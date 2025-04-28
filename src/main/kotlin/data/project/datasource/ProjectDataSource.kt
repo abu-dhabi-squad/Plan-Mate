@@ -6,5 +6,5 @@ interface ProjectDataSource{
 
     fun readProjects(): List<Project>
 
-    fun writeProjects(projects: List<Project>): Result<Boolean>
+    fun writeProjects(projects: List<Project>): Boolean
 }
