@@ -3,20 +3,15 @@ package data.project.repository
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import squad.abudhabi.data.Exceptions.CanNotParseProjectException
-import squad.abudhabi.data.Exceptions.CanNotParseStateException
-import squad.abudhabi.data.Exceptions.FileDoesNotExistException
-import squad.abudhabi.data.Exceptions.NoProjectsFoundException
+import squad.abudhabi.data.Exceptions.*
 import squad.abudhabi.data.project.datasource.ProjectDataSource
 import squad.abudhabi.data.project.repository.ProjectRepositoryImpl
 import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
 
 class ProjectRepositoryImplTest{
 
@@ -71,12 +66,7 @@ class ProjectRepositoryImplTest{
     @Test
     fun `addProject should throw FileDoesNotExistException when readProjects throw FileDoesNotExistException`(){
         //given
-        val resState = listOf(
-            State("1","state1"),
-            State("2","state2"),
-            State("3","state3")
-        )
-        val res = Project("1","name1", resState)
+        val res = Project("1","name1", listOf())
         every { projectDataSource.readProjects() } throws FileDoesNotExistException()
         //when & then
         assertThrows<FileDoesNotExistException>{
@@ -87,12 +77,7 @@ class ProjectRepositoryImplTest{
     @Test
     fun `addProject should throw FileDoesNotExistException when writeProjects throw FileDoesNotExistException`(){
         //given
-        val resState = listOf(
-            State("1","state1"),
-            State("2","state2"),
-            State("3","state3")
-        )
-        val res = Project("1","name1", resState)
+        val res = Project("1","name1", listOf())
         every { projectDataSource.writeProjects(any()) } throws FileDoesNotExistException()
         //when & then
         assertThrows<FileDoesNotExistException>{
@@ -108,12 +93,7 @@ class ProjectRepositoryImplTest{
     )
     fun `addProject should returns like writeProjects when readProjects return empty list`(returnValue : Boolean){
         //given
-        val resState = listOf(
-            State("1","state1"),
-            State("2","state2"),
-            State("3","state3")
-        )
-        val res = Project("1","name1", resState)
+        val res = Project("1","name1", listOf())
         every { projectDataSource.writeProjects(any()) } returns returnValue
         every { projectDataSource.readProjects() } returns listOf()
         //when & then
@@ -128,12 +108,7 @@ class ProjectRepositoryImplTest{
     )
     fun `addProject should returns like writeProjects when readProjects return list of values`(returnValue : Boolean){
         //given
-        val resState = listOf(
-            State("1","state1"),
-            State("2","state2"),
-            State("3","state3")
-        )
-        val res = Project("1","name1", resState)
+        val res = Project("1","name1", listOf())
         every { projectDataSource.writeProjects(any()) } returns returnValue
         every { projectDataSource.readProjects() } returns listOf(res)
         //when & then
@@ -143,12 +118,7 @@ class ProjectRepositoryImplTest{
     @Test
     fun `editProject should throw FileDoesNotExistException when readProjects throw FileDoesNotExistException`(){
         //given
-        val resState = listOf(
-            State("1","state1"),
-            State("2","state2"),
-            State("3","state3")
-        )
-        val res = Project("1","name1", resState)
+        val res = Project("1","name1", listOf())
         every { projectDataSource.readProjects() } throws FileDoesNotExistException()
         //when & then
         assertThrows<FileDoesNotExistException>{
@@ -159,12 +129,7 @@ class ProjectRepositoryImplTest{
     @Test
     fun `editProject should throw Exception when readProjects throw Exception`(){
         //given
-        val resState = listOf(
-            State("1","state1"),
-            State("2","state2"),
-            State("3","state3")
-        )
-        val res = Project("1","name1", resState)
+        val res = Project("1","name1", listOf())
         every { projectDataSource.readProjects() } throws Exception()
         //when & then
         assertThrows<Exception>{
@@ -175,16 +140,48 @@ class ProjectRepositoryImplTest{
     @Test
     fun `editProject should throw Exception when readProjects returns empty list`(){
         //given
-        val resState = listOf(
-            State("1","state1"),
-            State("2","state2"),
-            State("3","state3")
-        )
-        val res = Project("1","name1", resState)
+        val res = Project("1","name1", listOf())
         every { projectDataSource.readProjects() } returns listOf()
         //when & then
         assertThrows<NoProjectsFoundException>{
             projectRepositoryImpl.editProject(res)
         }
+    }
+
+    @Test
+    fun `editProject should throw ProjectNotInListException when project id not in data`(){
+        //given
+        val data = listOf(
+            Project("2","name2", listOf()),
+            Project("3","name3", listOf()),
+            Project("4","name4", listOf()),
+        )
+        val input = Project("1","name11", listOf())
+        every { projectDataSource.readProjects() } returns data
+        //when & then
+        assertThrows<ProjectNotInListException>{
+            projectRepositoryImpl.editProject(input)
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = [
+        true,
+        false,
+    ]
+    )
+    fun `editProject should return like writeProject when project id is in the data`(returnValue: Boolean){
+        //given
+        val data = listOf(
+            Project("1","name1", listOf()),
+            Project("2","name2", listOf()),
+            Project("3","name3", listOf()),
+            Project("4","name4", listOf()),
+        )
+        val input = Project("1","name11", listOf())
+        every { projectDataSource.readProjects() } returns data
+        every { projectDataSource.writeProjects(any()) } returns returnValue
+        //when & then
+        Truth.assertThat(projectRepositoryImpl.editProject(input)).isEqualTo(returnValue)
     }
 }

@@ -11,14 +11,33 @@ class ProjectRepositoryImpl(
 ) : ProjectRepository {
 
     override fun getProjects(): List<Project> {
-        TODO()
+        if (projectDataSource.readProjects().isEmpty()) throw NoProjectsFoundException()
+        return projectDataSource.readProjects()
     }
 
     override fun addProject(project: Project): Boolean {
-        TODO()
+        val newProjects = projectDataSource.readProjects().toMutableList()
+        if (newProjects.isEmpty()){
+            return projectDataSource.writeProjects(listOf(project))
+        }
+        newProjects.add(project)
+        return projectDataSource.writeProjects(newProjects)
     }
 
     override fun editProject(project: Project): Boolean {
-        TODO()
+        val projects = projectDataSource.readProjects().toMutableList()
+
+        if (projectDataSource.readProjects().isEmpty()) throw NoProjectsFoundException()
+        if(!projects.isContainProject(project)) throw ProjectNotInListException()
+
+        projects.map { currentProject -> if(currentProject.id == project.id) project else currentProject }
+        return projectDataSource.writeProjects(projects)
+    }
+
+    private fun List<Project>.isContainProject(project: Project) : Boolean {
+        this.forEach { currentProject ->
+            if(currentProject.id == project.id) return true
+        }
+        return false
     }
 }
