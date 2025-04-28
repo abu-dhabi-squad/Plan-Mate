@@ -14,9 +14,7 @@ class CsvProjectDataSource(
 ) : ProjectDataSource {
     override fun readProjects(): List<Project> {
         return fileHelper.readFile(File(PROJECTS_FILE_NAME))
-            .takeIf { it.isNotEmpty() }
-            ?.map(::parseStringToProject)
-            ?: throw NoProjectsFoundException()
+            .map(::parseStringToProject)
     }
 
     override fun writeProjects(projects: List<Project>): Boolean {

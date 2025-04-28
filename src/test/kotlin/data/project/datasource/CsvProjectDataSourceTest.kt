@@ -17,9 +17,9 @@ import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
 
-class CsvProjectDataSourceTest()
+class CsvProjectDataSourceTest
 {
-    private val fileHelper: FileHelper = mockk()
+    private val fileHelper: FileHelper = mockk(relaxed = true)
     private lateinit var csvProjectDataSource: CsvProjectDataSource
 
     @BeforeEach
@@ -38,13 +38,11 @@ class CsvProjectDataSourceTest()
     }
 
     @Test
-    fun `readProjects should throw NoProjectsFoundException when read file returns empty list`(){
+    fun `readProjects should returns emplty list when read file returns empty list`(){
         //given
         every { fileHelper.readFile(any()) } returns listOf()
         //when & then
-        assertThrows<NoProjectsFoundException> {
-            csvProjectDataSource.readProjects()
-        }
+        Truth.assertThat(csvProjectDataSource.readProjects()).isEqualTo(listOf<Project>())
     }
 
     @ParameterizedTest
