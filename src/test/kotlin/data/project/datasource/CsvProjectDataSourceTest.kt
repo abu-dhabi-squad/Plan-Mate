@@ -9,7 +9,6 @@ import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.data.Exceptions.CanNotParseProjectException
 import squad.abudhabi.data.Exceptions.CanNotParseStateException
 import squad.abudhabi.data.Exceptions.FileDoesNotExistException
-import squad.abudhabi.data.Exceptions.NoProjectsFoundException
 import squad.abudhabi.data.project.datasource.CsvProjectDataSource
 import squad.abudhabi.data.project.datasource.CsvProjectParser
 import squad.abudhabi.data.utils.filehelper.FileHelper
