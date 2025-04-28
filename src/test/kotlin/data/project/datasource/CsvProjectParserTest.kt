@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import squad.abudhabi.data.Exceptions.CanNotParseProjectException
-import squad.abudhabi.data.Exceptions.CanNotParseStateException
+import squad.abudhabi.logic.exceptions.CanNotParseProjectException
+import squad.abudhabi.logic.exceptions.CanNotParseStateException
 import squad.abudhabi.data.project.datasource.CsvProjectParser
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State

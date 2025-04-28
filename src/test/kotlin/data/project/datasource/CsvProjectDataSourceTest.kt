@@ -6,9 +6,9 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.data.Exceptions.CanNotParseProjectException
-import squad.abudhabi.data.Exceptions.CanNotParseStateException
-import squad.abudhabi.data.Exceptions.FileDoesNotExistException
+import squad.abudhabi.logic.exceptions.CanNotParseProjectException
+import squad.abudhabi.logic.exceptions.CanNotParseStateException
+import squad.abudhabi.logic.exceptions.FileDoesNotExistException
 import squad.abudhabi.data.project.datasource.CsvProjectDataSource
 import squad.abudhabi.data.project.datasource.CsvProjectParser
 import squad.abudhabi.data.utils.filehelper.FileHelper

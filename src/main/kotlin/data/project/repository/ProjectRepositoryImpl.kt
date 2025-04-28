@@ -13,21 +13,20 @@ class ProjectRepositoryImpl(
     }
 
     override fun addProject(project: Project): Boolean {
-        val newProjects = projectDataSource.readProjects().toMutableList()
-        if (newProjects.isEmpty()){
-            return projectDataSource.writeProjects(listOf(project))
-        }
-        newProjects.add(project)
-        return projectDataSource.writeProjects(newProjects)
+        val projects = projectDataSource.readProjects().toMutableList()
+        projects.add(project)
+        return projectDataSource.writeProjects(projects)
     }
 
     override fun editProject(project: Project): Boolean {
         val projects = projectDataSource.readProjects().toMutableList()
 
-        if (projectDataSource.readProjects().isEmpty()) return false
-
-        projects.map { currentProject -> if(currentProject.id == project.id) project else currentProject }
+        projects.map { currentProject -> currentProject.isEqualProject(project)}
         return projectDataSource.writeProjects(projects)
+    }
+
+    private fun Project.isEqualProject(project : Project): Project{
+        if (this.id == project.id) return project else return this
     }
 
 }

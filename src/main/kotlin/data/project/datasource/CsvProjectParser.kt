@@ -1,7 +1,7 @@
 package squad.abudhabi.data.project.datasource
 
-import squad.abudhabi.data.Exceptions.CanNotParseProjectException
-import squad.abudhabi.data.Exceptions.CanNotParseStateException
+import squad.abudhabi.logic.exceptions.CanNotParseProjectException
+import squad.abudhabi.logic.exceptions.CanNotParseStateException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
 
