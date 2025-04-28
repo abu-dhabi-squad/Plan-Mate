@@ -8,7 +8,7 @@ class CsvFileHelper(): FileHelper {
         TODO("Not yet implemented")
     }
 
-    override fun writeFile(file: File, data: List<String>) {
+    override fun writeFile(file: File, data: List<String>): Boolean {
         TODO("Not yet implemented")
     }
 
