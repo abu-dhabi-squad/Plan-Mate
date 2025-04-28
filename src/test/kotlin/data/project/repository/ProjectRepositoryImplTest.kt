@@ -54,13 +54,11 @@ class ProjectRepositoryImplTest{
     }
 
     @Test
-    fun `getProjects should throw NoProjectsFoundException when readProjects return empty list`(){
+    fun `getProjects should return empty when readProjects return empty list`(){
         //given
         every { projectDataSource.readProjects() } returns listOf()
         //when & then
-        assertThrows<NoProjectsFoundException> {
-            projectRepositoryImpl.getProjects()
-        }
+        Truth.assertThat(projectRepositoryImpl.getProjects()).isEmpty()
     }
 
     @Test
@@ -138,30 +136,12 @@ class ProjectRepositoryImplTest{
     }
 
     @Test
-    fun `editProject should throw Exception when readProjects returns empty list`(){
+    fun `editProject should return false when readProjects returns empty list`(){
         //given
         val res = Project("1","name1", listOf())
         every { projectDataSource.readProjects() } returns listOf()
         //when & then
-        assertThrows<NoProjectsFoundException>{
-            projectRepositoryImpl.editProject(res)
-        }
-    }
-
-    @Test
-    fun `editProject should throw ProjectNotInListException when project id not in data`(){
-        //given
-        val data = listOf(
-            Project("2","name2", listOf()),
-            Project("3","name3", listOf()),
-            Project("4","name4", listOf()),
-        )
-        val input = Project("1","name11", listOf())
-        every { projectDataSource.readProjects() } returns data
-        //when & then
-        assertThrows<ProjectNotInListException>{
-            projectRepositoryImpl.editProject(input)
-        }
+        Truth.assertThat(projectRepositoryImpl.editProject(res)).isFalse()
     }
 
     @ParameterizedTest

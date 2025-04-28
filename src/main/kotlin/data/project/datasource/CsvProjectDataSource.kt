@@ -1,6 +1,5 @@
 package squad.abudhabi.data.project.datasource
 
-import squad.abudhabi.data.Exceptions.NoProjectsFoundException
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Project
 import java.io.File
@@ -16,7 +15,7 @@ class CsvProjectDataSource(
     }
 
     override fun writeProjects(projects: List<Project>): Boolean {
-        if (projects.isEmpty()) throw NoProjectsFoundException()
+        if (projects.isEmpty()) return false
         return fileHelper.writeFile(File(PROJECTS_FILE_NAME), projects.map(::buildStringFromProject))
     }
 

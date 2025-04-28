@@ -99,11 +99,9 @@ class CsvProjectDataSourceTest
     }
 
     @Test
-    fun `writeProjects should throw NoProjectsFoundException when passing an empty list`(){
+    fun `writeProjects should return false when passing an empty list`(){
         //given & when & then
-        assertThrows<NoProjectsFoundException> {
-            csvProjectDataSource.writeProjects(listOf())
-        }
+        Truth.assertThat(csvProjectDataSource.writeProjects(listOf())).isFalse()
     }
 
     @Test
