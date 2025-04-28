@@ -52,9 +52,10 @@ class CsvProjectDataSourceTest()
             State("2","state2"),
             State("3","state3")
         )
-        val res = Project("1","name1", resState)
+        val res = listOf(Project("1","name1", resState))
         every { fileHelper.readFile(any()) } returns listOf("1,name1,1-state1|2-state2|3-state3")
         //when & then
+        println(csvProjectDataSource.readProjects())
         Truth.assertThat(csvProjectDataSource.readProjects()).isEqualTo(res)
     }
 
@@ -67,7 +68,7 @@ class CsvProjectDataSourceTest()
             State("3","state3")
         )
         val res = Project("1","name1", resState)
-        every { fileHelper.writeFile<Project>(any(),any()) } throws FileDoesNotExistException()
+        every { fileHelper.writeFile(any(),any()) } throws FileDoesNotExistException()
         //when & then
         assertThrows<FileDoesNotExistException> {
             csvProjectDataSource.writeProjects(listOf(res,res))
