@@ -13,6 +13,7 @@ import squad.abudhabi.data.Exceptions.CanNotParseStateException
 import squad.abudhabi.data.Exceptions.FileDoesNotExistException
 import squad.abudhabi.data.Exceptions.NoProjectsFoundException
 import squad.abudhabi.data.project.datasource.CsvProjectDataSource
+import squad.abudhabi.data.project.datasource.CsvProjectParser
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
@@ -20,11 +21,12 @@ import squad.abudhabi.logic.model.State
 class CsvProjectDataSourceTest
 {
     private val fileHelper: FileHelper = mockk(relaxed = true)
+    private val csvProjectParser: CsvProjectParser = mockk(relaxed = true)
     private lateinit var csvProjectDataSource: CsvProjectDataSource
 
     @BeforeEach
     fun setup(){
-        csvProjectDataSource = CsvProjectDataSource(fileHelper)
+        csvProjectDataSource = CsvProjectDataSource(fileHelper,csvProjectParser)
     }
 
     @Test
@@ -45,32 +47,22 @@ class CsvProjectDataSourceTest
         Truth.assertThat(csvProjectDataSource.readProjects()).isEqualTo(listOf<Project>())
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = [
-        "1,name1,ee,1-state1|2-state2|3-state3",
-        "1",
-    ]
-    )
-    fun `readProjects should throw CanNotParseProject when line can not be parsed into project object`(project_line : String){
+    @Test
+    fun `readProjects should throw CanNotParseProjectException when parser throw CanNotParseProjectException`(){
         //given
-        every { fileHelper.readFile(any()) } returns listOf(project_line)
+        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
+        every { csvProjectParser.parseStringToProject(any()) } throws CanNotParseProjectException()
         //when & then
         assertThrows<CanNotParseProjectException> {
             csvProjectDataSource.readProjects()
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = [
-        "1,name1,1-state1|2-state2|3-r-state3",
-        "1,name1,1-r-state1",
-        "1,name1,1state1",
-        "1,name1,1state1|2-state2|3-r-state3",
-    ]
-    )
-    fun `readProjects should throw CanNotParseStateException when line can not be parsed into state object`(state_line: String){
+    @Test
+    fun `readProjects should throw CanNotParseStateException when parser throw CanNotParseStateException`(){
         //given
-        every { fileHelper.readFile(any()) } returns listOf(state_line)
+        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
+        every { csvProjectParser.parseStringToProject(any()) } throws CanNotParseStateException()
         //when & then
         assertThrows<CanNotParseStateException> {
             csvProjectDataSource.readProjects()
@@ -87,6 +79,7 @@ class CsvProjectDataSourceTest
         )
         val res = listOf(Project("1","name1", resState))
         every { fileHelper.readFile(any()) } returns listOf("1,name1,1-state1|2-state2|3-state3")
+        every { csvProjectParser.parseStringToProject(any()) } returns Project("1","name1", resState)
         //when & then
         Truth.assertThat(csvProjectDataSource.readProjects()).isEqualTo(res)
     }
@@ -116,7 +109,7 @@ class CsvProjectDataSourceTest
     }
 
     @Test
-    fun `writeProjects should retrun true when list is not empty and write file returns true`(){
+    fun `writeProjects should return true when list is not empty and write file returns true`(){
         //given
         val resState = listOf(
             State("1","state1"),
@@ -130,7 +123,7 @@ class CsvProjectDataSourceTest
     }
 
     @Test
-    fun `writeProjects should retrun false when list is not empty and write file returns false`(){
+    fun `writeProjects should return false when list is not empty and write file returns false`(){
         //given
         val resState = listOf(
             State("1","state1"),
