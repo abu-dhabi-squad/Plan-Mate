@@ -7,3 +7,4 @@ class IllegalTaskException(error: String = "Invalid task data") : Exception(erro
 class InvalidDateException(error: String = "Invalid date") : Exception(error)
 
 class TaskNotFoundException(error: String = "Task not found") : Exception(error)
+class NoTasksFoundException(error: String = "No tasks found" ) : Exception(error)
