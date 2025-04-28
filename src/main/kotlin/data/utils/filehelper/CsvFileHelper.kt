@@ -4,7 +4,7 @@ import squad.abudhabi.data.utils.filehelper.FileHelper
 import java.io.File
 
 class CsvFileHelper(): FileHelper {
-    override fun <T> readFile(files: File): T {
+    override fun readFile(files: File): List<String> {
         TODO("Not yet implemented")
     }
 
