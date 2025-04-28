@@ -3,10 +3,13 @@ package data.project.datasource
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+ import org.junit.jupiter.params.provider.ValueSource
+import squad.abudhabi.data.Exceptions.CanNotParseProjectException
+import squad.abudhabi.data.Exceptions.CanNotParseStateException
 import squad.abudhabi.data.Exceptions.FileDoesNotExistException
 import squad.abudhabi.data.Exceptions.NoProjectsFoundException
 import squad.abudhabi.data.project.datasource.CsvProjectDataSource
@@ -45,6 +48,27 @@ class CsvProjectDataSourceTest()
     }
 
     @Test
+    fun `readProjects should throw CanNotParseProject when line can not be parsed into project object`(){
+        //given
+        every { fileHelper.readFile(any()) } returns listOf("1,name1,ee,1-state1|2-state2|3-state3")
+        //when & then
+        assertThrows<CanNotParseProjectException> {
+            csvProjectDataSource.readProjects()
+        }
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = ["1,name1,1-state1|2-state2|3-r-state3", "1,name1,1-r-state1"])
+    fun `readProjects should throw CanNotParseStateException when line can not be parsed into state object`(state_line: String){
+        //given
+        every { fileHelper.readFile(any()) } returns listOf(state_line)
+        //when & then
+        assertThrows<CanNotParseStateException> {
+            csvProjectDataSource.readProjects()
+        }
+    }
+
+    @Test
     fun `readProjects should return list of projects when read file returns list`(){
         //given
         val resState = listOf(
@@ -55,7 +79,6 @@ class CsvProjectDataSourceTest()
         val res = listOf(Project("1","name1", resState))
         every { fileHelper.readFile(any()) } returns listOf("1,name1,1-state1|2-state2|3-state3")
         //when & then
-        println(csvProjectDataSource.readProjects())
         Truth.assertThat(csvProjectDataSource.readProjects()).isEqualTo(res)
     }
 
