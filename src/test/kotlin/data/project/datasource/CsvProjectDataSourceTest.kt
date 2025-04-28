@@ -47,10 +47,15 @@ class CsvProjectDataSourceTest()
         }
     }
 
-    @Test
-    fun `readProjects should throw CanNotParseProject when line can not be parsed into project object`(){
+    @ParameterizedTest
+    @ValueSource(strings = [
+        "1,name1,ee,1-state1|2-state2|3-state3",
+        "1",
+    ]
+    )
+    fun `readProjects should throw CanNotParseProject when line can not be parsed into project object`(project_line : String){
         //given
-        every { fileHelper.readFile(any()) } returns listOf("1,name1,ee,1-state1|2-state2|3-state3")
+        every { fileHelper.readFile(any()) } returns listOf(project_line)
         //when & then
         assertThrows<CanNotParseProjectException> {
             csvProjectDataSource.readProjects()
@@ -58,7 +63,13 @@ class CsvProjectDataSourceTest()
     }
 
     @ParameterizedTest
-    @ValueSource(strings = ["1,name1,1-state1|2-state2|3-r-state3", "1,name1,1-r-state1"])
+    @ValueSource(strings = [
+        "1,name1,1-state1|2-state2|3-r-state3",
+        "1,name1,1-r-state1",
+        "1,name1,1state1",
+        "1,name1,1state1|2-state2|3-r-state3",
+    ]
+    )
     fun `readProjects should throw CanNotParseStateException when line can not be parsed into state object`(state_line: String){
         //given
         every { fileHelper.readFile(any()) } returns listOf(state_line)
@@ -104,6 +115,34 @@ class CsvProjectDataSourceTest()
         assertThrows<NoProjectsFoundException> {
             csvProjectDataSource.writeProjects(listOf())
         }
+    }
+
+    @Test
+    fun `writeProjects should retrun true when list is not empty and write file returns true`(){
+        //given
+        val resState = listOf(
+            State("1","state1"),
+            State("2","state2"),
+            State("3","state3")
+        )
+        val res = Project("1","name1", resState)
+        every { fileHelper.writeFile(any(),any()) } returns true
+        //when & then
+        Truth.assertThat(csvProjectDataSource.writeProjects(listOf(res,res))).isTrue()
+    }
+
+    @Test
+    fun `writeProjects should retrun false when list is not empty and write file returns false`(){
+        //given
+        val resState = listOf(
+            State("1","state1"),
+            State("2","state2"),
+            State("3","state3")
+        )
+        val res = Project("1","name1", resState)
+        every { fileHelper.writeFile(any(),any()) } returns false
+        //when & then
+        Truth.assertThat(csvProjectDataSource.writeProjects(listOf(res,res))).isFalse()
     }
 
 }

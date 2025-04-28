@@ -21,8 +21,7 @@ class CsvProjectDataSource(
 
     override fun writeProjects(projects: List<Project>): Boolean {
         if (projects.isEmpty()) throw NoProjectsFoundException()
-        fileHelper.writeFile(File(PROJECTS_FILE_NAME), projects.map(::buildStringFromProject))
-        return true
+        return fileHelper.writeFile(File(PROJECTS_FILE_NAME), projects.map(::buildStringFromProject))
     }
 
     private fun parseStringToProject(line: String): Project {
