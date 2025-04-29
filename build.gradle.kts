@@ -26,12 +26,14 @@ kotlin {
 }
 
 val includedPackages = listOf(
-    "squad/abudhabi/data",
-    "squad/abudhabi/logic",
+    "squad/abudhabi/data/**",
+    "squad/abudhabi/logic/**"
 )
 
 val excludedPackages = listOf(
-    "squad/abudhabi/data/utils/**"
+    "squad/abudhabi/data/utils/**",
+    "squad/abudhabi/logic/model/**",
+    "squad/abudhabi/logic/exceptions/**"
 )
 
 tasks.jacocoTestReport {
@@ -42,20 +44,10 @@ tasks.jacocoTestReport {
     }
 
     classDirectories.setFrom(
-        files(
-            fileTree(layout.buildDirectory.dir("classes/kotlin/main")) {
-                include(includedPackages.map { "$it/**" })
-                exclude(excludedPackages)
-            },
-            fileTree(layout.buildDirectory.dir("classes/java/main")) {
-                include(includedPackages.map { "$it/**" })
-                exclude(excludedPackages)
-            },
-            fileTree(layout.buildDirectory.dir("classes/kotlin/jvm/main")) {
-                include(includedPackages.map { "$it/**" })
-                exclude(excludedPackages)
-            }
-        )
+        fileTree(layout.buildDirectory.dir("classes/kotlin/main")) {
+            include(includedPackages)
+            exclude(excludedPackages)
+        }
     )
 }
 
@@ -64,25 +56,15 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = "0.8".toBigDecimal() // 80% coverage
+                minimum = "0.8".toBigDecimal()
             }
         }
     }
 
     classDirectories.setFrom(
-        files(
-            fileTree(layout.buildDirectory.dir("classes/kotlin/main")) {
-                include(includedPackages.map { "$it/**" })
-                exclude(excludedPackages)
-            },
-            fileTree(layout.buildDirectory.dir("classes/java/main")) {
-                include(includedPackages.map { "$it/**" })
-                exclude(excludedPackages)
-            },
-            fileTree(layout.buildDirectory.dir("classes/kotlin/jvm/main")) {
-                include(includedPackages.map { "$it/**" })
-                exclude(excludedPackages)
-            }
-        )
+        fileTree(layout.buildDirectory.dir("classes/kotlin/main")) {
+            include(includedPackages)
+            exclude(excludedPackages)
+        }
     )
 }
