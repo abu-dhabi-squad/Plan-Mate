@@ -6,9 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  test:
-    name: Check Test Cases
+  test:  
+    name: Check Test Cases  
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
