@@ -1,7 +1,6 @@
 package squad.abudhabi.logic.project
 
 import squad.abudhabi.logic.exceptions.CanNotEditException
-import squad.abudhabi.logic.exceptions.DataNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.repository.ProjectRepository
 
