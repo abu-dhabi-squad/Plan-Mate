@@ -10,16 +10,14 @@ class EditProjectUseCase(
 ) {
 
     fun editProject(newProject: Project): Boolean {
-
         if (newProject.states.isEmpty()) throw CanNotEditException()
 
         projectRepository.getProjects()
             .let { projects ->
-                projects.takeIf {it.isNotEmpty()} ?: throw DataNotFoundException()
+                projects.takeIf { it.isNotEmpty() } ?: throw DataNotFoundException()
                 projects.find { it.id == newProject.id } ?: throw CanNotEditException()
             }
 
         return projectRepository.editProject(newProject)
-
     }
 }

@@ -16,7 +16,6 @@ import squad.abudhabi.logic.project.EditProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 
 class EditProjectUseCaseTest {
-
     private lateinit var editProjectUseCase: EditProjectUseCase
     private val projectRepository: ProjectRepository = mockk(relaxed = true)
 
@@ -24,7 +23,6 @@ class EditProjectUseCaseTest {
     fun setup() {
         editProjectUseCase = EditProjectUseCase(projectRepository)
     }
-
 
     @Test
     fun `editProject should throw CanNotEditException when the new project data has empty states`() {
@@ -100,5 +98,4 @@ class EditProjectUseCaseTest {
         //when & then
         Truth.assertThat(editProjectUseCase.editProject(newProject)).isEqualTo(returnedValue)
     }
-
 }
