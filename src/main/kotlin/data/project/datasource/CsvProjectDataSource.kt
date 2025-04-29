@@ -13,21 +13,29 @@ class CsvProjectDataSource(
             .map(csvProjectParser::parseStringToProject)
     }
 
-    override fun writeProjects(projects: List<Project>): Boolean {
-        if (projects.isEmpty()) return false
-        return fileHelper.writeFile(File(PROJECTS_FILE_NAME), projects.map(::buildStringFromProject))
-    }
-
     override fun writeProject(project: Project): Boolean {
-        TODO("Not yet implemented")
+        val projects = readProjects().toMutableList()
+        projects.add(project)
+        return writeProjects(projects)
     }
 
     override fun editProject(project: Project): Boolean {
-        TODO("Not yet implemented")
+        val projects = readProjects().toMutableList()
+        projects.find { it.id == project.id } ?: return false
+        projects.map { currentProject -> currentProject.isEqualProject(project) }
+        return writeProjects(projects)
     }
 
     override fun deleteProject(project: Project): Boolean {
-        TODO("Not yet implemented")
+        val projects = readProjects().toMutableList()
+        projects.find { it.id == project.id } ?: return false
+        projects.filter { it.id != project.id }
+        return writeProjects(projects)
+    }
+
+    private fun writeProjects(projects: List<Project>): Boolean {
+        if (projects.isEmpty()) return false
+        return fileHelper.writeFile(File(PROJECTS_FILE_NAME), projects.map(::buildStringFromProject))
     }
 
     private fun buildStringFromProject(project: Project): String {
@@ -36,6 +44,10 @@ class CsvProjectDataSource(
                 project.states.map {
                     it.id + "-" + it.name + "|"
                 }.dropLast(UNUSED_CHARACTER)
+    }
+
+    private fun Project.isEqualProject(project: Project): Project {
+        if (this.id == project.id) return project else return this
     }
 
     companion object {

@@ -24,37 +24,17 @@ class ProjectRepositoryImplTest{
     }
 
     @Test
-    fun `getProjects should throw FileDoesNotExistException when readProjects throw FileDoesNotExistException`(){
+    fun `getProjects should throw Exception when projectDataSource readProjects throw Exception`(){
         //given
-        every { projectDataSource.readProjects() } throws FileDoesNotExistException()
+        every { projectDataSource.readProjects() } throws Exception()
         //when & then
-        assertThrows<FileDoesNotExistException>{
+        assertThrows<Exception>{
             projectRepositoryImpl.getProjects()
         }
     }
 
     @Test
-    fun `getProjects should throw CanNotParseProjectException when readProjects throw CanNotParseProjectException`(){
-        //given
-        every { projectDataSource.readProjects() } throws CanNotParseProjectException()
-        //when & then
-        assertThrows<CanNotParseProjectException>{
-            projectRepositoryImpl.getProjects()
-        }
-    }
-
-    @Test
-    fun `getProjects should throw CanNotParseStateException when readProjects throw CanNotParseStateException`(){
-        //given
-        every { projectDataSource.readProjects() } throws CanNotParseStateException()
-        //when & then
-        assertThrows<CanNotParseStateException>{
-            projectRepositoryImpl.getProjects()
-        }
-    }
-
-    @Test
-    fun `getProjects should return empty when readProjects return empty list`(){
+    fun `getProjects should return empty when projectDataSource readProjects return empty list`(){
         //given
         every { projectDataSource.readProjects() } returns listOf()
         //when & then
@@ -62,106 +42,75 @@ class ProjectRepositoryImplTest{
     }
 
     @Test
-    fun `addProject should throw FileDoesNotExistException when readProjects throw FileDoesNotExistException`(){
+    fun `getProjects should return list of projects when projectDataSource readProjects return list of projects`(){
         //given
-        val res = Project("1","name1", listOf())
-        every { projectDataSource.readProjects() } throws FileDoesNotExistException()
+        val list = listOf(Project("id1","name1", listOf()))
+        every { projectDataSource.readProjects() } returns list
         //when & then
-        assertThrows<FileDoesNotExistException>{
-            projectRepositoryImpl.addProject(res)
-        }
+        Truth.assertThat(projectRepositoryImpl.getProjects()).isEqualTo(list)
     }
 
     @Test
-    fun `addProject should throw FileDoesNotExistException when writeProjects throw FileDoesNotExistException`(){
+    fun `addProject should throw Exception when projectDataSource writeProject throw Exception`(){
         //given
         val res = Project("1","name1", listOf())
-        every { projectDataSource.writeProjects(any()) } throws FileDoesNotExistException()
+        every { projectDataSource.writeProject(any()) } throws Exception()
         //when & then
-        assertThrows<FileDoesNotExistException>{
+        assertThrows<Exception>{
             projectRepositoryImpl.addProject(res)
         }
     }
 
     @ParameterizedTest
-    @ValueSource(booleans = [
-        true,
-        false,
-    ]
-    )
-    fun `addProject should returns like writeProjects when readProjects return empty list`(returnValue : Boolean){
+    @ValueSource(booleans = [true, false])
+    fun `addProject should returns like projectDataSource writeProject when it return true or false`(returnValue : Boolean){
         //given
         val res = Project("1","name1", listOf())
-        every { projectDataSource.writeProjects(any()) } returns returnValue
-        every { projectDataSource.readProjects() } returns listOf()
-        //when & then
-        Truth.assertThat(projectRepositoryImpl.addProject(res)).isEqualTo(returnValue)
-    }
-
-    @ParameterizedTest
-    @ValueSource(booleans = [
-        true,
-        false,
-    ]
-    )
-    fun `addProject should returns like writeProjects when readProjects return list of values`(returnValue : Boolean){
-        //given
-        val res = Project("1","name1", listOf())
-        every { projectDataSource.writeProjects(any()) } returns returnValue
-        every { projectDataSource.readProjects() } returns listOf(res)
+        every { projectDataSource.writeProject(any()) } returns returnValue
         //when & then
         Truth.assertThat(projectRepositoryImpl.addProject(res)).isEqualTo(returnValue)
     }
 
     @Test
-    fun `editProject should throw FileDoesNotExistException when readProjects throw FileDoesNotExistException`(){
+    fun `editProject should throw Exception when projectDataSource editProject throw Exception`(){
         //given
         val res = Project("1","name1", listOf())
-        every { projectDataSource.readProjects() } throws FileDoesNotExistException()
-        //when & then
-        assertThrows<FileDoesNotExistException>{
-            projectRepositoryImpl.editProject(res)
-        }
-    }
-
-    @Test
-    fun `editProject should throw Exception when readProjects throw Exception`(){
-        //given
-        val res = Project("1","name1", listOf())
-        every { projectDataSource.readProjects() } throws Exception()
+        every { projectDataSource.editProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception>{
             projectRepositoryImpl.editProject(res)
         }
     }
 
-    @Test
-    fun `editProject should return false when readProjects returns empty list`(){
+    @ParameterizedTest
+    @ValueSource(booleans = [true, false])
+    fun `editProject should returns like projectDataSource editProject when it return true or false`(returnValue : Boolean){
         //given
         val res = Project("1","name1", listOf())
-        every { projectDataSource.readProjects() } returns listOf()
+        every { projectDataSource.editProject(any()) } returns returnValue
         //when & then
-        Truth.assertThat(projectRepositoryImpl.editProject(res)).isFalse()
+        Truth.assertThat(projectRepositoryImpl.editProject(res)).isEqualTo(returnValue)
+    }
+
+
+    @Test
+    fun `deleteProject should throw Exception when projectDataSource deleteProject throw Exception`(){
+        //given
+        val res = Project("1","name1", listOf())
+        every { projectDataSource.deleteProject(any()) } throws Exception()
+        //when & then
+        assertThrows<Exception>{
+            projectRepositoryImpl.deleteProject(res)
+        }
     }
 
     @ParameterizedTest
-    @ValueSource(booleans = [
-        true,
-        false,
-    ]
-    )
-    fun `editProject should return like writeProject when project id is in the data`(returnValue: Boolean){
+    @ValueSource(booleans = [true, false])
+    fun `deleteProject should returns like projectDataSource deleteProject when it return true or false`(returnValue : Boolean){
         //given
-        val data = listOf(
-            Project("1","name1", listOf()),
-            Project("2","name2", listOf()),
-            Project("3","name3", listOf()),
-            Project("4","name4", listOf()),
-        )
-        val input = Project("1","name11", listOf())
-        every { projectDataSource.readProjects() } returns data
-        every { projectDataSource.writeProjects(any()) } returns returnValue
+        val res = Project("1","name1", listOf())
+        every { projectDataSource.deleteProject(any()) } returns returnValue
         //when & then
-        Truth.assertThat(projectRepositoryImpl.editProject(input)).isEqualTo(returnValue)
+        Truth.assertThat(projectRepositoryImpl.deleteProject(res)).isEqualTo(returnValue)
     }
 }
