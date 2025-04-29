@@ -12,7 +12,6 @@ import squad.abudhabi.logic.project.GetProjectByIdUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 import kotlin.test.Test
 
-
 class GetProjectByIdUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
     private lateinit var getProjectByIdUseCase: GetProjectByIdUseCase
