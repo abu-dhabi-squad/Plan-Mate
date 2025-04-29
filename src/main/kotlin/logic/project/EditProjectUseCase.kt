@@ -8,7 +8,6 @@ import squad.abudhabi.logic.repository.ProjectRepository
 class EditProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
-
     fun editProject(newProject: Project): Boolean {
         if (newProject.states.isEmpty()) throw CanNotEditException()
 
