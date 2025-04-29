@@ -35,5 +35,6 @@ jobs:
       - name: Run unit tests
         run: ./gradlew test
 
+
       - name: Run tests and enforce 80% coverage
         run: ./gradlew test jacocoTestReport jacocoTestCoverageVerification
