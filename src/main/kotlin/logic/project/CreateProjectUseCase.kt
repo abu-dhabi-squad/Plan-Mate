@@ -9,7 +9,17 @@ class CreateProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
     fun execute(projectName: String):Boolean {
-        TODO()
+        if (projectName.isBlank()) {
+            throw InvalidProjectNameException()
+        }
+
+        val newProject = Project(
+            id = UUID.randomUUID().toString(),
+            projectName = projectName,
+            states = emptyList()
+        )
+
+        return projectRepository.addProject(newProject)
     }
 
 }
