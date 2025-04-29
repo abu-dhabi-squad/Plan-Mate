@@ -2,11 +2,13 @@ package squad.abudhabi.data.audit.repository
 
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.EntityType
+import squad.abudhabi.logic.repository.AuditRepository
 import java.io.File
 
-class CsvAuditRepository(private val filePath: String) {
+class CsvAuditRepository(private val filePath: String)  : AuditRepository  {
 
-    fun saveAuditLog(audit: Audit) {
+    override fun saveAuditLog(audit: Audit) {
+
         val csvLine = listOf(
             audit.id,
             audit.userId,
@@ -21,7 +23,8 @@ class CsvAuditRepository(private val filePath: String) {
         File(filePath).appendText("$csvLine\n")
     }
 
-    fun getAuditLogsByEntityId(entityId: String): List<Audit> {
+    override fun getAuditByEntityId(entityId: String): List<Audit> {
+
         return File(filePath).readLines()
             .mapNotNull { line ->
                 val parts = line.split(",")
