@@ -25,6 +25,11 @@ class ProjectRepositoryImpl(
         return projectDataSource.writeProjects(projects)
     }
 
+    override fun deleteProject(project: Project): Boolean {
+        val projects = projectDataSource.readProjects().filter { it.id != project.id }
+        return projectDataSource.writeProjects(projects)
+    }
+
     private fun Project.isEqualProject(project : Project): Project{
         if (this.id == project.id) return project else return this
     }
