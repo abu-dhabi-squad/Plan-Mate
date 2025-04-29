@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Assertions.*
-class DeleteProjectUseCaseTest {
-  
-}
+package logic.project
+
+class DeleteProjectUseCaseTest

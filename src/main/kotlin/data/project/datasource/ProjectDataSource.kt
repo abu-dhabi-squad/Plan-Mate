@@ -1,4 +1,10 @@
 package squad.abudhabi.data.project.datasource
 
-interface ProjectDataSource {
+import squad.abudhabi.logic.model.Project
+
+interface ProjectDataSource{
+
+    fun readProjects(): List<Project>
+
+    fun writeProjects(projects: List<Project>): Boolean
 }

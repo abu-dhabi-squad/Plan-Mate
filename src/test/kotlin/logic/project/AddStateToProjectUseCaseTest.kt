@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.Assertions.*
-class AddStateToProjectUseCaseTest {
-  
-}
+package logic.project
+
+class AddStateToProjectUseCaseTest
