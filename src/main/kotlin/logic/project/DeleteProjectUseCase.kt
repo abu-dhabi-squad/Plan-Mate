@@ -4,6 +4,6 @@ import squad.abudhabi.logic.repository.ProjectRepository
 
 class DeleteProjectUseCase(private val projectRepository: ProjectRepository) {
     fun execute(projectId:String):Boolean {
-        TODO()
+        return projectRepository.deleteProject(projectId)
     }
 }
