@@ -51,7 +51,7 @@ class EditStateToProjectUseCaseTest {
     fun `editStateOfProject should throw DataNotFoundException when the projectRepository getProjects returns empty list`() {
         //given
         val newState = State("id1", "newState1")
-        val states = listOf(State("id2", "state1"), State("id2", "state2"))
+        val states = listOf(State("id1", "state1"), State("id2", "state2"))
         val project = Project("id1", "name1", states)
         every { projectRepository.getProjects() } returns listOf()
         //when & then
@@ -64,7 +64,7 @@ class EditStateToProjectUseCaseTest {
     fun `editStateOfProject should throw Exception when the projectRepository getProjects throw Exception`() {
         //given
         val newState = State("id1", "newState1")
-        val states = listOf(State("id2", "state1"), State("id2", "state2"))
+        val states = listOf(State("id1", "state1"), State("id2", "state2"))
         val project = Project("id1", "name1", states)
         every { projectRepository.getProjects() } throws Exception()
         //when & then
@@ -77,7 +77,7 @@ class EditStateToProjectUseCaseTest {
     fun `editStateOfProject should throw CanNotEditException when the project id not in the ids of all projects`() {
         //given
         val newState = State("id1", "newState1")
-        val states = listOf(State("id2", "state1"), State("id2", "state2"))
+        val states = listOf(State("id1", "state1"), State("id2", "state2"))
         val project = Project("id1", "name1", states)
         val project1 = Project("id2", "name1", states)
         every { projectRepository.getProjects() } returns listOf(project1)
@@ -91,7 +91,7 @@ class EditStateToProjectUseCaseTest {
     fun `editStateOfProject should throw Exception when the projectRepository editProject throw Exception`() {
         //given
         val newState = State("id1", "newState1")
-        val states = listOf(State("id2", "state1"), State("id2", "state2"))
+        val states = listOf(State("id1", "state1"), State("id2", "state2"))
         val project = Project("id1", "name1", states)
         every { projectRepository.editProject(any()) } throws Exception()
         //when & then
@@ -107,7 +107,7 @@ class EditStateToProjectUseCaseTest {
     ) {
         //given
         val newState = State("id1", "newState1")
-        val states = listOf(State("id2", "state1"), State("id2", "state2"))
+        val states = listOf(State("id1", "state1"), State("id2", "state2"))
         val project = Project("id1", "name1", states)
         every { projectRepository.getProjects() } returns listOf(project)
         every { projectRepository.editProject(any()) } returns returnedValue
