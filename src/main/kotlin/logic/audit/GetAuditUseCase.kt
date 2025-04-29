@@ -8,8 +8,7 @@ class GetAuditUseCase(private val auditRepository: AuditRepository){
 
     fun getAuditHistory(entityId: String): List<Audit> {
 
-        if (entityId.isNotEmpty())
-        return auditRepository.getAuditByEntityId(entityId)
+        return if (entityId.isNotEmpty()) auditRepository.getAuditByEntityId(entityId)
         else throw WrongInputException()
     }
 }

@@ -7,11 +7,10 @@ import java.io.File
 
 class CsvAuditRepository(private val filePath: String)  : AuditRepository  {
 
-    //    override fun addAuditLog(audit: Audit) {
+//       override fun addAuditLog(audit: Audit) {
 //
 //        val csvLine = listOf(
 //            audit.id,
-//            audit.userId,
 //            audit.createdBy,
 //            audit.entityId,
 //            audit.entityType.name,
@@ -41,6 +40,7 @@ class CsvAuditRepository(private val filePath: String)  : AuditRepository  {
 //                } else null
 //            }
 //    }
+
     override fun addAuditLog(auditLog: Audit) {
         TODO("Not yet implemented")
     }
