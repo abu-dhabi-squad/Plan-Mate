@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  check-test-cases:
+  test:
     name: Check Test Cases
     runs-on: ubuntu-latest
     steps:
