@@ -13,12 +13,11 @@ class EditProjectUseCase(
 
         if (newProject.states.isEmpty()) throw CanNotEditException()
 
-        val projects = projectRepository.getProjects()
-            .takeIf { it.isNotEmpty() }
-            ?: throw DataNotFoundException()
-
-        projects.find { it.id == newProject.id }
-            ?: throw CanNotEditException()
+        projectRepository.getProjects()
+            .let { projects ->
+                projects.takeIf {it.isNotEmpty()} ?: throw DataNotFoundException()
+                projects.find { it.id == newProject.id } ?: throw CanNotEditException()
+            }
 
         return projectRepository.editProject(newProject)
 
