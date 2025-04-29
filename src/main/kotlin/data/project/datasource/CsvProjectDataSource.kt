@@ -4,7 +4,6 @@ import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Project
 import java.io.File
 
-
 class CsvProjectDataSource(
     private val fileHelper: FileHelper,
     private val csvProjectParser: CsvProjectParser
@@ -17,6 +16,18 @@ class CsvProjectDataSource(
     override fun writeProjects(projects: List<Project>): Boolean {
         if (projects.isEmpty()) return false
         return fileHelper.writeFile(File(PROJECTS_FILE_NAME), projects.map(::buildStringFromProject))
+    }
+
+    override fun writeProject(project: Project): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun editProject(project: Project): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteProject(project: Project): Boolean {
+        TODO("Not yet implemented")
     }
 
     private fun buildStringFromProject(project: Project): String {
