@@ -27,7 +27,6 @@ class EditProjectUseCaseTest {
     @Test
     fun `editProject should throw CanNotEditException when the new project data has empty states`() {
         //given
-        val state = State("id1", "stateName")
         val newProject = Project("id1", "name1", listOf())
         //when & then
         assertThrows<CanNotEditException> {

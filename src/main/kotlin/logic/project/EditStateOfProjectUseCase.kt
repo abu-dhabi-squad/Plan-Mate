@@ -9,7 +9,7 @@ import squad.abudhabi.logic.repository.ProjectRepository
 class EditStateOfProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
-    fun editStateOfProject(project: Project, newState:State):Boolean{
+    fun editStateOfProject(project: Project, newState: State): Boolean {
         if (project.states.isEmpty()) throw CanNotEditException()
 
         project.states.find { it.id == newState.id }
@@ -20,7 +20,8 @@ class EditStateOfProjectUseCase(
                 projects.takeIf { it.isNotEmpty() } ?: throw DataNotFoundException()
                 projects.find { it.id == project.id } ?: throw CanNotEditException()
             }
-        project.states.map { state -> if(state.id == newState.id) newState else state }
+
+        project.states.map { state -> if (state.id == newState.id) newState else state }
         return projectRepository.editProject(project)
     }
 }
