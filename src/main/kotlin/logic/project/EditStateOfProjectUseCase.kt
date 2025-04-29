@@ -4,13 +4,10 @@ import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.repository.ProjectRepository
 
-class EditStateToProjectUseCase(
+class EditStateOfProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
-
-    fun editStateProject(project: Project, newState:State):Boolean{
+    fun editStateOfProject(project: Project, newState:State):Boolean{
         return false
     }
-
-
 }
