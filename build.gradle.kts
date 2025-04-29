@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.1.20"
+    id("jacoco")
 }
 
 group = "squad.abudhabi"
@@ -21,5 +22,49 @@ tasks.test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(23)
+    jvmToolchain(17)
+}
+
+val includedPackages = listOf(
+    "squad/abudhabi/data/**",
+    "squad/abudhabi/logic/**"
+)
+
+val excludedPackages = listOf(
+    "squad/abudhabi/data/utils/**",
+    "squad/abudhabi/logic/model/**",
+    "squad/abudhabi/logic/exceptions/**"
+)
+
+tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+
+    classDirectories.setFrom(
+        fileTree(layout.buildDirectory.dir("classes/kotlin/main")) {
+            include(includedPackages)
+            exclude(excludedPackages)
+        }
+    )
+}
+
+tasks.jacocoTestCoverageVerification {
+    dependsOn(tasks.test)
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.8".toBigDecimal()
+            }
+        }
+    }
+
+    classDirectories.setFrom(
+        fileTree(layout.buildDirectory.dir("classes/kotlin/main")) {
+            include(includedPackages)
+            exclude(excludedPackages)
+        }
+    )
 }
