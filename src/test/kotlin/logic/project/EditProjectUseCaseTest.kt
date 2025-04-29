@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.Arguments
-import org.junit.jupiter.params.provider.MethodSource
 import org.junit.jupiter.params.provider.ValueSource
 import squad.abudhabi.logic.exceptions.CanNotEditException
 import squad.abudhabi.logic.exceptions.DataNotFoundException
@@ -27,26 +25,15 @@ class EditProjectUseCaseTest {
         editProjectUseCase = EditProjectUseCase(projectRepository)
     }
 
-    @Test
-    fun `editProject should throw CanNotEditException when the new project equal to the old project`() {
-        //given
-        val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
-        //when & then
-        assertThrows<CanNotEditException> {
-            editProjectUseCase.editProject(project, project)
-        }
-    }
 
-    @ParameterizedTest
-    @MethodSource("getNewProject")
-    fun `editProject should throw CanNotEditException when the new project data is null or has empty states`(newProject: Project) {
+    @Test
+    fun `editProject should throw CanNotEditException when the new project data has empty states`() {
         //given
         val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
+        val newProject = Project("id1", "name1", listOf())
         //when & then
         assertThrows<CanNotEditException> {
-            editProjectUseCase.editProject(project, newProject)
+            editProjectUseCase.editProject(newProject)
         }
     }
 
@@ -54,12 +41,11 @@ class EditProjectUseCaseTest {
     fun `editProject should throw DataNotFoundException when the projectRepository getProjects returns empty list`() {
         //given
         val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
         val newProject = Project("id1", "name2", listOf(state))
         every { projectRepository.getProjects() } returns listOf()
         //when & then
         assertThrows<DataNotFoundException> {
-            editProjectUseCase.editProject(project, newProject)
+            editProjectUseCase.editProject(newProject)
         }
     }
 
@@ -67,12 +53,11 @@ class EditProjectUseCaseTest {
     fun `editProject should throw Exception when the projectRepository getProjects throw Exception`() {
         //given
         val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
         val newProject = Project("id1", "name2", listOf(state))
         every { projectRepository.getProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editProjectUseCase.editProject(project, newProject)
+            editProjectUseCase.editProject(newProject)
         }
     }
 
@@ -85,7 +70,7 @@ class EditProjectUseCaseTest {
         every { projectRepository.getProjects() } returns listOf(project)
         //when & then
         assertThrows<CanNotEditException> {
-            editProjectUseCase.editProject(project, newProject)
+            editProjectUseCase.editProject(newProject)
         }
     }
 
@@ -93,12 +78,11 @@ class EditProjectUseCaseTest {
     fun `editProject should throw Exception when the projectRepository editProject throw Exception`() {
         //given
         val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
         val newProject = Project("id1", "name2", listOf(state))
         every { projectRepository.editProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editProjectUseCase.editProject(project, newProject)
+            editProjectUseCase.editProject(newProject)
         }
     }
 
@@ -114,15 +98,7 @@ class EditProjectUseCaseTest {
         every { projectRepository.getProjects() } returns listOf(project)
         every { projectRepository.editProject(any()) } returns returnedValue
         //when & then
-        Truth.assertThat(editProjectUseCase.editProject(project, newProject)).isEqualTo(returnedValue)
+        Truth.assertThat(editProjectUseCase.editProject(newProject)).isEqualTo(returnedValue)
     }
 
-
-    companion object {
-        @JvmStatic
-        fun getNewProject() = listOf(
-            Arguments.of(null),
-            Arguments.of(Project("id1", "name1", listOf()))
-        )
-    }
 }

@@ -9,17 +9,16 @@ class EditProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
 
-    fun editProject(oldProject: Project, newProject: Project): Boolean {
+    fun editProject(newProject: Project): Boolean {
 
-        if(newProject.states.isEmpty()) throw CanNotEditException()
-        if(oldProject == newProject) throw CanNotEditException()
+        if (newProject.states.isEmpty()) throw CanNotEditException()
 
         val projects = projectRepository.getProjects()
             .takeIf { it.isNotEmpty() }
             ?: throw DataNotFoundException()
 
         projects.find { it.id == newProject.id }
-            ?:throw CanNotEditException()
+            ?: throw CanNotEditException()
 
         return projectRepository.editProject(newProject)
 
