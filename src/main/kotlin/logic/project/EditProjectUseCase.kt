@@ -1,5 +1,7 @@
 package squad.abudhabi.logic.project
 
+import squad.abudhabi.logic.exceptions.CanNotEditException
+import squad.abudhabi.logic.exceptions.DataNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.repository.ProjectRepository
 
@@ -8,6 +10,18 @@ class EditProjectUseCase(
 ) {
 
     fun editProject(oldProject: Project, newProject: Project): Boolean {
-        return false
+
+        if(newProject.states.isEmpty()) throw CanNotEditException()
+        if(oldProject == newProject) throw CanNotEditException()
+
+        val projects = projectRepository.getProjects()
+            .takeIf { it.isNotEmpty() }
+            ?: throw DataNotFoundException()
+
+        projects.find { it.id == newProject.id }
+            ?:throw CanNotEditException()
+
+        return projectRepository.editProject(newProject)
+
     }
 }
