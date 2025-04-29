@@ -19,4 +19,8 @@ class ProjectRepositoryImpl(
     override fun editProject(project: Project): Boolean {
         TODO()
     }
+
+    override fun deleteProject(projectId: String): Boolean {
+        TODO("Not yet implemented")
+    }
 }
