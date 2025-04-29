@@ -1,4 +1,4 @@
 import org.junit.jupiter.api.Assertions.*
-class EditStateToProjectUseCaseTest {
+class CreateProjectUseCaseTest {
   
 }
