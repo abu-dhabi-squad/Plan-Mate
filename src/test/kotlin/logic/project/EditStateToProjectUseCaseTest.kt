@@ -9,7 +9,6 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import squad.abudhabi.logic.exceptions.CanNotEditException
-import squad.abudhabi.logic.exceptions.DataNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.EditStateOfProjectUseCase
@@ -55,7 +54,7 @@ class EditStateToProjectUseCaseTest {
         val project = Project("id1", "name1", states)
         every { projectRepository.getProjects() } returns listOf()
         //when & then
-        assertThrows<DataNotFoundException> {
+        assertThrows<CanNotEditException> {
             editStateToProjectUseCase.editStateOfProject(project, newState)
         }
     }

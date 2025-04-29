@@ -13,7 +13,6 @@ class EditProjectUseCase(
 
         projectRepository.getProjects()
             .let { projects ->
-                projects.takeIf { it.isNotEmpty() } ?: throw DataNotFoundException()
                 projects.find { it.id == newProject.id } ?: throw CanNotEditException()
             }
 

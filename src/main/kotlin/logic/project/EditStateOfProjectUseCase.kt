@@ -17,7 +17,6 @@ class EditStateOfProjectUseCase(
 
         projectRepository.getProjects()
             .let { projects ->
-                projects.takeIf { it.isNotEmpty() } ?: throw DataNotFoundException()
                 projects.find { it.id == project.id } ?: throw CanNotEditException()
             }
 
