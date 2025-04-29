@@ -6,4 +6,5 @@ interface ProjectRepository {
     fun getProjects() : List<Project>
     fun addProject(project: Project) : Boolean
     fun editProject(project: Project) : Boolean
+    fun deleteProject(project: Project) : Boolean
 }
