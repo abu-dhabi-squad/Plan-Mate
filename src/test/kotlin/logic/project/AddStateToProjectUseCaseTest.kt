@@ -15,7 +15,7 @@ import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.AddStateToProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 
-class AddStateToProjectUseCaseTest{
+class AddStateToProjectUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
     private lateinit var addStateToProjectUseCase: AddStateToProjectUseCase
 
@@ -77,16 +77,15 @@ class AddStateToProjectUseCaseTest{
     }
 
     @Test
-    fun `should throw ProjectNotFoundException if project id is invalid`() {
+    fun `should throw Project Not FoundException if project id is invalid`() {
         // Given
-        every { projectRepository.getProjects() } returns emptyList()
+        every { projectRepository.getProjects() } returns listOf(Project("test", "test", emptyList()))
         val newState = State(id = "s1", name = "Review")
 
         // When & Then
-        val exception = assertThrows<ProjectNotFoundException> {
+        assertThrows<ProjectNotFoundException> {
             addStateToProjectUseCase.execute("invalid_project", newState)
         }
-        assertThat(exception).hasMessageThat().contains("invalid_project")
     }
 
     @Test

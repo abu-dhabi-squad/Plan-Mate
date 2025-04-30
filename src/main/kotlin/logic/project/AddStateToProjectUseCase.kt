@@ -8,7 +8,7 @@ import squad.abudhabi.logic.repository.ProjectRepository
 
 class AddStateToProjectUseCase(private val projectRepository: ProjectRepository){
         fun execute(projectId: String, newState: State) {
-            if (newState.name.isBlank() || newState.id.isBlank()) {
+            if (newState.name.isBlank()) {
                 throw InvalidStateException("State name and ID cannot be blank")
             }
             val projects = projectRepository.getProjects()
