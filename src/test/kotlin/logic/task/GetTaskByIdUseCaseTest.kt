@@ -26,26 +26,22 @@ class GetTaskByIdUseCaseTest {
         // Given
         val taskId = "1"
         val task = createTask(id = taskId)
-        every { taskRepository.getAllTasks() } returns listOf(task)
+        every { taskRepository.getTaskById(any()) } returns task
 
-        // when
+        // When
         val result = getTasksByIdUseCaseTest(taskId)
 
-        // then
+        // Then
         assertThat(result).isEqualTo(task)
     }
 
     @Test
     fun `should throw TaskNotFoundException when there is no task with the same id`() {
-        // given
+        // Given
         val taskId = "1"
-        every { taskRepository.getAllTasks() } returns listOf(
-            createTask(),
-            createTask(),
-            createTask()
-        )
+        every { taskRepository.getTaskById(any()) } returns null
 
-        // when && then
+        // When && Then
         assertThrows<TaskNotFoundException> {
             getTasksByIdUseCaseTest(taskId)
         }

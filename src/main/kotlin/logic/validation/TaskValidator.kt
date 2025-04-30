@@ -1,5 +1,7 @@
 package squad.abudhabi.logic.validation
 
+import squad.abudhabi.logic.model.Task
+
 interface TaskValidator {
-    fun validateOrThrow(startDate: String, endDate: String)
+    fun validateOrThrow(task: Task)
 }

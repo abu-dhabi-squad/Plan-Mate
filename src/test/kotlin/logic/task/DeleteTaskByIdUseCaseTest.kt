@@ -21,23 +21,27 @@ class DeleteTaskByIdUseCaseTest {
         taskRepository = mockk(relaxed = true)
         deleteTaskByIdUseCase = DeleteTaskByIdUseCase(taskRepository)
     }
+
     @Test
     fun `should delete task by its id when task is exists`() {
-        // given
+        // Given
         val taskId = UUID.randomUUID().toString()
-        every { taskRepository.getAllTasks() } returns listOf(createTask(id = taskId))
-        // when
+        every { taskRepository.getTaskById(any()) } returns createTask(id = taskId)
+
+        // When
         deleteTaskByIdUseCase(taskId)
-        // then
+
+        // Then
         verify { taskRepository.deleteTask(taskId) }
     }
 
     @Test
     fun `should throw TaskNotFoundException exception when task is not exists`() {
-        // given
+        // Given
         val taskId = UUID.randomUUID().toString()
-        every { taskRepository.getAllTasks() } returns listOf(createTask())
-        // when && then
+        every { taskRepository.getTaskById(any()) } returns null
+
+        // When && Then
         assertThrows<TaskNotFoundException> {
             deleteTaskByIdUseCase(taskId)
         }
