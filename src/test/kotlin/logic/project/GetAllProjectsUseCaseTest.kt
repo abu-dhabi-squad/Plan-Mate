@@ -1,6 +1,7 @@
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
@@ -31,6 +32,7 @@ class GetAllProjectsUseCaseTest {
         val result = getAllProjectsUseCase()
         //Then
         assertThat(result).isEqualTo(projects)
+        verify(exactly = 1) { projectRepository.getProjects()  }
     }
 
     @Test
@@ -41,6 +43,7 @@ class GetAllProjectsUseCaseTest {
         assertThrows<NoProjectsFoundException> {
             getAllProjectsUseCase()
         }
+        verify(exactly = 1) { projectRepository.getProjects()  }
     }
 
 

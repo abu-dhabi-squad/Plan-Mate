@@ -1,7 +1,6 @@
 package squad.abudhabi.logic.project
 
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
-import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.repository.ProjectRepository
 
