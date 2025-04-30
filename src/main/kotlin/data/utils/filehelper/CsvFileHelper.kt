@@ -10,4 +10,12 @@ class CsvFileHelper: FileHelper {
     override fun writeFile(file: File, data: List<String>): Boolean {
         return true
     }
+
+    override fun appendFile(file: File, data: List<String>): Boolean {
+        return true
+    }
+
+    override fun appendFile(file: File, data: String): Boolean {
+        return true
+    }
 }
