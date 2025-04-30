@@ -88,4 +88,66 @@ class AddStateToProjectUseCaseTest{
         }
         assertThat(exception).hasMessageThat().contains("invalid_project")
     }
+
+    @Test
+    fun `should throw DuplicateStateException if state name matches existing one ignoring case`() {
+        // Given
+        val existingState = State(id = "s1", name = "ToDo")
+        val duplicateState = State(id = "s2", name = "todo") // same name, different case
+        val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
+
+        every { projectRepository.getProjects() } returns listOf(existingProject)
+
+        // When & Then
+        val exception = assertThrows<DuplicateStateException> {
+            addStateToProjectUseCase.execute("p1", duplicateState)
+        }
+
+        assertThat(exception).hasMessageThat().contains("todo")
+    }
+
+    @Test
+    fun `should allow adding state with same ID but different name`() {
+        // Given
+        val existingState = State(id = "s1", name = "TODO")
+        val newState = State(id = "s1", name = "NEW_NAME")
+        val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
+
+        every { projectRepository.getProjects() } returns listOf(existingProject)
+        every { projectRepository.editProject(any()) } returns true
+
+        // When
+        addStateToProjectUseCase.execute("p1", newState)
+
+        // Then
+        verify {
+            projectRepository.editProject(
+                match {
+                    it.id == "p1" && it.states.any { s -> s.id == "s1" && s.name == "NEW_NAME" }
+                }
+            )
+        }
+    }
+
+    @Test
+    fun `should handle adding first state to project with empty states list`() {
+        // Given
+        val newState = State(id = "s1", name = "TODO")
+        val existingProject = Project(id = "p1", projectName = "Test Project", states = emptyList())
+
+        every { projectRepository.getProjects() } returns listOf(existingProject)
+        every { projectRepository.editProject(any()) } returns true
+
+        // When
+        addStateToProjectUseCase.execute("p1", newState)
+
+        // Then
+        verify {
+            projectRepository.editProject(
+                match {
+                    it.id == "p1" && it.states.size == 1 && it.states[0] == newState
+                }
+            )
+        }
+    }
 }
