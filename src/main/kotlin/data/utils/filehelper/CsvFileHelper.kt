@@ -1,7 +1,6 @@
 package squad.abudhabi.data.utils.filehelper
 
 import java.io.File
-import java.io.FileNotFoundException
 
 class CsvFileHelper : FileHelper {
     override fun readFile(fileName: String): List<String> {
@@ -13,7 +12,6 @@ class CsvFileHelper : FileHelper {
     override fun writeFile(fileName: String, data: List<String>): Boolean {
         val file = File(fileName)
         if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
-        if(!file.exists()) throw FileNotFoundException()
         file.writeText(data.joinToString("\n"))
         return true
     }
@@ -21,7 +19,6 @@ class CsvFileHelper : FileHelper {
     override fun appendFile(fileName: String, data: List<String>): Boolean {
         val file = File(fileName)
         if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
-        if(!file.exists()) throw FileNotFoundException()
         file.appendText(data.joinToString("\n"))
         return true
     }

@@ -74,16 +74,6 @@ class CsvFileHelperTest {
         }
     }
 
-    @Test
-    fun `writeFile should throw FileNotFoundException when file does not exist`() {
-        //given
-        val data = listOf("line1", "line2", "line3")
-        file.delete()
-        //when && then
-        assertThrows<FileNotFoundException> {
-            csvFileHelper.writeFile(fileName, data)
-        }
-    }
 
     @Test
     fun `appendFile should return true when data is written successfully`() {
@@ -105,14 +95,5 @@ class CsvFileHelperTest {
         }
     }
 
-    @Test
-    fun `appendFile should throw FileNotFoundException when file does not exist`() {
-        //given
-        val data = listOf("line1", "line2", "line3")
-        file.delete()
-        //when && then
-        assertThrows<FileNotFoundException> {
-            csvFileHelper.appendFile(fileName, data)
-        }
-    }
+
 }
