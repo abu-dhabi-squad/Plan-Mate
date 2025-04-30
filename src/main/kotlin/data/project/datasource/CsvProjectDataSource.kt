@@ -3,6 +3,7 @@ package squad.abudhabi.data.project.datasource
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Project
 import java.io.File
+import java.io.StringReader
 
 class CsvProjectDataSource(
     private val fileHelper: FileHelper,
@@ -31,6 +32,11 @@ class CsvProjectDataSource(
         projects.find { it.id == project.id } ?: return false
         projects.filter { it.id != project.id }
         return writeProjects(projects)
+    }
+
+    override fun getProject(projectId: String): Project? {
+        return readProjects().toMutableList()
+            .find { it.id == projectId }
     }
 
     private fun writeProjects(projects: List<Project>): Boolean {

@@ -7,4 +7,5 @@ interface ProjectDataSource {
     fun writeProject(project: Project): Boolean
     fun editProject(project: Project): Boolean
     fun deleteProject(project: Project): Boolean
+    fun getProject(projectId: String): Project?
 }
