@@ -4,16 +4,22 @@ import java.io.File
 import java.io.FileNotFoundException
 
 class CsvFileHelper : FileHelper {
-    override fun readFile(file: File) = file.readLines()
+    override fun readFile(fileName: String): List<String> {
+        val file = File(fileName)
+        return  file.readLines()
+    }
 
-    override fun writeFile(file: File, data: List<String>): Boolean {
+
+    override fun writeFile(fileName: String, data: List<String>): Boolean {
+        val file = File(fileName)
         if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
         if(!file.exists()) throw FileNotFoundException()
         file.writeText(data.joinToString("\n"))
         return true
     }
 
-    override fun appendFile(file: File, data: List<String>): Boolean {
+    override fun appendFile(fileName: String, data: List<String>): Boolean {
+        val file = File(fileName)
         if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
         if(!file.exists()) throw FileNotFoundException()
         file.appendText(data.joinToString("\n"))

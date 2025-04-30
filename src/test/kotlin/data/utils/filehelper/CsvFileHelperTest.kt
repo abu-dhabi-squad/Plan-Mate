@@ -12,11 +12,13 @@ import java.nio.file.Path
 
 class CsvFileHelperTest {
     private lateinit var csvFileHelper: CsvFileHelper
+    private lateinit var fileName: String
     private lateinit var file: File
 
     @BeforeEach
     fun setUp(@TempDir tempDir: Path) {
-        file = File("$tempDir/test.csv")
+        fileName = "$tempDir/test.csv"
+        file = File(fileName)
         file.createNewFile()
         csvFileHelper = CsvFileHelper()
     }
@@ -27,7 +29,7 @@ class CsvFileHelperTest {
         val data = listOf("line1", "line2", "line3")
         file.writeText(data.joinToString("\n"))
         //when
-        val result = csvFileHelper.readFile(file)
+        val result = csvFileHelper.readFile(fileName)
         val writtenContent = file.readLines()
         //then
         assertThat(result).isEqualTo(data)
@@ -37,7 +39,7 @@ class CsvFileHelperTest {
     @Test
     fun `readFile should return empty list when file is empty`() {
         //when
-        val result = csvFileHelper.readFile(file)
+        val result = csvFileHelper.readFile(fileName)
         //then
         assertThat(result).isEmpty()
     }
@@ -48,7 +50,7 @@ class CsvFileHelperTest {
         file.delete()
         //when && then
         assertThrows<FileNotFoundException> {
-            csvFileHelper.readFile(file)
+            csvFileHelper.readFile(fileName)
         }
     }
 
@@ -57,7 +59,7 @@ class CsvFileHelperTest {
         //given
         val data = listOf("line1", "line2", "line3")
         //when
-        val result = csvFileHelper.writeFile(file, data)
+        val result = csvFileHelper.writeFile(fileName, data)
         //then
         assertThat(result).isTrue()
     }
@@ -68,7 +70,7 @@ class CsvFileHelperTest {
         val data = emptyList<String>()
         //when && then
         assertThrows<IllegalArgumentException> {
-            csvFileHelper.writeFile(file, data)
+            csvFileHelper.writeFile(fileName, data)
         }
     }
 
@@ -79,7 +81,7 @@ class CsvFileHelperTest {
         file.delete()
         //when && then
         assertThrows<FileNotFoundException> {
-            csvFileHelper.writeFile(file, data)
+            csvFileHelper.writeFile(fileName, data)
         }
     }
 
@@ -88,7 +90,7 @@ class CsvFileHelperTest {
         //given
         val data = listOf("line1", "line2", "line3")
         //when
-        val result = csvFileHelper.appendFile(file, data)
+        val result = csvFileHelper.appendFile(fileName, data)
         //then
         assertThat(result).isTrue()
     }
@@ -99,7 +101,7 @@ class CsvFileHelperTest {
         val data = emptyList<String>()
         //when && then
         assertThrows<IllegalArgumentException> {
-            csvFileHelper.appendFile(file, data)
+            csvFileHelper.appendFile(fileName, data)
         }
     }
 
@@ -110,7 +112,7 @@ class CsvFileHelperTest {
         file.delete()
         //when && then
         assertThrows<FileNotFoundException> {
-            csvFileHelper.appendFile(file, data)
+            csvFileHelper.appendFile(fileName, data)
         }
     }
 }
