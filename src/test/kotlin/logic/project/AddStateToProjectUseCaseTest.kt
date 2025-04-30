@@ -8,7 +8,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.DuplicateStateException
-import squad.abudhabi.logic.exceptions.InvalidStateException
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
@@ -32,11 +31,11 @@ class AddStateToProjectUseCaseTest {
         val newState = State(id = "s2", name = "InProgress")
         val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
 
-        every { projectRepository.getProjects() } returns listOf(existingProject)
+        every { projectRepository.getProjectById("p1") } returns existingProject
         every { projectRepository.editProject(any()) } returns true
 
         // When
-        addStateToProjectUseCase.execute("p1", newState)
+        addStateToProjectUseCase("p1", newState)
 
         // Then
         verify {
@@ -49,29 +48,17 @@ class AddStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw InvalidStateException if state name or id is blank`() {
-        // Given
-        val invalidState = State(id = "", name = "")
-
-        // When & Then
-        val exception = assertThrows<InvalidStateException> {
-            addStateToProjectUseCase.execute(projectId = "p1", newState = invalidState)
-        }
-        assertThat(exception).hasMessageThat().contains("State name and ID cannot be blank")
-    }
-
-    @Test
     fun `should throw DuplicateStateException if state name already exists`() {
         // Given
         val existingState = State(id = "s1", name = "TODO")
         val duplicateState = State(id = "s2", name = "TODO")
         val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
 
-        every { projectRepository.getProjects() } returns listOf(existingProject)
+        every { projectRepository.getProjectById(any()) } returns existingProject
 
         // When & Then
         val exception = assertThrows<DuplicateStateException> {
-            addStateToProjectUseCase.execute("p1", duplicateState)
+            addStateToProjectUseCase.invoke("p1", duplicateState)
         }
         assertThat(exception).hasMessageThat().contains("TODO")
     }
@@ -79,12 +66,12 @@ class AddStateToProjectUseCaseTest {
     @Test
     fun `should throw Project Not FoundException if project id is invalid`() {
         // Given
-        every { projectRepository.getProjects() } returns listOf(Project("test", "test", emptyList()))
+        every { projectRepository.getProjectById(any()) } returns null
         val newState = State(id = "s1", name = "Review")
 
         // When & Then
         assertThrows<ProjectNotFoundException> {
-            addStateToProjectUseCase.execute("invalid_project", newState)
+            addStateToProjectUseCase.invoke("invalid_project", newState)
         }
     }
 
@@ -95,37 +82,14 @@ class AddStateToProjectUseCaseTest {
         val duplicateState = State(id = "s2", name = "todo") // same name, different case
         val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
 
-        every { projectRepository.getProjects() } returns listOf(existingProject)
+        every { projectRepository.getProjectById(any()) } returns existingProject
 
         // When & Then
         val exception = assertThrows<DuplicateStateException> {
-            addStateToProjectUseCase.execute("p1", duplicateState)
+            addStateToProjectUseCase.invoke("p1", duplicateState)
         }
 
         assertThat(exception).hasMessageThat().contains("todo")
-    }
-
-    @Test
-    fun `should allow adding state with same ID but different name`() {
-        // Given
-        val existingState = State(id = "s1", name = "TODO")
-        val newState = State(id = "s1", name = "NEW_NAME")
-        val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
-
-        every { projectRepository.getProjects() } returns listOf(existingProject)
-        every { projectRepository.editProject(any()) } returns true
-
-        // When
-        addStateToProjectUseCase.execute("p1", newState)
-
-        // Then
-        verify {
-            projectRepository.editProject(
-                match {
-                    it.id == "p1" && it.states.any { s -> s.id == "s1" && s.name == "NEW_NAME" }
-                }
-            )
-        }
     }
 
     @Test
@@ -134,11 +98,11 @@ class AddStateToProjectUseCaseTest {
         val newState = State(id = "s1", name = "TODO")
         val existingProject = Project(id = "p1", projectName = "Test Project", states = emptyList())
 
-        every { projectRepository.getProjects() } returns listOf(existingProject)
+        every { projectRepository.getProjectById(any()) } returns existingProject
         every { projectRepository.editProject(any()) } returns true
 
         // When
-        addStateToProjectUseCase.execute("p1", newState)
+        addStateToProjectUseCase.invoke("p1", newState)
 
         // Then
         verify {

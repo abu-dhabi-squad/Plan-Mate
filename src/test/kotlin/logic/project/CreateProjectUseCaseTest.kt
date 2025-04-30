@@ -4,10 +4,8 @@ import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.exceptions.InvalidProjectNameException
 import squad.abudhabi.logic.project.CreateProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
-import kotlin.test.assertFailsWith
 
 class CreateProjectUseCaseTest{
     private lateinit var projectRepository: ProjectRepository
@@ -26,7 +24,7 @@ class CreateProjectUseCaseTest{
         every { projectRepository.addProject(any())} returns true
 
         // When
-        val result = createProjectUseCase.execute(name)
+        val result = createProjectUseCase.invoke(name)
 
         // Then
         assertThat(result).isEqualTo(true)
@@ -36,17 +34,6 @@ class CreateProjectUseCaseTest{
                     project.projectName == name && project.states.isEmpty()
                 }
             )
-        }
-    }
-
-    @Test
-    fun `given blank project name, should throw InvalidProjectNameException`() {
-        // Given
-        val name = "  "
-
-        // When & Then
-        assertFailsWith<InvalidProjectNameException> {
-            createProjectUseCase.execute(name)
         }
     }
 

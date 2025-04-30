@@ -1,9 +1,11 @@
 package squad.abudhabi.logic.model
 
+import java.util.*
+
 data class Project(
-    val id: String,
+    val id: String= UUID.randomUUID().toString(),
     val projectName: String,
     val states: List<State>,
 
-)
+    )
 

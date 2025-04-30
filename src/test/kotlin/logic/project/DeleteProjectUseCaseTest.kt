@@ -19,7 +19,7 @@ class DeleteProjectUseCaseTest {
 
     @BeforeEach
     fun setup() {
-        projectRepository = mockk()
+        projectRepository = mockk(relaxed = true)
         deleteProjectUseCase = DeleteProjectUseCase(projectRepository)
     }
 
@@ -28,14 +28,14 @@ class DeleteProjectUseCaseTest {
         // Given
         val projectId = "Test Project"
         every { projectRepository.deleteProject(projectId) } returns true
-        every { projectRepository.getProjects() } returns listOf(Project(projectId,"test", emptyList()))
+        every { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
 
         // When
-        val result = deleteProjectUseCase.execute(projectId)
+        val result = deleteProjectUseCase.invoke(projectId)
 
         // Then
         assertThat(result).isTrue()
-        verify { projectRepository.deleteProject(projectId)}
+        verify { projectRepository.deleteProject(projectId) }
     }
 
     @Test
@@ -43,10 +43,10 @@ class DeleteProjectUseCaseTest {
         // Given
         val projectId = "invalid-id"
         every { projectRepository.deleteProject(projectId) } returns false
-        every { projectRepository.getProjects() } returns listOf(Project(projectId,"test", emptyList()))
+        every { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
 
         // When
-        val result = deleteProjectUseCase.execute(projectId)
+        val result = deleteProjectUseCase.invoke(projectId)
 
         // Then
         assertThat(result).isFalse()
@@ -56,11 +56,11 @@ class DeleteProjectUseCaseTest {
     fun `should throw exception when data is not exist`() {
         // Given
         val projectId = "invalid-id"
-        every { projectRepository.getProjects() } returns emptyList()
+        every { projectRepository.getProjectById(any()) } returns null
 
         // When & Then
-        assertThrows<ProjectNotFoundException>{
-            deleteProjectUseCase.execute(projectId)
+        assertThrows<ProjectNotFoundException> {
+            deleteProjectUseCase.invoke(projectId)
         }
         verify(exactly = 0) { projectRepository.deleteProject(any()) }
     }
@@ -69,11 +69,11 @@ class DeleteProjectUseCaseTest {
     fun `given non-existent project ID, should throw exception`() {
         // Given
         val projectId = "invalid-id"
-        every { projectRepository.getProjects() } returns listOf(Project("Test123","TestName", emptyList()))
+        every { projectRepository.getProjectById(any()) } returns null
 
         // When & Then
-        assertThrows<ProjectNotFoundException>{
-            deleteProjectUseCase.execute(projectId)
+        assertThrows<ProjectNotFoundException> {
+            deleteProjectUseCase.invoke(projectId)
         }
         verify(exactly = 0) { projectRepository.deleteProject(any()) }
     }
@@ -82,11 +82,11 @@ class DeleteProjectUseCaseTest {
     fun `should throw exception when their is an issue in getProject`() {
         // Given
         val projectId = "invalid-id"
-        every { projectRepository.getProjects() } throws Exception()
+        every { projectRepository.getProjectById(any()) } throws Exception()
 
         // When & Then
-        assertThrows<Exception>{
-            deleteProjectUseCase.execute(projectId)
+        assertThrows<Exception> {
+            deleteProjectUseCase.invoke(projectId)
         }
         verify(exactly = 0) { projectRepository.deleteProject(any()) }
     }
