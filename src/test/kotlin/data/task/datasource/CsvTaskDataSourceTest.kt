@@ -11,6 +11,7 @@ import java.io.File
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import squad.abudhabi.data.task.datasource.CsvTaskDataSource
+import squad.abudhabi.data.task.datasource.TaskColumnIndex
 import squad.abudhabi.data.utils.filehelper.CsvFileHelper
 import squad.abudhabi.logic.exceptions.TaskNotFoundException
 import squad.abudhabi.logic.model.Task
@@ -220,8 +221,19 @@ class CsvTaskDataSourceTest {
         assertThrows<Exception> { csvTaskDataSource.deleteTask(task.id) }
     }
 
-    private fun Task.toCsvLine() =
-        "${id},${userName},${projectId},${stateId},${title},${description},${startDate},${endDate}"
+    private fun Task.toCsvLine(): String {
+        MutableList(TaskColumnIndex.entries.size) { "" }.let {
+            it[TaskColumnIndex.ID.ordinal] = id
+            it[TaskColumnIndex.USERNAME.ordinal] = userName
+            it[TaskColumnIndex.PROJECT_ID.ordinal] = projectId
+            it[TaskColumnIndex.STATE_ID.ordinal] = stateId
+            it[TaskColumnIndex.TITLE.ordinal] = title
+            it[TaskColumnIndex.DESCRIPTION.ordinal] = description
+            it[TaskColumnIndex.START_DATE.ordinal] = startDate.toString()
+            it[TaskColumnIndex.END_DATE.ordinal] = endDate.toString()
+            return it.joinToString(",")
+        }
+    }
 
     companion object {
         private const val CSV_FILE_NAME = "build/tasks_test.csv"

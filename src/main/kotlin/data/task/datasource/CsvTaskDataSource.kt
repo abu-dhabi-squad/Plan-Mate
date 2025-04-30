@@ -63,17 +63,28 @@ class CsvTaskDataSource(
     private fun taskFromCsvLine(taskLine: String): Task {
         val values = taskLine.split(",")
         return Task(
-            id = values[0],
-            userName = values[1],
-            projectId = values[2],
-            stateId = values[3],
-            title = values[4],
-            description = values[5],
-            startDate = LocalDate.parse(values[6]),
-            endDate = LocalDate.parse(values[7]),
+            id = values[TaskColumnIndex.ID.ordinal],
+            userName = values[TaskColumnIndex.USERNAME.ordinal],
+            projectId = values[TaskColumnIndex.PROJECT_ID.ordinal],
+            stateId = values[TaskColumnIndex.STATE_ID.ordinal],
+            title = values[TaskColumnIndex.TITLE.ordinal],
+            description = values[TaskColumnIndex.DESCRIPTION.ordinal],
+            startDate = LocalDate.parse(values[TaskColumnIndex.START_DATE.ordinal]),
+            endDate = LocalDate.parse(values[TaskColumnIndex.END_DATE.ordinal]),
         )
     }
 
-    private fun Task.toCsvLine() =
-        "${id},${userName},${projectId},${stateId},${title},${description},${startDate},${endDate}"
+    private fun Task.toCsvLine(): String {
+        MutableList(TaskColumnIndex.entries.size) { "" }.let {
+            it[TaskColumnIndex.ID.ordinal] = id
+            it[TaskColumnIndex.USERNAME.ordinal] = userName
+            it[TaskColumnIndex.PROJECT_ID.ordinal] = projectId
+            it[TaskColumnIndex.STATE_ID.ordinal] = stateId
+            it[TaskColumnIndex.TITLE.ordinal] = title
+            it[TaskColumnIndex.DESCRIPTION.ordinal] = description
+            it[TaskColumnIndex.START_DATE.ordinal] = startDate.toString()
+            it[TaskColumnIndex.END_DATE.ordinal] = endDate.toString()
+            return it.joinToString(",")
+        }
+    }
 }
