@@ -3,7 +3,6 @@ package squad.abudhabi.data.project.datasource
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Project
 import java.io.File
-import java.io.StringReader
 
 class CsvProjectDataSource(
     private val fileHelper: FileHelper,
