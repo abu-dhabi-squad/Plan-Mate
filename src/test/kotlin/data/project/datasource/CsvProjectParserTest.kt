@@ -42,14 +42,17 @@ class CsvProjectParserTest{
     @ParameterizedTest
     @ValueSource(strings = [
         "id1,name1,1-state1|2-state2|3-r-state3",
+        "id1,name1,1-state1|-state2|3-state3",
+        "id1,name1,1-state1|2-|3-state3",
         "id1,name1,1-state1|2-state2|state3",
-        "id1,name1,1-state1|-state2|state3",
+        "1,name1,1state1|2-state2|3-r-state3",
         "id1,name1,|2-state2",
         "id1,name1,|-state2",
+        "id1,name1,|1-",
         "id1,name1,1-r-state1",
         "id1,name1,state1",
+        "id1,name1,1-",
         "id1,name1,-state1",
-        "1,name1,1state1|2-state2|3-r-state3",
     ]
     )
     fun`parseStringToProject should throw CanNotParseStateException when the string is not valid`(input: String){
