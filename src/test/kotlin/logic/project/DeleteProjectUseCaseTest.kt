@@ -1,6 +1,6 @@
 package logic.project
 
-import com.google.common.truth.Truth.assertThat
+
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -29,7 +29,7 @@ class DeleteProjectUseCaseTest {
         val projectId = "Test Project"
         every { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
         // When
-        val result = deleteProjectUseCase.invoke(projectId)
+        deleteProjectUseCase.invoke(projectId)
 
         // Then
         verify { projectRepository.deleteProject(projectId) }

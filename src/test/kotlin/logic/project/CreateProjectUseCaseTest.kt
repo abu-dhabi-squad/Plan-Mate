@@ -1,6 +1,5 @@
 package logic.project
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -23,7 +22,7 @@ class CreateProjectUseCaseTest{
         val name = "Test Project"
 
         // When
-        val result = createProjectUseCase.invoke(name)
+        createProjectUseCase.invoke(name)
 
         // Then
         verify {

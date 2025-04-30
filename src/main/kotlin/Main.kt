@@ -7,8 +7,7 @@ import squad.abudhabi.di.uiModule
 import squad.abudhabi.di.useCaseModule
 
 fun main() {
-//    startKoin {
-//        modules(appModule, repositoryModule, useCaseModule, uiModule)
-//    }
-    println(listOf<String>()+ listOf("sss"))
+    startKoin {
+        modules(appModule, repositoryModule, useCaseModule, uiModule)
+    }
 }
