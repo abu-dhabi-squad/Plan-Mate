@@ -12,4 +12,12 @@ class CsvFileHelper : FileHelper {
         file.writeText(data.joinToString("\n"))
         return true
     }
+
+    override fun appendFile(file: File, data: List<String>): Boolean {
+        if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
+        if(!file.exists()) throw FileNotFoundException()
+        file.appendText(data.joinToString("\n"))
+        return true
+    }
+
 }

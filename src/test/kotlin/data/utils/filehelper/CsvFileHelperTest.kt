@@ -82,4 +82,35 @@ class CsvFileHelperTest {
             csvFileHelper.writeFile(file, data)
         }
     }
+
+    @Test
+    fun `appendFile should return true when data is written successfully`() {
+        //given
+        val data = listOf("line1", "line2", "line3")
+        //when
+        val result = csvFileHelper.appendFile(file, data)
+        //then
+        assertThat(result).isTrue()
+    }
+
+    @Test
+    fun `appendFile should throw IllegalArgumentException when list data is empty`() {
+        //given
+        val data = emptyList<String>()
+        //when && then
+        assertThrows<IllegalArgumentException> {
+            csvFileHelper.appendFile(file, data)
+        }
+    }
+
+    @Test
+    fun `appendFile should throw FileNotFoundException when file does not exist`() {
+        //given
+        val data = listOf("line1", "line2", "line3")
+        file.delete()
+        //when && then
+        assertThrows<FileNotFoundException> {
+            csvFileHelper.appendFile(file, data)
+        }
+    }
 }
