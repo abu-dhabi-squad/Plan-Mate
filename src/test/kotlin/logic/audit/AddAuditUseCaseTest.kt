@@ -38,7 +38,17 @@ class AddAuditUseCaseTest {
         )
 
         // then
-        verify(exactly = 1) { auditRepository.addAuditLog(audit) }
+        verify(exactly = 1) {
+            auditRepository.addAuditLog(match {
+                it.id == audit.id &&
+                        it.createdBy == audit.createdBy &&
+                        it.entityId == audit.entityId &&
+                        it.entityType == audit.entityType &&
+                        it.oldState == audit.oldState &&
+                        it.newState == audit.newState &&
+                        it.date == audit.date
+            })
+        }
     }
 
     @ParameterizedTest
