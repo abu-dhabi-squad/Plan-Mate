@@ -26,10 +26,10 @@ class CsvProjectDataSource(
         return writeProjects(projects)
     }
 
-    override fun deleteProject(project: Project): Boolean {
+    override fun deleteProject(projectId: String): Boolean {
         val projects = readProjects().toMutableList()
-        projects.find { it.id == project.id } ?: return false
-        projects.filter { it.id != project.id }
+        projects.find { it.id == projectId } ?: return false
+        projects.filter { it.id != projectId }
         return writeProjects(projects)
     }
 

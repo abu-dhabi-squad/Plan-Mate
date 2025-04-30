@@ -96,7 +96,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `deleteProject should throw Exception when projectDataSource deleteProject throw Exception`() {
         //given
-        val res = Project("1", "name1", listOf())
+        val res = "1"
         every { projectDataSource.deleteProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -108,7 +108,7 @@ class ProjectRepositoryImplTest {
     @ValueSource(booleans = [true, false])
     fun `deleteProject should returns like projectDataSource deleteProject when it return true or false`(returnValue: Boolean) {
         //given
-        val res = Project("1", "name1", listOf())
+        val res = "1"
         every { projectDataSource.deleteProject(any()) } returns returnValue
         //when & then
         Truth.assertThat(projectRepositoryImpl.deleteProject(res)).isEqualTo(returnValue)

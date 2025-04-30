@@ -241,34 +241,34 @@ class CsvProjectDataSourceTest {
     @Test
     fun `deleteProject should throw Exception when readProjects throw Exception`() {
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val projectId = "id1"
         every { csvProjectDataSource.readProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
-            csvProjectDataSource.deleteProject(project)
+            csvProjectDataSource.deleteProject(projectId)
         }
     }
 
     @Test
     fun `deleteProject should throw Exception when readFile throw Exception`() {
         //given
-        val project = Project("id1", "name2", listOf(State("id1", "name1")))
+        val projectId = "id1"
         every { fileHelper.readFile(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            csvProjectDataSource.deleteProject(project)
+            csvProjectDataSource.deleteProject(projectId)
         }
     }
 
     @Test
     fun `deleteProject should throw Exception when parser throw Exception`() {
         //given
-        val project = Project("id1", "name2", listOf(State("id1", "name1")))
+        val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            csvProjectDataSource.deleteProject(project)
+            csvProjectDataSource.deleteProject(projectId)
         }
     }
 
@@ -276,44 +276,59 @@ class CsvProjectDataSourceTest {
     fun `deleteProject should return false when project not in list`() {
         //given
         val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        val editProject = Project("id2", "name1", listOf(State("id1", "name1")))
+        val projectId = "id2"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
         //when & then
-        Truth.assertThat(csvProjectDataSource.deleteProject(editProject)).isFalse()
+        Truth.assertThat(csvProjectDataSource.deleteProject(projectId)).isFalse()
     }
 
     @Test
     fun `deleteProject should return false when read projects returns empty list`() {
         //given
-        val editProject = Project("id2", "name1", listOf(State("id1", "name1")))
+        val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf()
         //when & then
-        Truth.assertThat(csvProjectDataSource.deleteProject(editProject)).isFalse()
+        Truth.assertThat(csvProjectDataSource.deleteProject(projectId)).isFalse()
     }
 
     @Test
     fun `deleteProject should throw Exception when write file throw Exception`() {
         //given
         val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
         every { fileHelper.writeFile(any(), any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            csvProjectDataSource.deleteProject(project)
+            csvProjectDataSource.deleteProject(projectId)
         }
+    }
+
+    @Test
+    fun `deleteProject should return true when id in list`() {
+        //given
+        val project1 = Project("id1", "name1", listOf(State("id1", "name1")))
+        val project2 = Project("id2", "name1", listOf(State("id1", "name1")))
+        val projectId = "id2"
+        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1","id2,name1,id1-name1")
+        every { csvProjectParser.parseStringToProject(any()) } returns project1 andThen project2
+        every { fileHelper.writeFile(any(), any()) } returns true
+        //when & then
+        Truth.assertThat(csvProjectDataSource.deleteProject(projectId)).isTrue()
     }
 
     @Test
     fun `deleteProject should return true when delete the only project in list`() {
         //given
         val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
         every { fileHelper.writeFile(any(), any()) } returns true
         //when & then
-        Truth.assertThat(csvProjectDataSource.deleteProject(project)).isTrue()
+        Truth.assertThat(csvProjectDataSource.deleteProject(projectId)).isTrue()
     }
 
     @ParameterizedTest
@@ -321,11 +336,12 @@ class CsvProjectDataSourceTest {
     fun `deleteProject should return like write file when project in data`(returnedValue: Boolean) {
         //given
         val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
         every { fileHelper.writeFile(any(), any()) } returns returnedValue
         //when & then
-        Truth.assertThat(csvProjectDataSource.deleteProject(project))
+        Truth.assertThat(csvProjectDataSource.deleteProject(projectId))
     }
 
 
