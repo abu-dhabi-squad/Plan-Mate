@@ -11,19 +11,23 @@ class TaskRepositoryImpl(
         return taskDataSource.getAllTasks()
     }
 
-    override fun getTaskById(taskId: String): Task {
+    override fun getTaskById(taskId: String): Task? {
         return taskDataSource.getTaskById(taskId)
     }
 
-    override fun createTask(task: Task): Boolean {
+    override fun getTaskByProjectId(projectId: String): List<Task> {
+        return taskDataSource.getTaskByProjectId(projectId)
+    }
+
+    override fun createTask(task: Task) {
         return taskDataSource.createTask(task)
     }
 
-    override fun editTask(updatedTask: Task): Boolean {
+    override fun editTask(updatedTask: Task) {
         return taskDataSource.editTask(updatedTask)
     }
 
-    override fun deleteTask(taskId: String): Boolean {
+    override fun deleteTask(taskId: String) {
         return taskDataSource.deleteTask(taskId)
     }
 

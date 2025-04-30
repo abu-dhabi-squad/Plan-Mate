@@ -5,11 +5,13 @@ import squad.abudhabi.logic.model.Task
 interface TaskDataSource {
     fun getAllTasks(): List<Task>
 
-    fun getTaskById(taskId: String): Task
+    fun getTaskById(taskId: String): Task?
 
-    fun createTask(task: Task): Boolean
+    fun getTaskByProjectId(projectId: String): List<Task>
 
-    fun editTask(task: Task): Boolean
+    fun createTask(task: Task)
 
-    fun deleteTask(taskId: String): Boolean
+    fun editTask(task: Task)
+
+    fun deleteTask(taskId: String)
 }

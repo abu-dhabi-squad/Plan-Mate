@@ -8,4 +8,9 @@ class DateParserImpl: DateParser {
         val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
         return LocalDate.parse(date, formatter)
     }
+
+    override fun getStringFromDate(date: LocalDate): String {
+        val formatter = DateTimeFormatter.ofPattern("yyyy-M-d")
+        return date.format(formatter).toString()
+    }
 }
