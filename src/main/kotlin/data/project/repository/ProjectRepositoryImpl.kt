@@ -24,4 +24,8 @@ class ProjectRepositoryImpl(
         return projectDataSource.deleteProject(project)
     }
 
+    override fun getProjectById(projectId: String): Project? {
+        return projectDataSource.getProject(projectId)
+    }
+
 }

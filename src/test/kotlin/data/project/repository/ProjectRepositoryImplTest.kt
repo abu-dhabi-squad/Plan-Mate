@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import squad.abudhabi.data.project.datasource.ProjectDataSource
 import squad.abudhabi.data.project.repository.ProjectRepositoryImpl
 import squad.abudhabi.logic.model.Project
+import squad.abudhabi.logic.model.State
 
 class ProjectRepositoryImplTest{
 
@@ -111,5 +112,32 @@ class ProjectRepositoryImplTest{
         every { projectDataSource.deleteProject(any()) } returns returnValue
         //when & then
         Truth.assertThat(projectRepositoryImpl.deleteProject(res)).isEqualTo(returnValue)
+    }
+
+    @Test
+    fun `getProjectById should throw Exception when projectDataSource getProject throw Exception`(){
+        //given
+        every { projectDataSource.getProject(any()) } throws Exception()
+        //when & then
+        assertThrows<Exception>{
+            projectRepositoryImpl.getProjectById("1")
+        }
+    }
+
+    @Test
+    fun `getProjectById should return null when projectDataSource getProject return null`(){
+        //given
+        every { projectDataSource.getProject(any()) } returns null
+        //when & then
+        Truth.assertThat(projectRepositoryImpl.getProjectById("1")).isNull()
+    }
+
+    @Test
+    fun `getProjectById should return project when projectDataSource getProject return project`(){
+        //given
+        val res = Project("1","name1", listOf(State("1","name1")))
+        every { projectDataSource.getProject(any()) } returns res
+        //when & then
+        Truth.assertThat(projectRepositoryImpl.getProjectById("1")).isEqualTo(res)
     }
 }

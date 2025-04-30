@@ -7,4 +7,5 @@ interface ProjectRepository {
     fun addProject(project: Project): Boolean
     fun editProject(project: Project): Boolean
     fun deleteProject(project: Project): Boolean
+    fun getProjectById(projectId: String): Project?
 }
