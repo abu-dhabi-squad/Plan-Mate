@@ -10,6 +10,7 @@ repositories {
 }
 
 dependencies {
+
     testImplementation(kotlin("test"))
     implementation("io.insert-koin:koin-core:4.0.2")
     testImplementation ("com.google.truth:truth:1.4.4")

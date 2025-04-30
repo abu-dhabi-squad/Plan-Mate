@@ -5,14 +5,18 @@ import java.time.LocalDate
 fun createAudit(
     id: String,
     entityId : String,
+    newState: String = "InProgress",
+    oldState : String = "TODO",
+    createdBy: String = "UG",
+    entityType: EntityType = EntityType.TASK,
 ): Audit {
     return Audit(
-        id = "0",
-        createdBy = "dsdsa",
-        entityId = "task123",
-        entityType = EntityType.TASK,
-        oldState = "TODO",
-        newState = "InProgress",
+        id = id,
+        createdBy = createdBy,
+        entityId = entityId,
+        entityType = entityType,
+        oldState = oldState,
+        newState = newState,
         date = LocalDate.now()
     )
 }

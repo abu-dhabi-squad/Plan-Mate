@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.audit.GetAuditUseCase
 import squad.abudhabi.logic.exceptions.WrongInputException
+import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.repository.AuditRepository
 import kotlin.test.assertFails
 
@@ -30,7 +31,8 @@ class GetAuditUseCaseTest {
         val expectedAudits = listOf(
             createAudit(
                 entityId = entityId,
-                id = "0"
+                id = "0",
+                entityType = EntityType.PROJECT
             ),
             createAudit(
                 entityId = entityId,

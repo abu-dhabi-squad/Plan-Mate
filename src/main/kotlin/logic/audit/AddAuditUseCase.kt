@@ -28,7 +28,7 @@ class AddAuditUseCase(
             date = date,
         )
 
-        if (auditLog.isValid() && isValidState(newState = newState, oldState = oldState))
+        if (auditLog.isValid() && !isSameStates(newState = newState, oldState = oldState))
         auditRepository.addAuditLog(auditLog)
         else throw InvalidAudit()
     }
@@ -37,8 +37,8 @@ class AddAuditUseCase(
         return newState.isNotEmpty() &&
                id.isNotEmpty() &&
                entityId.isNotEmpty() &&
-               newState.isNotEmpty()
+               createdBy.isNotEmpty()
     }
 
-    private fun isValidState (newState: String, oldState: String) = newState != oldState
+    private fun isSameStates (newState: String, oldState: String) = newState == oldState
 }
