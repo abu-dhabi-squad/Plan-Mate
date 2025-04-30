@@ -65,7 +65,6 @@ class CsvProjectParserTest {
         }
     }
 
-
     @Test
     fun `parseStringToProject should return Project when the string could be splited`() {
         //given
