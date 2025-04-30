@@ -21,7 +21,7 @@ class CreateTaskUseCase(
     ): Boolean {
         taskValidator.validateOrThrow(startDate, endDate)
         taskRepository.createTask(Task(
-            userId = userId,
+            userName = userId,
             projectId = projectId,
             stateId = stateId,
             title = title,

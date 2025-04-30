@@ -15,7 +15,7 @@ fun createTask(id: String = UUID.randomUUID().toString()
 ): Task {
     return Task(
         id = id,
-        userId = userId,
+        userName = userId,
         projectId = projectId,
         stateId = stateId,
         title = title,
