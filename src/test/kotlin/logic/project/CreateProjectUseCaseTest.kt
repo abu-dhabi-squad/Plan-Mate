@@ -13,7 +13,7 @@ class CreateProjectUseCaseTest{
 
     @BeforeEach
     fun setup() {
-        projectRepository = mockk()
+        projectRepository = mockk(relaxed = true)
         createProjectUseCase = CreateProjectUseCase(projectRepository)
     }
 
@@ -21,13 +21,11 @@ class CreateProjectUseCaseTest{
     fun `given valid project name, should create and save project`() {
         // Given
         val name = "Test Project"
-        every { projectRepository.addProject(any())} returns true
 
         // When
         val result = createProjectUseCase.invoke(name)
 
         // Then
-        assertThat(result).isEqualTo(true)
         verify {
             projectRepository.addProject(
                 match { project ->

@@ -3,6 +3,7 @@ package data.project.repository
 import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -29,7 +30,7 @@ class ProjectRepositoryImplTest {
         every { projectDataSource.readProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
-            projectRepositoryImpl.getProjects()
+            projectRepositoryImpl.getAllProjects()
         }
     }
 
@@ -38,7 +39,7 @@ class ProjectRepositoryImplTest {
         //given
         every { projectDataSource.readProjects() } returns listOf()
         //when & then
-        Truth.assertThat(projectRepositoryImpl.getProjects()).isEmpty()
+        Truth.assertThat(projectRepositoryImpl.getAllProjects()).isEmpty()
     }
 
     @Test
@@ -47,7 +48,7 @@ class ProjectRepositoryImplTest {
         val list = listOf(Project("id1", "name1", listOf()))
         every { projectDataSource.readProjects() } returns list
         //when & then
-        Truth.assertThat(projectRepositoryImpl.getProjects()).isEqualTo(list)
+        Truth.assertThat(projectRepositoryImpl.getAllProjects()).isEqualTo(list)
     }
 
     @Test
@@ -61,14 +62,14 @@ class ProjectRepositoryImplTest {
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = [true, false])
-    fun `addProject should returns like projectDataSource writeProject when it return true or false`(returnValue: Boolean) {
+    @Test
+    fun `addProject best case`(){
         //given
         val res = Project("1", "name1", listOf())
-        every { projectDataSource.writeProject(any()) } returns returnValue
-        //when & then
-        Truth.assertThat(projectRepositoryImpl.addProject(res)).isEqualTo(returnValue)
+        //when
+        projectRepositoryImpl.addProject(res)
+        //then
+        verify(exactly = 1) { projectDataSource.writeProject(res) }
     }
 
     @Test
@@ -82,16 +83,15 @@ class ProjectRepositoryImplTest {
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = [true, false])
-    fun `editProject should returns like projectDataSource editProject when it return true or false`(returnValue: Boolean) {
+    @Test
+    fun `editProject best case`() {
         //given
         val res = Project("1", "name1", listOf())
-        every { projectDataSource.editProject(any()) } returns returnValue
-        //when & then
-        Truth.assertThat(projectRepositoryImpl.editProject(res)).isEqualTo(returnValue)
+        //when
+        projectRepositoryImpl.editProject(res)
+        //then
+        verify(exactly = 1) { projectDataSource.editProject(res) }
     }
-
 
     @Test
     fun `deleteProject should throw Exception when projectDataSource deleteProject throw Exception`() {
@@ -104,14 +104,14 @@ class ProjectRepositoryImplTest {
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = [true, false])
-    fun `deleteProject should returns like projectDataSource deleteProject when it return true or false`(returnValue: Boolean) {
+    @Test
+    fun `deleteProject best case`() {
         //given
         val res = "1"
-        every { projectDataSource.deleteProject(any()) } returns returnValue
+        //when
+        projectRepositoryImpl.deleteProject(res)
         //when & then
-        Truth.assertThat(projectRepositoryImpl.deleteProject(res)).isEqualTo(returnValue)
+        verify(exactly = 1) { projectDataSource.deleteProject(res) }
     }
 
     @Test

@@ -94,4 +94,28 @@ class CsvProjectParserTest {
         //when & then
         Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project("1", "name1", listOf()))
     }
+
+    @Test
+    fun`parseProjectToString should return a string when get a project with empty states`(){
+        //given
+        val project = Project("id1","name1", listOf())
+        //when & then
+        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("id1,name1,")
+    }
+
+    @Test
+    fun`parseProjectToString should return a string when get a project with state`(){
+        //given
+        val project = Project("id1","name1", listOf(State("id1","name1")))
+        //when & then
+        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("id1,name1,id1-name1")
+    }
+
+    @Test
+    fun`parseProjectToString should return a string when get a project with states`(){
+        //given
+        val project = Project("id1","name1", listOf(State("id1","name1"),State("id2","name2")))
+        //when & then
+        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("id1,name1,id1-name1|id2-name2")
+    }
 }

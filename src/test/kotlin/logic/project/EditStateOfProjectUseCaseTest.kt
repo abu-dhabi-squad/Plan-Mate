@@ -32,7 +32,7 @@ class EditStateOfProjectUseCaseTest {
         every { projectRepository.getProjectById(any()) } returns null
         //when & then
         assertThrows<ProjectNotFoundException> {
-            editStateToProjectUseCase.editStateOfProject(project.id, newState)
+            editStateToProjectUseCase(project.id, newState)
         }
     }
 
@@ -45,7 +45,7 @@ class EditStateOfProjectUseCaseTest {
         every { projectRepository.getProjectById(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editStateToProjectUseCase.editStateOfProject(project.id, newState)
+            editStateToProjectUseCase(project.id, newState)
         }
     }
 
@@ -58,7 +58,7 @@ class EditStateOfProjectUseCaseTest {
         every { projectRepository.getProjectById(any()) } returns project
         //when & then
         assertThrows<ProjectStateNotFoundException> {
-            editStateToProjectUseCase.editStateOfProject(project.id, newState)
+            editStateToProjectUseCase(project.id, newState)
         }
     }
 
@@ -72,7 +72,7 @@ class EditStateOfProjectUseCaseTest {
         every { projectRepository.editProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editStateToProjectUseCase.editStateOfProject(project.id, newState)
+            editStateToProjectUseCase(project.id, newState)
         }
     }
 
@@ -84,7 +84,7 @@ class EditStateOfProjectUseCaseTest {
         val project = Project("id1", "name1", states)
         every { projectRepository.getProjectById(any()) } returns project
         //when
-        editStateToProjectUseCase.editStateOfProject(project.id, newState)
+        editStateToProjectUseCase(project.id, newState)
         //then
         verify(exactly = 1) { projectRepository.editProject(any()) }
     }

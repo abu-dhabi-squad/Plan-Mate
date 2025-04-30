@@ -8,20 +8,20 @@ class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource
 ) : ProjectRepository {
 
-    override fun getProjects(): List<Project> {
+    override fun getAllProjects(): List<Project> {
         return projectDataSource.readProjects()
     }
 
-    override fun addProject(project: Project): Boolean {
-        return projectDataSource.writeProject(project)
+    override fun addProject(project: Project) {
+        projectDataSource.writeProject(project)
     }
 
-    override fun editProject(project: Project): Boolean {
-        return projectDataSource.editProject(project)
+    override fun editProject(project: Project) {
+        projectDataSource.editProject(project)
     }
 
-    override fun deleteProject(projectId: String): Boolean {
-        return projectDataSource.deleteProject(projectId)
+    override fun deleteProject(projectId: String) {
+        projectDataSource.deleteProject(projectId)
     }
 
     override fun getProjectById(projectId: String): Project? {

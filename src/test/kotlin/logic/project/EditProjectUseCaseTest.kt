@@ -30,7 +30,7 @@ class EditProjectUseCaseTest {
         every { projectRepository.getProjectById(any()) } returns null
         //when & then
         assertThrows<ProjectNotFoundException> {
-            editProjectUseCase.editProject(project.id,newName)
+            editProjectUseCase(project.id,newName)
         }
     }
 
@@ -43,7 +43,7 @@ class EditProjectUseCaseTest {
         every { projectRepository.getProjectById(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editProjectUseCase.editProject(project.id,newName)
+            editProjectUseCase(project.id,newName)
         }
     }
 
@@ -57,7 +57,7 @@ class EditProjectUseCaseTest {
         every { projectRepository.getProjectById(any()) } returns project
         //when & then
         assertThrows<Exception> {
-            editProjectUseCase.editProject(project.id,newName)
+            editProjectUseCase(project.id,newName)
         }
     }
 
@@ -69,7 +69,7 @@ class EditProjectUseCaseTest {
         val newName = "name2"
         every { projectRepository.getProjectById(any()) } returns project
         //when
-        editProjectUseCase.editProject(project.id,newName)
+        editProjectUseCase(project.id,newName)
         //then
         verify (exactly = 1){ projectRepository.editProject(any()) }
     }

@@ -4,8 +4,8 @@ import squad.abudhabi.logic.model.Project
 
 interface ProjectDataSource {
     fun readProjects(): List<Project>
-    fun writeProject(project: Project): Boolean
-    fun editProject(project: Project): Boolean
-    fun deleteProject(projectId: String): Boolean
+    fun writeProject(project: Project)
+    fun editProject(project: Project)
+    fun deleteProject(projectId: String)
     fun getProject(projectId: String): Project?
 }

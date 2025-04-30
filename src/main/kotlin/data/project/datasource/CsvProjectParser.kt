@@ -7,6 +7,15 @@ import squad.abudhabi.logic.model.State
 
 class CsvProjectParser {
 
+    fun parseProjectToString(project: Project): String {
+        var res = project.id + "," + project.projectName + ","
+        if (project.states.isEmpty()) return res
+        project.states.forEach {
+            res += it.id + "-" + it.name + "|"
+        }
+        return res.dropLast(UNUSED_CHARACTER)
+    }
+
     fun parseStringToProject(line: String): Project {
         line.split(",")
             .takeIf(::isValidProject)
@@ -22,25 +31,32 @@ class CsvProjectParser {
 
     //ID,NAME,STATE   -->       ID-NAME|ID-NAME
     private fun parseStringToListOfState(subLine: String): List<State> {
-        if (subLine.contains("|")) {
-            val res: MutableList<State> = mutableListOf()
-            subLine.split("|")
-                .forEach { stateRegex ->
-                    stateRegex.split("-").also {
-                        it.takeIf(::isValidState) ?: throw CanNotParseStateException()
-                        res.add(State(it[ProjectColumnIndex.STATE_ID], it[ProjectColumnIndex.STATE_NAME]))
-                    }
-                }
-            return res
+        return if (subLine.contains("|")) {
+            parseMultipleStates(subLine)
         } else if (subLine.contains("-")) {
-            val listOfRegex: List<String> = subLine.split("-")
-                .takeIf(::isValidState) ?: throw CanNotParseStateException()
-
-            return listOf(State(listOfRegex[ProjectColumnIndex.STATE_ID], listOfRegex[ProjectColumnIndex.STATE_NAME]))
+            parseOneState(subLine)
         } else {
             if (subLine.isNotEmpty()) throw CanNotParseStateException()
-            return listOf()
+            listOf()
         }
+    }
+
+    private fun parseMultipleStates(subLine: String): List<State> {
+        val result: MutableList<State> = mutableListOf()
+        subLine.split("|")
+            .forEach { stateRegex ->
+                stateRegex.split("-").also {
+                    it.takeIf(::isValidState) ?: throw CanNotParseStateException()
+                    result.add(State(it[ProjectColumnIndex.STATE_ID], it[ProjectColumnIndex.STATE_NAME]))
+                }
+            }
+        return result
+    }
+
+    private fun parseOneState(subLine: String): List<State> {
+        val listOfRegex: List<String> = subLine.split("-")
+            .takeIf(::isValidState) ?: throw CanNotParseStateException()
+        return listOf(State(listOfRegex[ProjectColumnIndex.STATE_ID], listOfRegex[ProjectColumnIndex.STATE_NAME]))
     }
 
     private fun isValidProject(projectRegex: List<String>): Boolean {
@@ -55,7 +71,8 @@ class CsvProjectParser {
                 && stateRegex[ProjectColumnIndex.STATE_NAME] != ""
     }
 
-    companion object {
+    private companion object {
+        const val UNUSED_CHARACTER = 1
         const val PROJECT_LINE_REGEX_NUMBERS = 3
         const val STATE_LINE_REGEX_NUMBERS = 2
     }

@@ -20,7 +20,7 @@ class AddStateToProjectUseCaseTest {
 
     @BeforeEach
     fun setup() {
-        projectRepository = mockk()
+        projectRepository = mockk(relaxed = true)
         addStateToProjectUseCase = AddStateToProjectUseCase(projectRepository)
     }
 
@@ -32,7 +32,6 @@ class AddStateToProjectUseCaseTest {
         val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
 
         every { projectRepository.getProjectById("p1") } returns existingProject
-        every { projectRepository.editProject(any()) } returns true
 
         // When
         addStateToProjectUseCase("p1", newState)
@@ -99,7 +98,6 @@ class AddStateToProjectUseCaseTest {
         val existingProject = Project(id = "p1", projectName = "Test Project", states = emptyList())
 
         every { projectRepository.getProjectById(any()) } returns existingProject
-        every { projectRepository.editProject(any()) } returns true
 
         // When
         addStateToProjectUseCase.invoke("p1", newState)

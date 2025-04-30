@@ -6,12 +6,11 @@ import squad.abudhabi.logic.repository.ProjectRepository
 class CreateProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
-    operator fun invoke(projectName: String):Boolean {
+    operator fun invoke(projectName: String){
         val newProject = Project(
             projectName = projectName,
             states = emptyList()
         )
-        return projectRepository.addProject(newProject)
+        projectRepository.addProject(newProject)
     }
-
 }

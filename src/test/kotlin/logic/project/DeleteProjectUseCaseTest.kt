@@ -27,14 +27,11 @@ class DeleteProjectUseCaseTest {
     fun `given valid project ID, should delete project successfully`() {
         // Given
         val projectId = "Test Project"
-        every { projectRepository.deleteProject(projectId) } returns true
         every { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
-
         // When
         val result = deleteProjectUseCase.invoke(projectId)
 
         // Then
-        assertThat(result).isTrue()
         verify { projectRepository.deleteProject(projectId) }
     }
 
@@ -42,14 +39,13 @@ class DeleteProjectUseCaseTest {
     fun `return false when delete project return false`() {
         // Given
         val projectId = "invalid-id"
-        every { projectRepository.deleteProject(projectId) } returns false
+        every { projectRepository.deleteProject(projectId) } throws Exception()
         every { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
 
-        // When
-        val result = deleteProjectUseCase.invoke(projectId)
-
-        // Then
-        assertThat(result).isFalse()
+        // When & Then
+        assertThrows<Exception> {
+            deleteProjectUseCase.invoke(projectId)
+        }
     }
 
     @Test

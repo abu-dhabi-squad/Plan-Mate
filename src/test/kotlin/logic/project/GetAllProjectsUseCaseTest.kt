@@ -27,23 +27,23 @@ class GetAllProjectsUseCaseTest {
             Project(id = "1", projectName = "Project One", states = emptyList()),
             Project(id = "2", projectName = "Project Two", states = emptyList())
         )
-        every { projectRepository.getProjects() } returns projects
+        every { projectRepository.getAllProjects() } returns projects
         // When
         val result = getAllProjectsUseCase()
         //Then
         assertThat(result).isEqualTo(projects)
-        verify(exactly = 1) { projectRepository.getProjects()  }
+        verify(exactly = 1) { projectRepository.getAllProjects()  }
     }
 
     @Test
     fun `should throw NoProjectsFoundException when no projects exist`() {
         // Given
-        every { projectRepository.getProjects() } returns emptyList()
+        every { projectRepository.getAllProjects() } returns emptyList()
         // When & Then
         assertThrows<NoProjectsFoundException> {
             getAllProjectsUseCase()
         }
-        verify(exactly = 1) { projectRepository.getProjects()  }
+        verify(exactly = 1) { projectRepository.getAllProjects()  }
     }
 
 
