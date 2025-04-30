@@ -12,4 +12,8 @@ class CsvFileHelper: FileHelper {
         return true
     }
 
+    override fun appendFile(file: File, data: List<String>): Boolean {
+        return true
+    }
+
 }
