@@ -3,9 +3,9 @@ package logic.project
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.project.GetProjectByIdUseCase
@@ -25,36 +25,26 @@ class GetProjectByIdUseCaseTest {
     @Test
     fun `should return the project when a project with the given id exists`() {
         //Given
+        val projectId = "1"
         val project = Project(id = "1", projectName = "Project One", states = emptyList())
-        every { projectRepository.getProjects() } returns listOf(project)
+        every { projectRepository.getProjectById(projectId) } returns project
         // When
-        val result = getProjectByIdUseCase("1")
+        val result = getProjectByIdUseCase(projectId)
         //Then
         assertThat(result).isEqualTo(project)
-    }
-
-    @Test
-    fun `should throw NoProjectsFoundException when no projects exist`() {
-        // Given
-        every { projectRepository.getProjects() } returns emptyList()
-        // When & Then
-        assertThrows<NoProjectsFoundException> {
-            getProjectByIdUseCase("1")
-        }
+        verify(exactly = 1) { projectRepository.getProjectById(projectId) }
     }
 
     @Test
     fun `should throw ProjectNotFoundException when a project with the given id does not exist`() {
         // Given
-        val projects = listOf(
-            Project(id = "2", projectName = "Project One", states = emptyList()),
-            Project(id = "3", projectName = "Project One", states = emptyList())
-        )
-        every { projectRepository.getProjects() } returns projects
+        val projectId = "2"
+        every { projectRepository.getProjectById(projectId) } returns null
         // When & Then
         assertThrows<ProjectNotFoundException> {
-            getProjectByIdUseCase("1")
+            getProjectByIdUseCase.invoke(projectId)
         }
+        verify(exactly = 1) { projectRepository.getProjectById(projectId) }
     }
 
 }
