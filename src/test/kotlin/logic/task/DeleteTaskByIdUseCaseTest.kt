@@ -29,7 +29,7 @@ class DeleteTaskByIdUseCaseTest {
         // when
         deleteTaskByIdUseCase(taskId)
         // then
-        verify { taskRepository.deleteTaskById(taskId) }
+        verify { taskRepository.deleteTask(taskId) }
     }
 
     @Test

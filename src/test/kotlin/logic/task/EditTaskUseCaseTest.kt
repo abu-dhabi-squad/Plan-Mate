@@ -50,7 +50,7 @@ class EditTaskUseCaseTest {
         // given
         val oldTask = Task(
             id = "11111",
-            userId = "11111",
+            userName = "11111",
             projectId = "11111",
             stateId = "11111",
             title = "Title",
@@ -79,7 +79,7 @@ class EditTaskUseCaseTest {
 
         // Then
         Truth.assertThat(result).isTrue()
-        verify(exactly = 1) { taskRepository.editTask(oldTask.id, newTask) }
+        verify(exactly = 1) { taskRepository.editTask(newTask) }
     }
 
     @ParameterizedTest
@@ -95,7 +95,7 @@ class EditTaskUseCaseTest {
         // given
         val task = Task(
             id = "11111",
-            userId = "11111",
+            userName = "11111",
             projectId = "11111",
             stateId = "11111",
             title = "Title",
@@ -126,7 +126,7 @@ class EditTaskUseCaseTest {
         val endDate = "2025-04-01"
         val task = Task(
             id = "11111",
-            userId = "11111",
+            userName = "11111",
             projectId = "11111",
             stateId = "11111",
             title = "Title",
@@ -157,7 +157,7 @@ class EditTaskUseCaseTest {
         val endDate = "2025-04-01"
         val task = Task(
             id = "11111",
-            userId = "11111",
+            userName = "11111",
             projectId = "11111",
             stateId = "11111",
             title = "Title",
@@ -188,7 +188,7 @@ class EditTaskUseCaseTest {
         val endDate = "2025-04-01"
         val task = Task(
             id = "11111",
-            userId = "11111",
+            userName = "11111",
             projectId = "11111",
             stateId = "11111",
             title = "Title",

@@ -9,7 +9,7 @@ class DeleteTaskByIdUseCase (
 
     operator fun invoke(taskId:String){
         getTaskById(taskId) ?: throw TaskNotFoundException()
-        taskRepository.deleteTaskById(taskId)
+        taskRepository.deleteTask(taskId)
     }
 
     private fun getTaskById(taskId: String) =

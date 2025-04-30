@@ -23,7 +23,7 @@ class EditTaskUseCase(private val taskRepository: TaskRepository, private val ta
             startDate = if (startDate.isNotBlank()) LocalDate.parse(startDate) else oldTask.startDate,
             endDate = if (endDate.isNotBlank()) LocalDate.parse(endDate) else oldTask.endDate,
         )
-        taskRepository.editTask(taskId, newTask)
+        taskRepository.editTask(newTask)
         return true
     }
 
