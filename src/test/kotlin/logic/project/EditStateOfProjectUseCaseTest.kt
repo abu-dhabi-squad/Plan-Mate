@@ -1,14 +1,13 @@
 package logic.project
 
-import com.google.common.truth.Truth
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
-import squad.abudhabi.logic.exceptions.CanNotEditException
+import squad.abudhabi.logic.exceptions.ProjectNotFoundException
+import squad.abudhabi.logic.exceptions.ProjectStateNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.EditStateOfProjectUseCase
@@ -24,65 +23,42 @@ class EditStateOfProjectUseCaseTest {
     }
 
     @Test
-    fun `editStateOfProject should throw CanNotEditException when project's states is empty`() {
-        //given
-        val newState = State("id1", "newState1")
-        val project = Project("id1", "name1", listOf())
-        //when & then
-        assertThrows<CanNotEditException> {
-            editStateToProjectUseCase.editStateOfProject(project, newState)
-        }
-    }
+    fun `editStateOfProject should throw ProjectNotFoundException when projectRepository getProjectById returns null`() {
 
-    @Test
-    fun `editStateOfProject should throw CanNotEditException when the new state id not in project's states`() {
         //given
         val newState = State("id1", "newState1")
         val states = listOf(State("id2", "state1"), State("id3", "state2"))
         val project = Project("id1", "name1", states)
+        every { projectRepository.getProjectById(any()) } returns null
         //when & then
-        assertThrows<CanNotEditException> {
-            editStateToProjectUseCase.editStateOfProject(project, newState)
+        assertThrows<ProjectNotFoundException> {
+            editStateToProjectUseCase.editStateOfProject(project.id, newState)
         }
     }
 
     @Test
-    fun `editStateOfProject should throw DataNotFoundException when the projectRepository getProjects returns empty list`() {
+    fun `editStateOfProject should throw Exception when projectRepository getProjectById throw Exception`() {
         //given
         val newState = State("id1", "newState1")
-        val states = listOf(State("id1", "state1"), State("id2", "state2"))
+        val states = listOf(State("id2", "state1"), State("id3", "state2"))
         val project = Project("id1", "name1", states)
-        every { projectRepository.getProjects() } returns listOf()
-        //when & then
-        assertThrows<CanNotEditException> {
-            editStateToProjectUseCase.editStateOfProject(project, newState)
-        }
-    }
-
-    @Test
-    fun `editStateOfProject should throw Exception when the projectRepository getProjects throw Exception`() {
-        //given
-        val newState = State("id1", "newState1")
-        val states = listOf(State("id1", "state1"), State("id2", "state2"))
-        val project = Project("id1", "name1", states)
-        every { projectRepository.getProjects() } throws Exception()
+        every { projectRepository.getProjectById(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editStateToProjectUseCase.editStateOfProject(project, newState)
+            editStateToProjectUseCase.editStateOfProject(project.id, newState)
         }
     }
 
     @Test
-    fun `editStateOfProject should throw CanNotEditException when the project id not in the ids of all projects`() {
+    fun `editStateOfProject should throw ProjectStateNotFoundException when the new state id not in project's states`() {
         //given
         val newState = State("id1", "newState1")
-        val states = listOf(State("id1", "state1"), State("id2", "state2"))
+        val states = listOf(State("id2", "state1"), State("id3", "state2"))
         val project = Project("id1", "name1", states)
-        val project1 = Project("id2", "name1", states)
-        every { projectRepository.getProjects() } returns listOf(project1)
+        every { projectRepository.getProjectById(any()) } returns project
         //when & then
-        assertThrows<CanNotEditException> {
-            editStateToProjectUseCase.editStateOfProject(project, newState)
+        assertThrows<ProjectStateNotFoundException> {
+            editStateToProjectUseCase.editStateOfProject(project.id, newState)
         }
     }
 
@@ -92,25 +68,24 @@ class EditStateOfProjectUseCaseTest {
         val newState = State("id1", "newState1")
         val states = listOf(State("id1", "state1"), State("id2", "state2"))
         val project = Project("id1", "name1", states)
+        every { projectRepository.getProjectById(any()) } returns project
         every { projectRepository.editProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editStateToProjectUseCase.editStateOfProject(project, newState)
+            editStateToProjectUseCase.editStateOfProject(project.id, newState)
         }
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = [true, false])
-    fun `editStateOfProject should return like projectRepository editProject function when it return true or false`(
-        returnedValue: Boolean
-    ) {
+    @Test
+    fun `editStateOfProject should call projectRepository editProject function when the state id is found`() {
         //given
         val newState = State("id1", "newState1")
         val states = listOf(State("id1", "state1"), State("id2", "state2"))
         val project = Project("id1", "name1", states)
-        every { projectRepository.getProjects() } returns listOf(project)
-        every { projectRepository.editProject(any()) } returns returnedValue
-        //when & then
-        Truth.assertThat(editStateToProjectUseCase.editStateOfProject(project, newState)).isEqualTo(returnedValue)
+        every { projectRepository.getProjectById(any()) } returns project
+        //when
+        editStateToProjectUseCase.editStateOfProject(project.id, newState)
+        //then
+        verify(exactly = 1) { projectRepository.editProject(any()) }
     }
 }
