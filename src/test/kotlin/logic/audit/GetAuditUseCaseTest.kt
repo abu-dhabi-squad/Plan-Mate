@@ -1,12 +1,12 @@
 package logic.audit
 
+import GetAuditUseCase
 import createAudit
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.audit.GetAuditUseCase
 import squad.abudhabi.logic.exceptions.WrongInputException
 import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.repository.AuditRepository
