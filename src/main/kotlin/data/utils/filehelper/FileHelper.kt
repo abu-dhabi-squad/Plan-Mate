@@ -4,6 +4,6 @@ import java.io.File
 
 interface FileHelper {
     fun readFile(file: File): List<String>
-    fun writeFile(file: File, data: List<String>): Boolean
-    fun appendFile(file: File, data: List<String>): Boolean
+    fun writeFile(fileName: String, data: List<String>): Boolean
+    fun appendFile(fileName: String, data: List<String>): Boolean
 }
