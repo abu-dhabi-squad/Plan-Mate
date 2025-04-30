@@ -55,13 +55,13 @@ class CsvFileHelperTest {
     }
 
     @Test
-    fun `writeFile should return true when data is written successfully`() {
+    fun `writeFile should write to the file when data is valid`() {
         //given
         val data = listOf("line1", "line2", "line3")
         //when
-        val result = csvFileHelper.writeFile(fileName, data)
+         csvFileHelper.writeFile(fileName, data)
         //then
-        assertThat(result).isTrue()
+        assertThat(file.readLines()).isEqualTo(data)
     }
 
     @Test
@@ -76,13 +76,13 @@ class CsvFileHelperTest {
 
 
     @Test
-    fun `appendFile should return true when data is written successfully`() {
+    fun `appendFile should append data to the file when data is valid`() {
         //given
         val data = listOf("line1", "line2", "line3")
         //when
-        val result = csvFileHelper.appendFile(fileName, data)
+         csvFileHelper.appendFile(fileName, data)
         //then
-        assertThat(result).isTrue()
+        assertThat(file.readLines()).isEqualTo(data)
     }
 
     @Test
