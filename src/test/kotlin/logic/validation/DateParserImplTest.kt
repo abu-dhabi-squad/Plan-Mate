@@ -27,11 +27,13 @@ class DateParserImplTest {
         month: Int,
         day: Int
     ) {
-        //given
+        // Given
         val date = "$year-$month-$day"
-        //when
+
+        // When
         val res = dateParserImpl.parseDateFromString(date)
-        //then
+
+        // Then
         Truth.assertThat(res).isEqualTo(LocalDate.of(year, month, day))
     }
 
@@ -43,7 +45,7 @@ class DateParserImplTest {
         "2020-0-10"
     ])
     fun `should throw DateTimeParseException when the input contains invalid day or month`(date: String) {
-        // when & then
+        // When & Then
         assertFailsWith<DateTimeParseException> {
             dateParserImpl.parseDateFromString(date)
         }
@@ -57,7 +59,7 @@ class DateParserImplTest {
         "2025.4.30"
     ])
     fun `should throw DateTimeParseException when the input contains invalid character`(date: String) {
-        // when & then
+        // When & Then
         assertFailsWith<DateTimeParseException> {
             dateParserImpl.parseDateFromString(date)
         }
@@ -66,10 +68,10 @@ class DateParserImplTest {
 
     @Test
     fun `parseDateFromString should return date of the last day in month when the input' day is more than the last day of the month`() {
-        //given
+        // Given
         val date = "2025-4-31"
         val res = LocalDate.of(2025, 4, 30)
-        //when & then
+        // When & Then
         Truth.assertThat(dateParserImpl.parseDateFromString(date)).isEqualTo(res)
     }
 

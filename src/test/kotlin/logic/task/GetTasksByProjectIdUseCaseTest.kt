@@ -24,32 +24,33 @@ class GetTasksByProjectIdUseCaseTest {
 
     @Test
     fun `should get tasks by project id when project is exists`() {
-        // given
+        // Given
         val projectId = UUID.randomUUID().toString()
         val firstRelatedTask = createTask(projectId = projectId)
         val secondRelatedTask = createTask(projectId = projectId)
-        val nonRelatedTask = createTask()
-        every { taskRepository.getAllTasks() } returns listOf(
+        every { taskRepository.getTaskByProjectId(projectId) } returns listOf(
             firstRelatedTask,
             secondRelatedTask,
-            nonRelatedTask
         )
-        // when
+
+        // When
         val result = getTasksByProjectIdUseCase(projectId)
-        // then
+
+        // Then
         assertThat(result).containsExactly(firstRelatedTask, secondRelatedTask)
     }
 
     @Test
     fun `should throw NoTasksFoundException when there are no tasks for provided project id`() {
-        // given
+        // Given
         val projectId = UUID.randomUUID().toString()
         every { taskRepository.getAllTasks() } returns listOf(
             createTask(),
             createTask(),
             createTask()
         )
-        // when && then
+
+        // When && Then
         assertThrows<NoTasksFoundException> {
             getTasksByProjectIdUseCase(projectId)
         }

@@ -26,20 +26,23 @@ class DateValidatorImplTest {
 
     @Test
     fun `should not throw exception when date is valid`() {
-        //given
+        // Given
         val date = "2020-2-10"
         every { dateParserInterface.parseDateFromString(date) } returns LocalDate.of(2020, 2, 10)
-        //when
+
+        // When
         dateValidatorImpl.validateDateOrThrow(date)
-        //then
+
+        // Then
         verify(exactly = 1) { dateParserInterface.parseDateFromString(date) }
     }
 
     @Test
     fun `should throw InvalidDateFormatException when invalid date format provided`() {
-        //given
+        // Given
         every { dateParserInterface.parseDateFromString(any()) } throws InvalidDateFormatException()
-        //when
+
+        // When
         assertThrows<InvalidDateFormatException> {
             dateValidatorImpl.validateDateOrThrow("2000/10-10")
         }
@@ -47,7 +50,7 @@ class DateValidatorImplTest {
     @ParameterizedTest
     @ValueSource(ints = [1999, 1900, 1000, -1000])
     fun `should throw InvalidYearException when year from the is very old`(year:Int) {
-        //given
+        // Given
         val invalidOldYear = year
         val date = "$invalidOldYear-10-10"
         every { dateParserInterface.parseDateFromString(date) } returns LocalDate.of(
@@ -55,7 +58,8 @@ class DateValidatorImplTest {
             10,
             10
         )
-        //when & then
+
+        // When & Then
         assertThrows<InvalidYearException> {
             dateValidatorImpl.validateDateOrThrow(date)
         }
