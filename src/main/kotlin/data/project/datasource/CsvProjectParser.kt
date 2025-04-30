@@ -9,7 +9,7 @@ class CsvProjectParser {
 
     fun parseStringToProject(line: String): Project {
         line.split(",")
-            .takeIf (::isValidProject)
+            .takeIf(::isValidProject)
             ?.let { projectRegex ->
                 return Project(
                     projectRegex[ProjectColumnIndex.ID],
@@ -32,25 +32,25 @@ class CsvProjectParser {
                     }
                 }
             return res
-        } else {
+        } else if (subLine.contains("-")) {
             val listOfRegex: List<String> = subLine.split("-")
                 .takeIf(::isValidState) ?: throw CanNotParseStateException()
 
             return listOf(State(listOfRegex[ProjectColumnIndex.STATE_ID], listOfRegex[ProjectColumnIndex.STATE_NAME]))
+        } else {
+            if (subLine.isNotEmpty()) throw CanNotParseStateException()
+            return listOf()
         }
     }
 
     private fun isValidProject(projectRegex: List<String>): Boolean {
-        return projectRegex.isNotEmpty()
-                && projectRegex.size == PROJECT_LINE_REGEX_NUMBERS
+        return projectRegex.size == PROJECT_LINE_REGEX_NUMBERS
                 && projectRegex[ProjectColumnIndex.ID] != ""
                 && projectRegex[ProjectColumnIndex.NAME] != ""
-                && projectRegex[ProjectColumnIndex.STATES] != ""
     }
 
     private fun isValidState(stateRegex: List<String>): Boolean {
-        return stateRegex.isNotEmpty()
-                && stateRegex.size == STATE_LINE_REGEX_NUMBERS
+        return stateRegex.size == STATE_LINE_REGEX_NUMBERS
                 && stateRegex[ProjectColumnIndex.STATE_ID] != ""
                 && stateRegex[ProjectColumnIndex.STATE_NAME] != ""
     }

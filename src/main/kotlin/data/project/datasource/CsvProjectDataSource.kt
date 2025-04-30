@@ -39,16 +39,16 @@ class CsvProjectDataSource(
     }
 
     private fun writeProjects(projects: List<Project>): Boolean {
-        if (projects.isEmpty()) return false
         return fileHelper.writeFile(File(PROJECTS_FILE_NAME), projects.map(::buildStringFromProject))
     }
 
     private fun buildStringFromProject(project: Project): String {
-        return project.id + "," +
-                project.projectName + "," +
-                project.states.map {
-                    it.id + "-" + it.name + "|"
-                }.dropLast(UNUSED_CHARACTER)
+        var res = project.id + "," + project.projectName + ","
+        if (project.states.isEmpty()) return res
+        project.states.forEach {
+            res += it.id + "-" + it.name + "|"
+        }
+        return res.dropLast(UNUSED_CHARACTER)
     }
 
     private fun Project.isEqualProject(project: Project): Project {
