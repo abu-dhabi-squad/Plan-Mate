@@ -16,20 +16,20 @@ class StandardPasswordValidatorTest {
     }
 
     @Test
-    fun `should validate successfully when password is contain uppercase, lowercase, special characters, Number and it length more then 7`() {
-        // given
+    fun `should validate successfully when password is contain uppercase, lowercase, special characters, Number and it length more than 7`() {
+        // Given
         val password = "Alaa@Kh1"
 
-        // when & then
+        // When & Then
         standardPasswordValidator.validatePassword(password)
     }
 
     @Test
     fun `should throw exception when password is less than 8 characters`() {
-        // given
+        // Given
         val password = "AK@1a"
 
-        // when & then
+        // When & Then
         assertThrows<ShortPasswordException> {
             standardPasswordValidator.validatePassword(password)
         }
@@ -37,10 +37,10 @@ class StandardPasswordValidatorTest {
 
     @Test
     fun `should throw exception when password does not contain uppercase letter`() {
-        // given
+        // Given
         val password = "alaa@123"
 
-        // when & then
+        // When & Then
         assertThrows<NoUpperCaseInPasswordException> {
             standardPasswordValidator.validatePassword(password)
         }
@@ -48,10 +48,10 @@ class StandardPasswordValidatorTest {
 
     @Test
     fun `should throw exception when password does not contain lowercase letter`() {
-        // given
+        // Given
         val password = "ALAA@123"
 
-        // when & then
+        // When & Then
         assertThrows<NoLowerCaseInPasswordException> {
             standardPasswordValidator.validatePassword(password)
         }
@@ -59,10 +59,10 @@ class StandardPasswordValidatorTest {
 
     @Test
     fun `should throw exception when password does not contain a number`() {
-        // given
+        // Given
         val password = "Alaa@Khaled"
 
-        // when & then
+        // When & Then
         assertThrows<NoNumberInPasswordException> {
             standardPasswordValidator.validatePassword(password)
         }
@@ -70,10 +70,10 @@ class StandardPasswordValidatorTest {
 
     @Test
     fun `should throw exception when password does not contain special character`() {
-        // given
+        // Given
         val password = "AlaaKhaled1"
 
-        // when & then
+        // When & Then
         assertThrows<NoSpecialCharsInPasswordException> {
             standardPasswordValidator.validatePassword(password)
         }
