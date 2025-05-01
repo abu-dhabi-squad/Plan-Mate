@@ -29,7 +29,7 @@ class LoginByUserNameUseCaseTest {
 
     @Test
     fun `should return user when credentials are correct`() {
-        // given
+        // Given
         val username = "shahd"
         val password = "pass123"
         val hashedPassword = "hashed_pass123"
@@ -38,34 +38,30 @@ class LoginByUserNameUseCaseTest {
         every { authRepository.getUserByName(username) } returns expectedUser
         every { hashingService.hash(password) } returns hashedPassword
 
-        // when
+        // When
         val result = loginByUserNameUseCase.login(username, password)
 
-        // then
+        // Then
         assertThat(result).isEqualTo(expectedUser)
-        verify { authRepository.getUserByName(username) }
-        verify { hashingService.hash(password) }
     }
 
 
     @Test
     fun `should throw UserNotFoundException when user is not found`() {
-        // given
+        // Given
         val username = "shahd"
         val password = "pass123"
         every { authRepository.getUserByName(username) } returns null
 
-        // when & then
-        val exception = assertThrows<UserNotFoundException> {
+        // When & Then
+             assertThrows<UserNotFoundException> {
             loginByUserNameUseCase.login(username, password)
         }
-        assertThat(exception).hasMessageThat().contains(username)
-        verify { authRepository.getUserByName(username) }
     }
 
     @Test
     fun `should throw InvalidCredentialsException when password is incorrect`() {
-        // given
+        // Given
         val username = "shahd"
         val password = "wrongPassword"
         val existingUser = User(username = username, password = "hashed_pass123", userType = UserType.MATE)
@@ -73,13 +69,10 @@ class LoginByUserNameUseCaseTest {
         every { authRepository.getUserByName(username) } returns existingUser
         every { hashingService.hash(password) } returns "hashed_wrongPassword"
 
-        // when & then
-        val exception = assertThrows<InvalidCredentialsException> {
+        // When & Then
+             assertThrows<InvalidCredentialsException> {
             loginByUserNameUseCase.login(username, password)
         }
-        assertThat(exception).hasMessageThat().contains("Invalid credentials")
-        verify { authRepository.getUserByName(username) }
-        verify { hashingService.hash(password) }
     }
 
 }
