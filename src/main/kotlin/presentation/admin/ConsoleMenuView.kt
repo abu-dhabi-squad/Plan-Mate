@@ -26,20 +26,21 @@ class ConsoleMenuView(
     }
 
     private fun showMenu() {
-        printer.display("╔════════════════════════════════════════╗")
-        printer.display("║         PlanMate Admin Console        ║")
-        printer.display("╠════════════════════════════════════════╣")
-        printer.display("╠ 1. Add a new Project                  ╣")
-        printer.display("╠ 2. Edit an Existing Project           ╣")
-        printer.display("╠ 3. Delete a Project                   ╣")
-        printer.display("╠ 4. Add a new Task                     ╣")
-        printer.display("╠ 5. View All Tasks in a Project        ╣")
-        printer.display("╠ 6. Create a new User (Mate)           ╣")
-        printer.display("╠ 7. View History of a Project          ╣")
-        printer.display("╠ 8. View History of a Task             ╣")
-        printer.display("╠ 9. Edit Task/Project States           ╣")
-        printer.display("╠ 10. Log Out                           ╣")
-        printer.display("╚════════════════════════════════════════╝")
+        printer.displayLn()
+        printer.displayLn("╔════════════════════════════════════════╗")
+        printer.displayLn("║         PlanMate Admin Console         ║")
+        printer.displayLn("╠════════════════════════════════════════╣")
+        printer.displayLn("╠ 1. Add a new Project                   ╣")
+        printer.displayLn("╠ 2. Edit an Existing Project            ╣")
+        printer.displayLn("╠ 3. Delete a Project                    ╣")
+        printer.displayLn("╠ 4. Add a new Task                      ╣")
+        printer.displayLn("╠ 5. View All Tasks in a Project         ╣")
+        printer.displayLn("╠ 6. Create a new User (Mate)            ╣")
+        printer.displayLn("╠ 7. View History of a Project           ╣")
+        printer.displayLn("╠ 8. View History of a Task              ╣")
+        printer.displayLn("╠ 9. Edit Task/Project States            ╣")
+        printer.displayLn("╠ 10. Log Out                            ╣")
+        printer.displayLn("╚════════════════════════════════════════╝")
     }
 
 }

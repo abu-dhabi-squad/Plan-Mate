@@ -1,7 +1,6 @@
 package squad.abudhabi.presentation.ui_io
 
 class ConsoleReader: InputReader {
-
     override fun readString(): String? {
         return readlnOrNull()
     }

@@ -26,15 +26,16 @@ class ConsoleMenuView(
     }
 
     private fun showMateMenu() {
-        printer.display("╔════════════════════════════════════════╗")
-        printer.display("║         PlanMate Mate Console          ║")
-        printer.display("╠════════════════════════════════════════╣")
-        printer.display("╠ 1. Add a new Task                      ╣")
-        printer.display("╠ 2. Edit a Task                         ╣")
-        printer.display("╠ 3. Delete a Task                       ╣")
-        printer.display("╠ 4. View All Tasks in a Project         ╣")
-        printer.display("╠ 5. View History of a Task              ╣")
-        printer.display("╠ 6. Log Out                             ╣")
-        printer.display("╚════════════════════════════════════════╝")
+        printer.displayLn()
+        printer.displayLn("╔════════════════════════════════════════╗")
+        printer.displayLn("║         PlanMate Mate Console          ║")
+        printer.displayLn("╠════════════════════════════════════════╣")
+        printer.displayLn("╠ 1. Add a new Task                      ╣")
+        printer.displayLn("╠ 2. Edit a Task                         ╣")
+        printer.displayLn("╠ 3. Delete a Task                       ╣")
+        printer.displayLn("╠ 4. View All Tasks in a Project         ╣")
+        printer.displayLn("╠ 5. View History of a Task              ╣")
+        printer.displayLn("╠ 6. Log Out                             ╣")
+        printer.displayLn("╚════════════════════════════════════════╝")
     }
 }

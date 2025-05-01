@@ -31,6 +31,7 @@ val includedPackages = listOf(
 )
 
 val excludedPackages = listOf(
+    "squad/abudhabi/di/**",
     "squad/abudhabi/data/utils/**",
     "squad/abudhabi/logic/model/**",
     "squad/abudhabi/logic/exceptions/**"
