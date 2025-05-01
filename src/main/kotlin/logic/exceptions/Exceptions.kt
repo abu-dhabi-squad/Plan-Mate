@@ -22,4 +22,6 @@ class InvalidCredentialsException : RuntimeException("Invalid credentials")
 
 class EmptyUsernameException(message: String = "Username cannot be empty") : IllegalArgumentException(message)
 
+class CanNotParseUserException : Exception("Cannot parse User data from CSV")
+
 
