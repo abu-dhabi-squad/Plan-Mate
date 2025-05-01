@@ -20,28 +20,30 @@ class ProjectNotFoundException() : AppException("Project Not Found")
 
 class ProjectStateNotFoundException() : AppException("State Not Found")
 
+class InvalidPasswordException(password: String) : AppException("Invalid password")
+
+class UserAlreadyExistsException(username: String) : AppException("Username '$username' already exists")
+
+class UserNotFoundException(username: String) :
+    AppException("User with username '$username' not found")
+
 open class DataException(msg: String) : AppException(msg)
 
 class CanNotParseProjectException : DataException("can't parse string to project")
 
 class CanNotParseStateException : DataException("can't parse string to State")
-class ShortPasswordException : Exception("Password must be at least 8 characters long")
 
-class NoUpperCaseInPasswordException : Exception("Password must contain at least one uppercase letter")
+open class PasswordException(msg: String) : AppException(msg)
 
-class NoLowerCaseInPasswordException : Exception("Password must contain at least one lowercase letter")
+class ShortPasswordException : PasswordException("Password must be at least 8 characters long")
 
-class NoNumberInPasswordException : Exception("Password must contain at least one number")
+class NoUpperCaseInPasswordException : PasswordException("Password must contain at least one uppercase letter")
 
-class NoSpecialCharsInPasswordException : Exception("Password must contain at least one special character")
+class NoLowerCaseInPasswordException : PasswordException("Password must contain at least one lowercase letter")
 
-class UserAlreadyExistsException(username: String) : AppException("Username '$username' already exists")
+class NoNumberInPasswordException : PasswordException("Password must contain at least one number")
 
-class InvalidPasswordException(password: String) :
-    Exception("Invalid password")
-
-class UserNotFoundException(username: String) :
-    AppException("User with username '$username' not found")
+class NoSpecialCharsInPasswordException : PasswordException("Password must contain at least one special character")
 
 class InvalidCredentialsException : RuntimeException("Invalid credentials")
 
