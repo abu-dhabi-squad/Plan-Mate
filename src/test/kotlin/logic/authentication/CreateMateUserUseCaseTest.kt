@@ -31,7 +31,7 @@ class CreateMateUserUseCaseTest {
 
     @Test
     fun `create should successfully add new user when inputs are valid`() {
-        // given
+        // Given
         val username = "shahd"
         val password = "pass123"
         val hashedPassword = "hashed_pass123"
@@ -43,10 +43,10 @@ class CreateMateUserUseCaseTest {
         every { authRepository.getUserByName(username) } returns null
         every { authRepository.addNewUser(any()) } just Runs
 
-        // when
+        // When
         createMateUserUseCase.create(username, password, UserType.MATE)
 
-        // then
+        // Then
         verify {
             passwordValidator.validatePassword(password)
             hashingService.hash(password)
@@ -65,11 +65,11 @@ class CreateMateUserUseCaseTest {
 
     @Test
     fun `should throw IllegalArgumentException when username is blank`() {
-        // given
+        // Given
         val username = ""
         val password = "ValidPass123!"
 
-        // when & then
+        // When & Then
         val exception = assertThrows<IllegalArgumentException> {
             createMateUserUseCase.create(username, password, UserType.MATE)
         }
@@ -79,12 +79,12 @@ class CreateMateUserUseCaseTest {
 
     @Test
     fun `should throw InvalidPasswordException when password is invalid`() {
-        // given
+        // Given
         val username = "newUser"
         val weakPassword = "weak"
         every { passwordValidator.validatePassword(any()) } throws InvalidPasswordException("Invalid password")
 
-        // when & then
+        // When & Then
         val exception = assertThrows<InvalidPasswordException> {
             createMateUserUseCase.create(username, weakPassword, UserType.MATE)
         }
@@ -96,7 +96,7 @@ class CreateMateUserUseCaseTest {
 
     @Test
     fun `should throw UserAlreadyExistsException when user already exists`() {
-        // given
+        // Given
         val username = "existingUser"
         val password = "ValidPass123!"
         val existingUser = User(id = "2", username = username, password = "oldHash", userType = UserType.MATE)
@@ -105,7 +105,7 @@ class CreateMateUserUseCaseTest {
         every { hashingService.hash(any()) } returns "hashedPassword"
         every { authRepository.getUserByName(username) } returns existingUser
 
-        // when & then
+        // When & Then
         val exception = assertThrows<UserAlreadyExistsException> {
             createMateUserUseCase.create(username, password, UserType.MATE)
         }
