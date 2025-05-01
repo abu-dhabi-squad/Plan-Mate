@@ -25,30 +25,30 @@ class CsvFileHelperTest {
 
     @Test
     fun `readFile should return list of lines when file contains data`() {
-        // Given
+        //given
         val data = listOf("line1", "line2", "line3")
         file.writeText(data.joinToString("\n"))
-        // When
+        //when
         val result = csvFileHelper.readFile(fileName)
         val writtenContent = file.readLines()
-        // Then
+        //then
         assertThat(result).isEqualTo(data)
         assertThat(writtenContent).isEqualTo(data)
     }
 
     @Test
     fun `readFile should return empty list when file is empty`() {
-        // When
+        //when
         val result = csvFileHelper.readFile(fileName)
-        // Then
+        //then
         assertThat(result).isEmpty()
     }
 
     @Test
     fun `readFile should throw FileNotFoundException when file does not exist`() {
-        // Given
+        //given
         file.delete()
-        // When && then
+        //when && then
         assertThrows<FileNotFoundException> {
             csvFileHelper.readFile(fileName)
         }
@@ -56,19 +56,19 @@ class CsvFileHelperTest {
 
     @Test
     fun `writeFile should write to the file when data is valid`() {
-        // Given
+        //given
         val data = listOf("line1", "line2", "line3")
-        // When
+        //when
          csvFileHelper.writeFile(fileName, data)
-        // Then
+        //then
         assertThat(file.readLines()).isEqualTo(data)
     }
 
     @Test
     fun `writeFile should throw IllegalArgumentException when list data is empty`() {
-        // Given
+        //given
         val data = emptyList<String>()
-        // When && then
+        //when && then
         assertThrows<IllegalArgumentException> {
             csvFileHelper.writeFile(fileName, data)
         }
@@ -77,19 +77,19 @@ class CsvFileHelperTest {
 
     @Test
     fun `appendFile should append data to the file when data is valid`() {
-        // Given
+        //given
         val data = listOf("line1", "line2", "line3")
-        // When
+        //when
          csvFileHelper.appendFile(fileName, data)
-        // Then
+        //then
         assertThat(file.readLines()).isEqualTo(data)
     }
 
     @Test
     fun `appendFile should throw IllegalArgumentException when list data is empty`() {
-        // Given
+        //given
         val data = emptyList<String>()
-        // When && then
+        //when && then
         assertThrows<IllegalArgumentException> {
             csvFileHelper.appendFile(fileName, data)
         }
