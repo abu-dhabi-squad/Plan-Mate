@@ -6,5 +6,5 @@ import squad.abudhabi.logic.repository.TaskRepository
 
 class GetTaskByIdUseCase(private val taskRepository: TaskRepository) {
     operator fun invoke(taskId: String): Task =
-        taskRepository.getTaskById(taskId).takeIf { it != null } ?: throw TaskNotFoundException()
+        taskRepository.getTaskById(taskId) ?: throw TaskNotFoundException()
 }

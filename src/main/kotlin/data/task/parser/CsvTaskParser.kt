@@ -1,10 +1,10 @@
 package squad.abudhabi.data.task.parser
 
 import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.validation.DateParserImpl
+import squad.abudhabi.logic.validation.DateParser
 
 class CsvTaskParser(
-    private val dateParser: DateParserImpl
+    private val dateParser: DateParser
 ) : TaskParser {
     override fun getCsvLineFromTask(task: Task): String {
         return "${task.id},${task.userName},${task.projectId},${task.stateId},${task.title},${task.description},${dateParser.getStringFromDate(task.startDate)},${dateParser.getStringFromDate(task.startDate)}"

@@ -26,28 +26,36 @@ class CsvTaskDataSource(
     }
 
     override fun editTask(task: Task) {
-        return csvFileHelper.writeFile(csvFileName, getTasksWithReplacedTask(task))
+        return csvFileHelper.writeFile(
+            csvFileName,
+            getTasksWithReplacedTask(task).parseToCsvLines()
+        )
     }
 
     override fun deleteTask(taskId: String) {
-        return csvFileHelper.writeFile(csvFileName, getTasksWithDeletedTask(taskId))
+        return csvFileHelper.writeFile(
+            csvFileName,
+            getTasksWithDeletedTask(taskId).parseToCsvLines()
+        )
     }
 
-    private fun getTasksWithReplacedTask(task: Task): List<String> {
+    private fun getTasksWithReplacedTask(task: Task): List<Task> {
         return getAllTasks().let { tasks ->
             tasks.indexOfFirst { it.id == task.id }.let { taskIndex ->
                 (tasks.subList(0, taskIndex) + task + tasks.subList(taskIndex + 1, tasks.size))
-                    .map { csvTaskParser.getCsvLineFromTask(it) }
             }
         }
     }
 
-    private fun getTasksWithDeletedTask(taskId: String): List<String> {
+    private fun getTasksWithDeletedTask(taskId: String): List<Task> {
         return getAllTasks().let { tasks ->
             tasks.indexOfFirst { it.id == taskId }.let { taskIndex ->
                 (tasks.subList(0, taskIndex) + tasks.subList(taskIndex + 1, tasks.size))
-                    .map { csvTaskParser.getCsvLineFromTask(it) }
             }
         }
+    }
+
+    private fun List<Task>.parseToCsvLines(): List<String> {
+        return map { csvTaskParser.getCsvLineFromTask(it) }
     }
 }
