@@ -19,14 +19,14 @@ class CreateMateUserUseCaseTest {
     private lateinit var authRepository: AuthenticationRepository
     private lateinit var hashingService: HashingService
     private lateinit var passwordValidator: PasswordValidator
-    private lateinit var useCase: CreateMateUserUseCase
+    private lateinit var createMateUserUseCase: CreateMateUserUseCase
 
     @BeforeEach
     fun setUp() {
         authRepository = mockk(relaxed = true)
         hashingService = mockk(relaxed = true)
         passwordValidator = mockk(relaxed = true)
-        useCase = CreateMateUserUseCase(authRepository, hashingService, passwordValidator)
+        createMateUserUseCase = CreateMateUserUseCase(authRepository, hashingService, passwordValidator)
     }
 
     @Test
@@ -44,7 +44,7 @@ class CreateMateUserUseCaseTest {
         every { authRepository.addNewUser(any()) } just Runs
 
         // When
-        useCase.create(username, password, UserType.MATE)
+        createMateUserUseCase.create(username, password, UserType.MATE)
 
         // Then
         verify {
@@ -71,7 +71,7 @@ class CreateMateUserUseCaseTest {
 
         // When & Then
         val exception = assertThrows<IllegalArgumentException> {
-            useCase.create(username, password, UserType.MATE)
+            createMateUserUseCase.create(username, password, UserType.MATE)
         }
         assertThat(exception).hasMessageThat().contains("Username cannot be empty")
     }
@@ -86,7 +86,7 @@ class CreateMateUserUseCaseTest {
 
         // When & Then
         val exception = assertThrows<InvalidPasswordException> {
-            useCase.create(username, weakPassword, UserType.MATE)
+            createMateUserUseCase.create(username, weakPassword, UserType.MATE)
         }
         assertThat(exception).hasMessageThat().contains("Invalid password")
     }
@@ -107,7 +107,7 @@ class CreateMateUserUseCaseTest {
 
         // When & Then
         val exception = assertThrows<UserAlreadyExistsException> {
-            useCase.create(username, password, UserType.MATE)
+            createMateUserUseCase.create(username, password, UserType.MATE)
         }
         assertThat(exception).hasMessageThat().contains(username)
     }
