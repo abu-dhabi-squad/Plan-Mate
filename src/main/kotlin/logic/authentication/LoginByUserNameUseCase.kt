@@ -12,17 +12,14 @@ class LoginByUserNameUseCase(
 ) {
     fun login(username: String, password: String): User {
 
-        val existingUser=authRepository.getUserByName(username )
-            ?: throw UserNotFoundException(username)
+        return authRepository.getUserByName(username )?.let{ existingUser ->
+            val hashedInputPassword = hashingService.hash(password)
+            if (existingUser.password != hashedInputPassword) {
+                throw InvalidCredentialsException()
+            }
+            existingUser
+        } ?: throw UserNotFoundException(username)
 
-        val hashedInputPassword = hashingService.hash(password)
-
-        if (existingUser.password != hashedInputPassword) {
-            throw InvalidCredentialsException()
-        }
-
-
-        return existingUser
    }
 
 }
