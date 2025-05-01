@@ -23,3 +23,18 @@ open class DataException(msg: String) : AppException(msg)
 class CanNotParseProjectException : DataException("can't parse string to project")
 
 class CanNotParseStateException : DataException("can't parse string to State")
+
+class UserAlreadyExistsException(username: String) :
+    Exception("Username '$username' already exists")
+
+class InvalidPasswordException(password: String) :
+    Exception("Invalid password")
+
+class UserNotFoundException(username: String) :
+    RuntimeException("User with username '$username' not found")
+
+class RepositoryException(message: String, cause: Throwable? = null) :
+    RuntimeException(message, cause)
+
+class InvalidCredentialsException : RuntimeException("Invalid credentials")
+
