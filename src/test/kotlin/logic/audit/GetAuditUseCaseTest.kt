@@ -7,6 +7,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import squad.abudhabi.logic.exceptions.EmptyList
 import squad.abudhabi.logic.exceptions.WrongInputException
 import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.repository.AuditRepository
@@ -62,5 +63,17 @@ class GetAuditUseCaseTest {
         assertFails { getAuditUseCase.getAuditHistory(entityId) }
     }
 
+    @Test
+    fun `get Audit History throws Empty List Exception when there is no Audit History`() {
+
+        // given
+        val entityId = "UG7299"
+
+        // when
+        every { auditRepository.getAuditByEntityId(entityId) } returns emptyList()
+
+        // then
+        assertFails { getAuditUseCase.getAuditHistory(entityId) }
+    }
 
 }

@@ -1,9 +1,10 @@
 package squad.abudhabi.logic.model
 
 import java.time.LocalDate
+import java.util.UUID
 
 data class Audit(
-    val id: String,
+    val id: String = UUID.randomUUID().toString(),
     val createdBy: String,
     val entityId: String,
     val entityType: EntityType,

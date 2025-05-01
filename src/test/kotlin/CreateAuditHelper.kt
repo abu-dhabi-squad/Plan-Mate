@@ -1,9 +1,10 @@
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.EntityType
 import java.time.LocalDate
+import java.util.UUID
 
 fun createAudit(
-    id: String,
+    id: String = UUID.randomUUID().toString(),
     entityId : String,
     newState: String = "InProgress",
     oldState : String = "TODO",

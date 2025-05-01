@@ -7,7 +7,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import squad.abudhabi.logic.audit.AddAuditUseCase
 import squad.abudhabi.logic.repository.AuditRepository
 import kotlin.test.assertFails
 
@@ -32,10 +31,7 @@ class AddAuditUseCaseTest {
         )
 
         // when
-        useCase.addAudit(
-            audit.id, audit.createdBy, audit.entityId, audit.entityType,
-            audit.oldState, audit.newState, audit.date
-        )
+        useCase.addAudit(audit)
 
         // then
         verify(exactly = 1) {
@@ -53,10 +49,9 @@ class AddAuditUseCaseTest {
 
     @ParameterizedTest
     @CsvSource(
-        "'',entity1,old,new",      // id is empty
-        "audit1,'',old,new",       // entityId is empty
-        "audit1,entity1,'',new",   // oldState is empty
-        "audit1,entity1,old,''"    // newState is empty
+        "audit1,'',old,new",
+        "audit1,entity1,'',new",
+        "audit1,entity1,old,''"
     )
     fun `addAudit throws InvalidAudit when essential param is empty`(
         id: String,
@@ -75,10 +70,7 @@ class AddAuditUseCaseTest {
 
         // then
         assertFails {
-            useCase.addAudit(
-                audit.id, audit.createdBy, audit.entityId, audit.entityType,
-                audit.oldState, audit.newState, audit.date
-            )
+            useCase.addAudit(audit)
         }
 
     }
@@ -96,10 +88,7 @@ class AddAuditUseCaseTest {
 
         // then
         assertFails {
-            useCase.addAudit(
-                audit.id, audit.createdBy, audit.entityId, audit.entityType,
-                audit.oldState, audit.newState, audit.date
-            )
+            useCase.addAudit(audit)
         }
     }
 }
