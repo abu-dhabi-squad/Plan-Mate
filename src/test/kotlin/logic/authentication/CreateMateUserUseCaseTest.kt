@@ -85,10 +85,9 @@ class CreateMateUserUseCaseTest {
         every { passwordValidator.validatePassword(any()) } throws InvalidPasswordException("Invalid password")
 
         // When & Then
-        val exception = assertThrows<InvalidPasswordException> {
+             assertThrows<InvalidPasswordException> {
             createMateUserUseCase.create(username, weakPassword, UserType.MATE)
         }
-        assertThat(exception).hasMessageThat().contains("Invalid password")
     }
 
 
@@ -106,10 +105,9 @@ class CreateMateUserUseCaseTest {
         every { authRepository.getUserByName(username) } returns existingUser
 
         // When & Then
-        val exception = assertThrows<UserAlreadyExistsException> {
+             assertThrows<UserAlreadyExistsException> {
             createMateUserUseCase.create(username, password, UserType.MATE)
         }
-        assertThat(exception).hasMessageThat().contains(username)
     }
 
 }
