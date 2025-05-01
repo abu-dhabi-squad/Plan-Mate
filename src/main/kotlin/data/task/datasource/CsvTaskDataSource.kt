@@ -35,24 +35,19 @@ class CsvTaskDataSource(
 
     private fun getTasksWithReplacedTask(task: Task): List<String> {
         return getAllTasks().let { tasks ->
-            tasks.indexOfFirst { it.id == task.id }
-                .let { taskIndex ->
-                    tasks.subList(0, taskIndex)
-                        .map { csvTaskParser.getCsvLineFromTask(it) } +
-                            csvTaskParser.getCsvLineFromTask(task) +
-                            tasks.subList(taskIndex + 1, tasks.size).map { csvTaskParser.getCsvLineFromTask(it) }
-                }
+            tasks.indexOfFirst { it.id == task.id }.let { taskIndex ->
+                (tasks.subList(0, taskIndex) + task + tasks.subList(taskIndex + 1, tasks.size))
+                    .map { csvTaskParser.getCsvLineFromTask(it) }
+            }
         }
     }
 
     private fun getTasksWithDeletedTask(taskId: String): List<String> {
         return getAllTasks().let { tasks ->
-            tasks.indexOfFirst { it.id == taskId }
-                .let { taskIndex ->
-                    tasks.subList(0, taskIndex)
-                        .map { csvTaskParser.getCsvLineFromTask(it) } +
-                            tasks.subList(taskIndex + 1, tasks.size).map { csvTaskParser.getCsvLineFromTask(it) }
-                }
+            tasks.indexOfFirst { it.id == taskId }.let { taskIndex ->
+                (tasks.subList(0, taskIndex) + tasks.subList(taskIndex + 1, tasks.size))
+                    .map { csvTaskParser.getCsvLineFromTask(it) }
+            }
         }
     }
 }
