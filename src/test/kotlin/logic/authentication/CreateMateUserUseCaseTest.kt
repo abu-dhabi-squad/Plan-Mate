@@ -61,8 +61,6 @@ class CreateMateUserUseCaseTest {
         }
     }
 
-
-
     @Test
     fun `should throw IllegalArgumentException when username is blank`() {
         // Given
@@ -76,7 +74,6 @@ class CreateMateUserUseCaseTest {
         assertThat(exception).hasMessageThat().contains("Username cannot be empty")
     }
 
-
     @Test
     fun `should throw InvalidPasswordException when password is invalid`() {
         // Given
@@ -89,9 +86,6 @@ class CreateMateUserUseCaseTest {
             createMateUserUseCase.create(username, weakPassword, UserType.MATE)
         }
     }
-
-
-
 
     @Test
     fun `should throw UserAlreadyExistsException when user already exists`() {
@@ -109,5 +103,4 @@ class CreateMateUserUseCaseTest {
             createMateUserUseCase.create(username, password, UserType.MATE)
         }
     }
-
 }
