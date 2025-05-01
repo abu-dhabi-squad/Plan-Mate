@@ -9,7 +9,6 @@ class GetAllProjectsUseCase(private val projectRepository: ProjectRepository) {
         val storedProjects = projectRepository.getAllProjects()
             .takeIf { it.isNotEmpty() }
             ?: throw NoProjectsFoundException()
-        //if (storedProjects.isEmpty()) throw NoProjectsFoundException()
         return storedProjects
     }
 }

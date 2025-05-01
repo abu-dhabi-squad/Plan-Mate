@@ -1,8 +1,6 @@
 package squad.abudhabi.data.project.datasource
 
 import squad.abudhabi.data.utils.filehelper.FileHelper
-import squad.abudhabi.logic.exceptions.NoDataFoundException
-import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.Project
 
 class CsvProjectDataSource(
@@ -44,5 +42,4 @@ class CsvProjectDataSource(
     private fun Project.isEqualProject(project: Project): Project {
         if (this.id == project.id) return project else return this
     }
-
 }

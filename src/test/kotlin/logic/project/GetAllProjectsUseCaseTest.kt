@@ -32,7 +32,7 @@ class GetAllProjectsUseCaseTest {
         val result = getAllProjectsUseCase()
         //Then
         assertThat(result).isEqualTo(projects)
-        verify(exactly = 1) { projectRepository.getAllProjects()  }
+        verify(exactly = 1) { projectRepository.getAllProjects() }
     }
 
     @Test
@@ -43,7 +43,7 @@ class GetAllProjectsUseCaseTest {
         assertThrows<NoProjectsFoundException> {
             getAllProjectsUseCase()
         }
-        verify(exactly = 1) { projectRepository.getAllProjects()  }
+        verify(exactly = 1) { projectRepository.getAllProjects() }
     }
 
 

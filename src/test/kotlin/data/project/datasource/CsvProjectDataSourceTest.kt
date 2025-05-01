@@ -116,7 +116,12 @@ class CsvProjectDataSourceTest {
         //when
         csvProjectDataSource.createProject(project)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf("id1,name1,id1-name1","id1,name1,id1-name1")) }
+        verify(exactly = 1) {
+            fileHelper.writeFile(
+                "project.csv",
+                listOf("id1,name1,id1-name1", "id1,name1,id1-name1")
+            )
+        }
     }
 
     @Test
@@ -212,7 +217,7 @@ class CsvProjectDataSourceTest {
         //when
         csvProjectDataSource.editProject(editProject)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf("id1,name1,id1-name1","id2,name2,")) }
+        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf("id1,name1,id1-name1", "id2,name2,")) }
     }
 
     @Test
@@ -280,7 +285,7 @@ class CsvProjectDataSourceTest {
         val project1 = Project("id1", "name1", listOf(State("id1", "name1")))
         val project2 = Project("id2", "name1", listOf(State("id1", "name1")))
         val projectId = "id2"
-        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1","id2,name1,id1-name1")
+        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1", "id2,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project1 andThen project2
         every { csvProjectParser.parseProjectToString(project1) } returns "id1,name1,id1-name1"
         //when

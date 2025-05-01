@@ -1,6 +1,6 @@
 package squad.abudhabi.logic.exceptions
 
-open class AppException(msg: String): Exception(msg)
+open class AppException(msg: String) : Exception(msg)
 
 class InvalidStateException(message: String) : AppException(message)
 
@@ -12,14 +12,8 @@ class ProjectNotFoundException() : AppException("Project Not Found")
 
 class ProjectStateNotFoundException() : AppException("State Not Found")
 
-class InvalidProjectNameException: AppException(("Project name cannot be blank"))
+open class DataException(msg: String) : AppException(msg)
 
-open class DataException(msg: String): AppException(msg)
+class CanNotParseProjectException : DataException("can't parse string to project")
 
-class FileDoesNotExistException: DataException("file does not exist")
-
-class NoDataFoundException: DataException("data not found in file")
-
-class CanNotParseProjectException: DataException("can't parse string to project")
-
-class CanNotParseStateException: DataException("can't parse string to State")
+class CanNotParseStateException : DataException("can't parse string to State")
