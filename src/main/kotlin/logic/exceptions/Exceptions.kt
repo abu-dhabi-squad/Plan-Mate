@@ -2,13 +2,11 @@ package squad.abudhabi.logic.exceptions
 
 open class AppException(msg: String) : Exception(msg)
 
-class TaskNotFoundException : AppException("Task not found")
+class NoUpperCaseInPasswordException : Exception("Password must contain at least one uppercase letter")
 
-class NoTasksFoundException : AppException("No tasks found")
+class NoLowerCaseInPasswordException : Exception("Password must contain at least one lowercase letter")
 
-class InvalidDateFormatException : AppException("Invalid date format")
-
-class InvalidYearException : AppException("Invalid year")
+class NoNumberInPasswordException : Exception("Password must contain at least one number")
 
 class InvalidTaskDateException : AppException("Invalid task date")
 
