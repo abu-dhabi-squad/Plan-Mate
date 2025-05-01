@@ -1,7 +1,6 @@
 package squad.abudhabi.logic.authentication
 
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
-import squad.abudhabi.logic.exceptions.RepositoryException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.repository.AuthenticationRepository
@@ -13,7 +12,17 @@ class LoginByUserNameUseCase(
 ) {
     fun login(username: String, password: String): User {
 
-        TODO()
+        val existingUser=authRepository.getUserByName(username )
+            ?: throw UserNotFoundException(username)
+
+        val hashedInputPassword = hashingService.hash(password)
+
+        if (existingUser.password != hashedInputPassword) {
+            throw InvalidCredentialsException()
+        }
+
+
+        return existingUser
    }
 
 }
