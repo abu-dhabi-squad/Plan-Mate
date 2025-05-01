@@ -35,18 +35,18 @@ class NoNumberInPasswordException : Exception("Password must contain at least on
 
 class NoSpecialCharsInPasswordException : Exception("Password must contain at least one special character")
 
-class UserAlreadyExistsException(username: String) : Exception("Username '$username' already exists")
+class UserAlreadyExistsException(username: String) : AppException("Username '$username' already exists")
 
 class InvalidPasswordException(password: String) :
     Exception("Invalid password")
 
 class UserNotFoundException(username: String) :
-    RuntimeException("User with username '$username' not found")
+    AppException("User with username '$username' not found")
 
 class InvalidCredentialsException : RuntimeException("Invalid credentials")
 
 class EmptyUsernameException(message: String = "Username cannot be empty") : IllegalArgumentException(message)
 
-class CanNotParseUserException : Exception("Cannot parse User data from CSV")
+class CanNotParseUserException : AppException("Cannot parse User data from CSV")
 
 
