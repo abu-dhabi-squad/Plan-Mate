@@ -45,7 +45,6 @@ class LoginByUserNameUseCaseTest {
         assertThat(result).isEqualTo(expectedUser)
     }
 
-
     @Test
     fun `should throw UserNotFoundException when user is not found`() {
         // Given
