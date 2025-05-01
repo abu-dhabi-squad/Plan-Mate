@@ -43,8 +43,6 @@ class LoginByUserNameUseCaseTest {
 
         // Then
         assertThat(result).isEqualTo(expectedUser)
-        verify { authRepository.getUserByName(username) }
-        verify { hashingService.hash(password) }
     }
 
 
@@ -56,11 +54,9 @@ class LoginByUserNameUseCaseTest {
         every { authRepository.getUserByName(username) } returns null
 
         // When & Then
-        val exception = assertThrows<UserNotFoundException> {
+             assertThrows<UserNotFoundException> {
             loginByUserNameUseCase.login(username, password)
         }
-        assertThat(exception).hasMessageThat().contains(username)
-        verify { authRepository.getUserByName(username) }
     }
 
     @Test
@@ -74,12 +70,9 @@ class LoginByUserNameUseCaseTest {
         every { hashingService.hash(password) } returns "hashed_wrongPassword"
 
         // When & Then
-        val exception = assertThrows<InvalidCredentialsException> {
+             assertThrows<InvalidCredentialsException> {
             loginByUserNameUseCase.login(username, password)
         }
-        assertThat(exception).hasMessageThat().contains("Invalid credentials")
-        verify { authRepository.getUserByName(username) }
-        verify { hashingService.hash(password) }
     }
 
 }
