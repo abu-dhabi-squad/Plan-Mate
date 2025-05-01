@@ -9,11 +9,11 @@ class ProjectRepositoryImpl(
 ) : ProjectRepository {
 
     override fun getAllProjects(): List<Project> {
-        return projectDataSource.readProjects()
+        return projectDataSource.getAllProjects()
     }
 
     override fun addProject(project: Project) {
-        projectDataSource.writeProject(project)
+        projectDataSource.createProject(project)
     }
 
     override fun editProject(project: Project) {

@@ -6,7 +6,7 @@ import squad.abudhabi.logic.repository.ProjectRepository
 class DeleteProjectUseCase(private val projectRepository: ProjectRepository) {
     operator fun invoke(projectId: String){
         projectRepository.getProjectById(projectId)
-            ?: throw ProjectNotFoundException(projectId)
+            ?: throw ProjectNotFoundException()
         projectRepository.deleteProject(projectId)
     }
 }

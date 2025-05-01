@@ -22,7 +22,7 @@ class CreateProjectUseCaseTest{
         val name = "Test Project"
 
         // When
-        createProjectUseCase.invoke(name)
+        createProjectUseCase.invoke(name, listOf())
 
         // Then
         verify {

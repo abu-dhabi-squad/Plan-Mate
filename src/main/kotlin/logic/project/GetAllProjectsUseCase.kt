@@ -7,7 +7,9 @@ import squad.abudhabi.logic.repository.ProjectRepository
 class GetAllProjectsUseCase(private val projectRepository: ProjectRepository) {
     operator fun invoke(): List<Project> {
         val storedProjects = projectRepository.getAllProjects()
-        if (storedProjects.isEmpty()) throw NoProjectsFoundException()
+            .takeIf { it.isNotEmpty() }
+            ?: throw NoProjectsFoundException()
+        //if (storedProjects.isEmpty()) throw NoProjectsFoundException()
         return storedProjects
     }
 }

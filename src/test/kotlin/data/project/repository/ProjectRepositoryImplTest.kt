@@ -25,7 +25,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `getProjects should throw Exception when projectDataSource readProjects throw Exception`() {
         //given
-        every { projectDataSource.readProjects() } throws Exception()
+        every { projectDataSource.getAllProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
             projectRepositoryImpl.getAllProjects()
@@ -35,7 +35,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `getProjects should return empty when projectDataSource readProjects return empty list`() {
         //given
-        every { projectDataSource.readProjects() } returns listOf()
+        every { projectDataSource.getAllProjects() } returns listOf()
         //when & then
         Truth.assertThat(projectRepositoryImpl.getAllProjects()).isEmpty()
     }
@@ -44,7 +44,7 @@ class ProjectRepositoryImplTest {
     fun `getProjects should return list of projects when projectDataSource readProjects return list of projects`() {
         //given
         val list = listOf(Project("id1", "name1", listOf()))
-        every { projectDataSource.readProjects() } returns list
+        every { projectDataSource.getAllProjects() } returns list
         //when & then
         Truth.assertThat(projectRepositoryImpl.getAllProjects()).isEqualTo(list)
     }
@@ -53,7 +53,7 @@ class ProjectRepositoryImplTest {
     fun `addProject should throw Exception when projectDataSource writeProject throw Exception`() {
         //given
         val res = Project("1", "name1", listOf())
-        every { projectDataSource.writeProject(any()) } throws Exception()
+        every { projectDataSource.createProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
             projectRepositoryImpl.addProject(res)
@@ -61,13 +61,13 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `addProject best case`(){
+    fun `addProject should be successful when no error occur (best case scenario)`(){
         //given
         val res = Project("1", "name1", listOf())
         //when
         projectRepositoryImpl.addProject(res)
         //then
-        verify(exactly = 1) { projectDataSource.writeProject(res) }
+        verify(exactly = 1) { projectDataSource.createProject(res) }
     }
 
     @Test
@@ -82,7 +82,7 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `editProject best case`() {
+    fun `editProject should be successful when no error occur (best case scenario)`() {
         //given
         val res = Project("1", "name1", listOf())
         //when
@@ -103,7 +103,7 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `deleteProject best case`() {
+    fun `deleteProject should be successful when no error occur (best case scenario)`() {
         //given
         val res = "1"
         //when

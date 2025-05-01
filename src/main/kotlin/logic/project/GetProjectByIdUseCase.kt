@@ -6,6 +6,6 @@ import squad.abudhabi.logic.repository.ProjectRepository
 
 class GetProjectByIdUseCase(private val projectRepository: ProjectRepository) {
     operator fun invoke(projectId: String): Project {
-        return projectRepository.getProjectById(projectId) ?: throw ProjectNotFoundException(projectId)
+        return projectRepository.getProjectById(projectId) ?: throw ProjectNotFoundException()
     }
 }

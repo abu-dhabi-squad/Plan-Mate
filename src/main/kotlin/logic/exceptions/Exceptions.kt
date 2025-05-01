@@ -8,15 +8,17 @@ class DuplicateStateException(state: String) : AppException("State '$state' alre
 
 class NoProjectsFoundException : AppException("No projects Found")
 
-class ProjectNotFoundException(id: String) : AppException("No Project Found with ID: $id")
+class ProjectNotFoundException() : AppException("Project Not Found")
 
-class ProjectStateNotFoundException(id: String) : AppException("No State Found with id: $id in the project")
+class ProjectStateNotFoundException() : AppException("State Not Found")
 
 class InvalidProjectNameException: AppException(("Project name cannot be blank"))
 
 open class DataException(msg: String): AppException(msg)
 
 class FileDoesNotExistException: DataException("file does not exist")
+
+class NoDataFoundException: DataException("data not found in file")
 
 class CanNotParseProjectException: DataException("can't parse string to project")
 

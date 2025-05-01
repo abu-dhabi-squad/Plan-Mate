@@ -8,7 +8,7 @@ class EditProjectUseCase(
 ) {
     operator fun invoke(projectId: String, newName: String){
         val project = projectRepository.getProjectById(projectId)
-            ?: throw ProjectNotFoundException(projectId)
+            ?: throw ProjectNotFoundException()
         projectRepository.editProject(project.copy(projectName = newName))
     }
 }
