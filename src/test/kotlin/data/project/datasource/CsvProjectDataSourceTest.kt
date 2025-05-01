@@ -81,7 +81,7 @@ class CsvProjectDataSourceTest {
         //when
         csvProjectDataSource.createProject(project)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf("id1,name1,id1-name1")) }
+        verify(exactly = 1) { fileHelper.appendFile("build/project.csv", listOf("id1,name1,id1-name1")) }
     }
 
     @Test
