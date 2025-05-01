@@ -25,6 +25,6 @@ class ProjectRepositoryImpl(
     }
 
     override fun getProjectById(projectId: String): Project? {
-        return projectDataSource.getProject(projectId)
+        return projectDataSource.getProjectById(projectId)
     }
 }

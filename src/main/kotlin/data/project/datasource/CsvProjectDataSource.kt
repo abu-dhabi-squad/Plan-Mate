@@ -29,9 +29,8 @@ class CsvProjectDataSource(
         writeProjects(projects.filter { it.id != projectId })
     }
 
-    override fun getProject(projectId: String): Project? {
-        return getAllProjects().toMutableList()
-            .find { it.id == projectId }
+    override fun getProjectById(projectId: String): Project? {
+        return getAllProjects().find { it.id == projectId }
     }
 
     private fun writeProjects(projects: List<Project>) {

@@ -309,62 +309,62 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getProject should throw Exception when readProjects throw Exception`() {
+    fun `getProjectById should throw Exception when readProjects throw Exception`() {
         //given
         every { csvProjectDataSource.getAllProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
-            csvProjectDataSource.getProject("id1")
+            csvProjectDataSource.getProjectById("id1")
         }
     }
 
     @Test
-    fun `getProject should return null when readProjects returns empty list`() {
+    fun `getProjectById should return null when readProjects returns empty list`() {
         //given
         every { fileHelper.readFile(any()) } returns listOf()
         //when & then
-        Truth.assertThat(csvProjectDataSource.getProject("id1")).isNull()
+        Truth.assertThat(csvProjectDataSource.getProjectById("id1")).isNull()
     }
 
     @Test
-    fun `getProject should throw Exception when readFile throw Exception`() {
+    fun `getProjectById should throw Exception when readFile throw Exception`() {
         //given
         every { fileHelper.readFile(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            csvProjectDataSource.getProject("id1")
+            csvProjectDataSource.getProjectById("id1")
         }
     }
 
     @Test
-    fun `getProject should throw Exception when parser throw Exception`() {
+    fun `getProjectById should throw Exception when parser throw Exception`() {
         //given
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            csvProjectDataSource.getProject("id1")
+            csvProjectDataSource.getProjectById("id1")
         }
     }
 
     @Test
-    fun `getProject should return null when the id not in the data`() {
+    fun `getProjectById should return null when the id not in the data`() {
         //given
         val project = Project("id1", "name1", listOf(State("id1", "name1")))
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
         //when & then
-        Truth.assertThat(csvProjectDataSource.getProject("id2")).isNull()
+        Truth.assertThat(csvProjectDataSource.getProjectById("id2")).isNull()
     }
 
     @Test
-    fun `getProject should return the prject when the id in the data`() {
+    fun `getProjectById should return the prject when the id in the data`() {
         //given
         val project = Project("id1", "name1", listOf(State("id1", "name1")))
         val project2 = Project("id2", "name1", listOf(State("id1", "name1")))
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project andThen project2
         //when & then
-        Truth.assertThat(csvProjectDataSource.getProject("id1")).isEqualTo(project)
+        Truth.assertThat(csvProjectDataSource.getProjectById("id1")).isEqualTo(project)
     }
 }

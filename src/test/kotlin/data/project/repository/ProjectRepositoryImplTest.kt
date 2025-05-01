@@ -115,7 +115,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `getProjectById should throw Exception when projectDataSource getProject throw Exception`() {
         //given
-        every { projectDataSource.getProject(any()) } throws Exception()
+        every { projectDataSource.getProjectById(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
             projectRepositoryImpl.getProjectById("1")
@@ -125,7 +125,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `getProjectById should return null when projectDataSource getProject return null`() {
         //given
-        every { projectDataSource.getProject(any()) } returns null
+        every { projectDataSource.getProjectById(any()) } returns null
         //when & then
         Truth.assertThat(projectRepositoryImpl.getProjectById("1")).isNull()
     }
@@ -134,7 +134,7 @@ class ProjectRepositoryImplTest {
     fun `getProjectById should return project when projectDataSource getProject return project`() {
         //given
         val res = Project("1", "name1", listOf(State("1", "name1")))
-        every { projectDataSource.getProject(any()) } returns res
+        every { projectDataSource.getProjectById(any()) } returns res
         //when & then
         Truth.assertThat(projectRepositoryImpl.getProjectById("1")).isEqualTo(res)
     }
