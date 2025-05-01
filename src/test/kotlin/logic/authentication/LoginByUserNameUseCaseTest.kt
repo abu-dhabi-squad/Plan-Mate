@@ -29,7 +29,7 @@ class LoginByUserNameUseCaseTest {
 
     @Test
     fun `should return user when credentials are correct`() {
-        // Given
+        // given
         val username = "shahd"
         val password = "pass123"
         val hashedPassword = "hashed_pass123"
@@ -38,10 +38,10 @@ class LoginByUserNameUseCaseTest {
         every { authRepository.getUserByName(username) } returns expectedUser
         every { hashingService.hash(password) } returns hashedPassword
 
-        // When
+        // when
         val result = loginByUserNameUseCase.login(username, password)
 
-        // Then
+        // then
         assertThat(result).isEqualTo(expectedUser)
         verify { authRepository.getUserByName(username) }
         verify { hashingService.hash(password) }
@@ -50,12 +50,12 @@ class LoginByUserNameUseCaseTest {
 
     @Test
     fun `should throw UserNotFoundException when user is not found`() {
-        // Given
+        // given
         val username = "shahd"
         val password = "pass123"
         every { authRepository.getUserByName(username) } returns null
 
-        // When & Then
+        // when & then
         val exception = assertThrows<UserNotFoundException> {
             loginByUserNameUseCase.login(username, password)
         }
@@ -65,7 +65,7 @@ class LoginByUserNameUseCaseTest {
 
     @Test
     fun `should throw InvalidCredentialsException when password is incorrect`() {
-        // Given
+        // given
         val username = "shahd"
         val password = "wrongPassword"
         val existingUser = User(username = username, password = "hashed_pass123", userType = UserType.MATE)
@@ -73,7 +73,7 @@ class LoginByUserNameUseCaseTest {
         every { authRepository.getUserByName(username) } returns existingUser
         every { hashingService.hash(password) } returns "hashed_wrongPassword"
 
-        // When & Then
+        // when & then
         val exception = assertThrows<InvalidCredentialsException> {
             loginByUserNameUseCase.login(username, password)
         }
