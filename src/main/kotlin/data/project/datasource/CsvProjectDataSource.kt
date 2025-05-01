@@ -14,8 +14,7 @@ class CsvProjectDataSource(
     }
 
     override fun createProject(project: Project) {
-        val projects = getAllProjects()
-        writeProjects(projects + project)
+        appendProject(project)
     }
 
     override fun editProject(project: Project) {
@@ -36,6 +35,10 @@ class CsvProjectDataSource(
     private fun writeProjects(projects: List<Project>) {
         if (projects.isEmpty()) fileHelper.writeFile(fileName, listOf(",,"))
         else fileHelper.writeFile(fileName, projects.map(csvProjectParser::parseProjectToString))
+    }
+
+    private fun appendProject(project: Project) {
+        fileHelper.appendFile(fileName, listOf(csvProjectParser.parseProjectToString(project)))
     }
 
     private fun Project.isEqualProject(project: Project): Project {

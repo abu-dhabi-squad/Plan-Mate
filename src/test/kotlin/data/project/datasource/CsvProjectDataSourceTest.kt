@@ -22,7 +22,7 @@ class CsvProjectDataSourceTest {
     fun setup() {
         fileHelper = mockk(relaxed = true)
         csvProjectParser = mockk(relaxed = true)
-        csvProjectDataSource = CsvProjectDataSource(fileHelper, csvProjectParser, "project.csv")
+        csvProjectDataSource = CsvProjectDataSource(fileHelper, csvProjectParser, "build/project.csv")
     }
 
     @Test
@@ -74,62 +74,21 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `createProject should throw Exception when readProjects throw Exception`() {
-        //given
-        val project = Project("id1", "name1", listOf())
-        every { csvProjectDataSource.getAllProjects() } throws Exception()
-        //when & then
-        assertThrows<Exception> {
-            csvProjectDataSource.createProject(project)
-        }
-    }
-
-    @Test
-    fun `createProject should throw Exception when readFile throw Exception`() {
+    fun `createProject should be success when there is no error occur`() {
         //given
         val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        every { fileHelper.readFile(any()) } throws Exception()
-        //when & then
-        assertThrows<Exception> {
-            csvProjectDataSource.createProject(project)
-        }
-    }
-
-    @Test
-    fun `createProject should add project when readProjects return empty list`() {
-        //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        every { fileHelper.readFile(any()) } returns listOf()
         every { csvProjectParser.parseProjectToString(any()) } returns "id1,name1,id1-name1"
         //when
         csvProjectDataSource.createProject(project)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf("id1,name1,id1-name1")) }
-    }
-
-    @Test
-    fun `createProject should be success when readProjects return list`() {
-        //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
-        every { csvProjectParser.parseProjectToString(any()) } returns "id1,name1,id1-name1" andThen "id1,name1,id1-name1"
-        //when
-        csvProjectDataSource.createProject(project)
-        //then
-        verify(exactly = 1) {
-            fileHelper.writeFile(
-                "project.csv",
-                listOf("id1,name1,id1-name1", "id1,name1,id1-name1")
-            )
-        }
+        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf("id1,name1,id1-name1")) }
     }
 
     @Test
     fun `createProject should throw Exception when parser throw Exception`() {
         //given
         val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
-        every { csvProjectParser.parseStringToProject(any()) } throws Exception()
+        every { csvProjectParser.parseProjectToString(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
             csvProjectDataSource.createProject(project)
@@ -137,11 +96,10 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `createProject should throw Exception when write file throw Exception`() {
+    fun `createProject should throw Exception when append file throw Exception`() {
         //given
         val project = Project("id1", "name1", listOf())
-        every { csvProjectDataSource.getAllProjects() } returns listOf()
-        every { fileHelper.writeFile(any(), any()) } throws Exception()
+        every { fileHelper.appendFile(any(), any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
             csvProjectDataSource.createProject(project)
@@ -190,7 +148,7 @@ class CsvProjectDataSourceTest {
         //when
         csvProjectDataSource.editProject(editProject)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf(",,")) }
+        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf(",,")) }
     }
 
     @Test
@@ -217,7 +175,7 @@ class CsvProjectDataSourceTest {
         //when
         csvProjectDataSource.editProject(editProject)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf("id1,name1,id1-name1", "id2,name2,")) }
+        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf("id1,name1,id1-name1", "id2,name2,")) }
     }
 
     @Test
@@ -262,7 +220,7 @@ class CsvProjectDataSourceTest {
         //when
         csvProjectDataSource.deleteProject(projectId)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf(",,")) }
+        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf(",,")) }
     }
 
     @Test
@@ -291,7 +249,7 @@ class CsvProjectDataSourceTest {
         //when
         csvProjectDataSource.deleteProject(projectId)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf("id1,name1,id1-name1")) }
+        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf("id1,name1,id1-name1")) }
     }
 
     @Test
@@ -305,7 +263,7 @@ class CsvProjectDataSourceTest {
         //when
         csvProjectDataSource.deleteProject(projectId)
         //then
-        verify(exactly = 1) { fileHelper.writeFile("project.csv", listOf(",,")) }
+        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf(",,")) }
     }
 
     @Test
