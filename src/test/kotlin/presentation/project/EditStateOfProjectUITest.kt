@@ -55,7 +55,7 @@ class EditStateOfProjectUITest{
     @Test
     fun `launchUI should display error when edit project use case throw Exception`() {
         // Given
-        every { reader.readString() } returns "id1" andThen "name1"
+        every { reader.readString() } returns "id1" andThen "id1" andThen "name1"
         every { editStateOfProjectUseCase(any(), any()) } throws Exception()
         // When
         editStateOfProjectUI.launchUi()
