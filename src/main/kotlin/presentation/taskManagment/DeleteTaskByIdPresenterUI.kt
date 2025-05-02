@@ -1,0 +1,83 @@
+package squad.abudhabi.presentation.taskManagment
+
+import squad.abudhabi.logic.model.Project
+import squad.abudhabi.logic.model.Task
+import squad.abudhabi.logic.project.GetAllProjectsUseCase
+import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
+import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
+import squad.abudhabi.presentation.UiLauncher
+import squad.abudhabi.presentation.ui_io.InputReader
+import squad.abudhabi.presentation.ui_io.Printer
+
+class DeleteTaskByIdPresenterUI(
+    private val printer: Printer,
+    private val inputReader: InputReader,
+    private val getAllProjectsUseCase: GetAllProjectsUseCase,
+    private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
+    private val deleteTaskByIdUseCase: DeleteTaskByIdUseCase
+) : UiLauncher {
+
+    override fun launchUi() {
+        val projects = try {
+            getAllProjectsUseCase()
+        } catch (e: Exception) {
+            printer.display("❌ Error loading projects: ${e.message}")
+            return
+        }
+
+        if (projects.isEmpty()) {
+            printer.display("⚠️ No projects available.")
+            return
+        }
+
+        showProjects(projects)
+        val projectIndex = promptSelection("Select a project:", projects.size)
+        val selectedProject = projects[projectIndex]
+
+        val tasks = try {
+            getTasksByProjectIdUseCase(selectedProject.id)
+        } catch (e: Exception) {
+            printer.display("❌ Error loading tasks: ${e.message}")
+            return
+        }
+
+        if (tasks.isEmpty()) {
+            printer.display("⚠️ No tasks found in this project.")
+            return
+        }
+
+        showTasks(tasks)
+        val taskIndex = promptSelection("Select a task to delete:", tasks.size)
+        val selectedTask = tasks[taskIndex]
+
+        try {
+            deleteTaskByIdUseCase(selectedTask.id)
+            printer.display("✅ Task '${selectedTask.title}' deleted successfully.")
+        } catch (e: Exception) {
+            printer.display("❌ Failed to delete task: ${e.message}")
+        }
+    }
+
+    private fun showProjects(projects: List<Project>) {
+        printer.display("📋 Available projects:")
+        projects.forEachIndexed { index, project ->
+            printer.display("${index + 1}. ${project.projectName}")
+        }
+    }
+
+    private fun showTasks(tasks: List<Task>) {
+        printer.display("🗂️ Tasks in selected project:")
+        tasks.forEachIndexed { index, task ->
+            printer.display("${index + 1}. ${task.title} (ID: ${task.id})")
+        }
+    }
+
+    private fun promptSelection(prompt: String, max: Int): Int {
+        while (true) {
+            printer.display(prompt)
+            val input = inputReader.readInt()
+            if (input != null && input in 1..max) return input - 1
+            printer.display("Please enter a number between 1 and $max.")
+        }
+    }
+}
