@@ -3,6 +3,7 @@ package squad.abudhabi.data.authentication.datasource
 import squad.abudhabi.data.authentication.datasource.UserColumnIndex.ID
 import squad.abudhabi.data.authentication.datasource.UserColumnIndex.PASSWORD
 import squad.abudhabi.data.authentication.datasource.UserColumnIndex.USERNAME
+import squad.abudhabi.data.authentication.datasource.UserColumnIndex.USER_PARTS
 import squad.abudhabi.data.authentication.datasource.UserColumnIndex.USER_TYPE
 import squad.abudhabi.logic.exceptions.CanNotParseUserException
 import squad.abudhabi.logic.model.User
@@ -15,7 +16,7 @@ class CsvUserParser {
 
     fun parseStringToUser(line: String): User {
         val parts = line.split(",")
-        if (parts.size != 4) throw CanNotParseUserException()
+        if (parts.size != USER_PARTS) throw CanNotParseUserException()
         return User(
             id = parts[ID],
             username = parts[USERNAME],

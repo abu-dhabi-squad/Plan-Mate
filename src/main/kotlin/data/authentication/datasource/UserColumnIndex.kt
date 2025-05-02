@@ -5,4 +5,5 @@ object UserColumnIndex {
     const val USERNAME = 1
     const val PASSWORD = 2
     const val USER_TYPE = 3
+    const val USER_PARTS = 4
 }
