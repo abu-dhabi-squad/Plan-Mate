@@ -19,7 +19,7 @@ class EditStateOfProjectUI(
                 reader.readString()?.let { stateId ->
                     printer.display("\nenter the new name of the state: ")
                     reader.readString()?.let { stateNewName ->
-                        editStateOfProjectUseCase(projectId, State(stateId,stateNewName))
+                        editStateOfProjectUseCase(projectId, State(stateId, stateNewName))
                     } ?: printer.displayLn("wrong input")
                 } ?: printer.displayLn("wrong input")
             } catch (e: Exception) {

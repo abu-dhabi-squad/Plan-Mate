@@ -1,7 +1,10 @@
 package squad.abudhabi.di
 
 import org.koin.dsl.module
+import squad.abudhabi.logic.project.EditProjectUseCase
+import squad.abudhabi.logic.project.EditStateOfProjectUseCase
 
 val useCaseModule = module {
-
+    single { EditStateOfProjectUseCase(get()) }
+    single { EditProjectUseCase(get()) }
 }

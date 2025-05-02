@@ -10,7 +10,7 @@ import squad.abudhabi.presentation.ui_io.ConsoleReader
 import squad.abudhabi.presentation.ui_io.Printer
 import kotlin.test.BeforeTest
 
-class EditStateOfProjectUITest{
+class EditStateOfProjectUITest {
 
     private val printer: Printer = mockk(relaxed = true)
     private val reader: ConsoleReader = mockk(relaxed = true)
