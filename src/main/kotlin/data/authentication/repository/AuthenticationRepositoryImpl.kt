@@ -8,7 +8,11 @@ class AuthenticationRepositoryImpl :AuthenticationRepository{
         TODO("Not yet implemented")
     }
 
-    override fun addNewUser(user: User) {
+    override fun loginUser(username: String, password: String): User? {
+        TODO("Not yet implemented")
+    }
+
+    override fun createUser(user: User) {
         TODO("Not yet implemented")
     }
 

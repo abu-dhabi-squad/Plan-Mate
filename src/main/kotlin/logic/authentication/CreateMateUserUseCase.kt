@@ -12,18 +12,12 @@ class CreateMateUserUseCase(
     private val hashingService: HashingService,
     private val standardPasswordValidator: PasswordValidator
 ) {
-    fun create(username: String, password: String, userType: UserType) {
-        validateInputs(username, password)
-
-             User(
-            username = username,
-            password = hashingService.hash(password),
-            userType = userType
-        ).apply { checkUserDoesNotExist(this)
-            authRepository.addNewUser(this) }
-
-
-
+    fun create(user: User) {
+        validateInputs(user.username, user.password)
+        checkUserDoesNotExist(user)
+        authRepository.createUser(
+            user.copy(password = hashingService.hash(user.password))
+        )
     }
 
     private fun validateInputs(username: String, password: String) {

@@ -1,12 +1,11 @@
 package logic.authentication
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.authentication.CreateMateUserUseCase
-import squad.abudhabi.logic.exceptions.InvalidPasswordException
+import squad.abudhabi.logic.exceptions.EmptyUsernameException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
@@ -30,77 +29,71 @@ class CreateMateUserUseCaseTest {
     }
 
     @Test
-    fun `create should successfully add new user when inputs are valid`() {
-        // Given
+    fun `createUser should successfully create user with valid input`() {
         val username = "shahd"
         val password = "pass123"
         val hashedPassword = "hashed_pass123"
         val userType = UserType.MATE
-        val expectedUser = User(username = username, password = hashedPassword, userType = userType)
+        val inputUser = User(username = username, password = password, userType = userType)
 
-        every { passwordValidator.validatePassword(password) } just runs
+        every { passwordValidator.validatePassword(password) } just Runs
         every { hashingService.hash(password) } returns hashedPassword
         every { authRepository.getUserByName(username) } returns null
-        every { authRepository.addNewUser(any()) } just Runs
 
-        // When
-        createMateUserUseCase.create(username, password, UserType.MATE)
+        createMateUserUseCase.create(inputUser)
 
-        // Then
         verify {
-            passwordValidator.validatePassword(password)
-            hashingService.hash(password)
-            authRepository.getUserByName(username)
-            authRepository.addNewUser(
-                match {
-                    it.username == expectedUser.username &&
-                            it.password == expectedUser.password &&
-                            it.userType == expectedUser.userType
+            authRepository.createUser(
+                match { savedUser ->
+                    savedUser.username == username &&
+                            savedUser.password == hashedPassword &&
+                            savedUser.userType == userType
                 }
             )
         }
     }
 
     @Test
-    fun `should throw IllegalArgumentException when username is blank`() {
-        // Given
-        val username = ""
-        val password = "ValidPass123!"
+    fun `createUser should throw EmptyUsernameException when username is blank`() {
+        val user = User(
+            username = "",
+            password = "ValidPass123!",
+            userType = UserType.MATE
+        )
 
-        // When & Then
-        val exception = assertThrows<IllegalArgumentException> {
-            createMateUserUseCase.create(username, password, UserType.MATE)
-        }
-        assertThat(exception).hasMessageThat().contains("Username cannot be empty")
-    }
-
-    @Test
-    fun `should throw InvalidPasswordException when password is invalid`() {
-        // Given
-        val username = "newUser"
-        val weakPassword = "weak"
-        every { passwordValidator.validatePassword(any()) } throws InvalidPasswordException("Invalid password")
-
-        // When & Then
-             assertThrows<InvalidPasswordException> {
-            createMateUserUseCase.create(username, weakPassword, UserType.MATE)
+        assertThrows<EmptyUsernameException> {
+            createMateUserUseCase.create(user)
         }
     }
 
     @Test
-    fun `should throw UserAlreadyExistsException when user already exists`() {
-        // Given
-        val username = "existingUser"
-        val password = "ValidPass123!"
-        val existingUser = User(id = "2", username = username, password = "oldHash", userType = UserType.MATE)
+    fun `createUser should throw UserAlreadyExistsException when user exists`() {
+        val user = User(
+            username = "existingUser",
+            password = "ValidPass123!",
+            userType = UserType.MATE
+        )
 
-        every { passwordValidator.validatePassword(any()) } just runs
+        every { authRepository.getUserByName(user.username) } returns user
+        every { passwordValidator.validatePassword(any()) } returns Unit
+
+        assertThrows<UserAlreadyExistsException> {
+            createMateUserUseCase.create(user)
+        }
+    }
+    @Test
+    fun `createUser should call password validator`() {
+        val user = User(
+            username = "newUser",
+            password = "ValidPass123!",
+            userType = UserType.MATE
+        )
+        every { authRepository.getUserByName(any()) } returns null
         every { hashingService.hash(any()) } returns "hashedPassword"
-        every { authRepository.getUserByName(username) } returns existingUser
+        every { passwordValidator.validatePassword(any()) } just runs
 
-        // When & Then
-             assertThrows<UserAlreadyExistsException> {
-            createMateUserUseCase.create(username, password, UserType.MATE)
-        }
+        createMateUserUseCase.create(user)
+
+        verify { passwordValidator.validatePassword(user.password) }
     }
 }
