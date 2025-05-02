@@ -4,9 +4,11 @@ import logic.validation.DateParser
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.EntityType
 
+import java.util.UUID
+
 class CsvAuditParser(
     private val dateParser: DateParser
-): AuditParser{
+): AuditParser {
 
     override fun getLineFromAudit(audit: Audit): String {
         return "${audit.id}," +
@@ -20,8 +22,13 @@ class CsvAuditParser(
 
     override fun getAuditFromLine(auditLine: String): Audit {
         val parts = auditLine.split(",")
+
+        if (parts.size < 7) {
+            throw IllegalArgumentException("Invalid CSV format for Audit: $auditLine")
+        }
+
         return Audit(
-            id = parts[AuditColumnIndex.ID],
+            id = UUID.fromString(parts[AuditColumnIndex.ID]),
             createdBy = parts[AuditColumnIndex.CREATED_BY],
             entityId = parts[AuditColumnIndex.ENTITY_ID],
             entityType = EntityType.valueOf(parts[AuditColumnIndex.ENTITY_TYPE]),

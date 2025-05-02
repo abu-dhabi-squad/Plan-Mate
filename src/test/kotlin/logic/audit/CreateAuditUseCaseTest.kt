@@ -10,15 +10,15 @@ import org.junit.jupiter.params.provider.CsvSource
 import squad.abudhabi.logic.repository.AuditRepository
 import kotlin.test.assertFails
 
-class AddAuditUseCaseTest {
+class CreateAuditUseCaseTest {
 
     private lateinit var auditRepository: AuditRepository
-    private lateinit var useCase: AddAuditUseCase
+    private lateinit var useCase: CreateAuditUseCase
 
     @BeforeEach
     fun setup() {
         auditRepository = mockk(relaxed = true)
-        useCase = AddAuditUseCase(auditRepository)
+        useCase = CreateAuditUseCase(auditRepository)
     }
 
     @Test
@@ -26,16 +26,16 @@ class AddAuditUseCaseTest {
 
         // given
         val audit = createAudit(
-            id = "213",
             entityId = "asdww98"
         )
 
         // when
-        useCase.addAudit(audit)
+        useCase.createAuditLog(audit)
 
         // then
+
         verify(exactly = 1) {
-            auditRepository.addAuditLog(match {
+            auditRepository.createAuditLog(match {
                 it.id == audit.id &&
                         it.createdBy == audit.createdBy &&
                         it.entityId == audit.entityId &&
@@ -49,12 +49,11 @@ class AddAuditUseCaseTest {
 
     @ParameterizedTest
     @CsvSource(
-        "audit1,'',old,new",
-        "audit1,entity1,'',new",
-        "audit1,entity1,old,''"
+        "audit1,'',new",
+        "'',entity1,new",
+        "audit1,entity1,''"
     )
     fun `addAudit throws InvalidAudit when essential param is empty`(
-        id: String,
         entityId: String,
         createdBy: String,
         newState: String
@@ -62,7 +61,6 @@ class AddAuditUseCaseTest {
 
         // given
         val audit = createAudit(
-            id = id,
             entityId = entityId,
             createdBy = createdBy,
             newState = newState
@@ -70,7 +68,7 @@ class AddAuditUseCaseTest {
 
         // then
         assertFails {
-            useCase.addAudit(audit)
+            useCase.createAuditLog(audit)
         }
 
     }
@@ -80,7 +78,6 @@ class AddAuditUseCaseTest {
 
         // given
         val audit = createAudit(
-            id = "213",
             entityId = "asdww98",
             newState = "done",
             oldState = "done"
@@ -88,7 +85,7 @@ class AddAuditUseCaseTest {
 
         // then
         assertFails {
-            useCase.addAudit(audit)
+            useCase.createAuditLog(audit)
         }
     }
 }

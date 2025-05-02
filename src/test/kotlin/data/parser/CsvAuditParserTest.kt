@@ -8,7 +8,9 @@ import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.EntityType
 import java.time.LocalDate
+import java.util.UUID
 import kotlin.test.assertEquals
+import kotlin.test.assertFails
 
 class CsvAuditParserTest {
 
@@ -24,9 +26,11 @@ class CsvAuditParserTest {
 
     @Test
     fun `getLineFromAudit should return CSV line correctly`() {
+
         // given
+        val id = UUID.randomUUID()
         val audit = Audit(
-            id = "1",
+            id = id,
             createdBy = "user123",
             entityId = "42",
             entityType = EntityType.PROJECT,
@@ -40,7 +44,7 @@ class CsvAuditParserTest {
         val result = csvAuditParser.getLineFromAudit(audit)
 
         // then
-        val expected = "1,user123,42,PROJECT,old,new,1999-12-20"
+        val expected = "$id,user123,42,PROJECT,old,new,1999-12-20"
         assertEquals(expected, result)
     }
 
@@ -48,7 +52,8 @@ class CsvAuditParserTest {
     fun `getAuditFromLine should parse CSV line into Audit object`() {
 
         // given
-        val line = "1,user123,42,PROJECT,old,new,2023-12-25"
+        val id = UUID.randomUUID()
+        val line = "$id,user123,42,PROJECT,old,new,2023-12-25"
         val expectedDate = LocalDate.of(2023, 12, 25)
 
         every { dateParser.parseDateFromString("2023-12-25") } returns expectedDate
@@ -58,7 +63,7 @@ class CsvAuditParserTest {
 
         // then
         val expectedAudit = Audit(
-            id = "1",
+            id = id,
             createdBy = "user123",
             entityId = "42",
             entityType = EntityType.PROJECT,
@@ -68,6 +73,18 @@ class CsvAuditParserTest {
         )
 
         assertEquals(expectedAudit, result)
+    }
+
+    @Test
+    fun `getAuditFromLine should throw exception for invalid CSV line`() {
+
+        // given
+        val invalidLine = "1,user123,42,PROJECT,old"
+
+        // when & then
+        assertFails {
+            csvAuditParser.getAuditFromLine(invalidLine)
+        }
     }
 
 }

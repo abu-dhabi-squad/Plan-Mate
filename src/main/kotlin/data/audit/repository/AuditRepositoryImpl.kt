@@ -8,8 +8,8 @@ class AuditRepositoryImpl(
     private val dataSource: AuditDataSource
 ) : AuditRepository {
 
-    override fun addAuditLog(auditLog: Audit) {
-        dataSource.addAuditLog(auditLog)
+    override fun createAuditLog(auditLog: Audit) {
+        dataSource.createAuditLog(auditLog)
     }
 
     override fun getAuditByEntityId(entityId: String): List<Audit> {

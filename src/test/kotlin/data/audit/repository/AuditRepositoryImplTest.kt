@@ -32,10 +32,10 @@ class AuditRepositoryImplTest {
         val audit = createAudit()
 
         // when
-        dataSource.addAuditLog(audit)
+        dataSource.createAuditLog(audit)
 
         // then
-        verify(exactly = 1){ dataSource.addAuditLog(any()) }
+        verify(exactly = 1){ dataSource.createAuditLog(any()) }
     }
 
     @Test
@@ -44,10 +44,10 @@ class AuditRepositoryImplTest {
         // given
         val audit = createAudit()
 
-        every { dataSource.addAuditLog(any()) } throws Exception()
+        every { dataSource.createAuditLog(any()) } throws Exception()
 
         // when & then
-        assertFails { auditRepository.addAuditLog(audit) }
+        assertFails { auditRepository.createAuditLog(audit) }
     }
 
 

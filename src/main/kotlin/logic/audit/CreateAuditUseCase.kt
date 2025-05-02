@@ -4,15 +4,15 @@ import squad.abudhabi.logic.exceptions.InvalidAudit
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.repository.AuditRepository
 
-class AddAuditUseCase(
+class CreateAuditUseCase(
     private val auditRepository: AuditRepository
 ) {
-    fun addAudit(
+    fun createAuditLog(
         auditLog: Audit
     ){
 
         if (auditLog.isValid() && !isSameStates(newState = auditLog.newState, oldState = auditLog.oldState))
-        auditRepository.addAuditLog(auditLog)
+        auditRepository.createAuditLog(auditLog)
         else throw InvalidAudit()
     }
 

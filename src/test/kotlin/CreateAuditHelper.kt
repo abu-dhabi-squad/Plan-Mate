@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 fun createAudit(
-    id: String = UUID.randomUUID().toString(),
+    id: UUID = UUID.randomUUID(),
     entityId : String = "UG7299",
     newState: String = "InProgress",
     oldState : String = "TODO",

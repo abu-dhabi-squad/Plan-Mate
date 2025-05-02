@@ -23,5 +23,4 @@ class DateValidatorImpl(
     private fun validateYearOrThrow(year: Int) {
         if (year < 2000) throw InvalidYearException()
     }
-
 }

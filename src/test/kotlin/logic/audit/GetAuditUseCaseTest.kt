@@ -31,12 +31,10 @@ class GetAuditUseCaseTest {
         val expectedAudits = listOf(
             createAudit(
                 entityId = entityId,
-                id = "0",
                 entityType = EntityType.PROJECT
             ),
             createAudit(
                 entityId = entityId,
-                id = "9"
             )
         )
 

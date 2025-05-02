@@ -34,7 +34,7 @@ class CsvAuditDataSourceTest {
         val audit = createAudit()
 
         // when
-        csvAuditDataSource.addAuditLog(audit)
+        csvAuditDataSource.createAuditLog(audit)
 
         // then
         verify(exactly = 1){ csvFileHelper.appendFile(any(),any()) }
@@ -48,7 +48,7 @@ class CsvAuditDataSourceTest {
         every { csvFileHelper.appendFile(any(),any()) } throws Exception()
 
         // when & then
-        assertFails { csvAuditDataSource.addAuditLog(audit) }
+        assertFails { csvAuditDataSource.createAuditLog(audit) }
     }
 
 

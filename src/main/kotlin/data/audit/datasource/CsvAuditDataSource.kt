@@ -10,7 +10,7 @@ class CsvAuditDataSource(
     private val csvAuditParser: CsvAuditParser,
 ) : AuditDataSource{
 
-    override fun addAuditLog(audit: Audit) {
+    override fun createAuditLog(audit: Audit) {
         return csvFileHelper.appendFile(csvFileName, listOf(csvAuditParser.getLineFromAudit(audit)))
     }
 
