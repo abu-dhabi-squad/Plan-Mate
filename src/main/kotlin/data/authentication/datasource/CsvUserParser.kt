@@ -12,6 +12,17 @@ class CsvUserParser {
     fun parseStringToUser(line: String): User {
         val parts = line.split(",")
         if (parts.size != 4) throw CanNotParseUserException()
-        return User(parts[0], parts[1], parts[2], UserType.valueOf(parts[3]))
+        return User(
+            id = parts[ID],
+            username = parts[USERNAME],
+            password = parts[PASSWORD],
+            userType = UserType.valueOf(parts[USER_TYPE]))
+    }
+
+    companion object{
+            const val ID = 0
+            const val USERNAME = 1
+            const val PASSWORD = 2
+            const val USER_TYPE = 3
     }
 }
