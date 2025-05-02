@@ -1,7 +1,8 @@
+package data.authentication.repository
+
 import com.google.common.truth.Truth
 import data.TestData.user1
 import data.TestData.user2
-import data.TestData.userName1
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -9,11 +10,12 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.data.authentication.datasource.AuthenticationDataSource
 import squad.abudhabi.data.authentication.repository.AuthenticationRepositoryImpl
+import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
-import kotlin.test.assertFailsWith
 
 
 class AuthenticationRepositoryImplTest {
@@ -29,63 +31,96 @@ class AuthenticationRepositoryImplTest {
     }
 
     @Test
-    fun `getUserByName should return user when user exists`() {
+    fun `login should return user when username and password are correct`() {
         // Given
-        every { authenticationDataSource.getAllUsers() } returns listOf(user1, user2)
+        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
 
         // When
-        val result = authenticationRepository.getUserByName(userName1)
+        val result = authenticationRepository.login(user1.username, "pass1")
 
         // Then
         Truth.assertThat(result).isEqualTo(user1)
     }
 
     @Test
-    fun `getUserByName should throw UserNotFoundException when user no found`() {
+    fun `login should throw InvalidCredentialsException when password is incorrect`() {
         // Given
-        every { authenticationDataSource.getAllUsers() } returns listOf(user1, user2)
+        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
 
         // When & Then
-        assertFailsWith<UserNotFoundException> {
-            authenticationRepository.getUserByName("user3")
+        assertThrows<InvalidCredentialsException> {
+            authenticationRepository.login(user1.username, "wrongPassword")
         }
     }
 
     @Test
-    fun `createUser should add user when user does not exist`() {
+    fun `login should throw InvalidCredentialsException when password is empty`() {
+        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
+
+        assertThrows<InvalidCredentialsException> {
+            authenticationRepository.login(user1.username, "")
+        }
+    }
+
+    @Test
+    fun `getUserByName should return user when username exists`() {
         // Given
-        every { authenticationDataSource.getAllUsers() } returns listOf(user1)
-        every { authenticationDataSource.saveUsers(any()) } just Runs
+        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
+
+        // When
+        val result = authenticationRepository.getUserByName(user1.username)
+
+        // Then
+        Truth.assertThat(result).isEqualTo(user1)
+    }
+
+    @Test
+    fun `getUserByName should throw UserNotFoundException when username does not exist`() {
+        // Given
+        every { authenticationDataSource.getUserByUserName(user1.username) } returns null
+
+        // When & Then
+        assertThrows<UserNotFoundException> {
+            authenticationRepository.getUserByName(user1.username)
+        }
+    }
+
+    @Test
+    fun `createUser should create user when username does not exist`() {
+        // Given
+        every { authenticationDataSource.getUserByUserName(user2.username) } returns null
+        every { authenticationDataSource.createUser(user2) } just Runs
 
         // When
         authenticationRepository.createUser(user2)
 
         // Then
-        verify(exactly = 1) { authenticationDataSource.saveUsers(listOf(user1, user2)) }
+        verify(exactly = 1) { authenticationDataSource.createUser(user2) }
     }
 
     @Test
-    fun `createUser should throw UserAlreadyExistsException when user already exists`() {
+    fun `createUser should throw UserAlreadyExistsException when username already exists`() {
         // Given
-        every { authenticationDataSource.getAllUsers() } returns listOf(user1, user2)
+        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
 
         // When & Then
-        assertFailsWith<UserAlreadyExistsException> {
+        assertThrows<UserAlreadyExistsException> {
             authenticationRepository.createUser(user1)
         }
     }
 
+
     @Test
     fun `createUser should check if the user already exists before adding`() {
         // Given
-        every { authenticationDataSource.getAllUsers() } returns listOf(user1)
-        every { authenticationDataSource.saveUsers(any()) } just Runs
+        every { authenticationDataSource.getUserByUserName(user2.username) } returns null
+        every { authenticationDataSource.createUser(user2) } just Runs
 
         // When
         authenticationRepository.createUser(user2)
 
         // Then
-        verify(exactly = 1) { authenticationDataSource.saveUsers(listOf(user1, user2)) }
+        verify(exactly = 1) { authenticationDataSource.createUser(user2) }
     }
 
 }
