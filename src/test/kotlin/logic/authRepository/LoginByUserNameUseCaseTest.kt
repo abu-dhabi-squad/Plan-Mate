@@ -28,49 +28,70 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `should return user when credentials are correct`() {
-        // Given
-        val username = "shahd"
-        val password = "pass123"
-        val hashedPassword = "hashed_pass123"
-        val expectedUser = User(username = username, password = hashedPassword, userType = UserType.MATE)
+    fun `getUser should return user when credentials are valid`() {
+        val username = "testUser"
+        val password = "correctPassword"
+        val hashedPassword = "hashedPassword"
+        val expectedUser = User(username, hashedPassword, "role", UserType.MATE)
 
-        every { authRepository.getUserByName(username) } returns expectedUser
         every { hashingService.hash(password) } returns hashedPassword
+        every { authRepository.loginUser(username, hashedPassword) } returns expectedUser
 
-        // When
-        val result = loginByUserNameUseCase.login(username, password)
+        val result = loginByUserNameUseCase.getUser(username, password)
 
-        // Then
         assertThat(result).isEqualTo(expectedUser)
-    }
-
-    @Test
-    fun `should throw UserNotFoundException when user is not found`() {
-        // Given
-        val username = "shahd"
-        val password = "pass123"
-        every { authRepository.getUserByName(username) } returns null
-
-        // When & Then
-        assertThrows<UserNotFoundException> {
-            loginByUserNameUseCase.login(username, password)
+        verify {
+            hashingService.hash(password)
+            authRepository.loginUser(username, hashedPassword)
         }
     }
 
     @Test
-    fun `should throw InvalidCredentialsException when password is incorrect`() {
-        // Given
-        val username = "shahd"
+    fun `getUser should throw UserNotFoundException when user not found`() {
+        val username = "nonExistingUser"
+        val password = "anyPassword"
+        val hashedPassword = "hashedPassword"
+
+        every { hashingService.hash(password) } returns hashedPassword
+        every { authRepository.loginUser(username, hashedPassword) } returns null
+
+        assertThrows<UserNotFoundException> {
+            loginByUserNameUseCase.getUser(username, password)
+        }
+
+        verify {
+            hashingService.hash(password)
+            authRepository.loginUser(username, hashedPassword)
+        }
+    }
+
+    @Test
+    fun `getUser should hash password before calling repository`() {
+        val username = "testUser"
+        val password = "password123"
+        val hashedPassword = "hashed123"
+        val expectedUser = User(username, hashedPassword, "role", UserType.MATE)
+
+        every { hashingService.hash(password) } returns hashedPassword
+        every { authRepository.loginUser(username, hashedPassword) } returns expectedUser
+
+        loginByUserNameUseCase.getUser(username, password)
+
+        verify(exactly = 1) { hashingService.hash(password) }
+        verify(exactly = 1) { authRepository.loginUser(username, hashedPassword) }
+    }
+
+    @Test
+    fun `getUser should propagate InvalidCredentialsException from repository`() {
+        val username = "testUser"
         val password = "wrongPassword"
-        val existingUser = User(username = username, password = "hashed_pass123", userType = UserType.MATE)
+        val hashedPassword = "hashedWrong"
 
-        every { authRepository.getUserByName(username) } returns existingUser
-        every { hashingService.hash(password) } returns "hashed_wrongPassword"
+        every { hashingService.hash(password) } returns hashedPassword
+        every { authRepository.loginUser(username, hashedPassword) } throws InvalidCredentialsException()
 
-        // When & Then
         assertThrows<InvalidCredentialsException> {
-            loginByUserNameUseCase.login(username, password)
+            loginByUserNameUseCase.getUser(username, password)
         }
     }
 
