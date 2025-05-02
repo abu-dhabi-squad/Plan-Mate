@@ -1,26 +1,34 @@
 package squad.abudhabi.presentation.project
 
 import squad.abudhabi.logic.project.EditProjectUseCase
+import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 
 class EditProjectUI(
     private val editProjectUseCase: EditProjectUseCase,
+    private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val reader: InputReader,
     private val printer: Printer
 ) : UiLauncher {
     override fun launchUi() {
-        printer.display("enter project id: ")
-        reader.readString()?.let { projectId ->
-            try {
-                printer.display("\nenter the new name: ")
-                reader.readString()?.let { projectName ->
-                    editProjectUseCase(projectId, projectName)
-                } ?: printer.displayLn("wrong input")
-            } catch (e: Exception) {
-                printer.displayLn(e.message)
-            }
-        } ?: printer.displayLn("wrong input")
+        try {
+            getAllProjectsUseCase().takeIf { it.isNotEmpty() }
+                ?.forEach { project ->
+                    printer.displayLn("project id: " + project.id + " - project name: " + project.projectName + " - states : " + project.states)
+                }?.let {
+                    printer.display("enter the id of the project you want to edit: ")
+                    reader.readString()?.let { projectId ->
+                        printer.display("\nenter the new name: ")
+                        reader.readString()?.let { projectName ->
+                            editProjectUseCase(projectId, projectName)
+                        } ?: printer.displayLn("wrong input")
+                    } ?: printer.displayLn("wrong input")
+                } ?: printer.displayLn("there is no project in list")
+        } catch (e: Exception) {
+            printer.displayLn(e.message)
+        }
+
     }
 }

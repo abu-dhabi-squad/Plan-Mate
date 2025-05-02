@@ -4,7 +4,10 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import squad.abudhabi.logic.model.Project
+import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.EditStateOfProjectUseCase
+import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.presentation.project.EditStateOfProjectUI
 import squad.abudhabi.presentation.ui_io.ConsoleReader
 import squad.abudhabi.presentation.ui_io.Printer
@@ -15,16 +18,63 @@ class EditStateOfProjectUITest {
     private val printer: Printer = mockk(relaxed = true)
     private val reader: ConsoleReader = mockk(relaxed = true)
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase = mockk(relaxed = true)
+    private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
     private lateinit var editStateOfProjectUI: EditStateOfProjectUI
 
     @BeforeTest
     fun setup() {
-        editStateOfProjectUI = EditStateOfProjectUI(editStateOfProjectUseCase, reader, printer)
+        editStateOfProjectUI = EditStateOfProjectUI(editStateOfProjectUseCase, getAllProjectsUseCase, reader, printer)
+    }
+
+    @Test
+    fun `launchUI should display Exception message when get all projects throw Exception`() {
+        //given
+        every { getAllProjectsUseCase() } throws Exception()
+        //when
+        editStateOfProjectUI.launchUi()
+        //then
+        verify { printer.displayLn(Exception().message) }
+    }
+
+    @Test
+    fun `launchUI should display there is no project in list when get all projects return empty list`() {
+        //given
+        every { getAllProjectsUseCase() } returns listOf()
+        //when
+        editStateOfProjectUI.launchUi()
+        //then
+        verify { printer.displayLn("there is no project in list") }
+    }
+
+    @Test
+    fun `launchUI should display list details when get all projects return list`() {
+        //given
+        val projects = listOf(
+            Project("id1", "name1", listOf(State("id2", "name2"))),
+            Project("id1", "name1", listOf(State("id2", "name2")))
+        )
+        every { getAllProjectsUseCase() } returns projects
+        every { reader.readString() } returns null
+        //when
+        editStateOfProjectUI.launchUi()
+        //then
+        verify {
+            projects.forEach{ project ->
+                printer.displayLn(
+                    "project id: " + project.id +
+                            " - project name: " + project.projectName +
+                            " - states : " + project.states
+                )
+            }
+
+        }
+        verify { printer.displayLn("wrong input") }
     }
 
     @Test
     fun `launchUI should display wrong input when enter wrong input or not entering at all for project id`() {
         //given
+        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
         every { reader.readString() } returns null
         //when
         editStateOfProjectUI.launchUi()
@@ -35,6 +85,7 @@ class EditStateOfProjectUITest {
     @Test
     fun `launchUI should display wrong input when enter wrong input or not entering at all for state id`() {
         //given
+        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
         every { reader.readString() } returns "id1" andThen null
         //when
         editStateOfProjectUI.launchUi()
@@ -45,6 +96,7 @@ class EditStateOfProjectUITest {
     @Test
     fun `launchUI should display wrong input when enter wrong input or not entering at all for state name`() {
         //given
+        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
         every { reader.readString() } returns "id1" andThen "id1" andThen null
         //when
         editStateOfProjectUI.launchUi()
@@ -55,6 +107,7 @@ class EditStateOfProjectUITest {
     @Test
     fun `launchUI should display error when edit project use case throw Exception`() {
         // Given
+        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
         every { reader.readString() } returns "id1" andThen "id1" andThen "name1"
         every { editStateOfProjectUseCase(any(), any()) } throws Exception()
         // When
