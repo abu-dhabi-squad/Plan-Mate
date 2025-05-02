@@ -8,7 +8,7 @@ class LoginByUserNameUseCase(
     private val authRepository: AuthenticationRepository,
     private val hashingService: HashingService
 ) {
-    fun invoke(username: String, password: String): User {
+    operator fun invoke(username: String, password: String): User {
         val hashPassword= hashingService.hash(password)
         return authRepository.loginUser(username,hashPassword)
             ?: throw UserNotFoundException(username)

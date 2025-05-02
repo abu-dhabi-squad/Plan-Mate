@@ -22,7 +22,7 @@ class LoginByUserNameUseCaseUI(
         val password = promptNonEmptyString("Enter password: ")
 
         try {
-            val user = loginUseCase.invoke(username, password)
+            val user = loginUseCase(username, password)
             printer.displayLn("Login successful! Welcome ${user.username} [${user.userType}]")
             when (user.userType) {
                 UserType.ADMIN -> consoleMenuViewAdmin.launchUi()

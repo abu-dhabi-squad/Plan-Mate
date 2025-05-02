@@ -37,7 +37,7 @@ class LoginByUserNameUseCaseTest {
         every { hashingService.hash(password) } returns hashedPassword
         every { authRepository.loginUser(username, hashedPassword) } returns expectedUser
 
-        val result = loginByUserNameUseCase.invoke(username, password)
+        val result = loginByUserNameUseCase(username, password)
 
         assertThat(result).isEqualTo(expectedUser)
         verify {
@@ -56,7 +56,7 @@ class LoginByUserNameUseCaseTest {
         every { authRepository.loginUser(username, hashedPassword) } returns null
 
         assertThrows<UserNotFoundException> {
-            loginByUserNameUseCase.invoke(username, password)
+            loginByUserNameUseCase(username, password)
         }
 
         verify {
@@ -75,7 +75,7 @@ class LoginByUserNameUseCaseTest {
         every { hashingService.hash(password) } returns hashedPassword
         every { authRepository.loginUser(username, hashedPassword) } returns expectedUser
 
-        loginByUserNameUseCase.invoke(username, password)
+        loginByUserNameUseCase(username, password)
 
         verify(exactly = 1) { hashingService.hash(password) }
         verify(exactly = 1) { authRepository.loginUser(username, hashedPassword) }
@@ -91,7 +91,7 @@ class LoginByUserNameUseCaseTest {
         every { authRepository.loginUser(username, hashedPassword) } throws InvalidCredentialsException()
 
         assertThrows<InvalidCredentialsException> {
-            loginByUserNameUseCase.invoke(username, password)
+            loginByUserNameUseCase(username, password)
         }
     }
 
