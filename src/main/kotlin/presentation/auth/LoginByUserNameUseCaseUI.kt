@@ -1,7 +1,6 @@
 package squad.abudhabi.presentation.auth
 
 import squad.abudhabi.logic.authentication.LoginByUserNameUseCase
-import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.UserType
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.admin.ConsoleAdminMenuView
@@ -23,7 +22,7 @@ class LoginByUserNameUseCaseUI(
         val password = promptNonEmptyString("Enter password: ")
 
         try {
-            val user = loginUseCase.getUser(username, password)
+            val user = loginUseCase.invoke(username, password)
             printer.displayLn("Login successful! Welcome ${user.username} [${user.userType}]")
             when (user.userType) {
                 UserType.ADMIN -> consoleMenuViewAdmin.launchUi()

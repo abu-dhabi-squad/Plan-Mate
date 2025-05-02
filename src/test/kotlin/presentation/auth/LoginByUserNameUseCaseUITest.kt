@@ -69,7 +69,7 @@ class LoginByUserNameUseCaseUITest {
         // Given
         val user = User("2", "adminUser", "adminPass", UserType.ADMIN)
         every { inputReader.readString() } returnsMany listOf("adminUser", "adminPass")
-        every { loginUseCase.getUser("adminUser", "adminPass") } returns user
+        every { loginUseCase.invoke("adminUser", "adminPass") } returns user
 
         // When
         loginUi.launchUi()
@@ -85,7 +85,7 @@ class LoginByUserNameUseCaseUITest {
         // Given
         val user = User("3", "mateUser", "matePass", UserType.MATE)
         every { inputReader.readString() } returnsMany listOf("mateUser", "matePass")
-        every { loginUseCase.getUser("mateUser", "matePass") } returns user
+        every { loginUseCase.invoke("mateUser", "matePass") } returns user
 
         // When
         loginUi.launchUi()
@@ -101,7 +101,7 @@ class LoginByUserNameUseCaseUITest {
         // Given
         val username = "wrongUser"
         every { inputReader.readString() } returnsMany listOf(username, "wrongPass")
-        every { loginUseCase.getUser(username, "wrongPass") } throws UserNotFoundException(username)
+        every { loginUseCase.invoke(username, "wrongPass") } throws UserNotFoundException(username)
 
         // When
         loginUi.launchUi()
