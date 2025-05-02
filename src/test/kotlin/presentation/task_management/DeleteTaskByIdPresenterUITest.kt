@@ -1,4 +1,4 @@
-package presentation.taskManagment
+package presentation.task_management
 
 import helper.createProject
 import helper.createTask
@@ -15,7 +15,6 @@ import squad.abudhabi.logic.exceptions.NoTasksFoundException
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
 import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
-import squad.abudhabi.presentation.taskManagment.DeleteTaskByIdPresenterUI
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 

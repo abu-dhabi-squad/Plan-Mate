@@ -1,4 +1,4 @@
-package presentation.taskManagment
+package presentation.task_management
 
 import helper.createProject
 import helper.createState
@@ -158,7 +158,7 @@ class CreateTaskPresenterUITest {
     }
 
     @ParameterizedTest
-    @CsvSource(",2025-10-10", "    ,2025-10-10", "null,2025-10-10", nullValues = ["null"])
+    @CsvSource(",2025-10-10", "'    ',2025-10-10", "null,2025-10-10", nullValues = ["null"])
     fun `should display error when user enter empty or null date`(
         firstEnterDate: String?,
         secondEnterDate: String

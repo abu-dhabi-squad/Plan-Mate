@@ -1,4 +1,4 @@
-package presentation.taskManagment
+package presentation.task_management
 
 import helper.createProject
 import helper.createTask
@@ -12,7 +12,6 @@ import squad.abudhabi.logic.exceptions.NoTasksFoundException
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.EditTaskUseCase
 import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
-import squad.abudhabi.presentation.taskManagment.EditTaskPresenterUI
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 
@@ -150,7 +149,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should keep existing title and description if user inputs are blank`() {
+    fun `should keep existing title and description if user inputs are empty`() {
         val project = createProject("1", "Project A")
         val task = createTask("t1", title = "Old Title", description = "Old Desc")
 
@@ -158,6 +157,21 @@ class EditTaskPresenterUITest {
         every { inputReader.readInt() } returnsMany listOf(1, 1)
         every { getTasksByProjectIdUseCase("1") } returns listOf(task)
         every { inputReader.readString() } returnsMany listOf("", "")
+
+        presenter.launchUi()
+
+        verify { editTaskUseCase(task.copy(title = "Old Title", description = "Old Desc")) }
+    }
+
+    @Test
+    fun `should keep existing title and description if user inputs are null`() {
+        val project = createProject("1", "Project A")
+        val task = createTask("t1", title = "Old Title", description = "Old Desc")
+
+        every { getAllProjectsUseCase() } returns listOf(project)
+        every { inputReader.readInt() } returnsMany listOf(1, 1)
+        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
+        every { inputReader.readString() } returnsMany listOf(null, null)
 
         presenter.launchUi()
 

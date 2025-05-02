@@ -1,4 +1,4 @@
-package presentation.taskManagment
+package presentation.task_management
 
 import helper.createProject
 import helper.createState
@@ -13,7 +13,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
-import squad.abudhabi.presentation.taskManagment.GetTasksByProjectIdPresenterUI
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate

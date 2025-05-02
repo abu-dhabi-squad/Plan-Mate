@@ -1,4 +1,4 @@
-package squad.abudhabi.presentation.taskManagment
+package presentation.task_management
 
 import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
@@ -20,12 +20,12 @@ class EditTaskPresenterUI(
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {
-            printer.display("❌ Failed to load projects: ${e.message}")
+            printer.display("Failed to load projects: ${e.message}")
             return
         }
 
         if (projects.isEmpty()) {
-            printer.display("⚠️ No projects available.")
+            printer.display("No projects available.")
             return
         }
 
@@ -36,12 +36,12 @@ class EditTaskPresenterUI(
         val tasks = try {
             getTasksByProjectIdUseCase(selectedProject.id)
         } catch (e: Exception) {
-            printer.display("❌ Failed to load tasks: ${e.message}")
+            printer.display("Failed to load tasks: ${e.message}")
             return
         }
 
         if (tasks.isEmpty()) {
-            printer.display("⚠️ No tasks found in this project.")
+            printer.display("No tasks found in this project.")
             return
         }
 
@@ -60,21 +60,21 @@ class EditTaskPresenterUI(
 
         try {
             editTaskUseCase(updatedTask)
-            printer.display("✅ Task updated successfully.")
+            printer.display("Task updated successfully.")
         } catch (e: Exception) {
-            printer.display("❌ Failed to update task: ${e.message}")
+            printer.display("Failed to update task: ${e.message}")
         }
     }
 
     private fun showProjects(projects: List<squad.abudhabi.logic.model.Project>) {
-        printer.display("📋 Available Projects:")
+        printer.display("Available Projects:")
         projects.forEachIndexed { index, project ->
             printer.display("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showTasks(tasks: List<Task>) {
-        printer.display("🗂️ Tasks in Selected Project:")
+        printer.display("Tasks in Selected Project:")
         tasks.forEachIndexed { index, task ->
             printer.display("${index + 1}. ${task.title} (ID: ${task.id})")
         }

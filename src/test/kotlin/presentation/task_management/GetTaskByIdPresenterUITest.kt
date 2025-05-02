@@ -1,4 +1,4 @@
-package presentation.taskManagment
+package presentation.task_management
 
 import io.mockk.every
 import io.mockk.mockk
@@ -9,7 +9,6 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.task.GetTaskByIdUseCase
-import squad.abudhabi.presentation.taskManagment.GetTaskByIdPresenterUI
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate

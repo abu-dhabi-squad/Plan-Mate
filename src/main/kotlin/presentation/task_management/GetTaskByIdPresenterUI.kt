@@ -1,4 +1,4 @@
-package squad.abudhabi.presentation.taskManagment
+package presentation.task_management
 
 import squad.abudhabi.logic.task.GetTaskByIdUseCase
 import squad.abudhabi.presentation.UiLauncher
@@ -12,18 +12,18 @@ class GetTaskByIdPresenterUI(
 ) : UiLauncher {
 
     override fun launchUi() {
-        printer.display("🔍 Retrieve Task by ID")
+        printer.display("Retrieve Task by ID")
         printer.display("Enter task ID:")
 
         val taskId = inputReader.readString()
         if (taskId.isNullOrBlank()) {
-            printer.display("❌ Task ID cannot be empty.")
+            printer.display("Task ID cannot be empty.")
             return
         }
 
         try {
             val task = getTaskByIdUseCase(taskId)
-            printer.display("✅ Task Found:")
+            printer.display("Task Found:")
             printer.display("Title: ${task.title}")
             printer.display("Description: ${task.description}")
             printer.display("Start Date: ${task.startDate}")
@@ -32,7 +32,7 @@ class GetTaskByIdPresenterUI(
             printer.display("State ID: ${task.stateId}")
             printer.display("Assigned to: ${task.userName}")
         } catch (e: Exception) {
-            printer.display("❌ Failed to retrieve task: ${e.message}")
+            printer.display("Failed to retrieve task: ${e.message}")
         }
     }
 }

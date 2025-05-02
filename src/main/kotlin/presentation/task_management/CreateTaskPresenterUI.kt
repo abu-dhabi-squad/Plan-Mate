@@ -58,21 +58,21 @@ class CreateTaskPresenterUI(
 
         try {
             createTaskUseCase(task)
-            printer.display("✅ Task created successfully.")
+            printer.display("Task created successfully.")
         } catch (e: Exception) {
-            printer.display("❌ Failed to create task: ${e.message}")
+            printer.display("Failed to create task: ${e.message}")
         }
     }
 
     private fun showProjects(projects: List<Project>) {
-        printer.display("📋 Available projects:")
+        printer.display("Available projects:")
         projects.forEachIndexed { index, project ->
             printer.display("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showStates(states: List<State>) {
-        printer.display("📍 Available states:")
+        printer.display("Available states:")
         states.forEachIndexed { index, state ->
             printer.display("${index + 1}. ${state.name}")
         }
