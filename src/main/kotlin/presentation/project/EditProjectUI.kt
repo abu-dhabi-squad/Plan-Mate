@@ -11,6 +11,16 @@ class EditProjectUI(
     private val printer: Printer
 ) : UiLauncher {
     override fun launchUi() {
-        TODO("Not yet implemented")
+        printer.display("enter project id: ")
+        reader.readString()?.let { projectId ->
+            try {
+                printer.display("\nenter the new name: ")
+                reader.readString()?.let { projectName ->
+                    editProjectUseCase(projectId, projectName)
+                } ?: printer.displayLn("wrong input")
+            } catch (e: Exception) {
+                printer.displayLn(e.message)
+            }
+        } ?: printer.displayLn("wrong input")
     }
 }
