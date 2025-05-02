@@ -13,7 +13,7 @@ import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.EditStateOfProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 
-class EditStateOfProjectUseCaseTest {
+class EditStateUIOfProjectUseCaseTest {
     private lateinit var editStateToProjectUseCase: EditStateOfProjectUseCase
     private val projectRepository: ProjectRepository = mockk(relaxed = true)
 
