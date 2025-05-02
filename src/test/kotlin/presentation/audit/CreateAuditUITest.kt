@@ -89,3 +89,5 @@ class AuditUiTest {
         assertTrue(output.contains("❌ Unexpected error:"))
     }
 }
+
+
