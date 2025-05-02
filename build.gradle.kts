@@ -16,6 +16,8 @@ dependencies {
     testImplementation ("com.google.truth:truth:1.4.4")
     testImplementation("io.mockk:mockk:1.14.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    implementation("com.soywiz.korlibs.krypto:krypto:3.4.0")
+
 }
 
 tasks.test {
