@@ -103,21 +103,6 @@ class CsvAuthenticationDataSourceTest {
         }
     }
 
-//    @Test
-//    fun `createUser should add user and save to file`() {
-//        // Given
-//        every { fileHelper.readFile(filePath) } returns listOf(userString1)
-//        every { csvUserParser.parseStringToUser(userString1) } returns user1
-//        every { csvUserParser.parseUserToString(user2) } returns userString2
-//        every { fileHelper.writeFile(filePath, listOf(userString1, userString2)) } just Runs
-//
-//        // When
-//        csvAuthenticationDataSource.createUser(user2)
-//
-//        // Then
-//        verify(exactly = 1) { fileHelper.writeFile(filePath, listOf(userString1, userString2)) }
-//    }
-
     @Test
     fun `createUser should save new user when file is empty`() {
         // Given
