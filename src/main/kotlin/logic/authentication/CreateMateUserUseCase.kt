@@ -2,7 +2,6 @@ package squad.abudhabi.logic.authentication
 import squad.abudhabi.logic.exceptions.EmptyUsernameException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
 import squad.abudhabi.logic.repository.AuthenticationRepository
 import squad.abudhabi.logic.utils.HashingService
 import squad.abudhabi.logic.validation.PasswordValidator
@@ -12,7 +11,7 @@ class CreateMateUserUseCase(
     private val hashingService: HashingService,
     private val standardPasswordValidator: PasswordValidator
 ) {
-    fun create(user: User) {
+    operator fun invoke(user: User) {
         validateInputs(user.username, user.password)
         checkUserDoesNotExist(user)
         authRepository.createUser(
@@ -30,6 +29,5 @@ class CreateMateUserUseCase(
         authRepository.getUserByName(user.username)?.let {
             throw UserAlreadyExistsException(user.username)
         }
-
     }
 }
