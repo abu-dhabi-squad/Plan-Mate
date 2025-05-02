@@ -26,8 +26,33 @@ class ProjectNotFoundException() : AppException("Project Not Found")
 
 class ProjectStateNotFoundException() : AppException("State Not Found")
 
+class InvalidPasswordException(password: String) : AppException("Invalid password")
+
+class UserAlreadyExistsException(username: String) : AppException("Username '$username' already exists")
+
+class CanNotParseUserException : AppException("Cannot parse User data from CSV")
+
+class UserNotFoundException(username: String) :
+    AppException("User with username '$username' not found")
+
 open class DataException(msg: String) : AppException(msg)
 
 class CanNotParseProjectException : DataException("can't parse string to project")
 
 class CanNotParseStateException : DataException("can't parse string to State")
+
+open class PasswordException(msg: String) : AppException(msg)
+
+class ShortPasswordException : PasswordException("Password must be at least 8 characters long")
+
+class NoUpperCaseInPasswordException : PasswordException("Password must contain at least one uppercase letter")
+
+class NoLowerCaseInPasswordException : PasswordException("Password must contain at least one lowercase letter")
+
+class NoNumberInPasswordException : PasswordException("Password must contain at least one number")
+
+class NoSpecialCharsInPasswordException : PasswordException("Password must contain at least one special character")
+
+class InvalidCredentialsException : RuntimeException("Invalid credentials")
+
+class EmptyUsernameException(message: String = "Username cannot be empty") : IllegalArgumentException(message)
