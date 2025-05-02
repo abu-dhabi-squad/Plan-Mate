@@ -23,25 +23,35 @@ class EditProjectUITest{
     }
 
     @Test
-    fun `launchUI should display wrong input when enter wrong input or not entering at all`(){
+    fun `launchUI should display wrong input when enter wrong input or not entering at all for project id`(){
         //given
         every { reader.readString() } returns null
         //when
         editProjectUI.launchUi()
         //then
         verify { printer.displayLn("wrong input") }
+    }
 
+    @Test
+    fun `launchUI should display wrong input when enter wrong input or not entering at all for project name`(){
+        //given
+        every { reader.readString() } returns "id1" andThen null
+        //when
+        editProjectUI.launchUi()
+        //then
+        verify { printer.displayLn("wrong input") }
     }
 
     @Test
     fun `launchUI should display error when edit project use case throw Exception`(){
         // Given
+        every { reader.readString() } returns "id1" andThen "name1"
         every { editProjectUseCase(any(),any()) } throws Exception()
         // When
         editProjectUI.launchUi()
         //then
         verify (exactly = 1) { editProjectUseCase(any(),any()) }
-        verify { printer.displayLn("error") }
+        verify { printer.displayLn(Exception().message) }
     }
 
 }
