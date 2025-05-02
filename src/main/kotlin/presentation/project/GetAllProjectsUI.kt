@@ -12,6 +12,7 @@ class GetAllProjectsUI (
 ): UiLauncher{
     override fun launchUi() {
       printer.displayLn("all projects created : \n")
+        getAllProjects()
     }
     private fun getAllProjects(){
         try {
