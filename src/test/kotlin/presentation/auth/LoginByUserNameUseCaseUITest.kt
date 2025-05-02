@@ -42,30 +42,39 @@ class LoginByUserNameUseCaseUITest {
 
     @Test
     fun `should show error for empty username`() {
-        every { inputReader.readString() } returnsMany listOf("","shahd","12345678")
+        // Given
+        every { inputReader.readString() } returnsMany listOf("", "shahd", "12345678")
 
+        // When
         loginUi.launchUi()
 
-        verify {printer.displayLn("Input cannot be empty.") }
+        // Then
+        verify { printer.displayLn("Input cannot be empty.") }
     }
 
     @Test
     fun `should show error for empty password`() {
-        every { inputReader.readString() } returnsMany listOf("someUser", "","12345678")
+        // Given
+        every { inputReader.readString() } returnsMany listOf("someUser", "", "12345678")
 
+        // When
         loginUi.launchUi()
 
-        verify {printer.displayLn("Input cannot be empty.") }
+        // Then
+        verify { printer.displayLn("Input cannot be empty.") }
     }
 
     @Test
     fun `should login successfully as ADMIN and launch admin menu`() {
+        // Given
         val user = User("2", "adminUser", "adminPass", UserType.ADMIN)
         every { inputReader.readString() } returnsMany listOf("adminUser", "adminPass")
         every { loginUseCase.getUser("adminUser", "adminPass") } returns user
 
+        // When
         loginUi.launchUi()
 
+        // Then
         verify { printer.displayLn("Login successful! Welcome adminUser [ADMIN]") }
         verify { consoleMenuViewAdmin.launchUi() }
         verify(exactly = 0) { consoleMenuViewUser.launchUi() }
@@ -73,12 +82,15 @@ class LoginByUserNameUseCaseUITest {
 
     @Test
     fun `should login successfully as MATE and launch user menu`() {
+        // Given
         val user = User("3", "mateUser", "matePass", UserType.MATE)
         every { inputReader.readString() } returnsMany listOf("mateUser", "matePass")
         every { loginUseCase.getUser("mateUser", "matePass") } returns user
 
+        // When
         loginUi.launchUi()
 
+        // Then
         verify { printer.displayLn("Login successful! Welcome mateUser [MATE]") }
         verify { consoleMenuViewUser.launchUi() }
         verify(exactly = 0) { consoleMenuViewAdmin.launchUi() }
@@ -86,31 +98,42 @@ class LoginByUserNameUseCaseUITest {
 
     @Test
     fun `should show error message when login fails with UserNotFoundException`() {
-        val username="wrongUser"
-        every { inputReader.readString() } returnsMany listOf("wrongUser", "wrongPass")
+        // Given
+        val username = "wrongUser"
+        every { inputReader.readString() } returnsMany listOf(username, "wrongPass")
         every { loginUseCase.getUser(username, "wrongPass") } throws UserNotFoundException(username)
 
+        // When
         loginUi.launchUi()
 
+        // Then
         verify {printer.displayLn(match{it.toString().contains("Login failed:User with username '$username' not found")})}
     }
 
     @Test
     fun `should show error for null username`() {
-        every { inputReader.readString() } returnsMany listOf(null, "shahd","12345678")
+        // Given
+        every { inputReader.readString() } returnsMany listOf(null, "shahd", "12345678")
 
+        // When
         loginUi.launchUi()
 
-        verify {printer.displayLn("Input cannot be empty.") }
+        // Then
+        verify { printer.displayLn("Input cannot be empty.") }
     }
+
     @Test
     fun `should show error for null password`() {
-        every { inputReader.readString() } returnsMany listOf("shahd", null,"12345678")
+        // Given
+        every { inputReader.readString() } returnsMany listOf("shahd", null, "12345678")
 
+        // When
         loginUi.launchUi()
 
-        verify {printer.displayLn("Input cannot be empty.") }
+        // Then
+        verify { printer.displayLn("Input cannot be empty.") }
     }
+
 }
 
 

@@ -19,7 +19,7 @@ class CreateMateUserUseCaseUITest {
     private lateinit var useCase: CreateMateUserUseCase
     private lateinit var inputReader: InputReader
     private lateinit var printer: Printer
-    private lateinit var createMateUserUI:CreateMateUserUseCaseUI
+    private lateinit var createMateUserUI: CreateMateUserUseCaseUI
 
     @BeforeEach
     fun setup() {
@@ -31,10 +31,13 @@ class CreateMateUserUseCaseUITest {
 
     @Test
     fun `should create user successfully`() {
+        // Given
         every { inputReader.readString() } returnsMany listOf("shahd", "123456")
 
+        // When: Launch the UI to create the user
         createMateUserUI.launchUi()
 
+        // Then:
         verify {
             useCase.create(
                 match {
@@ -44,75 +47,94 @@ class CreateMateUserUseCaseUITest {
                 }
             )
         }
+        // Then:
         verify { printer.displayLn("User created successfully!") }
     }
 
-
     @Test
     fun `should show error when username is empty`() {
-        every { inputReader.readString() } returnsMany listOf("", "shahd","123456789")
+        // Given:
+        every { inputReader.readString() } returnsMany listOf("", "shahd", "123456789")
 
+        // When:
         createMateUserUI.launchUi()
 
+        // Then:
         verify { printer.displayLn("Input cannot be empty.") }
     }
 
     @Test
     fun `should show error when password is empty`() {
+        // Given:
         every { inputReader.readString() } returnsMany listOf("shahd", "", "1223455")
 
+        // When:
         createMateUserUI.launchUi()
 
+        // Then: Verify the error message for empty input
         verify { printer.displayLn("Input cannot be empty.") }
     }
 
-
-
     @Test
     fun `should show error when user already exists`() {
-        val name="shahd"
+        val name = "shahd"
+        // Given:
         every { inputReader.readString() } returnsMany listOf("shahd", "123456")
         every { useCase.create(any()) } throws UserAlreadyExistsException(name)
 
+        // When:
         createMateUserUI.launchUi()
 
+        // Then
         verify { printer.displayLn("User already exists:Username '$name' already exists") }
     }
 
     @Test
     fun `should show error when username is null`() {
+        // Given:
         every { inputReader.readString() } returnsMany listOf(null, "shahd", "123455")
 
+        // When:
         createMateUserUI.launchUi()
 
+        // Then:
         verify { printer.displayLn("Input cannot be empty.") }
     }
 
     @Test
-    fun `should throw exception when username is empty `() {
+    fun `should throw exception when username is empty`() {
+        // Given:
         every { inputReader.readString() } returnsMany listOf("", "123456")
         every { useCase.create(any()) } throws EmptyUsernameException()
 
+        // When:
         createMateUserUI.launchUi()
 
+        // Then:
         verify { printer.displayLn("Input cannot be empty.") }
     }
 
     @Test
     fun `should show error for null username`() {
+        // Given
         every { inputReader.readString() } returnsMany listOf(null, "somePass")
 
+        // When:
         createMateUserUI.launchUi()
 
+        // Then:
         verify { printer.displayLn("Input cannot be empty.") }
     }
 
     @Test
     fun `should show error for null password`() {
-        every { inputReader.readString() } returnsMany listOf("shahd", null,"12343")
+        // Given:
+        every { inputReader.readString() } returnsMany listOf("shahd", null, "12343")
 
+        // When:
         createMateUserUI.launchUi()
 
+        // Then:
         verify { printer.displayLn("Input cannot be empty.") }
     }
 }
