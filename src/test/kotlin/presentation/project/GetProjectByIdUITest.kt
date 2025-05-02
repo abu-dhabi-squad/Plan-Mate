@@ -39,8 +39,8 @@ class GetProjectByIdUITest {
         ui.launchUi()
 
         // Then
-        verify { printer.displayLn("Enter project id : ") }
-        verify { printer.displayLn("Test Project") }
+        verify { printer.displayLn("Enter project ID:") }
+        verify { printer.displayLn("Project found: Test Project") }
     }
 
     @Test
@@ -56,12 +56,12 @@ class GetProjectByIdUITest {
         ui.launchUi()
 
         // Then
-        verify { printer.displayLn("Enter project id : ") }
-        verify { printer.displayLn(errorMessage) }
+        verify { printer.displayLn("Enter project ID:") }
+        verify { printer.displayLn("Error: $errorMessage") }
     }
 
     @Test
-    fun `should not call use case when user input is null`() {
+    fun `should not call use case when user input is null or empty`() {
         // Given
         every { inputReader.readString() } returns null
 
@@ -70,6 +70,21 @@ class GetProjectByIdUITest {
 
         // Then
         verify(exactly = 0) { getProjectByIdUseCase(any()) }
-        verify { printer.displayLn("Enter project id : ") }
+        verify { printer.displayLn("Enter project ID:") }
+        verify { printer.displayLn("Project ID cannot be empty.") }
+    }
+
+    @Test
+    fun `should not call use case when user input is empty`() {
+        // Given
+        every { inputReader.readString() } returns ""
+
+        // When
+        ui.launchUi()
+
+        // Then
+        verify(exactly = 0) { getProjectByIdUseCase(any()) }
+        verify { printer.displayLn("Enter project ID:") }
+        verify { printer.displayLn("Project ID cannot be empty.") }
     }
 }
