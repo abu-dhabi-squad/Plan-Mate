@@ -34,7 +34,7 @@ class CreateMateUserUseCaseUITest {
         // Given
         every { inputReader.readString() } returnsMany listOf("shahd", "123456")
 
-        // When: Launch the UI to create the user
+        // When:
         createMateUserUI.launchUi()
 
         // Then:
@@ -71,7 +71,7 @@ class CreateMateUserUseCaseUITest {
         // When:
         createMateUserUI.launchUi()
 
-        // Then: Verify the error message for empty input
+        // Then:
         verify { printer.displayLn("Input cannot be empty.") }
     }
 
