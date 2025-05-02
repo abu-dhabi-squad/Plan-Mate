@@ -5,11 +5,12 @@ import java.util.UUID
 
 fun createAudit(
     id: String = UUID.randomUUID().toString(),
-    entityId : String,
+    entityId : String = "UG7299",
     newState: String = "InProgress",
     oldState : String = "TODO",
     createdBy: String = "UG",
-    entityType: EntityType = EntityType.TASK,
+    date: LocalDate = LocalDate.now(),
+    entityType: EntityType = EntityType.PROJECT,
 ): Audit {
     return Audit(
         id = id,
@@ -18,6 +19,6 @@ fun createAudit(
         entityType = entityType,
         oldState = oldState,
         newState = newState,
-        date = LocalDate.now()
+        date = date
     )
 }

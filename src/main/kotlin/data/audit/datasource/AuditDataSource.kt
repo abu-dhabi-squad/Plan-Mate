@@ -5,5 +5,5 @@ import squad.abudhabi.logic.model.Audit
 interface AuditDataSource {
 
     fun addAuditLog(audit: Audit)
-    fun getAuditHistory(entityId: String) : List<Audit>
+    fun getAuditByEntityId(entityId: String) : List<Audit>
 }
