@@ -11,7 +11,7 @@ class GetProjectByIdUI (
     private val getProjectByIdUseCase: GetProjectByIdUseCase
 ) : UiLauncher {
     override fun launchUi() {
-        printer.displayLn("enter project id")
+        printer.displayLn("Enter project id : ")
         val id=inputReader.readString()
         if (id!=null){
             getProjectById(id)
@@ -23,7 +23,7 @@ class GetProjectByIdUI (
             val project = getProjectByIdUseCase(projectId)
             printer.displayLn(project.projectName)
         } catch (e: Exception) {
-            printer.displayLn(e.message)
+            printer.displayLn(e.message.toString())
         }
     }
 }
