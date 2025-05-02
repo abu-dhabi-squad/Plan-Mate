@@ -6,7 +6,6 @@ import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 
 class GetAllProjectsUI (
-    private val inputReader: InputReader,
     private val printer: Printer,
     private val getAllProjectsUseCase: GetAllProjectsUseCase
 ): UiLauncher{
