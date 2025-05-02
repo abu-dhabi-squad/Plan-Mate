@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import squad.abudhabi.logic.exceptions.InvalidTaskDateException
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.CreateTaskUseCase
@@ -66,7 +67,7 @@ class CreateTaskPresenterUITest {
     }
 
     @ParameterizedTest
-    @CsvSource(",title", "    ,title", "null,title", nullValues =["null"])
+    @CsvSource(",title", "    ,title", "null,title", nullValues = ["null"])
     fun `should display error message when user enter empty or null title`(
         firstEnterTitle: String?,
         secondEnterTitle: String
@@ -136,5 +137,98 @@ class CreateTaskPresenterUITest {
         //Then
         verify { printer.display(match { it.toString().contains("No projects Found") }) }
     }
+
+    @Test
+    fun `should display error message when failed to create task`() {
+        // Given
+        val fakeProject = createProject(states = listOf(createState()))
+
+        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+
+        every { readere.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        every { readere.readInt() } returns 1 andThen 1
+
+        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+        every { createTaskUseCase(any()) } throws InvalidTaskDateException()
+        //When
+        presenter.launchUi()
+        //Then
+        verify { printer.display(match { it.toString().contains("Invalid task date") }) }
+    }
+
+    @ParameterizedTest
+    @CsvSource(",2025-10-10", "    ,2025-10-10", "null,2025-10-10", nullValues = ["null"])
+    fun `should display error when user enter empty or null date`(
+        firstEnterDate: String?,
+        secondEnterDate: String
+    ) {
+        // Given
+        val fakeProject = createProject(states = listOf(createState()))
+        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+
+        every { readere.readString() } returns "Title" andThen "Description" andThen firstEnterDate andThen secondEnterDate andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+
+        every { readere.readInt() } returns 1 andThen 1
+
+        // When
+        presenter.launchUi()
+
+        // Then
+        verify { printer.display(match { it.toString().contains("Date cannot be empty.") }) }
+    }
+
+    @Test
+    fun `should display error when user enter date in invalid formatter`() {
+        // Given
+        val fakeProject = createProject(states = listOf(createState()))
+        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+
+        every { readere.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        every { parserDate.parseDateFromString("2025-10-10") } throws Exception()
+        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+
+        every { readere.readInt() } returns 1 andThen 1
+
+        // When
+        presenter.launchUi()
+
+        // Then
+        verify {
+            printer.display(match {
+                it.toString().contains("Invalid date format. Please use YYYY-MM-DD.")
+            })
+        }
+    }
+
+    @ParameterizedTest
+    @CsvSource("2,1", "    ,1", "null,1", nullValues = ["null"])
+    fun `should display error when user enter  invalid project or task number`(
+        firstEnterIndex: Int?,
+        secondEnterIndex: Int
+    ) {
+        // Given
+        val fakeProject = createProject(states = listOf(createState()))
+        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+
+        every { readere.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+
+        every { readere.readInt() } returns firstEnterIndex andThen secondEnterIndex andThen 1
+
+        // When
+        presenter.launchUi()
+
+        // Then
+        verify {
+            printer.display(match {
+                it.toString().contains("Please enter a number between 1 and 1")
+            })
+        }
+    }
+
 
 }

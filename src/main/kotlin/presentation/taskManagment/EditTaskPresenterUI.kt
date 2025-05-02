@@ -92,6 +92,7 @@ class EditTaskPresenterUI(
     private fun promptString(message: String, currentValue: String): String {
         printer.display(message)
         val input = inputReader.readString()
-        return if (input.isNullOrBlank()) currentValue else input
+        return if (input.isNullOrBlank()) currentValue
+        else input
     }
 }
