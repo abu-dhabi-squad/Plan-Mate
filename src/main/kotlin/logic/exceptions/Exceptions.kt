@@ -43,7 +43,7 @@ class InvalidPasswordException(password: String) :
 class UserNotFoundException(username: String) :
     AppException("User with username '$username' not found")
 
-class InvalidCredentialsException : RuntimeException("Invalid credentials")
+class InvalidCredentialsException : AppException("Invalid credentials")
 
 class EmptyUsernameException(message: String = "Username cannot be empty") : IllegalArgumentException(message)
 
