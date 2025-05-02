@@ -22,7 +22,7 @@ class GetAllProjectsUITest {
         inputReader = mockk()
         printer = mockk(relaxed = true)
         getAllProjectsUseCase = mockk()
-        getAllProjectsUI = GetAllProjectsUI(inputReader, printer, getAllProjectsUseCase)
+        getAllProjectsUI = GetAllProjectsUI(printer, getAllProjectsUseCase)
     }
 
     @Test
@@ -38,7 +38,7 @@ class GetAllProjectsUITest {
         getAllProjectsUI.launchUi()
 
         // Then
-        verify { printer.displayLn("all projects created : \n") }
+        verify { printer.displayLn("All Created Projects:") }
         verify { printer.displayLn("1) Project One") }
         verify { printer.displayLn("2) Project Two") }
     }
@@ -52,6 +52,6 @@ class GetAllProjectsUITest {
         getAllProjectsUI.launchUi()
 
         // Then
-        verify { printer.displayLn("Something went wrong") }
+        verify { printer.displayLn("Error retrieving projects: Something went wrong") }
     }
 }
