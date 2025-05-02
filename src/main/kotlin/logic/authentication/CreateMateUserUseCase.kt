@@ -20,7 +20,7 @@ class CreateMateUserUseCase(
             password = hashingService.hash(password),
             userType = userType
         ).apply { checkUserDoesNotExist(this)
-            authRepository.addNewUser(this) }
+            authRepository.createUser(this) }
 
 
 

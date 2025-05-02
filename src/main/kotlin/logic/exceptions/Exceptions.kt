@@ -45,7 +45,7 @@ class NoNumberInPasswordException : PasswordException("Password must contain at 
 
 class NoSpecialCharsInPasswordException : PasswordException("Password must contain at least one special character")
 
-class InvalidCredentialsException : RuntimeException("Invalid credentials")
+class InvalidCredentialsException : AppException("Invalid credentials")
 
 class EmptyUsernameException(message: String = "Username cannot be empty") : IllegalArgumentException(message)
 

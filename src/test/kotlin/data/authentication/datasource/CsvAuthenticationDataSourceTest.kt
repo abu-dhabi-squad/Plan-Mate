@@ -15,6 +15,7 @@ import squad.abudhabi.data.authentication.datasource.CsvAuthenticationDataSource
 import squad.abudhabi.data.authentication.datasource.CsvUserParser
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.exceptions.CanNotParseUserException
+import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.model.User
 
 class CsvAuthenticationDataSourceTest {
@@ -29,6 +30,32 @@ class CsvAuthenticationDataSourceTest {
         fileHelper = mockk(relaxed = true)
         csvUserParser = mockk(relaxed = true)
         csvAuthenticationDataSource = CsvAuthenticationDataSource(csvUserParser, fileHelper, filePath)
+    }
+
+    @Test
+    fun `getUserByUserName should return user when username exists`() {
+        // Given
+        every { fileHelper.readFile(filePath) } returns listOf(userString1)
+        every { csvUserParser.parseStringToUser(userString1) } returns user1
+
+        // When
+        val user = csvAuthenticationDataSource.getUserByUserName("user1")
+
+        // Then
+        Truth.assertThat(user).isEqualTo(user1)
+    }
+
+    @Test
+    fun `getUserByUserName should return null when username does not exist`() {
+        // Given
+        every { fileHelper.readFile(filePath) } returns listOf(userString1)
+        every { csvUserParser.parseStringToUser(userString1) } returns user1
+
+        // When
+        val user = csvAuthenticationDataSource.getUserByUserName("user2")
+
+        // Then
+        Truth.assertThat(user).isNull()
     }
 
     @Test
@@ -77,43 +104,28 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `saveUsers should write file when users list is empty`() {
+    fun `createUser should save new user when file is empty`() {
         // Given
-        val emptyUsers = listOf<User>()
-        every { fileHelper.writeFile(filePath, any()) } just Runs
-
-        // When
-        csvAuthenticationDataSource.saveUsers(emptyUsers)
-
-        // Then
-        verify(exactly = 1) { fileHelper.writeFile(filePath, emptyList()) }
-    }
-
-    @Test
-    fun `saveUsers should append to file when users list is not empty`() {
-        // Given
-        val users = listOf(user1, user2)
-        every { fileHelper.appendFile(filePath, any()) } just Runs
-        every { csvUserParser.parseUserToString(user1) } returns userString1
+        every { fileHelper.readFile(filePath) } returns emptyList()
         every { csvUserParser.parseUserToString(user2) } returns userString2
+        every { fileHelper.appendFile(filePath, listOf(userString2)) } just Runs
 
         // When
-        csvAuthenticationDataSource.saveUsers(users)
+        csvAuthenticationDataSource.createUser(user2)
 
         // Then
-        verify(exactly = 1) { fileHelper.appendFile(filePath, listOf(userString1, userString2)) }
+        verify(exactly = 1) { fileHelper.appendFile(filePath, listOf(userString2)) }
     }
 
     @Test
-    fun `saveUsers should throw Exception when appendFile throws Exception`() {
+    fun `createUser should throw Exception when appendFile throws Exception`() {
         // Given
-        val users = listOf(user1, user2)
+        every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { fileHelper.appendFile(filePath, any()) } throws Exception()
 
         // When & Then
         assertThrows<Exception> {
-            csvAuthenticationDataSource.saveUsers(users)
+            csvAuthenticationDataSource.createUser(user2)
         }
     }
-
 }
