@@ -1,7 +1,7 @@
 package squad.abudhabi.data.task.parser
 
+import logic.validation.DateParser
 import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.validation.DateParser
 
 class CsvTaskParser(
     private val dateParser: DateParser
