@@ -1,11 +1,10 @@
 package squad.abudhabi.logic.utils
+import com.soywiz.krypto.md5
 
-import java.security.MessageDigest
-
-class Md5Hashing: HashingService {
+class Md5Hashing : HashingService {
     @OptIn(ExperimentalStdlibApi::class)
     override fun hash(input: String): String {
-        val bytes = MessageDigest.getInstance("MD5").digest(input.toByteArray())
-        return bytes.toHexString()
+        val hashBytes = input.encodeToByteArray().md5().bytes
+        return hashBytes.toHexString()
     }
 }
