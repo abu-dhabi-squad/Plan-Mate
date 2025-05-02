@@ -52,7 +52,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("⚠️ No projects available.") }
+        verify { printer.display("No projects available.") }
     }
 
     @Test
@@ -73,7 +73,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("⚠️ No tasks found in this project.") }
+        verify { printer.display("No tasks found in this project.") }
     }
 
     @Test
@@ -114,7 +114,7 @@ class EditTaskPresenterUITest {
         presenter.launchUi()
 
         verify { editTaskUseCase(task.copy(title = "New Title", description = "New Desc")) }
-        verify { printer.display("✅ Task updated successfully.") }
+        verify { printer.display("Task updated successfully.") }
     }
 
     @Test

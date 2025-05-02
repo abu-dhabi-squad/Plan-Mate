@@ -1,4 +1,4 @@
-package squad.abudhabi.presentation.taskManagment
+package presentation.task_management
 
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State

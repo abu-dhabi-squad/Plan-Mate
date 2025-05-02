@@ -14,7 +14,6 @@ import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.CreateTaskUseCase
 import squad.abudhabi.logic.validation.DateParser
-import squad.abudhabi.presentation.taskManagment.CreateTaskPresenterUI
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate
@@ -23,7 +22,7 @@ class CreateTaskPresenterUITest {
 
     private val userName = "TestUser"
     private lateinit var printer: Printer
-    private lateinit var readere: InputReader
+    private lateinit var reader: InputReader
     private lateinit var presenter: CreateTaskPresenterUI
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var createTaskUseCase: CreateTaskUseCase
@@ -31,7 +30,7 @@ class CreateTaskPresenterUITest {
 
     @BeforeEach
     fun setup() {
-        readere = mockk(relaxed = true)
+        reader = mockk(relaxed = true)
         printer = mockk(relaxed = true)
         getAllProjectsUseCase = mockk(relaxed = true)
         createTaskUseCase = mockk(relaxed = true)
@@ -40,7 +39,7 @@ class CreateTaskPresenterUITest {
         presenter = CreateTaskPresenterUI(
             userName,
             printer,
-            readere,
+            reader,
             getAllProjectsUseCase,
             createTaskUseCase,
             parserDate
@@ -55,8 +54,8 @@ class CreateTaskPresenterUITest {
 
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { readere.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
-        every { readere.readInt() } returns 1 andThen 1
+        every { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        every { reader.readInt() } returns 1 andThen 1
 
         every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
         every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
@@ -77,8 +76,8 @@ class CreateTaskPresenterUITest {
 
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { readere.readString() } returns firstEnterTitle andThen secondEnterTitle andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
-        every { readere.readInt() } returns 1 andThen 1
+        every { reader.readString() } returns firstEnterTitle andThen secondEnterTitle andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        every { reader.readInt() } returns 1 andThen 1
 
         every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
         every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
@@ -99,8 +98,8 @@ class CreateTaskPresenterUITest {
 
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { readere.readString() } returns "title" andThen firstEnterDescription andThen secondEnterDescription andThen "2025-10-10" andThen "2025-10-30"
-        every { readere.readInt() } returns 1 andThen 1
+        every { reader.readString() } returns "title" andThen firstEnterDescription andThen secondEnterDescription andThen "2025-10-10" andThen "2025-10-30"
+        every { reader.readInt() } returns 1 andThen 1
 
         every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
         every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
@@ -118,7 +117,7 @@ class CreateTaskPresenterUITest {
         // Given
         val fakeProject = createProject(states = listOf(createState()))
         every { getAllProjectsUseCase() } returns emptyList() andThen listOf(fakeProject)
-        every { readere.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        every { reader.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
 
         //When
         presenter.launchUi()
@@ -130,7 +129,7 @@ class CreateTaskPresenterUITest {
     fun `should display error message when get all projects use case throw error`() {
         // Given
         every { getAllProjectsUseCase() } throws NoProjectsFoundException()
-        every { readere.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        every { reader.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
 
         //When
         presenter.launchUi()
@@ -145,8 +144,8 @@ class CreateTaskPresenterUITest {
 
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { readere.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
-        every { readere.readInt() } returns 1 andThen 1
+        every { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        every { reader.readInt() } returns 1 andThen 1
 
         every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
         every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
@@ -167,11 +166,11 @@ class CreateTaskPresenterUITest {
         val fakeProject = createProject(states = listOf(createState()))
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { readere.readString() } returns "Title" andThen "Description" andThen firstEnterDate andThen secondEnterDate andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        every { reader.readString() } returns "Title" andThen "Description" andThen firstEnterDate andThen secondEnterDate andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
         every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
         every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
 
-        every { readere.readInt() } returns 1 andThen 1
+        every { reader.readInt() } returns 1 andThen 1
 
         // When
         presenter.launchUi()
@@ -186,11 +185,11 @@ class CreateTaskPresenterUITest {
         val fakeProject = createProject(states = listOf(createState()))
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { readere.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        every { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
         every { parserDate.parseDateFromString("2025-10-10") } throws Exception()
         every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
 
-        every { readere.readInt() } returns 1 andThen 1
+        every { reader.readInt() } returns 1 andThen 1
 
         // When
         presenter.launchUi()
@@ -213,11 +212,11 @@ class CreateTaskPresenterUITest {
         val fakeProject = createProject(states = listOf(createState()))
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { readere.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        every { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
         every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
         every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
 
-        every { readere.readInt() } returns firstEnterIndex andThen secondEnterIndex andThen 1
+        every { reader.readInt() } returns firstEnterIndex andThen secondEnterIndex andThen 1
 
         // When
         presenter.launchUi()

@@ -97,7 +97,7 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("⚠️ No projects available.") }
+        verify { printer.display("No projects available.") }
     }
 
     @Test
@@ -123,7 +123,7 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("⚠️ No tasks found in this project.") }
+        verify { printer.display("No tasks found in this project.") }
     }
 
     @Test

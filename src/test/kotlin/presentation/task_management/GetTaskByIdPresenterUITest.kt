@@ -33,7 +33,7 @@ class GetTaskByIdPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("❌ Task ID cannot be empty.") }
+        verify { printer.display("Task ID cannot be empty.") }
     }
 
     @Test
@@ -54,7 +54,7 @@ class GetTaskByIdPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("✅ Task Found:") }
+        verify { printer.display("Task Found:") }
         verify { printer.display("Title: ${task.title}") }
         verify { printer.display("Description: ${task.description}") }
         verify { printer.display("Start Date: ${task.startDate}") }
@@ -71,6 +71,6 @@ class GetTaskByIdPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("❌ Failed to retrieve task: Task not found") }
+        verify { printer.display("Failed to retrieve task: Task not found") }
     }
 }

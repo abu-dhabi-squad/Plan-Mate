@@ -42,7 +42,7 @@ class GetTasksByProjectIdPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("❌ Failed to load projects: DB error") }
+        verify { printer.display("Failed to load projects: DB error") }
     }
 
     @Test
@@ -51,7 +51,7 @@ class GetTasksByProjectIdPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("⚠️ No projects available.") }
+        verify { printer.display("No projects available.") }
     }
 
     @Test
@@ -63,7 +63,7 @@ class GetTasksByProjectIdPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("❌ Failed to load tasks: Network issue") }
+        verify { printer.display("Failed to load tasks: Network issue") }
     }
 
     @Test
@@ -76,7 +76,7 @@ class GetTasksByProjectIdPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("📭 No tasks found in 'Project A'.") }
+        verify { printer.display("No tasks found in 'Project A'.") }
     }
 
     @Test
@@ -101,10 +101,10 @@ class GetTasksByProjectIdPresenterUITest {
         presenter.launchUi()
 
         verifySequence {
-            printer.display("📋 Available Projects:")
+            printer.display("Available Projects:")
             printer.display("1. Project A")
             printer.display("Enter project number:")
-            printer.display("\n📌 Tasks in Project:")
+            printer.display("\nTasks in Project:")
             printer.display(
                 withArg<String> {
                     assert(it.contains("Fix Bug"))
@@ -130,6 +130,6 @@ class GetTasksByProjectIdPresenterUITest {
         presenter.launchUi()
 
         verify { printer.display("Please enter a valid number between 1 and 1.") }
-        verify { printer.display("📭 No tasks found in 'Project A'.") }
+        verify { printer.display("No tasks found in 'Project A'.") }
     }
 }
