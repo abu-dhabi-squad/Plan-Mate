@@ -7,7 +7,7 @@ import squad.abudhabi.logic.repository.AuditRepository
 class CreateAuditUseCase(
     private val auditRepository: AuditRepository
 ) {
-    fun createAuditLog(
+    operator fun invoke(
         auditLog: Audit
     ){
 

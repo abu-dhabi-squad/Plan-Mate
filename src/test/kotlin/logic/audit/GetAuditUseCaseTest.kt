@@ -41,7 +41,7 @@ class GetAuditUseCaseTest {
         every { auditRepository.getAuditByEntityId(entityId) } returns expectedAudits
 
         // when
-        val result = getAuditUseCase.getAuditHistory(entityId)
+        val result = getAuditUseCase(entityId)
 
         // then
         assertEquals(expectedAudits, result)
@@ -55,7 +55,7 @@ class GetAuditUseCaseTest {
         every { auditRepository.getAuditByEntityId(entityId) } throws WrongInputException()
 
         // then
-        assertFails { getAuditUseCase.getAuditHistory(entityId) }
+        assertFails { getAuditUseCase(entityId) }
     }
 
     @Test
@@ -67,7 +67,7 @@ class GetAuditUseCaseTest {
         every { auditRepository.getAuditByEntityId(entityId) } returns emptyList()
 
         // then
-        assertFails { getAuditUseCase.getAuditHistory(entityId) }
+        assertFails { getAuditUseCase(entityId) }
     }
 
 }

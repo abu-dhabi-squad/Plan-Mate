@@ -8,7 +8,7 @@ import squad.abudhabi.logic.repository.AuditRepository
 class GetAuditUseCase(
     private val auditRepository: AuditRepository
 ){
-    fun getAuditHistory(entityId: String): List<Audit> {
+    operator fun invoke(entityId: String): List<Audit> {
 
         if (entityId.isEmpty()) throw WrongInputException()
         return auditRepository.getAuditByEntityId(entityId).takeIf { it.isNotEmpty() } ?: throw EmptyList()

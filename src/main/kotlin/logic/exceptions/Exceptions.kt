@@ -4,11 +4,11 @@ open class AppException(msg: String) : Exception(msg)
 
 class TaskNotFoundException : AppException("Task not found")
 
-class InvalidAudit : AppException("Audit Is Invalid")
+class InvalidAudit : AppException("Audit Is Invalid.")
 
-class WrongInputException : AppException("Wrong Input")
+class WrongInputException : AppException("Wrong Input.")
 
-class EmptyList: AppException("List Is Empty")
+class EmptyList: AppException("List Is Empty.")
 
 class NoTasksFoundException : AppException("No tasks found")
 

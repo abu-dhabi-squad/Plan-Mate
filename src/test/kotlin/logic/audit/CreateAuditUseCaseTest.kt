@@ -13,12 +13,12 @@ import kotlin.test.assertFails
 class CreateAuditUseCaseTest {
 
     private lateinit var auditRepository: AuditRepository
-    private lateinit var useCase: CreateAuditUseCase
+    private lateinit var createAuditUseCase: CreateAuditUseCase
 
     @BeforeEach
     fun setup() {
         auditRepository = mockk(relaxed = true)
-        useCase = CreateAuditUseCase(auditRepository)
+        createAuditUseCase = CreateAuditUseCase(auditRepository)
     }
 
     @Test
@@ -30,7 +30,7 @@ class CreateAuditUseCaseTest {
         )
 
         // when
-        useCase.createAuditLog(audit)
+        createAuditUseCase(audit)
 
         // then
 
@@ -68,7 +68,7 @@ class CreateAuditUseCaseTest {
 
         // then
         assertFails {
-            useCase.createAuditLog(audit)
+            createAuditUseCase(audit)
         }
 
     }
@@ -85,7 +85,7 @@ class CreateAuditUseCaseTest {
 
         // then
         assertFails {
-            useCase.createAuditLog(audit)
+            createAuditUseCase(audit)
         }
     }
 }
