@@ -8,5 +8,4 @@ object TestData {
     val user2 = User("2", "user2", "pass2", UserType.ADMIN)
     val userString1 = "1,user1,pass1,MATE"
     val userString2 = "2,user2,pass2,ADMIN"
-    val userName1 = "user1"
 }
