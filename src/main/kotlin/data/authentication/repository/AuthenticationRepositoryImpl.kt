@@ -13,8 +13,11 @@ class AuthenticationRepositoryImpl(
         return authenticationDataSource.getAllUsers().find { it.username==userName }
             ?:throw UserNotFoundException(userName)
     }
+     override fun loginUser(username: String, password: String): User? {
+        TODO("Not yet implemented")
+     }
 
-    override fun addNewUser(user: User) {
+    override fun createUser(user: User) {
         authenticationDataSource.getAllUsers()
             .find { it.username == user.username }
             ?.let { throw UserAlreadyExistsException(user.username) }

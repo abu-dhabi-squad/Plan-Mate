@@ -58,7 +58,7 @@ class AuthenticationRepositoryImplTest {
         every { authenticationDataSource.saveUsers(any()) } just Runs
 
         // When
-        authenticationRepository.addNewUser(user2)
+        authenticationRepository.createUser(user2)
 
         // Then
         verify(exactly = 1) { authenticationDataSource.saveUsers(listOf(user1, user2)) }
@@ -71,7 +71,7 @@ class AuthenticationRepositoryImplTest {
 
         // When & Then
         assertFailsWith<UserAlreadyExistsException> {
-            authenticationRepository.addNewUser(user1)
+            authenticationRepository.createUser(user1)
         }
     }
 
@@ -82,7 +82,7 @@ class AuthenticationRepositoryImplTest {
         every { authenticationDataSource.saveUsers(any()) } just Runs
 
         // When
-        authenticationRepository.addNewUser(user2)
+        authenticationRepository.createUser(user2)
 
         // Then
         verify(exactly = 1) { authenticationDataSource.saveUsers(listOf(user1, user2)) }
