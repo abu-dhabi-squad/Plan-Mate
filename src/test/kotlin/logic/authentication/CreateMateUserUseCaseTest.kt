@@ -41,7 +41,7 @@ class CreateMateUserUseCaseTest {
         every { passwordValidator.validatePassword(password) } just runs
         every { hashingService.hash(password) } returns hashedPassword
         every { authRepository.getUserByName(username) } returns null
-        every { authRepository.addNewUser(any()) } just Runs
+        every { authRepository.createUser(any()) } just Runs
 
         // When
         createMateUserUseCase.create(username, password, UserType.MATE)
@@ -51,7 +51,7 @@ class CreateMateUserUseCaseTest {
             passwordValidator.validatePassword(password)
             hashingService.hash(password)
             authRepository.getUserByName(username)
-            authRepository.addNewUser(
+            authRepository.createUser(
                 match {
                     it.username == expectedUser.username &&
                             it.password == expectedUser.password &&

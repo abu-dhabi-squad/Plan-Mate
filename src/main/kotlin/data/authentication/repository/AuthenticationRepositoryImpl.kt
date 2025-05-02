@@ -14,7 +14,7 @@ class AuthenticationRepositoryImpl(
             ?:throw UserNotFoundException(userName)
     }
 
-    override fun addNewUser(user: User) {
+    override fun createUser(user: User) {
         authenticationDataSource.getAllUsers()
             .find { it.username == user.username }
             ?.let { throw UserAlreadyExistsException(user.username) }

@@ -52,37 +52,37 @@ class AuthenticationRepositoryImplTest {
     }
 
     @Test
-    fun `addNewUser should add user when user does not exist`() {
+    fun `createUser should add user when user does not exist`() {
         // Given
         every { authenticationDataSource.getAllUsers() } returns listOf(user1)
         every { authenticationDataSource.saveUsers(any()) } just Runs
 
         // When
-        authenticationRepository.addNewUser(user2)
+        authenticationRepository.createUser(user2)
 
         // Then
         verify(exactly = 1) { authenticationDataSource.saveUsers(listOf(user1, user2)) }
     }
 
     @Test
-    fun `addNewUser should throw UserAlreadyExistsException when user already exists`() {
+    fun `createUser should throw UserAlreadyExistsException when user already exists`() {
         // Given
         every { authenticationDataSource.getAllUsers() } returns listOf(user1, user2)
 
         // When & Then
         assertFailsWith<UserAlreadyExistsException> {
-            authenticationRepository.addNewUser(user1)
+            authenticationRepository.createUser(user1)
         }
     }
 
     @Test
-    fun `addNewUser should check if the user already exists before adding`() {
+    fun `createUser should check if the user already exists before adding`() {
         // Given
         every { authenticationDataSource.getAllUsers() } returns listOf(user1)
         every { authenticationDataSource.saveUsers(any()) } just Runs
 
         // When
-        authenticationRepository.addNewUser(user2)
+        authenticationRepository.createUser(user2)
 
         // Then
         verify(exactly = 1) { authenticationDataSource.saveUsers(listOf(user1, user2)) }
