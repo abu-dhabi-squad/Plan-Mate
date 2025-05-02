@@ -4,22 +4,25 @@ import squad.abudhabi.logic.model.User
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
+import squad.abudhabi.presentation.userManagement.CreateMateUserUseCaseUI
 import kotlin.system.exitProcess
 
-class ConsoleMenuView(
+class ConsoleAdminMenuView(
     private val user: User,
     // other views will be injected here
     private val printer: Printer,
-    private val inputReader: InputReader
+    private val inputReader: InputReader,
+    private val createMateUserUseCaseUI: CreateMateUserUseCaseUI
 ) : UiLauncher {
 
     override fun launchUi() {
+
         showMenu()
         printer.display("Enter your choice: ")
         val input = inputReader.readInt()
         when (input) {
             1 -> {/* here will lan*/ }
-
+            6->createMateUserUseCaseUI.launchUi()
             10 -> exitProcess(0)
         }
         launchUi()
