@@ -24,12 +24,12 @@ class CreateMateUserUseCaseUI(
         val user = User(username = username, password = password, userType = UserType.MATE)
 
         try {
-            createUserUseCase.create(user)
+            createUserUseCase.invoke(user)
             printer.displayLn("User created successfully!")
         } catch (e: EmptyUsernameException) {
-            printer.displayLn("Username cannot be empty.")
+            printer.displayLn("${e.message}")
         } catch (e: UserAlreadyExistsException) {
-            printer.displayLn("User already exists:${e.message}")
+            printer.displayLn("${e.message}")
         }
     }
 

@@ -39,7 +39,7 @@ class CreateMateUserUseCaseUITest {
 
         // Then:
         verify {
-            useCase.create(
+            useCase.invoke(
                 match {
                     it.username == "shahd" &&
                             it.password == "123456" &&
@@ -80,13 +80,13 @@ class CreateMateUserUseCaseUITest {
         val name = "shahd"
         // Given:
         every { inputReader.readString() } returnsMany listOf("shahd", "123456")
-        every { useCase.create(any()) } throws UserAlreadyExistsException(name)
+        every { useCase.invoke(any()) } throws UserAlreadyExistsException(name)
 
         // When:
         createMateUserUI.launchUi()
 
         // Then
-        verify { printer.displayLn("User already exists:Username '$name' already exists") }
+        verify { printer.displayLn("Username '$name' already exists") }
     }
 
     @Test
@@ -105,7 +105,7 @@ class CreateMateUserUseCaseUITest {
     fun `should throw exception when username is empty`() {
         // Given:
         every { inputReader.readString() } returnsMany listOf("", "123456")
-        every { useCase.create(any()) } throws EmptyUsernameException()
+        every { useCase.invoke(any()) } throws EmptyUsernameException()
 
         // When:
         createMateUserUI.launchUi()

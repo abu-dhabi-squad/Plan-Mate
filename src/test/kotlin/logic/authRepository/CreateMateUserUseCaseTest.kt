@@ -40,7 +40,7 @@ class CreateMateUserUseCaseTest {
         every { hashingService.hash(password) } returns hashedPassword
         every { authRepository.getUserByName(username) } returns null
 
-        createMateUserUseCase.create(inputUser)
+        createMateUserUseCase.invoke(inputUser)
 
         verify {
             authRepository.createUser(
@@ -62,7 +62,7 @@ class CreateMateUserUseCaseTest {
         )
 
         assertThrows<EmptyUsernameException> {
-            createMateUserUseCase.create(user)
+            createMateUserUseCase.invoke(user)
         }
     }
 
@@ -78,7 +78,7 @@ class CreateMateUserUseCaseTest {
         every { passwordValidator.validatePassword(any()) } returns Unit
 
         assertThrows<UserAlreadyExistsException> {
-            createMateUserUseCase.create(user)
+            createMateUserUseCase.invoke(user)
         }
     }
     @Test
@@ -92,7 +92,7 @@ class CreateMateUserUseCaseTest {
         every { hashingService.hash(any()) } returns "hashedPassword"
         every { passwordValidator.validatePassword(any()) } just runs
 
-        createMateUserUseCase.create(user)
+        createMateUserUseCase.invoke(user)
 
         verify { passwordValidator.validatePassword(user.password) }
     }
