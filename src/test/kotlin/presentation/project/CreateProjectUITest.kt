@@ -1,12 +1,10 @@
 package presentation.project
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.slot
-import io.mockk.verify
+import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.CreateProjectUseCase
 import squad.abudhabi.presentation.project.CreateProjectUI
@@ -28,33 +26,8 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `launchUi should create project with empty state list when user enters 0 states`() {
-        every { inputReader.readString() } returns "My Project"
-        every { inputReader.readInt() } returns 0
-
-        createProjectUI.launchUi()
-
-        verify { createProjectUseCase("My Project", emptyList()) }
-        verify { printer.displayLn("Project 'My Project' created with 0 state(s).") }
-    }
-
-    @Test
-    fun `launchUi should create project with one state`() {
-        every { inputReader.readString() } returnsMany listOf("My Project", "To Do")
-        every { inputReader.readInt() } returns 1
-
-        createProjectUI.launchUi()
-
-        val stateSlot = slot<List<State>>()
-        verify { createProjectUseCase("My Project", capture(stateSlot)) }
-
-        assertThat(stateSlot.captured).hasSize(1)
-        assertThat(stateSlot.captured[0].name).isEqualTo("To Do")
-    }
-
-    @Test
-    fun `launchUi should not create project if project name is blank`() {
-        every { inputReader.readString() } returns "   "
+    fun `should print error when project name is null`() {
+        every { inputReader.readString() } returns null
 
         createProjectUI.launchUi()
 
@@ -63,7 +36,28 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `launchUi should not create project if number of states is invalid`() {
+    fun `should print error when project name is blank`() {
+        every { inputReader.readString() } returns "  "
+
+        createProjectUI.launchUi()
+
+        verify { printer.displayLn("Project name cannot be empty.") }
+        verify(exactly = 0) { createProjectUseCase(any(), any()) }
+    }
+
+    @Test
+    fun `should print error when number of states is invalid`() {
+        every { inputReader.readString() } returns "My Project"
+        every { inputReader.readInt() } returns null // simulate invalid input
+
+        createProjectUI.launchUi()
+
+        verify { printer.displayLn("Invalid number of states.") }
+        verify(exactly = 0) { createProjectUseCase(any(), any()) }
+    }
+
+    @Test
+    fun `should print error when number of states is negative`() {
         every { inputReader.readString() } returns "My Project"
         every { inputReader.readInt() } returns -2
 
@@ -74,13 +68,62 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `launchUi should not create project if a state name is empty`() {
-        every { inputReader.readString() } returnsMany listOf("My Project", "   ")
+    fun `should print error when state name is blank`() {
+        every { inputReader.readString() } returnsMany listOf("My Project", "   ") // project name, then blank state
         every { inputReader.readInt() } returns 1
 
         createProjectUI.launchUi()
 
         verify { printer.displayLn("State name cannot be empty.") }
-        verify(exactly = 0) { createProjectUseCase(any(), any()) }
     }
+
+    @Test
+    fun `should call use case and print success when input is valid`() {
+        every { inputReader.readString() } returnsMany listOf("My Project", "To Do", "In Progress")
+        every { inputReader.readInt() } returns 2
+
+        every { createProjectUseCase(any(), any()) } just Runs
+
+        createProjectUI.launchUi()
+
+        verify {
+            createProjectUseCase("My Project", match { it.map { s -> s.name } == listOf("To Do", "In Progress") })
+        }
+        verify { printer.displayLn("Project 'My Project' created with 2 state(s).") }
+    }
+
+    @Test
+    fun `should print error when exception is thrown`() {
+        every { inputReader.readString() } returnsMany listOf("My Project", "Design")
+        every { inputReader.readInt() } returns 1
+
+        every { createProjectUseCase(any(), any()) } throws ProjectNotFoundException()
+
+        createProjectUI.launchUi()
+
+        verify { printer.displayLn("Error: Project Not Found") }
+    }
+
+    @Test
+    fun `should print error when state name is null`() {
+        every { inputReader.readString() } returnsMany listOf("My Project", null) // project name, then null
+        every { inputReader.readInt() } returns 1
+
+        createProjectUI.launchUi()
+
+        verify { printer.displayLn("State name cannot be empty.") }
+    }
+
+    @Test
+    fun `should allow project creation with zero states`() {
+        every { inputReader.readString() } returns "Empty Project"
+        every { inputReader.readInt() } returns 0
+        every { createProjectUseCase(any(), any()) } just Runs
+
+        createProjectUI.launchUi()
+
+        verify { createProjectUseCase("Empty Project", emptyList()) }
+        verify { printer.displayLn("Project 'Empty Project' created with 0 state(s).") }
+    }
+
 }

@@ -39,7 +39,11 @@ class CreateProjectUI(
             states.add(State(name = stateName))
         }
 
-        createProjectUseCase(projectName, states)
-        printer.displayLn("Project '$projectName' created with ${states.size} state(s).")
+        try {
+            createProjectUseCase(projectName, states)
+            printer.displayLn("Project '$projectName' created with ${states.size} state(s).")
+        } catch (e: Exception) {
+            printer.displayLn("Error: ${e.message}")
+        }
     }
 }
