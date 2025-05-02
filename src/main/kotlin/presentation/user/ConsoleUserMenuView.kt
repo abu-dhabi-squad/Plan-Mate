@@ -6,7 +6,7 @@ import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import kotlin.system.exitProcess
 
-class ConsoleMenuView(
+class ConsoleUserMenuView(
     private val user: User,
     // other views will be injected here
     private val printer: Printer,
