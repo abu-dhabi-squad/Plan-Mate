@@ -5,6 +5,7 @@ import helper.createState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import logic.audit.CreateAuditUseCase
 import logic.validation.DateParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,6 +28,7 @@ class CreateTaskPresenterUITest {
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var createTaskUseCase: CreateTaskUseCase
     private lateinit var parserDate: DateParser
+    private lateinit var createAuditUseCase: CreateAuditUseCase
 
     @BeforeEach
     fun setup() {
@@ -35,6 +37,7 @@ class CreateTaskPresenterUITest {
         getAllProjectsUseCase = mockk(relaxed = true)
         createTaskUseCase = mockk(relaxed = true)
         parserDate = mockk(relaxed = true)
+        createAuditUseCase = mockk(relaxed = true)
 
         presenter = CreateTaskPresenterUI(
             userName,
@@ -42,7 +45,8 @@ class CreateTaskPresenterUITest {
             reader,
             getAllProjectsUseCase,
             createTaskUseCase,
-            parserDate
+            parserDate,
+            createAuditUseCase
         )
     }
 

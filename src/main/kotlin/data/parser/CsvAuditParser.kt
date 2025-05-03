@@ -1,13 +1,13 @@
 package data.parser
 
-import logic.validation.DateParser
+import logic.validation.DateTimeParser
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.EntityType
 
 import java.util.UUID
 
 class CsvAuditParser(
-    private val dateParser: DateParser
+    private val dateParser: DateTimeParser
 ): AuditParser {
 
     override fun getLineFromAudit(audit: Audit): String {

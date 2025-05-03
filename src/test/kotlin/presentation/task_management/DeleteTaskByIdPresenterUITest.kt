@@ -6,6 +6,7 @@ import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
+import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -26,7 +27,7 @@ class DeleteTaskByIdPresenterUITest {
     private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
     private lateinit var deleteTaskByIdUseCase: DeleteTaskByIdUseCase
     private lateinit var presenter: DeleteTaskByIdPresenterUI
-
+    private lateinit var createAuditUseCase: CreateAuditUseCase
     @BeforeEach
     fun setUp() {
         printer = mockk(relaxed = true)
@@ -34,13 +35,14 @@ class DeleteTaskByIdPresenterUITest {
         getAllProjectsUseCase = mockk(relaxed = true)
         getTasksByProjectIdUseCase = mockk(relaxed = true)
         deleteTaskByIdUseCase = mockk(relaxed = true)
-
+        createAuditUseCase = mockk(relaxed = true)
         presenter = DeleteTaskByIdPresenterUI(
             printer,
             reader,
             getAllProjectsUseCase,
             getTasksByProjectIdUseCase,
-            deleteTaskByIdUseCase
+            deleteTaskByIdUseCase,
+            createAuditUseCase
         )
     }
 

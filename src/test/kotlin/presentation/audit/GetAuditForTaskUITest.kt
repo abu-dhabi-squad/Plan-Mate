@@ -1,8 +1,8 @@
 package presentation.audit
 
-import GetAuditUseCase
 import io.mockk.every
 import io.mockk.mockk
+import logic.audit.GetAuditUseCase
 import logic.helper.createTask
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -17,7 +17,6 @@ import squad.abudhabi.presentation.ui_io.ConsolePrinter
 import squad.abudhabi.presentation.ui_io.InputReader
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.time.LocalDate
 import java.util.*
 import kotlin.test.assertTrue
 
@@ -48,7 +47,7 @@ class GetAuditForTaskUITest {
         val project = Project("p1", "Project A", listOf())
         val task = createTask(id = "t1", title = "Task A")
         val audits = listOf(
-            Audit(UUID.randomUUID(), "admin", "t1", EntityType.TASK, "old", "new", LocalDate.now())
+            Audit(UUID.randomUUID(), "admin", "t1", EntityType.TASK, "old", "new")
         )
 
         every { getAllProjectsUseCase() } returns listOf(project)
