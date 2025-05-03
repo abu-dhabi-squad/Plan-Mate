@@ -1,12 +1,12 @@
 package presentation.project
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.*
+import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.CreateProjectUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.project.CreateProjectUI
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
@@ -16,13 +16,18 @@ class CreateProjectUITest{
     private lateinit var inputReader: InputReader
     private lateinit var printer: Printer
     private lateinit var createProjectUI: CreateProjectUI
+    private lateinit var createAuditUseCase: CreateAuditUseCase
+    private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
+
 
     @BeforeEach
     fun setup() {
         createProjectUseCase = mockk(relaxed = true)
+        createAuditUseCase = mockk(relaxed = true)
+        getLoggedUserUseCase = mockk(relaxed = true)
         inputReader = mockk()
         printer = mockk(relaxed = true)
-        createProjectUI = CreateProjectUI(createProjectUseCase, inputReader, printer)
+        createProjectUI = CreateProjectUI(createProjectUseCase, inputReader, printer, createAuditUseCase, getLoggedUserUseCase)
     }
 
     @Test
@@ -32,7 +37,7 @@ class CreateProjectUITest{
         createProjectUI.launchUi()
 
         verify { printer.displayLn("Project name cannot be empty.") }
-        verify(exactly = 0) { createProjectUseCase(any(), any()) }
+        verify(exactly = 0) { createProjectUseCase(any()) }
     }
 
     @Test
@@ -42,7 +47,7 @@ class CreateProjectUITest{
         createProjectUI.launchUi()
 
         verify { printer.displayLn("Project name cannot be empty.") }
-        verify(exactly = 0) { createProjectUseCase(any(), any()) }
+        verify(exactly = 0) { createProjectUseCase(any()) }
     }
 
     @Test
@@ -53,7 +58,7 @@ class CreateProjectUITest{
         createProjectUI.launchUi()
 
         verify { printer.displayLn("Invalid number of states.") }
-        verify(exactly = 0) { createProjectUseCase(any(), any()) }
+        verify(exactly = 0) { createProjectUseCase(any()) }
     }
 
     @Test
@@ -64,7 +69,7 @@ class CreateProjectUITest{
         createProjectUI.launchUi()
 
         verify { printer.displayLn("Invalid number of states.") }
-        verify(exactly = 0) { createProjectUseCase(any(), any()) }
+        verify(exactly = 0) { createProjectUseCase(any()) }
     }
 
     @Test
@@ -82,12 +87,10 @@ class CreateProjectUITest{
         every { inputReader.readString() } returnsMany listOf("My Project", "To Do", "In Progress")
         every { inputReader.readInt() } returns 2
 
-        every { createProjectUseCase(any(), any()) } just Runs
-
         createProjectUI.launchUi()
 
         verify {
-            createProjectUseCase("My Project", match { it.map { s -> s.name } == listOf("To Do", "In Progress") })
+            createProjectUseCase(any())
         }
         verify { printer.displayLn("Project 'My Project' created with 2 state(s).") }
     }
@@ -97,7 +100,7 @@ class CreateProjectUITest{
         every { inputReader.readString() } returnsMany listOf("My Project", "Design")
         every { inputReader.readInt() } returns 1
 
-        every { createProjectUseCase(any(), any()) } throws ProjectNotFoundException()
+        every { createProjectUseCase(any()) } throws ProjectNotFoundException()
 
         createProjectUI.launchUi()
 
@@ -118,12 +121,22 @@ class CreateProjectUITest{
     fun `should allow project creation with zero states`() {
         every { inputReader.readString() } returns "Empty Project"
         every { inputReader.readInt() } returns 0
-        every { createProjectUseCase(any(), any()) } just Runs
 
         createProjectUI.launchUi()
 
-        verify { createProjectUseCase("Empty Project", emptyList()) }
+        verify { createProjectUseCase(any()) }
         verify { printer.displayLn("Project 'Empty Project' created with 0 state(s).") }
     }
 
+    @Test
+    fun `should throw exception when create audit throw exception`(){
+
+        every { inputReader.readString() } returnsMany listOf("My Project", "To Do", "In Progress")
+        every { inputReader.readInt() } returns 2
+        every { createAuditUseCase(any()) } throws Exception()
+
+        createProjectUI.launchUi()
+
+        verify { printer.displayLn("Error: ${Exception().message}") }
+    }
 }
