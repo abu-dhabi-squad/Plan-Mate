@@ -1,6 +1,7 @@
 package presentation.project
 
 import io.mockk.*
+import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,13 +15,15 @@ class DeleteProjectUITest{
     private lateinit var inputReader: InputReader
     private lateinit var printer: Printer
     private lateinit var deleteProjectUI: DeleteProjectUI
+    private lateinit var createAuditUseCase: CreateAuditUseCase
 
     @BeforeEach
     fun setUp() {
         deleteProjectUseCase = mockk()
+        createAuditUseCase = mockk(relaxed = true)
         inputReader = mockk()
         printer = mockk(relaxed = true)
-        deleteProjectUI = DeleteProjectUI(deleteProjectUseCase, inputReader, printer)
+        deleteProjectUI = DeleteProjectUI(deleteProjectUseCase, inputReader, printer, createAuditUseCase)
     }
 
     @Test
@@ -77,5 +80,18 @@ class DeleteProjectUITest{
         verify { printer.display("Enter the project ID to delete: ") }
         verify { printer.displayLn("Project name cannot be empty.") }
         verify(exactly = 0) { deleteProjectUseCase(any()) }
+    }
+
+    @Test
+    fun `should throw exception when create audit throw exception`(){
+
+        every { inputReader.readString() } returns "projectId"
+        every { deleteProjectUseCase(any()) } just Runs
+        every { createAuditUseCase(any()) } throws Exception()
+
+        deleteProjectUI.launchUi()
+
+        verify { printer.displayLn("Error: ${Exception().message}") }
+
     }
 }
