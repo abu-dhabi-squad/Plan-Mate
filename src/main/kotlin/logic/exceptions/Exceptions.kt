@@ -4,6 +4,12 @@ open class AppException(msg: String) : Exception(msg)
 
 class TaskNotFoundException : AppException("Task not found")
 
+class InvalidAudit : AppException("Audit Is Invalid.")
+
+class WrongInputException : AppException("Invalid entity ID input. Please try again.")
+
+class EmptyList: AppException("No audit logs found for this entity ID.")
+
 class NoTasksFoundException : AppException("No tasks found")
 
 class InvalidDateFormatException : AppException("Invalid date format")
