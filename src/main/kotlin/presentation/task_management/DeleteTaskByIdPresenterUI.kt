@@ -1,20 +1,26 @@
 package presentation.task_management
 
+import logic.audit.CreateAuditUseCase
+import squad.abudhabi.logic.model.Audit
+import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
 import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 
 class DeleteTaskByIdPresenterUI(
     private val printer: Printer,
+    private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
-    private val deleteTaskByIdUseCase: DeleteTaskByIdUseCase
+    private val deleteTaskByIdUseCase: DeleteTaskByIdUseCase,
+    private val createAuditUseCase: CreateAuditUseCase
 ) : UiLauncher {
 
     override fun launchUi() {
@@ -52,6 +58,15 @@ class DeleteTaskByIdPresenterUI(
 
         try {
             deleteTaskByIdUseCase(selectedTask.id)
+            createAuditUseCase(
+                Audit(
+                    entityId = selectedTask.id,
+                    entityType = EntityType.TASK,
+                    oldState = "",
+                    newState = "Deleted",
+                    createdBy = getLoggedUserUseCase().username
+                )
+            )
             printer.display("Task '${selectedTask.title}' deleted successfully.")
         } catch (e: Exception) {
             printer.display("Failed to delete task: ${e.message}")

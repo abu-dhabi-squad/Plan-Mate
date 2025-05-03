@@ -1,23 +1,29 @@
 package presentation.task_management
 
+import logic.audit.CreateAuditUseCase
 import logic.validation.DateParser
+import squad.abudhabi.logic.model.Audit
+import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.CreateTaskUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate
 
 class CreateTaskPresenterUI(
-    private val userName: String,
+    private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val printer: Printer,
     private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val createTaskUseCase: CreateTaskUseCase,
-    private val parserDate: DateParser
+    private val parserDate: DateParser,
+    private val createAuditUseCase: CreateAuditUseCase
+
 ) : UiLauncher {
 
     override fun launchUi() {
@@ -47,7 +53,7 @@ class CreateTaskPresenterUI(
         val selectedState = selectedProject.states[stateIndex]
 
         val task = Task(
-            userName = userName,
+            userName = getLoggedUserUseCase().username,
             projectId = selectedProject.id,
             stateId = selectedState.id,
             title = title,
@@ -58,6 +64,15 @@ class CreateTaskPresenterUI(
 
         try {
             createTaskUseCase(task)
+            createAuditUseCase(
+                Audit(
+                    entityId = task.id,
+                    entityType = EntityType.TASK,
+                    oldState = "",
+                    newState = "Created",
+                    createdBy = "Noor Serry"
+                )
+            )
             printer.display("Task created successfully.")
         } catch (e: Exception) {
             printer.display("Failed to create task: ${e.message}")

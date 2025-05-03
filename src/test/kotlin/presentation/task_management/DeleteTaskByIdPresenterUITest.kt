@@ -6,6 +6,7 @@ import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
+import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -15,6 +16,7 @@ import squad.abudhabi.logic.exceptions.NoTasksFoundException
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
 import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 
@@ -26,6 +28,8 @@ class DeleteTaskByIdPresenterUITest {
     private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
     private lateinit var deleteTaskByIdUseCase: DeleteTaskByIdUseCase
     private lateinit var presenter: DeleteTaskByIdPresenterUI
+    private lateinit var createAuditUseCase: CreateAuditUseCase
+    private lateinit var getLoggedUserUseCase : GetLoggedUserUseCase
 
     @BeforeEach
     fun setUp() {
@@ -34,13 +38,17 @@ class DeleteTaskByIdPresenterUITest {
         getAllProjectsUseCase = mockk(relaxed = true)
         getTasksByProjectIdUseCase = mockk(relaxed = true)
         deleteTaskByIdUseCase = mockk(relaxed = true)
+        createAuditUseCase = mockk(relaxed = true)
+        getLoggedUserUseCase = mockk(relaxed =true)
 
         presenter = DeleteTaskByIdPresenterUI(
             printer,
+            getLoggedUserUseCase,
             reader,
             getAllProjectsUseCase,
             getTasksByProjectIdUseCase,
-            deleteTaskByIdUseCase
+            deleteTaskByIdUseCase,
+            createAuditUseCase
         )
     }
 

@@ -5,6 +5,7 @@ import helper.createState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import logic.audit.CreateAuditUseCase
 import logic.validation.DateParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,19 +15,21 @@ import squad.abudhabi.logic.exceptions.InvalidTaskDateException
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.CreateTaskUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate
 
 class CreateTaskPresenterUITest {
 
-    private val userName = "TestUser"
     private lateinit var printer: Printer
     private lateinit var reader: InputReader
     private lateinit var presenter: CreateTaskPresenterUI
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var createTaskUseCase: CreateTaskUseCase
     private lateinit var parserDate: DateParser
+    private lateinit var createAuditUseCase: CreateAuditUseCase
+    private lateinit var getLoggedUserUseCase : GetLoggedUserUseCase
 
     @BeforeEach
     fun setup() {
@@ -35,14 +38,16 @@ class CreateTaskPresenterUITest {
         getAllProjectsUseCase = mockk(relaxed = true)
         createTaskUseCase = mockk(relaxed = true)
         parserDate = mockk(relaxed = true)
-
+        createAuditUseCase = mockk(relaxed = true)
+        getLoggedUserUseCase = mockk(relaxed =true)
         presenter = CreateTaskPresenterUI(
-            userName,
+            getLoggedUserUseCase,
             printer,
             reader,
             getAllProjectsUseCase,
             createTaskUseCase,
-            parserDate
+            parserDate,
+            createAuditUseCase
         )
     }
 
