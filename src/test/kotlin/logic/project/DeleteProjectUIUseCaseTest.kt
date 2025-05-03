@@ -12,7 +12,7 @@ import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.project.DeleteProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 
-class DeleteProjectUseCaseTest {
+class DeleteProjectUIUseCaseTest {
 
     private lateinit var projectRepository: ProjectRepository
     private lateinit var deleteProjectUseCase: DeleteProjectUseCase
