@@ -9,6 +9,7 @@ import squad.abudhabi.logic.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(
     private val authenticationDataSource: AuthenticationDataSource,
+    private val
 ) :AuthenticationRepository{
 
     override fun loginUser(userName: String, password: String): User? {
@@ -22,10 +23,20 @@ class AuthenticationRepositoryImpl(
             ?:throw UserNotFoundException(userName)
     }
 
+    override fun saveLoggedUser(user: User) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getLoggedUser(): User {
+        TODO("Not yet implemented")
+    }
+
     override fun createUser(user: User) {
         authenticationDataSource.getUserByUserName(user.username)
             ?.let { throw UserAlreadyExistsException(user.username) }
         authenticationDataSource.createUser(user)
     }
+
+
 
 }
