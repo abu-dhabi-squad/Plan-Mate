@@ -5,6 +5,7 @@ import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.project.DeleteProjectUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.project.DeleteProjectUI
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
@@ -15,14 +16,16 @@ class DeleteProjectUITest{
     private lateinit var printer: Printer
     private lateinit var deleteProjectUI: DeleteProjectUI
     private lateinit var createAuditUseCase: CreateAuditUseCase
+    private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
 
     @BeforeEach
     fun setUp() {
         deleteProjectUseCase = mockk()
         createAuditUseCase = mockk(relaxed = true)
+        getLoggedUserUseCase = mockk(relaxed = true)
         inputReader = mockk()
         printer = mockk(relaxed = true)
-        deleteProjectUI = DeleteProjectUI(deleteProjectUseCase, inputReader, printer, createAuditUseCase)
+        deleteProjectUI = DeleteProjectUI(deleteProjectUseCase, inputReader, printer, createAuditUseCase,getLoggedUserUseCase)
     }
 
     @Test
