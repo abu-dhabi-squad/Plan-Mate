@@ -1,13 +1,10 @@
 package presentation.project
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.CreateProjectUseCase
 import squad.abudhabi.presentation.project.CreateProjectUI
 import squad.abudhabi.presentation.ui_io.InputReader
@@ -86,8 +83,6 @@ class CreateProjectUITest{
         every { inputReader.readString() } returnsMany listOf("My Project", "To Do", "In Progress")
         every { inputReader.readInt() } returns 2
 
-        //every { createProjectUseCase(any(), any()) } just Runs
-
         createProjectUI.launchUi()
 
         verify {
@@ -122,7 +117,6 @@ class CreateProjectUITest{
     fun `should allow project creation with zero states`() {
         every { inputReader.readString() } returns "Empty Project"
         every { inputReader.readInt() } returns 0
-        //every { createProjectUseCase(any(), any()) } just Runs
 
         createProjectUI.launchUi()
 
@@ -136,12 +130,9 @@ class CreateProjectUITest{
         every { inputReader.readString() } returnsMany listOf("My Project", "To Do", "In Progress")
         every { inputReader.readInt() } returns 2
         every { createAuditUseCase(any()) } throws Exception()
-        //every { createProjectUseCase(any(), any()) } just Runs
 
         createProjectUI.launchUi()
 
         verify { printer.displayLn("Error: ${Exception().message}") }
-
     }
-
 }

@@ -8,7 +8,6 @@ import squad.abudhabi.logic.project.CreateProjectUseCase
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
-import java.util.*
 
 class CreateProjectUI(
     private val createProjectUseCase: CreateProjectUseCase,
