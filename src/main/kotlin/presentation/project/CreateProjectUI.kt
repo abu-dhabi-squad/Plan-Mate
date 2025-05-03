@@ -1,5 +1,8 @@
 package squad.abudhabi.presentation.project
 
+import logic.audit.CreateAuditUseCase
+import squad.abudhabi.logic.model.Audit
+import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.project.CreateProjectUseCase
 import squad.abudhabi.presentation.UiLauncher
@@ -10,7 +13,8 @@ import java.util.*
 class CreateProjectUI(
     private val createProjectUseCase: CreateProjectUseCase,
     private val inputReader: InputReader,
-    private val printer: Printer
+    private val printer: Printer,
+    private val createAuditUseCase: CreateAuditUseCase
 ):UiLauncher {
 
     override fun launchUi() {
@@ -40,7 +44,16 @@ class CreateProjectUI(
         }
 
         try {
-            createProjectUseCase(projectName, states)
+            val newProjectId = createProjectUseCase(projectName, states)
+            createAuditUseCase(
+                Audit(
+                    createdBy = "dddd",
+                    entityType = EntityType.PROJECT,
+                    entityId = newProjectId,
+                    oldState = "",
+                    newState = "Created"
+                )
+            )
             printer.displayLn("Project '$projectName' created with ${states.size} state(s).")
         } catch (e: Exception) {
             printer.displayLn("Error: ${e.message}")
