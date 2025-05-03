@@ -5,6 +5,7 @@ import helper.createState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import logic.validation.DateParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -13,7 +14,6 @@ import squad.abudhabi.logic.exceptions.InvalidTaskDateException
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.CreateTaskUseCase
-import squad.abudhabi.logic.validation.DateParser
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate
