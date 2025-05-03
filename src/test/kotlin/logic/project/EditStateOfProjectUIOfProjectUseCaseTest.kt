@@ -10,7 +10,6 @@ import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.exceptions.ProjectStateNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.project.EditStateOfProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 
 class EditStateOfProjectUIOfProjectUseCaseTest {

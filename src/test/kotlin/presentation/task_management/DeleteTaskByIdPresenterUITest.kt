@@ -12,11 +12,11 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.exceptions.NoTasksFoundException
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
-import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.GetAllProjectsUseCase
+import logic.task.DeleteTaskByIdUseCase
+import logic.task.GetTasksByProjectIdUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class DeleteTaskByIdPresenterUITest {
 

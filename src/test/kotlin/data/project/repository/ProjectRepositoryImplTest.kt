@@ -7,8 +7,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.data.project.datasource.ProjectDataSource
-import squad.abudhabi.data.project.repository.ProjectRepositoryImpl
+import data.project.datasource.ProjectDataSource
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
 

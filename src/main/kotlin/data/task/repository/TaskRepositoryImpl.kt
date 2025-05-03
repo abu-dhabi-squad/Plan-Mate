@@ -1,4 +1,4 @@
-package squad.abudhabi.data.task.repository
+package data.task.repository
 
 import squad.abudhabi.data.task.datasource.TaskDataSource
 import squad.abudhabi.logic.model.Task

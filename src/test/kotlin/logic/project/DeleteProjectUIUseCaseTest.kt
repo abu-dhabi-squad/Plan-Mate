@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.project.DeleteProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 
 class DeleteProjectUIUseCaseTest {

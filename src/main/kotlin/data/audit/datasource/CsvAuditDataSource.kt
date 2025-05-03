@@ -1,14 +1,14 @@
-package squad.abudhabi.data.audit.datasource
+package data.audit.datasource
 
-import data.parser.CsvAuditParser
-import squad.abudhabi.data.utils.filehelper.CsvFileHelper
+import data.parser.AuditParser
+import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Audit
 
 class CsvAuditDataSource(
-    private val csvFileHelper: CsvFileHelper,
+    private val csvFileHelper: FileHelper,
     private val csvFileName: String,
-    private val csvAuditParser: CsvAuditParser,
-) : AuditDataSource{
+    private val csvAuditParser: AuditParser,
+) : AuditDataSource {
 
     override fun createAuditLog(audit: Audit) {
         return csvFileHelper.appendFile(csvFileName, listOf(csvAuditParser.getLineFromAudit(audit)))

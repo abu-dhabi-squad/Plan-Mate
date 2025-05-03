@@ -4,14 +4,13 @@ import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.authentication.CreateMateUserUseCase
 import squad.abudhabi.logic.exceptions.EmptyUsernameException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
 import squad.abudhabi.logic.repository.AuthenticationRepository
-import squad.abudhabi.logic.utils.HashingService
-import squad.abudhabi.logic.validation.PasswordValidator
+import logic.utils.HashingService
+import logic.validation.PasswordValidator
 
 class CreateMateUserUseCaseTest {
 

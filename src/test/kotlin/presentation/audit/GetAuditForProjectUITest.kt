@@ -10,9 +10,9 @@ import squad.abudhabi.logic.exceptions.WrongInputException
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.presentation.ui_io.ConsolePrinter
-import squad.abudhabi.presentation.ui_io.InputReader
+import logic.project.GetAllProjectsUseCase
+import presentation.ui_io.ConsolePrinter
+import presentation.ui_io.InputReader
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.time.LocalDate

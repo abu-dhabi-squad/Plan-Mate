@@ -1,4 +1,4 @@
-package squad.abudhabi.data.audit.datasource
+package data.audit.datasource
 
 import squad.abudhabi.logic.model.Audit
 

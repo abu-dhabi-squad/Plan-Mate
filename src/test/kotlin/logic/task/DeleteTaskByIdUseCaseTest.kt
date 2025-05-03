@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.TaskNotFoundException
 import squad.abudhabi.logic.repository.TaskRepository
-import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
 import java.util.UUID
 
 class DeleteTaskByIdUseCaseTest {

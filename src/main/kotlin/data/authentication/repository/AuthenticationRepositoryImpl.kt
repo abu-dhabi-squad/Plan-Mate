@@ -1,6 +1,6 @@
-package squad.abudhabi.data.authentication.repository
+package data.authentication.repository
 
-import squad.abudhabi.data.authentication.datasource.AuthenticationDataSource
+import data.authentication.datasource.AuthenticationDataSource
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException

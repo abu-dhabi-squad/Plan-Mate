@@ -1,15 +1,12 @@
 package presentation.project
 
-import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.project.CreateProjectUseCase
-import squad.abudhabi.presentation.project.CreateProjectUI
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.CreateProjectUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class CreateProjectUITest{
     private lateinit var createProjectUseCase: CreateProjectUseCase

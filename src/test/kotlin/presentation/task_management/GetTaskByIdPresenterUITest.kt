@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.task.GetTaskByIdUseCase
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.task.GetTaskByIdUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import java.time.LocalDate
 
 class GetTaskByIdPresenterUITest {

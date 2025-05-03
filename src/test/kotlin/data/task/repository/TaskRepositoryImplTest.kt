@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
 import squad.abudhabi.data.task.datasource.TaskDataSource
-import squad.abudhabi.data.task.repository.TaskRepositoryImpl
 import squad.abudhabi.logic.repository.TaskRepository
 
 class TaskRepositoryImplTest {

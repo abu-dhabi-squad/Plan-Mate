@@ -1,17 +1,16 @@
-package squad.abudhabi.presentation.project
+package presentation.project
 
 import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.project.CreateProjectUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
-import java.util.*
+import logic.project.CreateProjectUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class CreateProjectUI(
     private val createProjectUseCase: CreateProjectUseCase,
     private val inputReader: InputReader,
     private val printer: Printer
-):UiLauncher {
+): UiLauncher {
 
     override fun launchUi() {
         printer.display("Enter project name: ")

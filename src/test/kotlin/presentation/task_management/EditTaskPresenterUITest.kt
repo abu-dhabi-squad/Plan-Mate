@@ -9,11 +9,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.exceptions.NoTasksFoundException
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.task.EditTaskUseCase
-import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.GetAllProjectsUseCase
+import logic.task.EditTaskUseCase
+import logic.task.GetTasksByProjectIdUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class EditTaskPresenterUITest {
 

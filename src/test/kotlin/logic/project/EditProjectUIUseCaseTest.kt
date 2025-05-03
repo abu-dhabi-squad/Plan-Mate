@@ -9,7 +9,6 @@ import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.project.EditProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 
 class EditProjectUIUseCaseTest {

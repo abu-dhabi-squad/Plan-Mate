@@ -1,8 +1,8 @@
-package squad.abudhabi.logic.task
+package logic.task
 
 import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.repository.TaskRepository
-import squad.abudhabi.logic.validation.TaskValidator
+import logic.validation.TaskValidator
 
 class CreateTaskUseCase(private val taskRepository: TaskRepository, private val taskValidator: TaskValidator, ) {
     operator fun invoke(task: Task) {

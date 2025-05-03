@@ -2,12 +2,12 @@ package presentation.task_management
 
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
-import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.GetAllProjectsUseCase
+import logic.task.DeleteTaskByIdUseCase
+import logic.task.GetTasksByProjectIdUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class DeleteTaskByIdPresenterUI(
     private val printer: Printer,

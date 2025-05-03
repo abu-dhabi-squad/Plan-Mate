@@ -1,8 +1,8 @@
-package squad.abudhabi.logic.authentication
+package logic.authentication
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.repository.AuthenticationRepository
-import squad.abudhabi.logic.utils.HashingService
+import logic.utils.HashingService
 
 class LoginByUserNameUseCase(
     private val authRepository: AuthenticationRepository,

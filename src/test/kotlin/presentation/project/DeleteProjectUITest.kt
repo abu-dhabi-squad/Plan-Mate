@@ -1,13 +1,11 @@
 package presentation.project
 
 import io.mockk.*
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.project.DeleteProjectUseCase
-import squad.abudhabi.presentation.project.DeleteProjectUI
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.DeleteProjectUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class DeleteProjectUITest{
     private lateinit var deleteProjectUseCase: DeleteProjectUseCase

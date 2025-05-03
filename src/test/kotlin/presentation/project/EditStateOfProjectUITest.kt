@@ -6,11 +6,10 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.project.EditStateOfProjectUseCase
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.presentation.project.EditStateOfProjectUI
-import squad.abudhabi.presentation.ui_io.ConsoleReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.EditStateOfProjectUseCase
+import logic.project.GetAllProjectsUseCase
+import presentation.ui_io.ConsoleReader
+import presentation.ui_io.Printer
 import kotlin.test.BeforeTest
 
 class EditStateOfProjectUITest {

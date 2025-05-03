@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.project
+package logic.project
 
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.exceptions.ProjectStateNotFoundException

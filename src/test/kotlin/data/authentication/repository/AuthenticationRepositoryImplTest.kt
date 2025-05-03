@@ -1,7 +1,6 @@
 import com.google.common.truth.Truth
 import data.TestData.user1
 import data.TestData.user2
-import data.TestData.userName1
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -10,12 +9,11 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.data.authentication.datasource.AuthenticationDataSource
-import squad.abudhabi.data.authentication.repository.AuthenticationRepositoryImpl
+import data.authentication.datasource.AuthenticationDataSource
+import data.authentication.repository.AuthenticationRepositoryImpl
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
-import kotlin.test.assertFailsWith
 
 
 class AuthenticationRepositoryImplTest {

@@ -11,8 +11,8 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.data.authentication.datasource.CsvAuthenticationDataSource
-import squad.abudhabi.data.authentication.datasource.CsvUserParser
+import data.authentication.datasource.CsvAuthenticationDataSource
+import data.authentication.datasource.CsvUserParser
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.exceptions.CanNotParseUserException
 import squad.abudhabi.logic.model.User

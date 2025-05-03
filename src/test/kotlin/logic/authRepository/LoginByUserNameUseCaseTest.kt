@@ -6,13 +6,12 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.authentication.LoginByUserNameUseCase
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
 import squad.abudhabi.logic.repository.AuthenticationRepository
-import squad.abudhabi.logic.utils.HashingService
+import logic.utils.HashingService
 import kotlin.test.Test
 
 class LoginByUserNameUseCaseTest {

@@ -1,4 +1,4 @@
-package squad.abudhabi.presentation.ui_io
+package presentation.ui_io
 
 class ConsoleReader: InputReader {
     override fun readString(): String? {

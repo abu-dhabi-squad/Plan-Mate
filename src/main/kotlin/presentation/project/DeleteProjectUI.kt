@@ -1,15 +1,15 @@
-package squad.abudhabi.presentation.project
+package presentation.project
 
-import squad.abudhabi.logic.project.DeleteProjectUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.DeleteProjectUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class DeleteProjectUI(
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val inputReader: InputReader,
     private val printer: Printer
-):UiLauncher {
+): UiLauncher {
     override fun launchUi() {
         printer.display("Enter the project ID to delete: ")
         val projectId = inputReader.readString()

@@ -1,6 +1,6 @@
-package squad.abudhabi.data.project.repository
+package data.project.repository
 
-import squad.abudhabi.data.project.datasource.ProjectDataSource
+import data.project.datasource.ProjectDataSource
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.repository.ProjectRepository
 

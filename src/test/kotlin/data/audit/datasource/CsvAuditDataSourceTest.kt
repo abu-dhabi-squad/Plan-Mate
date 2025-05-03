@@ -8,8 +8,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.data.audit.datasource.AuditDataSource
-import squad.abudhabi.data.audit.datasource.CsvAuditDataSource
 import squad.abudhabi.data.utils.filehelper.CsvFileHelper
 import kotlin.test.assertFails
 import kotlin.test.assertTrue

@@ -1,7 +1,7 @@
-package squad.abudhabi.presentation.ui_io
+package presentation.ui_io
 
 
-class ConsolePrinter:Printer {
+class ConsolePrinter: Printer {
     override fun display(input: Any?) {
         print(input)
     }

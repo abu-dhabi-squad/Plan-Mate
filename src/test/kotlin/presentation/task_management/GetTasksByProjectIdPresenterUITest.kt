@@ -11,10 +11,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.GetAllProjectsUseCase
+import logic.task.GetTasksByProjectIdUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import java.time.LocalDate
 
 class GetTasksByProjectIdPresenterUITest {

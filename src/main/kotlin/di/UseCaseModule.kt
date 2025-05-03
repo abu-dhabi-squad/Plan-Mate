@@ -1,14 +1,41 @@
 package di
 
+import GetAuditUseCase
+import logic.audit.CreateAuditUseCase
+import logic.authentication.CreateMateUserUseCase
+import logic.authentication.LoginByUserNameUseCase
+import logic.project.AddStateToProjectUseCase
+import logic.project.CreateProjectUseCase
+import logic.project.DeleteProjectUseCase
+import logic.project.EditProjectUseCase
+import logic.project.EditStateOfProjectUseCase
+import logic.project.GetAllProjectsUseCase
+import logic.project.GetProjectByIdUseCase
+import logic.task.CreateTaskUseCase
+import logic.task.DeleteTaskByIdUseCase
+import logic.task.EditTaskUseCase
+import logic.task.GetTaskByIdUseCase
+import logic.task.GetTasksByProjectIdUseCase
 import org.koin.dsl.module
-import squad.abudhabi.logic.project.GetProjectByIdUseCase
-import squad.abudhabi.logic.project.EditProjectUseCase
-import squad.abudhabi.logic.project.EditStateOfProjectUseCase
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
 
 val useCaseModule = module {
-    single { GetProjectByIdUseCase(get()) }
-    single { EditStateOfProjectUseCase(get()) }
+    single { CreateAuditUseCase(get()) }
+    single { GetAuditUseCase(get()) }
+
+    single <CreateMateUserUseCase>{ CreateMateUserUseCase(get(), get(), get()) }
+    single { LoginByUserNameUseCase(get(), get()) }
+
+    single { AddStateToProjectUseCase(get()) }
+    single { CreateProjectUseCase(get()) }
+    single { DeleteProjectUseCase(get()) }
     single { EditProjectUseCase(get()) }
+    single { EditStateOfProjectUseCase(get()) }
     single { GetAllProjectsUseCase(get()) }
+    single { GetProjectByIdUseCase(get()) }
+
+    single { CreateTaskUseCase(get(), get()) }
+    single { DeleteTaskByIdUseCase(get()) }
+    single { EditTaskUseCase(get(), get()) }
+    single { GetTaskByIdUseCase(get()) }
+    single { GetTasksByProjectIdUseCase(get()) }
 }

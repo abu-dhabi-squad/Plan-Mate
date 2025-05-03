@@ -1,12 +1,12 @@
 package squad.abudhabi.presentation.auth
 
-import squad.abudhabi.logic.authentication.LoginByUserNameUseCase
+import logic.authentication.LoginByUserNameUseCase
 import squad.abudhabi.logic.model.UserType
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.admin.ConsoleAdminMenuView
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
-import squad.abudhabi.presentation.user.ConsoleUserMenuView
+import presentation.UiLauncher
+import presentation.admin.ConsoleAdminMenuView
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
+import presentation.user.ConsoleUserMenuView
 
 class LoginByUserNameUseCaseUI(
     private val loginUseCase: LoginByUserNameUseCase,

@@ -11,8 +11,7 @@ import squad.abudhabi.logic.exceptions.InvalidTaskDateException
 import squad.abudhabi.logic.exceptions.TaskNotFoundException
 import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.repository.TaskRepository
-import squad.abudhabi.logic.task.EditTaskUseCase
-import squad.abudhabi.logic.validation.TaskValidator
+import logic.validation.TaskValidator
 import java.time.LocalDate
 
 class EditTaskUseCaseTest {

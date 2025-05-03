@@ -1,16 +1,14 @@
 package presentation.project
 
 import io.mockk.*
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.exceptions.DuplicateStateException
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.project.AddStateToProjectUseCase
-import squad.abudhabi.presentation.project.AddStateToProjectUI
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.AddStateToProjectUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class AddStateToProjectUITest{
     private lateinit var addStateToProjectUI: AddStateToProjectUI

@@ -1,9 +1,9 @@
 package presentation.task_management
 
-import squad.abudhabi.logic.task.GetTaskByIdUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.task.GetTaskByIdUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class GetTaskByIdPresenterUI(
     private val printer: Printer,

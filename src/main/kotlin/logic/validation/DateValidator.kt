@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.validation
+package logic.validation
 
 interface DateValidator {
     fun validateDateOrThrow(date: String)
