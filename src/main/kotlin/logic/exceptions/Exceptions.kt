@@ -50,3 +50,4 @@ class NoSpecialCharsInPasswordException : PasswordException("Password must conta
 class InvalidCredentialsException : RuntimeException("Invalid credentials")
 
 class EmptyUsernameException(message: String = "Username cannot be empty") : IllegalArgumentException(message)
+class NoLoggedInUserException : IllegalStateException("No user is currently logged in")

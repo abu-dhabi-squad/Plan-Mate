@@ -6,5 +6,5 @@ interface AuthenticationRepository {
     fun createUser(user: User)
     fun getUserByName(username:String):User?
     fun saveLoggedUser(user: User)
-    fun getLoggedUser():User
+    fun getLoggedUser():User?
 }
