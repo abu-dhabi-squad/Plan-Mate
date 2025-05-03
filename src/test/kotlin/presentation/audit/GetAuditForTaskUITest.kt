@@ -21,11 +21,11 @@ import java.time.LocalDate
 import java.util.*
 import kotlin.test.assertTrue
 
-class GetAuditForTaskTest {
+class GetAuditForTaskUITest {
 
     private val getAuditUseCase: GetAuditUseCase = mockk()
     private val reader = mockk<InputReader>()
-    private val getAllProjectsUseCase = mockk<GetAllProjectsUseCase>()
+    private val getAllProjectsUseCase = mockk<GetAllProjectsUseCase>(relaxed = true)
     private val printer = ConsolePrinter()
     private val getTasksByProjectIdUseCase = mockk<GetTasksByProjectIdUseCase>()
     private val outContent = ByteArrayOutputStream()
@@ -207,5 +207,16 @@ class GetAuditForTaskTest {
 
         val output = outContent.toString()
         assertTrue(output.contains("error"))
+    }
+
+    @Test
+    fun `should throw exception when get all projects fails`(){
+
+        every { getAllProjectsUseCase() } throws Exception()
+
+        ui.launchUi()
+
+        val output = outContent.toString()
+        assertTrue(output.contains("Failed to fetch projects"))
     }
 }

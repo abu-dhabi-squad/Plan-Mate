@@ -19,7 +19,7 @@ import java.time.LocalDate
 import java.util.*
 import kotlin.test.assertTrue
 
-class GetAuditForProjectTest {
+class GetAuditForProjectUITest{
 
     private val getAuditUseCase: GetAuditUseCase = mockk()
     private val reader = mockk<InputReader>()
@@ -41,6 +41,7 @@ class GetAuditForProjectTest {
 
     @Test
     fun `should show audit logs for valid project`() {
+
         val project = Project("p1", "Project A", states = listOf())
         val audits = listOf(
             Audit(UUID.randomUUID(), "admin", "p1", EntityType.PROJECT, "old", "new", LocalDate.now())
@@ -96,6 +97,7 @@ class GetAuditForProjectTest {
 
     @Test
     fun `should show message when no audit logs found`() {
+
         val project = Project("p1", "Project A", states = listOf())
 
         every { getAllProjectsUseCase() } returns listOf(project)
@@ -125,6 +127,7 @@ class GetAuditForProjectTest {
 
     @Test
     fun `should handle EmptyList exception gracefully`() {
+
         val project = Project("p1", "Project A", states = listOf())
 
         every { getAllProjectsUseCase() } returns listOf(project)
@@ -139,6 +142,7 @@ class GetAuditForProjectTest {
 
     @Test
     fun `should handle unexpected exception`() {
+
         val project = Project("p1", "Project A", states = listOf())
 
         every { getAllProjectsUseCase() } returns listOf(project)
