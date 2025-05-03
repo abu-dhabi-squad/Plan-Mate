@@ -15,6 +15,7 @@ import squad.abudhabi.logic.exceptions.NoTasksFoundException
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.EditTaskUseCase
 import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate
@@ -28,14 +29,18 @@ class EditTaskPresenterUITest {
     private val editTaskUseCase = mockk<EditTaskUseCase>(relaxed = true)
     private val dateParser: DateParser = mockk(relaxed = true)
     private lateinit var createAuditUseCase: CreateAuditUseCase
+    private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
 
     private lateinit var presenter: EditTaskPresenterUI
 
     @BeforeEach
     fun setup() {
         createAuditUseCase = mockk(relaxed = true)
+        getLoggedUserUseCase = mockk(relaxed = true)
+
         presenter = EditTaskPresenterUI(
             printer,
+            getLoggedUserUseCase,
             inputReader,
             getAllProjectsUseCase,
             getTasksByProjectIdUseCase,
@@ -51,7 +56,15 @@ class EditTaskPresenterUITest {
         val state1 = createState("s1", "Open")
         val state2 = createState("s2", "Closed")
         val project = createProject(id = "p1", name = "Project A", states = listOf(state1, state2))
-        val task = createTask("t1", projectId = "p1", stateId = "s1", title = "Old", description = "OldDesc", startDate = LocalDate.of(2025,1,1), endDate = LocalDate.of(2025,1,2))
+        val task = createTask(
+            "t1",
+            projectId = "p1",
+            stateId = "s1",
+            title = "Old",
+            description = "OldDesc",
+            startDate = LocalDate.of(2025, 1, 1),
+            endDate = LocalDate.of(2025, 1, 2)
+        )
 
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returnsMany listOf(
@@ -64,8 +77,8 @@ class EditTaskPresenterUITest {
         every { inputReader.readString() } returnsMany listOf(
             "NewTitle", "NewDesc", "2025-05-05", "2025-05-10"
         )
-        every { dateParser.parseDateFromString("2025-05-05") } returns LocalDate.of(2025,5,5)
-        every { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025,5,10)
+        every { dateParser.parseDateFromString("2025-05-05") } returns LocalDate.of(2025, 5, 5)
+        every { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025, 5, 10)
 
         // When
         presenter.launchUi()
@@ -74,8 +87,8 @@ class EditTaskPresenterUITest {
         val expected = task.copy(
             title = "NewTitle",
             description = "NewDesc",
-            startDate = LocalDate.of(2025,5,5),
-            endDate = LocalDate.of(2025,5,10),
+            startDate = LocalDate.of(2025, 5, 5),
+            endDate = LocalDate.of(2025, 5, 10),
             stateId = "s1" // first state selected
         )
         verify { editTaskUseCase(expected) }
@@ -195,7 +208,12 @@ class EditTaskPresenterUITest {
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returnsMany listOf(1, 0, 1, 1)
         every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { inputReader.readString() } returnsMany listOf("Updated Title", "Updated Desc", "", "")
+        every { inputReader.readString() } returnsMany listOf(
+            "Updated Title",
+            "Updated Desc",
+            "",
+            ""
+        )
 
         presenter.launchUi()
 
@@ -207,7 +225,13 @@ class EditTaskPresenterUITest {
     fun `should keep existing title and description if user inputs are empty`() {
         val state = createState("s1", "Open")
         val project = createProject("1", "Project A", states = listOf(state))
-        val task = createTask("t1", title = "Old Title", description = "Old Desc", projectId = "1", stateId = state.id)
+        val task = createTask(
+            "t1",
+            title = "Old Title",
+            description = "Old Desc",
+            projectId = "1",
+            stateId = state.id
+        )
 
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returnsMany listOf(1, 1, 1)
@@ -223,7 +247,13 @@ class EditTaskPresenterUITest {
     fun `should keep existing title and description if user inputs are null`() {
         val state = createState("s1", "Open")
         val project = createProject("1", "Project A", states = listOf(state))
-        val task = createTask("t1", title = "Old Title", description = "Old Desc", projectId = "1", stateId = state.id)
+        val task = createTask(
+            "t1",
+            title = "Old Title",
+            description = "Old Desc",
+            projectId = "1",
+            stateId = state.id
+        )
 
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returnsMany listOf(1, 1, 1)
@@ -253,12 +283,20 @@ class EditTaskPresenterUITest {
 
 
     @Test
-    fun `should show date format error message when user enter invalid date format`(){
+    fun `should show date format error message when user enter invalid date format`() {
         // Given
         val state1 = createState("s1", "Open")
         val state2 = createState("s2", "Closed")
         val project = createProject(id = "p1", name = "Project A", states = listOf(state1, state2))
-        val task = createTask("t1", projectId = "p1", stateId = "s1", title = "Old", description = "OldDesc", startDate = LocalDate.of(2025,1,1), endDate = LocalDate.of(2025,1,2))
+        val task = createTask(
+            "t1",
+            projectId = "p1",
+            stateId = "s1",
+            title = "Old",
+            description = "OldDesc",
+            startDate = LocalDate.of(2025, 1, 1),
+            endDate = LocalDate.of(2025, 1, 2)
+        )
 
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returnsMany listOf(
@@ -271,8 +309,8 @@ class EditTaskPresenterUITest {
         every { inputReader.readString() } returnsMany listOf(
             "NewTitle", "NewDesc", "Invalid date", "2025-05-10"
         )
-        every { dateParser.parseDateFromString("Invalid date") } throws Exception ("Invalid format")
-        every { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025,5,10)
+        every { dateParser.parseDateFromString("Invalid date") } throws Exception("Invalid format")
+        every { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025, 5, 10)
 
         // When
         presenter.launchUi()
@@ -281,11 +319,15 @@ class EditTaskPresenterUITest {
         val expected = task.copy(
             title = "NewTitle",
             description = "NewDesc",
-            startDate = LocalDate.of(2025,5,5),
-            endDate = LocalDate.of(2025,5,10),
+            startDate = LocalDate.of(2025, 5, 5),
+            endDate = LocalDate.of(2025, 5, 10),
             stateId = "s1" // first state selected
         )
-        verify { printer.display(match{it.toString().contains("Invalid date format. Keeping current value.")}) }
+        verify {
+            printer.display(match {
+                it.toString().contains("Invalid date format. Keeping current value.")
+            })
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package squad.abudhabi.data.authentication.repository
 
 import squad.abudhabi.data.authentication.datasource.AuthenticationDataSource
+import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
@@ -9,6 +10,7 @@ import squad.abudhabi.logic.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(
     private val authenticationDataSource: AuthenticationDataSource,
+    private val loggedUserDataSource: LoggedUserDataSource
 ) :AuthenticationRepository{
 
     override fun loginUser(userName: String, password: String): User? {
@@ -22,10 +24,20 @@ class AuthenticationRepositoryImpl(
             ?:throw UserNotFoundException(userName)
     }
 
+    override fun saveLoggedUser(user: User) {
+        loggedUserDataSource.saveLoggedUser(user)
+    }
+
+    override fun getLoggedUser(): User? {
+        return loggedUserDataSource.getLoggedUser()
+    }
+
     override fun createUser(user: User) {
         authenticationDataSource.getUserByUserName(user.username)
             ?.let { throw UserAlreadyExistsException(user.username) }
         authenticationDataSource.createUser(user)
     }
+
+
 
 }

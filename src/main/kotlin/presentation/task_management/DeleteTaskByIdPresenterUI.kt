@@ -8,12 +8,14 @@ import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
 import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 
 class DeleteTaskByIdPresenterUI(
     private val printer: Printer,
+    private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
@@ -62,7 +64,7 @@ class DeleteTaskByIdPresenterUI(
                     entityType = EntityType.TASK,
                     oldState = "",
                     newState = "Deleted",
-                    createdBy = "Noor Serry"
+                    createdBy = getLoggedUserUseCase().username
                 )
             )
             printer.display("Task '${selectedTask.title}' deleted successfully.")

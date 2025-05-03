@@ -9,13 +9,14 @@ import squad.abudhabi.logic.model.State
 import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.CreateTaskUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate
 
 class CreateTaskPresenterUI(
-    private val userName: String,
+    private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val printer: Printer,
     private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
@@ -52,7 +53,7 @@ class CreateTaskPresenterUI(
         val selectedState = selectedProject.states[stateIndex]
 
         val task = Task(
-            userName = userName,
+            userName = getLoggedUserUseCase().username,
             projectId = selectedProject.id,
             stateId = selectedState.id,
             title = title,

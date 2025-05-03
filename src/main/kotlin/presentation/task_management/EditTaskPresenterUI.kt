@@ -8,6 +8,7 @@ import squad.abudhabi.logic.model.Task
 import squad.abudhabi.logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.task.EditTaskUseCase
 import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.UiLauncher
 import squad.abudhabi.presentation.ui_io.InputReader
 import squad.abudhabi.presentation.ui_io.Printer
@@ -15,6 +16,7 @@ import java.time.LocalDate
 
 class EditTaskPresenterUI(
     private val printer: Printer,
+    private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
@@ -91,7 +93,7 @@ class EditTaskPresenterUI(
                     entityType = EntityType.TASK,
                     oldState = oldState.id,
                     newState = newState.id,
-                    createdBy = "Noor Serry"
+                    createdBy = getLoggedUserUseCase().username
                 )
             )
             printer.display("✅ Task updated successfully.")
