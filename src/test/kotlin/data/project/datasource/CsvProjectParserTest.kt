@@ -24,13 +24,13 @@ class CsvProjectParserTest {
     @ParameterizedTest
     @ValueSource(
         strings = [
-            "f1925419-22c9-48f5-9e5b,name1,ee,f1925419-22c9-48f5-9e5b/state1|f1925419-22c9-48f5-9e5b/state2|f1925419-22c9-48f5-9e5b/state3",
+            "f1925419-22c9-48f5-9e5b,name1,ee,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b;state2|f1925419-22c9-48f5-9e5b;state3",
             "f1925419-22c9-48f5-9e5b,name1",
             "f1925419-22c9-48f5-9e5b,",
             "",
             "1",
-            ",name1,f1925419-22c9-48f5-9e5b/state1",
-            "f1925419-22c9-48f5-9e5b,,f1925419-22c9-48f5-9e5b/state1",
+            ",name1,f1925419-22c9-48f5-9e5b;state1",
+            "f1925419-22c9-48f5-9e5b,,f1925419-22c9-48f5-9e5b;state1",
         ]
     )
     fun `parseStringToProject should throw CanNotParseProjectException when the string split with not equal to 3 regex`(
@@ -46,15 +46,15 @@ class CsvProjectParserTest {
     @ParameterizedTest
     @ValueSource(
         strings = [
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/state1|f1925419-22c9-48f5-9e5b/state2|f1925419-22c9-48f5-9e5b/r/state3",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/state1|/state2|f1925419-22c9-48f5-9e5b/state3",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/state1|f1925419-22c9-48f5-9e5b/|f1925419-22c9-48f5-9e5b/state3",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/state1|f1925419-22c9-48f5-9e5b|f1925419-22c9-48f5-9e5b/state3",
+            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b;state2|f1925419-22c9-48f5-9e5b;r;state3",
+            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|;state2|f1925419-22c9-48f5-9e5b;state3",
+            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b;|f1925419-22c9-48f5-9e5b;state3",
+            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b|f1925419-22c9-48f5-9e5b;state3",
             "f1925419-22c9-48f5-9e5b,name1,|",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/r/state1",
+            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;r;state1",
             "f1925419-22c9-48f5-9e5b,name1,state1",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/",
-            "f1925419-22c9-48f5-9e5b,name1,/state1",
+            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;",
+            "f1925419-22c9-48f5-9e5b,name1,;state1",
         ]
     )
     fun `parseStringToProject should throw CanNotParseStateException when the string is not valid`(input: String) {
@@ -73,7 +73,7 @@ class CsvProjectParserTest {
             State("f1925419-22c9-48f5-9e5b", "state2"),
             State("f1925419-22c9-48f5-9e5b", "state3")
         )
-        val line = "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/state1|f1925419-22c9-48f5-9e5b/state2|f1925419-22c9-48f5-9e5b/state3"
+        val line = "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b;state2|f1925419-22c9-48f5-9e5b;state3"
         //when & then
         Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project("f1925419-22c9-48f5-9e5b", "name1", resState))
     }
@@ -82,7 +82,7 @@ class CsvProjectParserTest {
     fun `parseStringToProject should return Project when the string could be splited with one state`() {
         //given
         val resState = listOf(State("f1925419-22c9-48f5-9e5b", "state1"))
-        val line = "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/state1"
+        val line = "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1"
         //when & then
         Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project("f1925419-22c9-48f5-9e5b", "name1", resState))
     }
@@ -108,7 +108,7 @@ class CsvProjectParserTest {
         //given
         val project = Project("f1925419-22c9-48f5-9e5b","name1", listOf(State("f1925419-22c9-48f5-9e5b","name1")))
         //when & then
-        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/name1")
+        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;name1")
     }
 
     @Test
@@ -116,6 +116,6 @@ class CsvProjectParserTest {
         //given
         val project = Project("f1925419-22c9-48f5-9e5b","name1", listOf(State("f1925419-22c9-48f5-9e5b","name1"),State("f1925419-22c9-48f5-9e5b","name2")))
         //when & then
-        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b/name1|f1925419-22c9-48f5-9e5b/name2")
+        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;name1|f1925419-22c9-48f5-9e5b;name2")
     }
 }
