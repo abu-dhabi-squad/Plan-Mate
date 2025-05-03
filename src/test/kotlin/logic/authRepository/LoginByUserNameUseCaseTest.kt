@@ -1,18 +1,22 @@
-package logic.authentication
+package logic.authRepository
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.runs
 import io.mockk.verify
+import logic.authentication.LoginByUserNameUseCase
+import logic.utils.HashingService
+import logic.validation.PasswordValidator
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.authentication.LoginByUserNameUseCase
+import squad.abudhabi.logic.exceptions.EmptyUsernameException
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
 import squad.abudhabi.logic.repository.AuthenticationRepository
-import squad.abudhabi.logic.utils.HashingService
 import kotlin.test.Test
 
 class LoginByUserNameUseCaseTest {

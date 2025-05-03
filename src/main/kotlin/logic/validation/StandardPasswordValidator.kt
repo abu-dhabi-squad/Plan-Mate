@@ -23,5 +23,5 @@ class StandardPasswordValidator : PasswordValidator {
 
     }
 
-    companion object { private const val SYMBOLS = "@&*#_-.()"}
+    companion object { private const val SYMBOLS = "@$&*#_-.()"}
 }

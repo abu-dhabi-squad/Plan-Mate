@@ -18,6 +18,7 @@ import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 
 class DeleteTaskByIdPresenterUITest {
 
@@ -46,7 +47,8 @@ class DeleteTaskByIdPresenterUITest {
             reader,
             getAllProjectsUseCase,
             getTasksByProjectIdUseCase,
-            deleteTaskByIdUseCase
+            deleteTaskByIdUseCase,
+            createAuditUseCase
         )
     }
 

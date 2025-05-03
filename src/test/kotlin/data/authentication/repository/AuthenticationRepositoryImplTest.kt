@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.authentication.datasource.AuthenticationDataSource
 import data.authentication.repository.AuthenticationRepositoryImpl
+import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
-import kotlin.test.assertFailsWith
 
 
 class AuthenticationRepositoryImplTest {
@@ -43,7 +43,7 @@ class AuthenticationRepositoryImplTest {
         val result = authenticationRepository.loginUser(user1.username, "pass1")
 
         // Then
-        Truth.assertThat(result).isEqualTo(user1)
+        assertThat(result).isEqualTo(user1)
     }
 
     @Test
@@ -75,7 +75,7 @@ class AuthenticationRepositoryImplTest {
         val result = authenticationRepository.getUserByName(user1.username)
 
         // Then
-        Truth.assertThat(result).isEqualTo(user1)
+       assertThat(result).isEqualTo(user1)
     }
 
     @Test

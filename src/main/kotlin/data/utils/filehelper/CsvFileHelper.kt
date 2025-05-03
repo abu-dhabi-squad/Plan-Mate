@@ -15,6 +15,8 @@ class CsvFileHelper : FileHelper {
 
     override fun appendFile(fileName: String, data: List<String>) {
         val file = File(fileName)
+        if(!file.exists())
+            file.createNewFile()
         if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
         file.appendText(data.joinToString("\n"))
     }

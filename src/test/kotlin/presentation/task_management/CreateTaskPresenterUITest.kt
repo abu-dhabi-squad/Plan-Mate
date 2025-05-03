@@ -17,6 +17,7 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import java.time.LocalDate
 
 class CreateTaskPresenterUITest {

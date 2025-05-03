@@ -16,6 +16,8 @@ import data.project.datasource.ProjectDataSource
 import data.project.repository.ProjectRepositoryImpl
 import data.task.datasource.CsvTaskDataSource
 import data.task.repository.TaskRepositoryImpl
+import squad.abudhabi.data.authentication.datasource.InMemoryLoggedUserDataSource
+import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
 import squad.abudhabi.data.task.datasource.TaskDataSource
 import squad.abudhabi.data.task.parser.CsvTaskParser
 import squad.abudhabi.data.task.parser.TaskParser
@@ -31,7 +33,8 @@ val repositoryModule = module {
     single<AuditDataSource> { CsvAuditDataSource(get(),"audit.csv",get() ) }
     single<AuthenticationDataSource>{ CsvAuthenticationDataSource(get(),get(),"auth.csv") }
     single<CsvUserParser>{ CsvUserParser() }
-    single<AuthenticationRepository> { AuthenticationRepositoryImpl(get())  }
+    single<AuthenticationRepository> { AuthenticationRepositoryImpl(get(),get())  }
+    single <LoggedUserDataSource>{  InMemoryLoggedUserDataSource() }
     single<AuditParser>{CsvAuditParser(get())}
     single<ProjectDataSource> {  CsvProjectDataSource(get(),get(),"project.csv")}
     single<ProjectRepository> { ProjectRepositoryImpl(get()) }

@@ -6,6 +6,7 @@ import presentation.UiLauncher
 import presentation.admin.ConsoleAdminMenuView
 import presentation.audit.GetAuditForProjectUI
 import presentation.audit.GetAuditForTaskUI
+import presentation.auth.LoginByUserNameUseCaseUI
 import presentation.project.CreateProjectUI
 import presentation.project.DeleteProjectUI
 import presentation.project.EditProjectUI
@@ -30,7 +31,7 @@ val uiModule = module {
 
     // Shared UI components
     single { User(username = "admin", password = "admin", userType = UserType.ADMIN) }
-    single { CreateTaskPresenterUI("Noor Serry", get(), get(), get(), get(), get()) }
+    single { CreateTaskPresenterUI(get(), get(), get(), get(), get(), get(),get()) }
     single { GetTasksByProjectIdPresenterUI(get(), get(), get(), get()) }
     single { DeleteProjectUI(get(), get(), get()) }
     single { GetAuditForTaskUI(get(), get(), get(), get(), get()) }
@@ -69,7 +70,7 @@ val uiModule = module {
     }
 
     // Mate UiLaunchers instances
-    single { EditTaskPresenterUI(get(), get(), get(), get(), get()) }
+    single { EditTaskPresenterUI(get(), get(), get(), get(), get(),get(),get(),get()) }
 
     // Final ConsoleAdminMenuView with injected grouped list
     single {
@@ -90,6 +91,8 @@ val uiModule = module {
             get()  // InputReader
         )
     }
+
+    single { LoginByUserNameUseCaseUI(get(),get(),get(),get(),get(),get()) }
 
 
 }

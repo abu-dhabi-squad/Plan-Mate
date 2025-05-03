@@ -22,7 +22,8 @@ class CsvAuthenticationDataSource(
     }
 
     private fun saveUsers(users: List<User>) {
-        fileHelper.appendFile(filePath, users.map(csvUserParser::parseUserToString))
+        fileHelper.writeFile(filePath, users.map(csvUserParser::parseUserToString))
     }
 
 }
+

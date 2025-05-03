@@ -1,7 +1,7 @@
 package di
 
-import GetAuditUseCase
 import logic.audit.CreateAuditUseCase
+import logic.audit.GetAuditUseCase
 import logic.authentication.CreateMateUserUseCase
 import logic.authentication.LoginByUserNameUseCase
 import logic.project.AddStateToProjectUseCase
@@ -17,13 +17,15 @@ import logic.task.EditTaskUseCase
 import logic.task.GetTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import org.koin.dsl.module
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import squad.abudhabi.logic.user.SaveLoggedUserUseCase
 
 val useCaseModule = module {
     single { CreateAuditUseCase(get()) }
     single { GetAuditUseCase(get()) }
 
-    single <CreateMateUserUseCase>{ CreateMateUserUseCase(get(), get(), get()) }
-    single { LoginByUserNameUseCase(get(), get()) }
+    single { CreateMateUserUseCase(get(), get(), get()) }
+    single { LoginByUserNameUseCase(get(), get(),get()) }
 
     single { AddStateToProjectUseCase(get()) }
     single { CreateProjectUseCase(get()) }
@@ -38,4 +40,9 @@ val useCaseModule = module {
     single { EditTaskUseCase(get(), get()) }
     single { GetTaskByIdUseCase(get()) }
     single { GetTasksByProjectIdUseCase(get()) }
+
+    single { GetLoggedUserUseCase(get()) }
+    single { SaveLoggedUserUseCase(get(),get()) }
+
+
 }

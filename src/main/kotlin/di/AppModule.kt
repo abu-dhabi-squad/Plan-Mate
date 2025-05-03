@@ -21,6 +21,9 @@ import presentation.ui_io.ConsoleReader
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
 import logic.utils.HashingService
+import logic.validation.DateTimeParser
+import logic.validation.DateTimeParserImpl
+
 val appModule = module {
     single<DateParser> { DateParserImpl() }
     single<DateValidator> { DateValidatorImpl(get()) }
@@ -39,4 +42,6 @@ val appModule = module {
             fileName = "projects.csv"
         )
     }
+
+    single <DateTimeParser>{DateTimeParserImpl()  }
 }
