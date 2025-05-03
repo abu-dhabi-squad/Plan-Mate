@@ -8,7 +8,6 @@ import squad.abudhabi.logic.validation.PasswordValidator
 class SaveLoggedUserUseCase(
     private val repository: AuthenticationRepository,
     private val standardPasswordValidator: PasswordValidator
-
 ) {
     operator fun invoke(user: User) {
         validateInputs(user.username, user.password)

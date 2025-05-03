@@ -7,6 +7,7 @@ import squad.abudhabi.logic.authentication.LoginByUserNameUseCase
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
+import squad.abudhabi.logic.user.SaveLoggedUserUseCase
 import squad.abudhabi.presentation.admin.ConsoleAdminMenuView
 import squad.abudhabi.presentation.auth.LoginByUserNameUseCaseUI
 import squad.abudhabi.presentation.ui_io.InputReader
@@ -21,6 +22,7 @@ class LoginByUserNameUseCaseUITest {
     private lateinit var consoleMenuViewUser: ConsoleUserMenuView
     private lateinit var consoleMenuViewAdmin: ConsoleAdminMenuView
     private lateinit var loginUi: LoginByUserNameUseCaseUI
+    private lateinit var saveLoggedUserUseCase: SaveLoggedUserUseCase
 
     @BeforeEach
     fun setUp() {
@@ -29,13 +31,15 @@ class LoginByUserNameUseCaseUITest {
         printer = mockk(relaxed = true)
         consoleMenuViewUser = mockk(relaxed = true)
         consoleMenuViewAdmin = mockk(relaxed = true)
+        saveLoggedUserUseCase= mockk(relaxed = true)
 
         loginUi = LoginByUserNameUseCaseUI(
             loginUseCase,
+            saveLoggedUserUseCase,
             inputReader,
             printer,
             consoleMenuViewUser,
-            consoleMenuViewAdmin
+            consoleMenuViewAdmin,
         )
     }
 

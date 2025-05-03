@@ -1,5 +1,6 @@
 package squad.abudhabi.logic.user
 
+import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
 import squad.abudhabi.logic.exceptions.NoLoggedInUserException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.repository.AuthenticationRepository

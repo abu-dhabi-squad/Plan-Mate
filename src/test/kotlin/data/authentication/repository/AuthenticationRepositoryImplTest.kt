@@ -1,4 +1,5 @@
 import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import data.TestData.user1
 import data.TestData.user2
 import data.TestData.userName1
@@ -11,10 +12,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.data.authentication.datasource.AuthenticationDataSource
+import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
 import squad.abudhabi.data.authentication.repository.AuthenticationRepositoryImpl
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
+import squad.abudhabi.logic.model.User
+import squad.abudhabi.logic.model.UserType
 import kotlin.test.assertFailsWith
 
 
@@ -23,11 +27,13 @@ class AuthenticationRepositoryImplTest {
 
     private lateinit var authenticationDataSource: AuthenticationDataSource
     private lateinit var authenticationRepository: AuthenticationRepositoryImpl
+    private lateinit var loggedUserDataSource: LoggedUserDataSource
 
     @BeforeEach
     fun setup() {
-        authenticationDataSource = mockk()
-        authenticationRepository = AuthenticationRepositoryImpl(authenticationDataSource)
+        authenticationDataSource = mockk(relaxed = true)
+        loggedUserDataSource=mockk(relaxed = true)
+        authenticationRepository = AuthenticationRepositoryImpl(authenticationDataSource,loggedUserDataSource)
     }
 
     @Test
@@ -132,6 +138,27 @@ class AuthenticationRepositoryImplTest {
         assertThrows<InvalidCredentialsException> {
             authenticationRepository.loginUser(user1.username, user1.password)
         }
+    }
+
+    @Test
+    fun `saveLoggedUser should save user correctly`(){
+        val user = User(
+            username = "",
+            password = "ValidPass123!",
+            userType = UserType.MATE
+        )
+        every { loggedUserDataSource.getLoggedUser() } returns user
+        authenticationRepository.saveLoggedUser(user)
+        assertThat(authenticationRepository.getLoggedUser()).isEqualTo(user)
+
+    }
+
+    @Test
+    fun `getLoggedUser should return null when no user was logged`(){
+
+        every { loggedUserDataSource.getLoggedUser() } returns null
+        val res=authenticationRepository.getLoggedUser()
+        assertThat(res).isNull()
     }
 
 
