@@ -1,4 +1,4 @@
-package squad.abudhabi.di
+package di
 
 import org.koin.dsl.module
 import squad.abudhabi.logic.project.GetProjectByIdUseCase

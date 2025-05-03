@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
-import squad.abudhabi.logic.validation.DateParserImpl
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import kotlin.test.assertFailsWith
@@ -58,13 +57,13 @@ class DateParserImplTest {
         "2025a4a30",
         "2025.4.30"
     ])
+
     fun `should throw DateTimeParseException when the input contains invalid character`(date: String) {
         // When & Then
         assertFailsWith<DateTimeParseException> {
             dateParserImpl.parseDateFromString(date)
         }
     }
-
 
     @Test
     fun `parseDateFromString should return date of the last day in month when the input' day is more than the last day of the month`() {
@@ -74,5 +73,4 @@ class DateParserImplTest {
         // When & Then
         Truth.assertThat(dateParserImpl.parseDateFromString(date)).isEqualTo(res)
     }
-
 }
