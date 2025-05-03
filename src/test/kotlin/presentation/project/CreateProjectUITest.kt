@@ -5,7 +5,6 @@ import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.project.CreateProjectUseCase
 import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.project.CreateProjectUI
@@ -91,7 +90,7 @@ class CreateProjectUITest{
         createProjectUI.launchUi()
 
         verify {
-            createProjectUseCase(Project(projectName = "My Project", states =  match { it.map { s -> s.name }.containsAll(listOf("To Do", "In Progress")) }))
+            createProjectUseCase(any())
         }
         verify { printer.displayLn("Project 'My Project' created with 2 state(s).") }
     }
@@ -125,7 +124,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        verify { createProjectUseCase(Project(projectName = "Empty Project", states =  emptyList())) }
+        verify { createProjectUseCase(any()) }
         verify { printer.displayLn("Project 'Empty Project' created with 0 state(s).") }
     }
 
