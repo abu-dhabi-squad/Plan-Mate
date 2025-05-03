@@ -27,17 +27,19 @@ class GetTaskByIdPresenterUITest {
     }
 
     @ParameterizedTest
-    @CsvSource("''","'  '","null", nullValues = ["null"])
+    @CsvSource("''", "'  '", "null", nullValues = ["null"])
     fun `should display error when task ID is blank`(taskID: String?) {
+        // Given
         every { inputReader.readString() } returns taskID
-
+        // When
         presenter.launchUi()
-
+        // Then
         verify { printer.display("Task ID cannot be empty.") }
     }
 
     @Test
     fun `should display task details when task is found`() {
+        // Given
         val task = Task(
             id = "t1",
             title = "Task 1",
@@ -51,9 +53,9 @@ class GetTaskByIdPresenterUITest {
 
         every { inputReader.readString() } returns "t1"
         every { getTaskByIdUseCase("t1") } returns task
-
+        // When
         presenter.launchUi()
-
+        // Then
         verify { printer.display("Task Found:") }
         verify { printer.display("Title: ${task.title}") }
         verify { printer.display("Description: ${task.description}") }
@@ -66,11 +68,12 @@ class GetTaskByIdPresenterUITest {
 
     @Test
     fun `should display error message when task is not found`() {
+        // Given
         every { inputReader.readString() } returns "invalid-id"
         every { getTaskByIdUseCase("invalid-id") } throws NoSuchElementException("Task not found")
-
+        // When
         presenter.launchUi()
-
+        // Then
         verify { printer.display("Failed to retrieve task: Task not found") }
     }
 }

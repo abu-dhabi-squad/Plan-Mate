@@ -1,15 +1,16 @@
 package squad.abudhabi.presentation.auth
 
-import logic.authentication.LoginByUserNameUseCase
+import squad.abudhabi.logic.authentication.LoginByUserNameUseCase
 import squad.abudhabi.logic.model.UserType
-import presentation.UiLauncher
-import presentation.admin.ConsoleAdminMenuView
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
-import presentation.user.ConsoleUserMenuView
+import squad.abudhabi.presentation.UiLauncher
+import squad.abudhabi.presentation.admin.ConsoleAdminMenuView
+import squad.abudhabi.presentation.ui_io.InputReader
+import squad.abudhabi.presentation.ui_io.Printer
+import squad.abudhabi.presentation.user.ConsoleUserMenuView
 
 class LoginByUserNameUseCaseUI(
     private val loginUseCase: LoginByUserNameUseCase,
+    private val saveLoggedUserUseCase: SaveLoggedUserUseCase,
     private val inputReader: InputReader,
     private val printer: Printer,
     private val consoleMenuViewUser: ConsoleUserMenuView,
@@ -24,6 +25,7 @@ class LoginByUserNameUseCaseUI(
         try {
             val user = loginUseCase(username, password)
             printer.displayLn("Login successful! Welcome ${user.username} [${user.userType}]")
+                saveLoggedUserUseCase(user)
             when (user.userType) {
                 UserType.ADMIN -> consoleMenuViewAdmin.launchUi()
                 UserType.MATE -> consoleMenuViewUser.launchUi()

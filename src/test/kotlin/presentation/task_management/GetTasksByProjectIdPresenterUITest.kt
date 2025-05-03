@@ -38,49 +38,54 @@ class GetTasksByProjectIdPresenterUITest {
 
     @Test
     fun `should display error when loading projects fails`() {
+        // Given
         every { getAllProjectsUseCase() } throws RuntimeException("DB error")
-
+        // When
         presenter.launchUi()
-
+        // Then
         verify { printer.display("Failed to load projects: DB error") }
     }
 
     @Test
     fun `should display message when no projects are available`() {
+        // Given
         every { getAllProjectsUseCase() } returns emptyList()
-
+        // When
         presenter.launchUi()
-
+        // Then
         verify { printer.display("No projects available.") }
     }
 
     @Test
     fun `should display error when loading tasks fails`() {
+        // Given
         val project = createProject("p1", name = "Project A")
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returns 1
         every { getTasksByProjectIdUseCase("p1") } throws RuntimeException("Network issue")
-
+        // When
         presenter.launchUi()
-
+        // Then
         verify { printer.display("Failed to load tasks: Network issue") }
     }
 
     @Test
     fun `should display message when no tasks found for selected project`() {
+        // Given
         val project =
             createProject("p1", name = "Project A", states = listOf(createState(id = "s1")))
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returns 1
         every { getTasksByProjectIdUseCase("p1") } returns emptyList()
-
+        // When
         presenter.launchUi()
-
+        // Then
         verify { printer.display("No tasks found in 'Project A'.") }
     }
 
     @Test
     fun `should show project list and task list successfully`() {
+        // Given
         val project =
             createProject("p1", name = "Project A", states = listOf(createState(id = "s1")))
         val task = createTask(
@@ -93,13 +98,12 @@ class GetTasksByProjectIdPresenterUITest {
             stateId = "s1",
             userName = "Alice"
         )
-
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returns 1
         every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
-
+        // When
         presenter.launchUi()
-
+        // Then
         verifySequence {
             printer.display("Available Projects:")
             printer.display("1. Project A")
@@ -121,14 +125,15 @@ class GetTasksByProjectIdPresenterUITest {
         firstAttemptEnterNumber: Int?,
         secondAttemptEnterIndex: Int
     ) {
+        // Given
         val project =
             createProject("p1", name = "Project A", states = listOf(createState(id = "s1")))
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returnsMany listOf(firstAttemptEnterNumber,secondAttemptEnterIndex)
         every { getTasksByProjectIdUseCase("p1") } returns emptyList()
-
+        // When
         presenter.launchUi()
-
+        // Then
         verify { printer.display("Please enter a valid number between 1 and 1.") }
         verify { printer.display("No tasks found in 'Project A'.") }
     }

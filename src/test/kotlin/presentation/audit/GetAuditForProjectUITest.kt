@@ -1,8 +1,8 @@
 package presentation.audit
 
-import GetAuditUseCase
 import io.mockk.every
 import io.mockk.mockk
+import logic.audit.GetAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.exceptions.EmptyList
@@ -15,7 +15,6 @@ import presentation.ui_io.ConsolePrinter
 import presentation.ui_io.InputReader
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.time.LocalDate
 import java.util.*
 import kotlin.test.assertTrue
 
@@ -44,7 +43,7 @@ class GetAuditForProjectUITest{
 
         val project = Project("p1", "Project A", states = listOf())
         val audits = listOf(
-            Audit(UUID.randomUUID(), "admin", "p1", EntityType.PROJECT, "old", "new", LocalDate.now())
+            Audit(UUID.randomUUID(), "admin", "p1", EntityType.PROJECT, "old", "new")
         )
 
         every { getAllProjectsUseCase() } returns listOf(project)

@@ -1,3 +1,4 @@
+package logic.audit
 
 import squad.abudhabi.logic.exceptions.EmptyList
 import squad.abudhabi.logic.exceptions.WrongInputException

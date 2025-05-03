@@ -21,6 +21,7 @@ class LoginByUserNameUseCaseUITest {
     private lateinit var consoleMenuViewUser: ConsoleUserMenuView
     private lateinit var consoleMenuViewAdmin: ConsoleAdminMenuView
     private lateinit var loginUi: LoginByUserNameUseCaseUI
+    private lateinit var saveLoggedUserUseCase: SaveLoggedUserUseCase
 
     @BeforeEach
     fun setUp() {
@@ -29,13 +30,15 @@ class LoginByUserNameUseCaseUITest {
         printer = mockk(relaxed = true)
         consoleMenuViewUser = mockk(relaxed = true)
         consoleMenuViewAdmin = mockk(relaxed = true)
+        saveLoggedUserUseCase= mockk(relaxed = true)
 
         loginUi = LoginByUserNameUseCaseUI(
             loginUseCase,
+            saveLoggedUserUseCase,
             inputReader,
             printer,
             consoleMenuViewUser,
-            consoleMenuViewAdmin
+            consoleMenuViewAdmin,
         )
     }
 

@@ -1,6 +1,5 @@
 package logic.audit
 
-import GetAuditUseCase
 import createAudit
 import io.mockk.every
 import io.mockk.mockk

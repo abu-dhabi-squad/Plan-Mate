@@ -1,5 +1,9 @@
 package presentation.task_management
 
+import logic.audit.CreateAuditUseCase
+import logic.validation.DateParser
+import squad.abudhabi.logic.model.Audit
+import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.model.Task
 import logic.project.GetAllProjectsUseCase
 import logic.task.EditTaskUseCase
@@ -10,10 +14,14 @@ import presentation.ui_io.Printer
 
 class EditTaskPresenterUI(
     private val printer: Printer,
+    private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
-    private val editTaskUseCase: EditTaskUseCase
+    private val editTaskUseCase: EditTaskUseCase,
+    private val dateParser: DateParser,
+    private val createAuditUseCase: CreateAuditUseCase
+
 ) : UiLauncher {
 
     override fun launchUi() {
@@ -50,33 +58,66 @@ class EditTaskPresenterUI(
         val selectedTask = tasks[taskIndex]
 
         printer.display("Editing Task: ${selectedTask.title}")
-        val newTitle = promptString("Enter new title (leave blank to keep current):", selectedTask.title)
-        val newDescription = promptString("Enter new description (leave blank to keep current):", selectedTask.description)
+        val newTitle =
+            promptString("Enter new title (leave blank to keep current):", selectedTask.title)
+        val newDescription = promptString(
+            "Enter new description (leave blank to keep current):",
+            selectedTask.description
+        )
+        val newStartDate =
+            promptDate("Enter new start date (YYYY-MM-DD) or leave blank:", selectedTask.startDate)
+        val newEndDate =
+            promptDate("Enter new end date (YYYY-MM-DD) or leave blank:", selectedTask.endDate)
+
+        showStates(selectedProject.states)
+        val stateIndex = promptSelection("Select new state:", selectedProject.states.size)
+        val newState = selectedProject.states[stateIndex]
 
         val updatedTask = selectedTask.copy(
             title = newTitle,
-            description = newDescription
+            description = newDescription,
+            startDate = newStartDate,
+            endDate = newEndDate,
+            stateId = newState.id
         )
 
         try {
             editTaskUseCase(updatedTask)
-            printer.display("Task updated successfully.")
+            val oldState = selectedProject.states.first { it.id == selectedTask.stateId }
+
+            createAuditUseCase(
+                Audit(
+                    entityId = updatedTask.id,
+                    entityType = EntityType.TASK,
+                    oldState = oldState.id,
+                    newState = newState.id,
+                    createdBy = getLoggedUserUseCase().username
+                )
+            )
+            printer.display("✅ Task updated successfully.")
         } catch (e: Exception) {
-            printer.display("Failed to update task: ${e.message}")
+            printer.display("❌ Failed to update task: ${e.message}")
         }
     }
 
     private fun showProjects(projects: List<squad.abudhabi.logic.model.Project>) {
-        printer.display("Available Projects:")
+        printer.display("📁 Available Projects:")
         projects.forEachIndexed { index, project ->
             printer.display("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showTasks(tasks: List<Task>) {
-        printer.display("Tasks in Selected Project:")
+        printer.display("📋 Tasks in Selected Project:")
         tasks.forEachIndexed { index, task ->
             printer.display("${index + 1}. ${task.title} (ID: ${task.id})")
+        }
+    }
+
+    private fun showStates(states: List<squad.abudhabi.logic.model.State>) {
+        printer.display("📍 Available States:")
+        states.forEachIndexed { index, state ->
+            printer.display("${index + 1}. ${state.name}")
         }
     }
 
@@ -92,7 +133,21 @@ class EditTaskPresenterUI(
     private fun promptString(message: String, currentValue: String): String {
         printer.display(message)
         val input = inputReader.readString()
-        return if (input.isNullOrBlank()) currentValue
-        else input
+        return if (input.isNullOrBlank()) currentValue else input
+    }
+
+    private fun promptDate(message: String, currentValue: LocalDate): LocalDate {
+        printer.display(message)
+        val input = inputReader.readString()
+        return if (input.isNullOrBlank()) {
+            currentValue
+        } else {
+            try {
+                dateParser.parseDateFromString(input)
+            } catch (e: Exception) {
+                printer.display("⚠️ Invalid date format. Keeping current value.")
+                currentValue
+            }
+        }
     }
 }

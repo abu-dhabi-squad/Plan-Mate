@@ -12,7 +12,7 @@ class CsvProjectParser {
         var res = project.id + "," + project.projectName + ","
         if (project.states.isEmpty()) return res
         project.states.forEach {
-            res += it.id + "-" + it.name + "|"
+            res += it.id + ";" + it.name + "|"
         }
         return res.dropLast(UNUSED_CHARACTER)
     }
@@ -30,11 +30,11 @@ class CsvProjectParser {
             ?: throw CanNotParseProjectException()
     }
 
-    //ID,NAME,STATE   -->       ID-NAME|ID-NAME
+    //ID,NAME,STATE   -->       ID/NAME|ID/NAME
     private fun parseStringToListOfState(subLine: String): List<State> {
         return if (subLine.contains("|")) {
             parseMultipleStates(subLine)
-        } else if (subLine.contains("-")) {
+        } else if (subLine.contains(";")) {
             parseOneState(subLine)
         } else {
             if (subLine.isNotEmpty()) throw CanNotParseStateException()
@@ -46,7 +46,7 @@ class CsvProjectParser {
         val result: MutableList<State> = mutableListOf()
         subLine.split("|")
             .forEach { stateRegex ->
-                stateRegex.split("-").also {
+                stateRegex.split(";").also {
                     it.takeIf(::isValidState) ?: throw CanNotParseStateException()
                     result.add(State(it[ProjectColumnIndex.STATE_ID], it[ProjectColumnIndex.STATE_NAME]))
                 }
@@ -55,7 +55,7 @@ class CsvProjectParser {
     }
 
     private fun parseOneState(subLine: String): List<State> {
-        val listOfRegex: List<String> = subLine.split("-")
+        val listOfRegex: List<String> = subLine.split(";")
             .takeIf(::isValidState) ?: throw CanNotParseStateException()
         return listOf(State(listOfRegex[ProjectColumnIndex.STATE_ID], listOfRegex[ProjectColumnIndex.STATE_NAME]))
     }

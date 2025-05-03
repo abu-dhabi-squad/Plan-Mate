@@ -1,6 +1,6 @@
 package presentation.audit
 
-import GetAuditUseCase
+import logic.audit.GetAuditUseCase
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.Project
 import logic.project.GetAllProjectsUseCase
