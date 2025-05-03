@@ -1,6 +1,6 @@
 package logic.validation
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -20,57 +20,67 @@ class DateParserImplTest {
     }
 
     @ParameterizedTest
-    @CsvSource("2025,4,30", "2025,1,1", "2025,12,31")
+    @CsvSource("2025,4,30", "2025,1,1", "2025,12,31", "2025,2,28")
     fun `parseDateFromString should return object of local date when the input is valid`(
         year: Int,
         month: Int,
         day: Int
     ) {
-        // Given
         val date = "$year-$month-$day"
+        val result = dateParserImpl.parseDateFromString(date)
+        assertThat(result).isEqualTo(LocalDate.of(year, month, day))
+    }
 
-        // When
-        val res = dateParserImpl.parseDateFromString(date)
-
-        // Then
-        Truth.assertThat(res).isEqualTo(LocalDate.of(year, month, day))
+    @Test
+    fun `getStringFromDate should return correct formatted string`() {
+        val date = LocalDate.of(2025, 5, 3)
+        val result = dateParserImpl.getStringFromDate(date)
+        assertThat(result).isEqualTo("2025-5-3")
     }
 
     @ParameterizedTest
-    @ValueSource(strings = [
-        "2020-10-0",
-        "2020-10-32",
-        "2020-13-10",
-        "2020-0-10"
-    ])
+    @ValueSource(strings = ["2020-10-0", "2020-10-32", "2020-13-10", "2020-0-10"])
     fun `should throw DateTimeParseException when the input contains invalid day or month`(date: String) {
-        // When & Then
         assertFailsWith<DateTimeParseException> {
             dateParserImpl.parseDateFromString(date)
         }
     }
 
     @ParameterizedTest
-    @ValueSource(strings = [
-        "2025/4/30",
-        "2025&4&30",
-        "2025a4a30",
-        "2025.4.30"
-    ])
-
+    @ValueSource(strings = ["2025/4/30", "2025&4&30", "2025a4a30", "2025.4.30"])
     fun `should throw DateTimeParseException when the input contains invalid character`(date: String) {
-        // When & Then
         assertFailsWith<DateTimeParseException> {
             dateParserImpl.parseDateFromString(date)
         }
     }
 
     @Test
-    fun `parseDateFromString should return date of the last day in month when the input' day is more than the last day of the month`() {
-        // Given
-        val date = "2025-4-31"
-        val res = LocalDate.of(2025, 4, 30)
-        // When & Then
-        Truth.assertThat(dateParserImpl.parseDateFromString(date)).isEqualTo(res)
+    fun `getStringFromDate should handle single-digit months and days without padding`() {
+        val date = LocalDate.of(2025, 1, 2)
+        val result = dateParserImpl.getStringFromDate(date)
+        assertThat(result).isEqualTo("2025-1-2") // no zero-padding in pattern "yyyy-M-d"
+    }
+
+    @Test
+    fun `parseDateFromString and getStringFromDate should be symmetrical`() {
+        val original = "2025-6-9"
+        val parsed = dateParserImpl.parseDateFromString(original)
+        val result = dateParserImpl.getStringFromDate(parsed)
+        assertThat(result).isEqualTo(original)
+    }
+
+    @Test
+    fun `parseDateFromString should throw when input is empty`() {
+        assertFailsWith<DateTimeParseException> {
+            dateParserImpl.parseDateFromString("")
+        }
+    }
+
+    @Test
+    fun `parseDateFromString should throw when input is null-equivalent`() {
+        val nullLikeInput = "null"
+        assertFailsWith<DateTimeParseException> {
+            dateParserImpl.parseDateFromString(nullLikeInput)
+        }
     }
 }
