@@ -1,16 +1,23 @@
-package presentation.project
+package squad.abudhabi.presentation.project
 
+import logic.audit.CreateAuditUseCase
+import squad.abudhabi.logic.model.Audit
+import squad.abudhabi.logic.model.EntityType
+import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
-import logic.project.CreateProjectUseCase
-import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import squad.abudhabi.logic.project.CreateProjectUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import squad.abudhabi.presentation.UiLauncher
+import squad.abudhabi.presentation.ui_io.InputReader
+import squad.abudhabi.presentation.ui_io.Printer
 
 class CreateProjectUI(
     private val createProjectUseCase: CreateProjectUseCase,
     private val inputReader: InputReader,
-    private val printer: Printer
-): UiLauncher {
+    private val printer: Printer,
+    private val createAuditUseCase: CreateAuditUseCase,
+    private val getLoggedUserUseCase: GetLoggedUserUseCase
+):UiLauncher {
 
     override fun launchUi() {
         printer.display("Enter project name: ")
@@ -39,7 +46,17 @@ class CreateProjectUI(
         }
 
         try {
-            createProjectUseCase(projectName, states)
+            val newProject = Project(projectName = projectName, states = states)
+            createProjectUseCase(newProject)
+            createAuditUseCase(
+                Audit(
+                    createdBy = getLoggedUserUseCase().username,
+                    entityType = EntityType.PROJECT,
+                    entityId = newProject.id,
+                    oldState = "",
+                    newState = "Created"
+                )
+            )
             printer.displayLn("Project '$projectName' created with ${states.size} state(s).")
         } catch (e: Exception) {
             printer.displayLn("Error: ${e.message}")

@@ -1,24 +1,31 @@
 package presentation.project
 
 import io.mockk.*
+import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.project.DeleteProjectUseCase
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import squad.abudhabi.logic.project.DeleteProjectUseCase
+import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import squad.abudhabi.presentation.project.DeleteProjectUI
+import squad.abudhabi.presentation.ui_io.InputReader
+import squad.abudhabi.presentation.ui_io.Printer
 
 class DeleteProjectUITest{
     private lateinit var deleteProjectUseCase: DeleteProjectUseCase
     private lateinit var inputReader: InputReader
     private lateinit var printer: Printer
     private lateinit var deleteProjectUI: DeleteProjectUI
+    private lateinit var createAuditUseCase: CreateAuditUseCase
+    private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
 
     @BeforeEach
     fun setUp() {
         deleteProjectUseCase = mockk()
+        createAuditUseCase = mockk(relaxed = true)
+        getLoggedUserUseCase = mockk(relaxed = true)
         inputReader = mockk()
         printer = mockk(relaxed = true)
-        deleteProjectUI = DeleteProjectUI(deleteProjectUseCase, inputReader, printer)
+        deleteProjectUI = DeleteProjectUI(deleteProjectUseCase, inputReader, printer, createAuditUseCase,getLoggedUserUseCase)
     }
 
     @Test
@@ -75,5 +82,18 @@ class DeleteProjectUITest{
         verify { printer.display("Enter the project ID to delete: ") }
         verify { printer.displayLn("Project name cannot be empty.") }
         verify(exactly = 0) { deleteProjectUseCase(any()) }
+    }
+
+    @Test
+    fun `should throw exception when create audit throw exception`(){
+
+        every { inputReader.readString() } returns "projectId"
+        every { deleteProjectUseCase(any()) } just Runs
+        every { createAuditUseCase(any()) } throws Exception()
+
+        deleteProjectUI.launchUi()
+
+        verify { printer.displayLn("Error: ${Exception().message}") }
+
     }
 }

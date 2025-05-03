@@ -3,6 +3,8 @@ package logic.project
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import squad.abudhabi.logic.model.Project
+import squad.abudhabi.logic.project.CreateProjectUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
 
 class CreateProjectUseCaseTest{
@@ -21,7 +23,7 @@ class CreateProjectUseCaseTest{
         val name = "Test Project"
 
         // When
-        createProjectUseCase.invoke(name, listOf())
+        createProjectUseCase.invoke(Project(projectName = name, states = listOf()))
 
         // Then
         verify {
