@@ -3,8 +3,6 @@ package data.authentication.repository
 import data.authentication.datasource.AuthenticationDataSource
 import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
-import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
-import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.repository.AuthenticationRepository
 
@@ -19,9 +17,8 @@ class AuthenticationRepositoryImpl(
             ?: throw InvalidCredentialsException()
     }
 
-    override fun getUserByName(userName: String): User {
+    override fun getUserByName(userName: String): User? {
         return authenticationDataSource.getUserByUserName(userName)
-            ?:throw UserNotFoundException(userName)
     }
 
     override fun saveLoggedUser(user: User) {
@@ -33,8 +30,6 @@ class AuthenticationRepositoryImpl(
     }
 
     override fun createUser(user: User) {
-        authenticationDataSource.getUserByUserName(user.username)
-            ?.let { throw UserAlreadyExistsException(user.username) }
         authenticationDataSource.createUser(user)
     }
 

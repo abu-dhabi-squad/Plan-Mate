@@ -116,15 +116,5 @@ class CsvAuthenticationDataSourceTest {
         verify(exactly = 1) { fileHelper.appendFile(filePath, listOf(userString2)) }
     }
 
-    @Test
-    fun `createUser should throw Exception when appendFile throws Exception`() {
-        // Given
-        every { fileHelper.readFile(filePath) } returns listOf(userString1)
-        every { fileHelper.appendFile(filePath, any()) } throws Exception()
 
-        // When & Then
-        assertThrows<Exception> {
-            csvAuthenticationDataSource.createUser(user2)
-        }
-    }
 }

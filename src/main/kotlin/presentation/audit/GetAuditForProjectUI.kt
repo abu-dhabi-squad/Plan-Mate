@@ -29,9 +29,9 @@ class GetAuditForProjectUI(
             return
         }
 
-        printer.display("=== Available Projects ===")
+        printer.displayLn("=== Available Projects ===")
         projects.forEachIndexed { index, project ->
-            printer.display("${index + 1}. ${project.projectName}")
+            printer.displayLn("${index + 1}. ${project.projectName}")
         }
 
         printer.display("Enter project number: ")

@@ -35,12 +35,12 @@ class CreateTaskPresenterUI(
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {
-            printer.display("Error loading projects: ${e.message}")
+            printer.displayLn("Error loading projects: ${e.message}")
             return
         }
 
         if (projects.isEmpty()) {
-            printer.display("No projects available.")
+            printer.displayLn("No projects available.")
             return
         }
 
@@ -70,26 +70,26 @@ class CreateTaskPresenterUI(
                     entityType = EntityType.TASK,
                     oldState = "",
                     newState = "Created",
-                    createdBy = "Noor Serry"
+                    createdBy = getLoggedUserUseCase().username
                 )
             )
-            printer.display("Task created successfully.")
+            printer.displayLn("Task created successfully.")
         } catch (e: Exception) {
-            printer.display("Failed to create task: ${e.message}")
+            printer.displayLn("Failed to create task: ${e.message}")
         }
     }
 
     private fun showProjects(projects: List<Project>) {
-        printer.display("Available projects:")
+        printer.displayLn("Available projects:")
         projects.forEachIndexed { index, project ->
-            printer.display("${index + 1}. ${project.projectName}")
+            printer.displayLn("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showStates(states: List<State>) {
-        printer.display("Available states:")
+        printer.displayLn("Available states:")
         states.forEachIndexed { index, state ->
-            printer.display("${index + 1}. ${state.name}")
+            printer.displayLn("${index + 1}. ${state.name}")
         }
     }
 
@@ -98,7 +98,7 @@ class CreateTaskPresenterUI(
             printer.display(prompt)
             val input = inputReader.readString()
             if (!input.isNullOrBlank()) return input
-            printer.display("Input cannot be empty.")
+            printer.displayLn("Input cannot be empty.")
         }
     }
 
@@ -107,14 +107,14 @@ class CreateTaskPresenterUI(
             printer.display(prompt)
             val input = inputReader.readString()
             if (input.isNullOrBlank()) {
-                printer.display("Date cannot be empty.")
+                printer.displayLn("Date cannot be empty.")
                 continue
             }
             try {
                 val date = parserDate.parseDateFromString(input)
                 return date
             } catch (e: Exception) {
-                printer.display("Invalid date format. Please use YYYY-MM-DD.")
+                printer.displayLn("Invalid date format. Please use YYYY-MM-DD.")
             }
         }
     }
@@ -124,7 +124,7 @@ class CreateTaskPresenterUI(
             printer.display(prompt)
             val input = inputReader.readInt()
             if (input != null && input in 1..size) return input - 1
-            printer.display("Please enter a number between 1 and $size.")
+            printer.displayLn("Please enter a number between 1 and $size.")
         }
     }
 }

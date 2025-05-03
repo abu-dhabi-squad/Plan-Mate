@@ -92,17 +92,17 @@ class EditTaskPresenterUITest {
             stateId = "s1" // first state selected
         )
         verify { editTaskUseCase(expected) }
-        verify { printer.display("✅ Task updated successfully.") }
+        verify { printer.displayLn("✅ Task updated successfully.") }
     }
 
     @Test
-    fun `should display list of tasks when there are projects`() {
+    fun `should displayLn list of tasks when there are projects`() {
         val project = createProject(name = "Project A")
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returns 1
         presenter.launchUi()
 
-        verify { printer.display(match { it.toString().contains(project.projectName) }) }
+        verify { printer.displayLn(match { it.toString().contains(project.projectName) }) }
     }
 
     @Test
@@ -111,7 +111,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("No projects available.") }
+        verify { printer.displayLn("No projects available.") }
     }
 
     @Test
@@ -120,7 +120,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display(match { it.toString().contains("No projects Found") }) }
+        verify { printer.displayLn(match { it.toString().contains("No projects Found") }) }
     }
 
     @Test
@@ -132,7 +132,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("No tasks found in this project.") }
+        verify { printer.displayLn("No tasks found in this project.") }
     }
 
     @Test
@@ -145,7 +145,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("Please enter a valid number between 1 and 1.") }
+        verify { printer.displayLn("Please enter a valid number between 1 and 1.") }
     }
 
     @Test
@@ -157,7 +157,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display(match { it.toString().contains("No tasks found") }) }
+        verify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
     }
 
     @Test
@@ -178,7 +178,7 @@ class EditTaskPresenterUITest {
                 task.copy(title = "New Title", description = "New Desc", stateId = state.id)
             )
         }
-        verify { printer.display("✅ Task updated successfully.") }
+        verify { printer.displayLn("✅ Task updated successfully.") }
     }
 
 
@@ -196,7 +196,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display(match { it.toString().contains("Failed to update task") }) }
+        verify { printer.displayLn(match { it.toString().contains("Failed to update task") }) }
     }
 
     @Test
@@ -217,7 +217,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("Please enter a valid number between 1 and 1.") }
+        verify { printer.displayLn("Please enter a valid number between 1 and 1.") }
     }
 
 
@@ -278,7 +278,7 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.display("Please enter a valid number between 1 and 1.") }
+        verify { printer.displayLn("Please enter a valid number between 1 and 1.") }
     }
 
 
@@ -324,7 +324,7 @@ class EditTaskPresenterUITest {
             stateId = "s1" // first state selected
         )
         verify {
-            printer.display(match {
+            printer.displayLn(match {
                 it.toString().contains("Invalid date format. Keeping current value.")
             })
         }

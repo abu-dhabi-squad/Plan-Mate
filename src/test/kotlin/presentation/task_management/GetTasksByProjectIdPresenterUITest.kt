@@ -43,7 +43,7 @@ class GetTasksByProjectIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("Failed to load projects: DB error") }
+        verify { printer.displayLn("Failed to load projects: DB error") }
     }
 
     @Test
@@ -53,7 +53,7 @@ class GetTasksByProjectIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("No projects available.") }
+        verify { printer.displayLn("No projects available.") }
     }
 
     @Test
@@ -66,7 +66,7 @@ class GetTasksByProjectIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("Failed to load tasks: Network issue") }
+        verify { printer.displayLn("Failed to load tasks: Network issue") }
     }
 
     @Test
@@ -80,14 +80,13 @@ class GetTasksByProjectIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("No tasks found in 'Project A'.") }
+        verify { printer.displayLn("No tasks found in 'Project A'.") }
     }
 
     @Test
     fun `should show project list and task list successfully`() {
         // Given
-        val project =
-            createProject("p1", name = "Project A", states = listOf(createState(id = "s1")))
+        val project = createProject("p1", name = "Project A", states = listOf(createState(id = "s1")))
         val task = createTask(
             id = "t1",
             title = "Fix Bug",
@@ -101,24 +100,25 @@ class GetTasksByProjectIdPresenterUITest {
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returns 1
         every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
+
         // When
         presenter.launchUi()
+
         // Then
         verifySequence {
-            printer.display("Available Projects:")
-            printer.display("1. Project A")
+            printer.displayLn("Available Projects:")
+            printer.displayLn("1. Project A")
             printer.display("Enter project number:")
-            printer.display("\nTasks in Project:")
-            printer.display(
-                withArg<String> {
-                    assert(it.contains("Fix Bug"))
-                    assert(it.contains("Resolve login issue"))
-                    assert(it.contains("Alice"))
-                }
-            )
+            printer.displayLn("Tasks in Project:")
+            printer.display("""
+            1. Fix Bug
+               ↳ Description: Resolve login issue
+               ↳ Start: 2025-05-01, End: 2025-05-02
+               ↳ Assigned to: Alice
+               ↳ State ID: s1
+        """.trimIndent())
         }
     }
-
     @ParameterizedTest
     @CsvSource("2,1", "    ,1", "null,1", nullValues = ["null"])
     fun `should prompt again if invalid project number is entered`(
@@ -134,7 +134,7 @@ class GetTasksByProjectIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("Please enter a valid number between 1 and 1.") }
-        verify { printer.display("No tasks found in 'Project A'.") }
+        verify { printer.displayLn("Please enter a valid number between 1 and 1.") }
+        verify { printer.displayLn("No tasks found in 'Project A'.") }
     }
 }

@@ -19,12 +19,12 @@ class GetTasksByProjectIdPresenterUI(
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {
-            printer.display("Failed to load projects: ${e.message}")
+            printer.displayLn("Failed to load projects: ${e.message}")
             return
         }
 
         if (projects.isEmpty()) {
-            printer.display("No projects available.")
+            printer.displayLn("No projects available.")
             return
         }
 
@@ -35,12 +35,12 @@ class GetTasksByProjectIdPresenterUI(
         val tasks = try {
             getTasksByProjectIdUseCase(selectedProject.id)
         } catch (e: Exception) {
-            printer.display("Failed to load tasks: ${e.message}")
+            printer.displayLn("Failed to load tasks: ${e.message}")
             return
         }
 
         if (tasks.isEmpty()) {
-            printer.display("No tasks found in '${selectedProject.projectName}'.")
+            printer.displayLn("No tasks found in '${selectedProject.projectName}'.")
             return
         }
 
@@ -48,14 +48,14 @@ class GetTasksByProjectIdPresenterUI(
     }
 
     private fun showProjects(projects: List<Project>) {
-        printer.display("Available Projects:")
+        printer.displayLn("Available Projects:")
         projects.forEachIndexed { index, project ->
-            printer.display("${index + 1}. ${project.projectName}")
+            printer.displayLn("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showTasks(tasks: List<Task>) {
-        printer.display("\nTasks in Project:")
+        printer.displayLn("Tasks in Project:")
         tasks.forEachIndexed { index, task ->
             printer.display("""
                 ${index + 1}. ${task.title}
@@ -72,7 +72,7 @@ class GetTasksByProjectIdPresenterUI(
             printer.display(message)
             val input = inputReader.readInt()
             if (input != null && input in 1..max) return input - 1
-            printer.display("Please enter a valid number between 1 and $max.")
+            printer.displayLn("Please enter a valid number between 1 and $max.")
         }
     }
 }

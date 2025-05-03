@@ -1,5 +1,6 @@
 package data.authentication.datasource
 
+
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.User
 
@@ -8,7 +9,6 @@ class CsvAuthenticationDataSource(
     private val fileHelper: FileHelper,
     private val filePath: String
 ) : AuthenticationDataSource {
-
     override fun getUserByUserName(userName: String): User? {
         return getAllUsers().find { it.username == userName }
     }
@@ -22,8 +22,7 @@ class CsvAuthenticationDataSource(
     }
 
     private fun saveUsers(users: List<User>) {
-        fileHelper.writeFile(filePath, users.map(csvUserParser::parseUserToString))
+        fileHelper.appendFile(filePath, users.map(csvUserParser::parseUserToString))
     }
 
 }
-

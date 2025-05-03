@@ -18,13 +18,11 @@ class CreateMateUserUseCase(
             user.copy(password = hashingService.hash(user.password))
         )
     }
-
     private fun validateInputs(username: String, password: String) {
         username.takeIf { it.isNotBlank() } ?:
         throw EmptyUsernameException()
         standardPasswordValidator.validatePassword(password)
     }
-
     private fun checkUserDoesNotExist(user: User) {
         authRepository.getUserByName(user.username)?.let {
             throw UserAlreadyExistsException(user.username)

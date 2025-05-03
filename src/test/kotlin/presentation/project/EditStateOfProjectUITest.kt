@@ -1,13 +1,13 @@
 package presentation.project
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 import presentation.ui_io.ConsoleReader
 import presentation.ui_io.Printer
 import kotlin.test.BeforeTest
@@ -18,101 +18,74 @@ class EditStateOfProjectUITest {
     private val reader: ConsoleReader = mockk(relaxed = true)
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
-    private lateinit var editStateOfProjectUI: EditStateOfProjectUI
+    private lateinit var ui: EditStateOfProjectUI
 
     @BeforeTest
     fun setup() {
-        editStateOfProjectUI = EditStateOfProjectUI(editStateOfProjectUseCase, getAllProjectsUseCase, reader, printer)
+        ui = EditStateOfProjectUI(editStateOfProjectUseCase, getAllProjectsUseCase, reader, printer)
     }
 
     @Test
-    fun `launchUI should display Exception message when get all projects throw Exception`() {
-        //given
-        every { getAllProjectsUseCase() } throws Exception()
-        //when
-        editStateOfProjectUI.launchUi()
-        //then
-        verify { printer.displayLn(Exception().message) }
+    fun `should print exception message if getAllProjectsUseCase throws`() {
+        val exception = Exception("Boom")
+        every { getAllProjectsUseCase() } throws exception
+
+        ui.launchUi()
+
+        verify { printer.displayLn("Boom") }
     }
 
     @Test
-    fun `launchUI should display there is no project in list when get all projects return empty list`() {
-        //given
-        every { getAllProjectsUseCase() } returns listOf()
-        //when
-        editStateOfProjectUI.launchUi()
-        //then
-        verify { printer.displayLn("there is no project in list") }
+    fun `should print message when no projects exist`() {
+        every { getAllProjectsUseCase() } returns emptyList()
+
+        ui.launchUi()
+
+        verify { printer.displayLn("There is no project in the list.") }
     }
 
     @Test
-    fun `launchUI should display list details when get all projects return list`() {
-        //given
-        val projects = listOf(
-            Project("id1", "name1", listOf(State("id2", "name2"))),
-            Project("id1", "name1", listOf(State("id2", "name2")))
-        )
+    fun `should display projects and ask for inputs`() {
+        val projects = listOf(Project("id1", "name1", listOf(State("s1", "state1"))))
         every { getAllProjectsUseCase() } returns projects
-        every { reader.readString() } returns null
-        //when
-        editStateOfProjectUI.launchUi()
-        //then
+        every { reader.readString() } returnsMany listOf("id1", "s1", "newName")
+
+        ui.launchUi()
+
         verify {
-            projects.forEach{ project ->
-                printer.displayLn(
-                    "project id: " + project.id +
-                            " - project name: " + project.projectName +
-                            " - states : " + project.states
-                )
-            }
-
+            printer.displayLn("project id: id1 - project name: name1 - states: [State(id=s1, name=state1)]")
+            editStateOfProjectUseCase("id1", State("s1", "newName"))
+            printer.displayLn("State updated successfully.")
         }
-        verify { printer.displayLn("wrong input") }
     }
 
     @Test
-    fun `launchUI should display wrong input when enter wrong input or not entering at all for project id`() {
-        //given
-        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
-        every { reader.readString() } returns null
-        //when
-        editStateOfProjectUI.launchUi()
-        //then
-        verify { printer.displayLn("wrong input") }
+    fun `should prompt again when input is null or blank`() {
+        val projects = listOf(Project("id1", "name1", listOf()))
+        every { getAllProjectsUseCase() } returns projects
+
+        every { reader.readString() } returnsMany listOf(
+            "", "  ", "\n", "validId", // projectId input retries
+            "", "stateId",             // stateId input retries
+            null, "newStateName"       // new name input retries
+        )
+
+        ui.launchUi()
+
+        verify(exactly = 5) { printer.displayLn("Input cannot be empty.") }
+        verify { editStateOfProjectUseCase("validId", State("stateId", "newStateName")) }
     }
 
-    @Test
-    fun `launchUI should display wrong input when enter wrong input or not entering at all for state id`() {
-        //given
-        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
-        every { reader.readString() } returns "id1" andThen null
-        //when
-        editStateOfProjectUI.launchUi()
-        //then
-        verify { printer.displayLn("wrong input") }
-    }
+    @ParameterizedTest
+    @CsvSource("null,An error occurred.","Update failed,Update failed" , nullValues =["null"] )
+    fun `should print error if editStateOfProjectUseCase throws`(errorMessage:String?,actualMessage:String) {
+        val projects = listOf(Project("id1", "name1", listOf()))
+        val exception = Exception(errorMessage)
+        every { getAllProjectsUseCase() } returns projects
+        every { reader.readString() } returnsMany listOf("id1", "sid1", "newName")
+        every { editStateOfProjectUseCase(any(), any()) } throws exception
 
-    @Test
-    fun `launchUI should display wrong input when enter wrong input or not entering at all for state name`() {
-        //given
-        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
-        every { reader.readString() } returns "id1" andThen "id1" andThen null
-        //when
-        editStateOfProjectUI.launchUi()
-        //then
-        verify { printer.displayLn("wrong input") }
-    }
-
-    @Test
-    fun `launchUI should display error when edit project use case throw Exception`() {
-        // Given
-        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
-        every { reader.readString() } returns "id1" andThen "id1" andThen "name1"
-        every { editStateOfProjectUseCase(any(), any()) } throws Exception()
-        // When
-        editStateOfProjectUI.launchUi()
-        //then
-        verify(exactly = 1) { editStateOfProjectUseCase(any(), any()) }
-        verify { printer.displayLn(Exception().message) }
+        ui.launchUi()
+        verify { printer.displayLn(actualMessage) }
     }
 }

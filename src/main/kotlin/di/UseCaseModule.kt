@@ -42,7 +42,7 @@ val useCaseModule = module {
     single { GetTasksByProjectIdUseCase(get()) }
 
     single { GetLoggedUserUseCase(get()) }
-    single { SaveLoggedUserUseCase(get(),get()) }
+    single { SaveLoggedUserUseCase(get()) }
 
 
 }
