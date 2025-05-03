@@ -1,30 +1,33 @@
 package logic.authentication
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.authentication.LoginByUserNameUseCase
+import squad.abudhabi.logic.exceptions.EmptyUsernameException
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
 import squad.abudhabi.logic.repository.AuthenticationRepository
 import squad.abudhabi.logic.utils.HashingService
+import squad.abudhabi.logic.validation.PasswordValidator
 import kotlin.test.Test
 
 class LoginByUserNameUseCaseTest {
     private lateinit var authRepository: AuthenticationRepository
     private lateinit var hashingService: HashingService
     private lateinit var loginByUserNameUseCase: LoginByUserNameUseCase
+    private lateinit var passwordValidator: PasswordValidator
+
 
     @BeforeEach
     fun setup() {
-        authRepository = mockk()
-        hashingService = mockk()
-        loginByUserNameUseCase = LoginByUserNameUseCase(authRepository,hashingService)
+        authRepository = mockk(relaxed = true)
+        hashingService = mockk(relaxed = true)
+        passwordValidator = mockk(relaxed = true)
+        loginByUserNameUseCase = LoginByUserNameUseCase(authRepository,hashingService,passwordValidator)
     }
 
     @Test
@@ -94,5 +97,35 @@ class LoginByUserNameUseCaseTest {
             loginByUserNameUseCase(username, password)
         }
     }
+
+    @Test
+    fun `createUser should call password validator`() {
+        val user = User(
+            username = "newUser",
+            password = "ValidPass123!",
+            userType = UserType.MATE
+        )
+        every { passwordValidator.validatePassword(any()) } just runs
+
+        loginByUserNameUseCase(user.username,user.password)
+
+        verify { passwordValidator.validatePassword(user.password) }
+    }
+
+    @Test
+    fun `createUser should throw EmptyUsernameException when username is blank`(){
+        val user = User(
+            username = "",
+            password = "ValidPass123!",
+            userType = UserType.MATE
+        )
+
+        assertThrows<EmptyUsernameException> {
+            loginByUserNameUseCase(user.username,user.password)
+        }
+    }
+
+    
+
 
 }
