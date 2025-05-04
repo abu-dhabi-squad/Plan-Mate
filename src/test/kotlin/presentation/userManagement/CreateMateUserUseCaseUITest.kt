@@ -4,13 +4,12 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
-import squad.abudhabi.logic.authentication.CreateMateUserUseCase
+import logic.authentication.CreateMateUserUseCase
 import squad.abudhabi.logic.exceptions.EmptyUsernameException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.model.UserType
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
-import squad.abudhabi.presentation.userManagement.CreateMateUserUseCaseUI
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import kotlin.test.Test
 
 

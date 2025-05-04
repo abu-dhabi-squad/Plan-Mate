@@ -1,6 +1,6 @@
 package data.audit.repository
 
-import squad.abudhabi.data.audit.datasource.AuditDataSource
+import data.audit.datasource.AuditDataSource
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.repository.AuditRepository
 

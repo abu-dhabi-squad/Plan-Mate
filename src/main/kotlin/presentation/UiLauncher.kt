@@ -1,4 +1,5 @@
-package squad.abudhabi.presentation
+package presentation
+
 
 interface UiLauncher {
     fun launchUi()

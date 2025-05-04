@@ -1,4 +1,4 @@
-package squad.abudhabi.data.authentication.datasource
+package data.authentication.datasource
 
 import squad.abudhabi.data.authentication.datasource.UserColumnIndex.ID
 import squad.abudhabi.data.authentication.datasource.UserColumnIndex.PASSWORD

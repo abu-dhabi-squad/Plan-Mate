@@ -2,14 +2,15 @@ package presentation.project
 
 import io.mockk.*
 import logic.audit.CreateAuditUseCase
+import logic.project.CreateProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.project.CreateProjectUseCase
 import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import squad.abudhabi.presentation.project.CreateProjectUI
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+
 
 class CreateProjectUITest{
     private lateinit var createProjectUseCase: CreateProjectUseCase

@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.validation
+package logic.validation
 
 import squad.abudhabi.logic.exceptions.*
 
@@ -23,5 +23,5 @@ class StandardPasswordValidator : PasswordValidator {
 
     }
 
-    companion object { private const val SYMBOLS = "@&*#_-.()"}
+    companion object { private const val SYMBOLS = "@$&*#_-.()"}
 }

@@ -1,4 +1,5 @@
-package squad.abudhabi.data.authentication.datasource
+package data.authentication.datasource
+
 
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.User
@@ -7,8 +8,7 @@ class CsvAuthenticationDataSource(
     private val csvUserParser: CsvUserParser,
     private val fileHelper: FileHelper,
     private val filePath: String
-) :AuthenticationDataSource {
-
+) : AuthenticationDataSource {
     override fun getUserByUserName(userName: String): User? {
         return getAllUsers().find { it.username == userName }
     }

@@ -1,10 +1,10 @@
-package squad.abudhabi.presentation.project
+package presentation.project
 
-import squad.abudhabi.logic.project.EditProjectUseCase
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.EditProjectUseCase
+import logic.project.GetAllProjectsUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class EditProjectUI(
     private val editProjectUseCase: EditProjectUseCase,

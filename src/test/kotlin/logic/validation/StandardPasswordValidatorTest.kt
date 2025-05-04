@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.*
-import squad.abudhabi.logic.validation.StandardPasswordValidator
 
 class StandardPasswordValidatorTest {
 

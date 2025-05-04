@@ -1,9 +1,9 @@
-package squad.abudhabi.presentation.project
+package presentation.project
 
-import squad.abudhabi.logic.project.GetProjectByIdUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.GetProjectByIdUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class GetProjectByIdUI(
     private val inputReader: InputReader,

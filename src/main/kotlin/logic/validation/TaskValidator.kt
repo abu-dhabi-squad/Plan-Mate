@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.validation
+package logic.validation
 
 import squad.abudhabi.logic.model.Task
 

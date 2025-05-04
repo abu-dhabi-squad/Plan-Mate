@@ -2,17 +2,17 @@ package presentation.audit
 
 import logic.audit.GetAuditUseCase
 import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.GetAllProjectsUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class GetAuditForProjectUI(
     private val printer: Printer,
     private val reader: InputReader,
     private val getAuditUseCase: GetAuditUseCase,
-    private val getAllProjectsUseCase:GetAllProjectsUseCase
-) : UiLauncher{
+    private val getAllProjectsUseCase: GetAllProjectsUseCase
+) : UiLauncher {
 
 
     override fun launchUi() {
@@ -29,9 +29,9 @@ class GetAuditForProjectUI(
             return
         }
 
-        printer.display("=== Available Projects ===")
+        printer.displayLn("=== Available Projects ===")
         projects.forEachIndexed { index, project ->
-            printer.display("${index + 1}. ${project.projectName}")
+            printer.displayLn("${index + 1}. ${project.projectName}")
         }
 
         printer.display("Enter project number: ")

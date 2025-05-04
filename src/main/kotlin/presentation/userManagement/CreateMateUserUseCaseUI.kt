@@ -1,13 +1,13 @@
-package squad.abudhabi.presentation.userManagement
+package presentation.userManagement
 
-import squad.abudhabi.logic.authentication.CreateMateUserUseCase
+import logic.authentication.CreateMateUserUseCase
 import squad.abudhabi.logic.exceptions.EmptyUsernameException
 import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class CreateMateUserUseCaseUI(
     private val createUserUseCase: CreateMateUserUseCase,

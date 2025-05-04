@@ -1,8 +1,8 @@
-package squad.abudhabi.presentation.project
+package presentation.project
 
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.GetAllProjectsUseCase
+import presentation.UiLauncher
+import presentation.ui_io.Printer
 
 class GetAllProjectsUI(
     private val printer: Printer,

@@ -1,4 +1,4 @@
-package squad.abudhabi.presentation.ui_io
+package presentation.ui_io
 
 interface InputReader {
     fun readString(): String?

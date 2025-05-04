@@ -5,10 +5,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.project.GetProjectByIdUseCase
-import squad.abudhabi.presentation.project.GetProjectByIdUI
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.GetProjectByIdUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import kotlin.test.Test
 
 class GetProjectByIdUITest {

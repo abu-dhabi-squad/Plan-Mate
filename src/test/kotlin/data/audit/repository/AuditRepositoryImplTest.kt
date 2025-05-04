@@ -7,7 +7,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.data.audit.datasource.AuditDataSource
+import data.audit.datasource.AuditDataSource
 import squad.abudhabi.logic.repository.AuditRepository
 import kotlin.test.assertFails
 import kotlin.test.assertTrue

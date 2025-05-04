@@ -13,11 +13,11 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import squad.abudhabi.logic.exceptions.InvalidTaskDateException
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.task.CreateTaskUseCase
+import logic.project.GetAllProjectsUseCase
+import logic.task.CreateTaskUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import squad.abudhabi.logic.user.GetLoggedUserUseCase
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate
 
 class CreateTaskPresenterUITest {
@@ -89,7 +89,7 @@ class CreateTaskPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display(match { it == "Input cannot be empty." }) }
+        verify { printer.displayLn(match { it == "Input cannot be empty." }) }
     }
 
     @ParameterizedTest
@@ -113,7 +113,7 @@ class CreateTaskPresenterUITest {
         presenter.launchUi()
 
         // Then
-        verify { printer.display(match { it == "Input cannot be empty." }) }
+        verify { printer.displayLn(match { it == "Input cannot be empty." }) }
     }
 
 
@@ -127,7 +127,7 @@ class CreateTaskPresenterUITest {
         //When
         presenter.launchUi()
         //Then
-        verify { printer.display(match { it == "No projects available." }) }
+        verify { printer.displayLn(match { it == "No projects available." }) }
     }
 
     @Test
@@ -139,7 +139,7 @@ class CreateTaskPresenterUITest {
         //When
         presenter.launchUi()
         //Then
-        verify { printer.display(match { it.toString().contains("No projects Found") }) }
+        verify { printer.displayLn(match { it.toString().contains("No projects Found") }) }
     }
 
     @Test
@@ -158,7 +158,7 @@ class CreateTaskPresenterUITest {
         //When
         presenter.launchUi()
         //Then
-        verify { printer.display(match { it.toString().contains("Invalid task date") }) }
+        verify { printer.displayLn(match { it.toString().contains("Invalid task date") }) }
     }
 
     @ParameterizedTest
@@ -181,7 +181,7 @@ class CreateTaskPresenterUITest {
         presenter.launchUi()
 
         // Then
-        verify { printer.display(match { it.toString().contains("Date cannot be empty.") }) }
+        verify { printer.displayLn(match { it.toString().contains("Date cannot be empty.") }) }
     }
 
     @Test
@@ -201,7 +201,7 @@ class CreateTaskPresenterUITest {
 
         // Then
         verify {
-            printer.display(match {
+            printer.displayLn(match {
                 it.toString().contains("Invalid date format. Please use YYYY-MM-DD.")
             })
         }
@@ -228,7 +228,7 @@ class CreateTaskPresenterUITest {
 
         // Then
         verify {
-            printer.display(match {
+            printer.displayLn(match {
                 it.toString().contains("Please enter a number between 1 and 1")
             })
         }

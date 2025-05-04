@@ -1,5 +1,6 @@
-package squad.abudhabi.data.project.datasource
+package data.project.datasource
 
+import squad.abudhabi.data.project.datasource.ProjectColumnIndex
 import squad.abudhabi.logic.exceptions.CanNotParseProjectException
 import squad.abudhabi.logic.exceptions.CanNotParseStateException
 import squad.abudhabi.logic.model.Project

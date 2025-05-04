@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.InvalidTaskDateException
-import squad.abudhabi.logic.validation.TaskValidatorImpl
 import java.time.LocalDate
 
 class TaskValidatorImplTest {

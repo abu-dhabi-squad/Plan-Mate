@@ -13,12 +13,12 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.exceptions.NoTasksFoundException
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.task.DeleteTaskByIdUseCase
-import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
+import logic.project.GetAllProjectsUseCase
+import logic.task.DeleteTaskByIdUseCase
+import logic.task.GetTasksByProjectIdUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import squad.abudhabi.logic.user.GetLoggedUserUseCase
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
 
 class DeleteTaskByIdPresenterUITest {
 
@@ -67,7 +67,7 @@ class DeleteTaskByIdPresenterUITest {
         presenter.launchUi()
         // Then
         verify { deleteTaskByIdUseCase(task.id) }
-        verify { printer.display(match { it.toString().contains("deleted successfully") }) }
+        verify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
     @Test
@@ -85,7 +85,7 @@ class DeleteTaskByIdPresenterUITest {
         presenter.launchUi()
         // Then
         verify { deleteTaskByIdUseCase(task.id) }
-        verify { printer.display(match { it.toString().contains("deleted successfully") }) }
+        verify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
     @Test
@@ -95,7 +95,7 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display(match { it.toString().contains("Error loading projects") }) }
+        verify { printer.displayLn(match { it.toString().contains("Error loading projects") }) }
     }
 
     @Test
@@ -105,7 +105,7 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("No projects available.") }
+        verify { printer.displayLn("No projects available.") }
     }
 
     @Test
@@ -118,7 +118,7 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display(match { it.toString().contains("No tasks found") }) }
+        verify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
     }
 
     @Test
@@ -131,7 +131,7 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("No tasks found in this project.") }
+        verify { printer.displayLn("No tasks found in this project.") }
     }
 
     @Test
@@ -148,7 +148,7 @@ class DeleteTaskByIdPresenterUITest {
         presenter.launchUi()
         // Then
         verify {
-            printer.display(match {
+            printer.displayLn(match {
                 it.toString().contains("There are error when deleting")
             })
         }
@@ -170,7 +170,7 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("Please enter a number between 1 and 1.") }
+        verify { printer.displayLn("Please enter a number between 1 and 1.") }
     }
 
     @Test
@@ -185,7 +185,7 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("Please enter a number between 1 and 1.") }
+        verify { printer.displayLn("Please enter a number between 1 and 1.") }
     }
 
     @Test
@@ -198,6 +198,6 @@ class DeleteTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display(match { it.toString().contains("No tasks found") }) }
+        verify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
     }
 }

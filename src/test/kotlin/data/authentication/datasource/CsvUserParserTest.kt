@@ -3,7 +3,7 @@ import data.TestData.user1
 import data.TestData.userString1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.data.authentication.datasource.CsvUserParser
+import data.authentication.datasource.CsvUserParser
 import squad.abudhabi.logic.exceptions.CanNotParseUserException
 import kotlin.test.assertFailsWith
 

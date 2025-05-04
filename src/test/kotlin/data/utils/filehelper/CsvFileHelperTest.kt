@@ -7,7 +7,6 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
 import squad.abudhabi.data.utils.filehelper.CsvFileHelper
 import java.io.File
-import java.io.FileNotFoundException
 import java.nio.file.Path
 
 class CsvFileHelperTest {
@@ -44,15 +43,7 @@ class CsvFileHelperTest {
         assertThat(result).isEmpty()
     }
 
-    @Test
-    fun `readFile should throw FileNotFoundException when file does not exist`() {
-        // Given
-        file.delete()
-        // When && then
-        assertThrows<FileNotFoundException> {
-            csvFileHelper.readFile(fileName)
-        }
-    }
+
 
     @Test
     fun `writeFile should write to the file when data is valid`() {

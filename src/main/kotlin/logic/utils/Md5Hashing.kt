@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.utils
+package logic.utils
 import com.soywiz.krypto.md5
 
 class Md5Hashing : HashingService {

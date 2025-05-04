@@ -3,16 +3,15 @@ package presentation.auth
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.authentication.LoginByUserNameUseCase
+import logic.authentication.LoginByUserNameUseCase
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
+import presentation.admin.ConsoleAdminMenuView
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
+import presentation.user.ConsoleUserMenuView
 import squad.abudhabi.logic.user.SaveLoggedUserUseCase
-import squad.abudhabi.presentation.admin.ConsoleAdminMenuView
-import squad.abudhabi.presentation.auth.LoginByUserNameUseCaseUI
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
-import squad.abudhabi.presentation.user.ConsoleUserMenuView
 
 class LoginByUserNameUseCaseUITest {
 

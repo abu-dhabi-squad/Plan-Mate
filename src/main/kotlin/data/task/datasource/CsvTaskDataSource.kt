@@ -1,13 +1,14 @@
-package squad.abudhabi.data.task.datasource
+package data.task.datasource
 
-import squad.abudhabi.data.task.parser.CsvTaskParser
-import squad.abudhabi.data.utils.filehelper.CsvFileHelper
+import squad.abudhabi.data.task.datasource.TaskDataSource
+import squad.abudhabi.data.task.parser.TaskParser
+import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Task
 
 class CsvTaskDataSource(
-    private val csvFileHelper: CsvFileHelper,
+    private val csvFileHelper: FileHelper,
     private val csvFileName: String,
-    private val csvTaskParser: CsvTaskParser,
+    private val csvTaskParser: TaskParser,
 ) : TaskDataSource {
     override fun getAllTasks(): List<Task> {
         return csvFileHelper.readFile(csvFileName).map { csvTaskParser.getTaskFromCsvLine(it) }

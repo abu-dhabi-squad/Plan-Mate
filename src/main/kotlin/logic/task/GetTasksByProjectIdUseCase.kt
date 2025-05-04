@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.task
+package logic.task
 
 import squad.abudhabi.logic.exceptions.NoTasksFoundException
 import squad.abudhabi.logic.model.Task

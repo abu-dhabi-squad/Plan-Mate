@@ -8,9 +8,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.task.GetTaskByIdUseCase
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.task.GetTaskByIdUseCase
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import java.time.LocalDate
 
 class GetTaskByIdPresenterUITest {
@@ -34,7 +34,7 @@ class GetTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("Task ID cannot be empty.") }
+        verify { printer.displayLn("Task ID cannot be empty.") }
     }
 
     @Test
@@ -56,14 +56,14 @@ class GetTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("Task Found:") }
-        verify { printer.display("Title: ${task.title}") }
-        verify { printer.display("Description: ${task.description}") }
-        verify { printer.display("Start Date: ${task.startDate}") }
-        verify { printer.display("End Date: ${task.endDate}") }
-        verify { printer.display("Project ID: ${task.projectId}") }
-        verify { printer.display("State ID: ${task.stateId}") }
-        verify { printer.display("Assigned to: ${task.userName}") }
+        verify { printer.displayLn("Task Found:") }
+        verify { printer.displayLn("Title: ${task.title}") }
+        verify { printer.displayLn("Description: ${task.description}") }
+        verify { printer.displayLn("Start Date: ${task.startDate}") }
+        verify { printer.displayLn("End Date: ${task.endDate}") }
+        verify { printer.displayLn("Project ID: ${task.projectId}") }
+        verify { printer.displayLn("State ID: ${task.stateId}") }
+        verify { printer.displayLn("Assigned to: ${task.userName}") }
     }
 
     @Test
@@ -74,6 +74,6 @@ class GetTaskByIdPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.display("Failed to retrieve task: Task not found") }
+        verify { printer.displayLn("Failed to retrieve task: Task not found") }
     }
 }

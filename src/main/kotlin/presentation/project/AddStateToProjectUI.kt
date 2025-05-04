@@ -1,16 +1,16 @@
-package squad.abudhabi.presentation.project
+package presentation.project
 
 import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.project.AddStateToProjectUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
+import logic.project.AddStateToProjectUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 
 class AddStateToProjectUI(
     private val addStateToProjectUseCase: AddStateToProjectUseCase,
     private val inputReader: InputReader,
     private val printer: Printer
-):UiLauncher {
+): UiLauncher {
     override fun launchUi() {
         printer.display("Enter the project ID to add a state to: ")
         val projectId = inputReader.readString()

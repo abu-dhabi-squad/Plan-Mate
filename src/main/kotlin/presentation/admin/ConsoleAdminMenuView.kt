@@ -1,49 +1,59 @@
-package squad.abudhabi.presentation.admin
+package presentation.admin
 
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
-import squad.abudhabi.presentation.userManagement.CreateMateUserUseCaseUI
+import org.koin.core.annotation.Named
+import presentation.UIFeature
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import kotlin.system.exitProcess
 
 class ConsoleAdminMenuView(
-    private val user: User,
-    // other views will be injected here
+    @Named("mate") private val uiFeatures: List<UIFeature>,
     private val printer: Printer,
     private val inputReader: InputReader,
-    private val createMateUserUseCaseUI: CreateMateUserUseCaseUI
 ) : UiLauncher {
 
+
     override fun launchUi() {
+        sortMenu()
+        showWelcome()
+        presentFeature()
+    }
 
-        showMenu()
-        printer.display("Enter your choice: ")
+    private fun showWelcome() {
+        printer.displayLn("Welcome to PlanMate Admin Dashboard ")
+    }
+
+    private fun presentFeature() {
+        showOptions()
+        print("Enter your choice: ")
         val input = inputReader.readInt()
-        when (input) {
-            1 -> {/* here will lan*/ }
-            6->createMateUserUseCaseUI.launchUi()
-            10 -> exitProcess(0)
+        if (input != null && input in 1 .. uiFeatures.size) {
+            uiFeatures.find { it.id == input }?.uiLauncher?.launchUi()
+        } else if(input == 0) {
+            exitProcess(0)
+        } else {
+            printer.displayLn("Invalid input")
         }
-        launchUi()
+        presentFeature()
     }
 
-    private fun showMenu() {
-        printer.displayLn()
-        printer.displayLn("╔════════════════════════════════════════╗")
-        printer.displayLn("║         PlanMate Admin Console         ║")
-        printer.displayLn("╠════════════════════════════════════════╣")
-        printer.displayLn("╠ 1. Add a new Project                   ╣")
-        printer.displayLn("╠ 2. Edit an Existing Project            ╣")
-        printer.displayLn("╠ 3. Delete a Project                    ╣")
-        printer.displayLn("╠ 4. Add a new Task                      ╣")
-        printer.displayLn("╠ 5. View All Tasks in a Project         ╣")
-        printer.displayLn("╠ 6. Create a new User (Mate)            ╣")
-        printer.displayLn("╠ 7. View History of a Project           ╣")
-        printer.displayLn("╠ 8. View History of a Task              ╣")
-        printer.displayLn("╠ 9. Edit Task/Project States            ╣")
-        printer.displayLn("╠ 10. Log Out                            ╣")
-        printer.displayLn("╚════════════════════════════════════════╝")
+    private fun showOptions() {
+        printer.displayLn("╔══════════════════════════════════════╗")
+        printer.displayLn("║        PlanMate Admin Dashboard      ║")
+        printer.displayLn("╠══════════════════════════════════════╣")
+        uiFeatures.sortedBy { it.id }.forEach { printFeatureLine(it) }
+        printer.displayLn("║  0.  Exit                            ║")
+        printer.displayLn("╚══════════════════════════════════════╝")
     }
+
+    private fun printFeatureLine(featureUi: UIFeature) {
+        printer.displayLn("║ ${(featureUi.id).toString().padStart(2, ' ')}.  ${featureUi.label.padEnd(32)}║")
+    }
+
+    private fun sortMenu() {
+        uiFeatures.sortedBy { it.id }
+    }
+
 
 }

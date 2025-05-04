@@ -5,13 +5,13 @@ import logic.validation.DateParser
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.EntityType
 import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.task.EditTaskUseCase
-import squad.abudhabi.logic.task.GetTasksByProjectIdUseCase
+import logic.project.GetAllProjectsUseCase
+import logic.task.EditTaskUseCase
+import logic.task.GetTasksByProjectIdUseCase
+import presentation.UiLauncher
+import presentation.ui_io.InputReader
+import presentation.ui_io.Printer
 import squad.abudhabi.logic.user.GetLoggedUserUseCase
-import squad.abudhabi.presentation.UiLauncher
-import squad.abudhabi.presentation.ui_io.InputReader
-import squad.abudhabi.presentation.ui_io.Printer
 import java.time.LocalDate
 
 class EditTaskPresenterUI(
@@ -30,12 +30,12 @@ class EditTaskPresenterUI(
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {
-            printer.display("Failed to load projects: ${e.message}")
+            printer.displayLn("Failed to load projects: ${e.message}")
             return
         }
 
         if (projects.isEmpty()) {
-            printer.display("No projects available.")
+            printer.displayLn("No projects available.")
             return
         }
 
@@ -46,12 +46,12 @@ class EditTaskPresenterUI(
         val tasks = try {
             getTasksByProjectIdUseCase(selectedProject.id)
         } catch (e: Exception) {
-            printer.display("Failed to load tasks: ${e.message}")
+            printer.displayLn("Failed to load tasks: ${e.message}")
             return
         }
 
         if (tasks.isEmpty()) {
-            printer.display("No tasks found in this project.")
+            printer.displayLn("No tasks found in this project.")
             return
         }
 
@@ -59,7 +59,7 @@ class EditTaskPresenterUI(
         val taskIndex = promptSelection("Select a task to edit:", tasks.size)
         val selectedTask = tasks[taskIndex]
 
-        printer.display("Editing Task: ${selectedTask.title}")
+        printer.displayLn("Editing Task: ${selectedTask.title}")
         val newTitle =
             promptString("Enter new title (leave blank to keep current):", selectedTask.title)
         val newDescription = promptString(
@@ -96,30 +96,30 @@ class EditTaskPresenterUI(
                     createdBy = getLoggedUserUseCase().username
                 )
             )
-            printer.display("✅ Task updated successfully.")
+            printer.displayLn("✅ Task updated successfully.")
         } catch (e: Exception) {
-            printer.display("❌ Failed to update task: ${e.message}")
+            printer.displayLn("❌ Failed to update task: ${e.message}")
         }
     }
 
     private fun showProjects(projects: List<squad.abudhabi.logic.model.Project>) {
-        printer.display("📁 Available Projects:")
+        printer.displayLn("📁 Available Projects:")
         projects.forEachIndexed { index, project ->
-            printer.display("${index + 1}. ${project.projectName}")
+            printer.displayLn("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showTasks(tasks: List<Task>) {
-        printer.display("📋 Tasks in Selected Project:")
+        printer.displayLn("📋 Tasks in Selected Project:")
         tasks.forEachIndexed { index, task ->
-            printer.display("${index + 1}. ${task.title} (ID: ${task.id})")
+            printer.displayLn("${index + 1}. ${task.title} (ID: ${task.id})")
         }
     }
 
     private fun showStates(states: List<squad.abudhabi.logic.model.State>) {
-        printer.display("📍 Available States:")
+        printer.displayLn("📍 Available States:")
         states.forEachIndexed { index, state ->
-            printer.display("${index + 1}. ${state.name}")
+            printer.displayLn("${index + 1}. ${state.name}")
         }
     }
 
@@ -128,7 +128,7 @@ class EditTaskPresenterUI(
             printer.display(message)
             val input = inputReader.readInt()
             if (input != null && input in 1..max) return input - 1
-            printer.display("Please enter a valid number between 1 and $max.")
+            printer.displayLn("Please enter a valid number between 1 and $max.")
         }
     }
 
@@ -147,7 +147,7 @@ class EditTaskPresenterUI(
             try {
                 dateParser.parseDateFromString(input)
             } catch (e: Exception) {
-                printer.display("⚠️ Invalid date format. Keeping current value.")
+                printer.displayLn("⚠️ Invalid date format. Keeping current value.")
                 currentValue
             }
         }
