@@ -11,7 +11,7 @@ class CreateMateUserUseCase(
     private val hashingService: HashingService,
     private val standardPasswordValidator: PasswordValidator
 ) {
-    operator fun invoke(user: User) {
+    suspend operator fun invoke(user: User) {
         validateInputs(user.username, user.password)
         checkUserDoesNotExist(user)
         authRepository.createUser(
@@ -23,7 +23,7 @@ class CreateMateUserUseCase(
         throw EmptyUsernameException()
         standardPasswordValidator.validatePassword(password)
     }
-    private fun checkUserDoesNotExist(user: User) {
+    private suspend fun checkUserDoesNotExist(user: User) {
         authRepository.getUserByName(user.username)?.let {
             throw UserAlreadyExistsException(user.username)
         }
