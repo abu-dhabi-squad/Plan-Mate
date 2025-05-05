@@ -1,4 +1,3 @@
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import data.TestData.user1
 import data.TestData.user2
@@ -12,7 +11,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
+import data.authentication.datasource.LoggedUserDataSource
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType

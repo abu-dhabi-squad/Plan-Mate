@@ -16,7 +16,7 @@ import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
-import squad.abudhabi.logic.repository.AuthenticationRepository
+import logic.repository.AuthenticationRepository
 import kotlin.test.Test
 
 class LoginByUserNameUseCaseTest {

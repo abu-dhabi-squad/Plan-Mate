@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.repository
+package logic.repository
 import squad.abudhabi.logic.model.User
 
 interface AuthenticationRepository {
