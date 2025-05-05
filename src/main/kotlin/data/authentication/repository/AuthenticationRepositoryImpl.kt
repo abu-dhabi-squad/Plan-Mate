@@ -11,14 +11,18 @@ class AuthenticationRepositoryImpl(
     private val loggedUserDataSource: LoggedUserDataSource
 ) : AuthenticationRepository {
 
-    override fun loginUser(userName: String, password: String): User {
+    override suspend fun loginUser(userName: String, password: String): User {
         return authenticationDataSource.getUserByUserName(userName)
             ?.takeIf { it.password == password }
             ?: throw InvalidCredentialsException()
     }
 
-    override fun getUserByName(userName: String): User? {
+    override suspend fun getUserByName(userName: String): User? {
         return authenticationDataSource.getUserByUserName(userName)
+    }
+
+    override suspend fun createUser(user: User) {
+        authenticationDataSource.createUser(user)
     }
 
     override fun saveLoggedUser(user: User) {
@@ -27,10 +31,6 @@ class AuthenticationRepositoryImpl(
 
     override fun getLoggedUser(): User? {
         return loggedUserDataSource.getLoggedUser()
-    }
-
-    override fun createUser(user: User) {
-        authenticationDataSource.createUser(user)
     }
 
 }
