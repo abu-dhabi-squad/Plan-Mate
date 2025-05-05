@@ -9,15 +9,15 @@ class CsvAuthenticationDataSource(
     private val fileHelper: FileHelper,
     private val filePath: String
 ) : AuthenticationDataSource {
-    override fun getUserByUserName(userName: String): User? {
+    override suspend fun getUserByUserName(userName: String): User? {
         return getAllUsers().find { it.username == userName }
     }
 
-    override fun getAllUsers(): List<User> {
+    override suspend fun getAllUsers(): List<User> {
         return fileHelper.readFile(filePath).map { csvUserParser.parseStringToUser(it) }
     }
 
-    override fun createUser(user: User) {
+    override suspend fun createUser(user: User) {
         saveUsers(getAllUsers().plus(user))
     }
 
