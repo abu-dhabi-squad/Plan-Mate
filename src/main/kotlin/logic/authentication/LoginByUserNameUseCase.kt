@@ -11,7 +11,7 @@ class LoginByUserNameUseCase(
     private val hashingService: HashingService,
     private val standardPasswordValidator: PasswordValidator
 ) {
-    operator fun invoke(username: String, password: String): User {
+    suspend operator fun invoke(username: String, password: String): User {
         validateInputs(username, password)
         val hashPassword= hashingService.hash(password)
         return authRepository.loginUser(username,hashPassword)
