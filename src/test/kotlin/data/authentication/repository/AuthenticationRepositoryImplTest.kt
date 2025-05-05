@@ -4,14 +4,15 @@ import data.TestData.user2
 import data.authentication.datasource.AuthenticationDataSource
 import data.authentication.repository.AuthenticationRepositoryImpl
 import io.mockk.Runs
-import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.authentication.datasource.LoggedUserDataSource
+import io.mockk.coEvery
+import io.mockk.coVerify
+import kotlinx.coroutines.test.runTest
 import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
@@ -26,82 +27,82 @@ class AuthenticationRepositoryImplTest {
         authenticationRepository = AuthenticationRepositoryImpl(authenticationDataSource,loggedUserDataSource)
     }
     @Test
-    fun `login should return user when username and password are correct`() {
+    fun `login should return user when username and password are correct`() = runTest {
         // Given
-        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
+        coEvery { authenticationDataSource.getUserByUserName(user1.username) } returns user1
         // When
         val result = authenticationRepository.loginUser(user1.username, "pass1")
         // Then
         assertThat(result).isEqualTo(user1)
     }
     @Test
-    fun `login should throw InvalidCredentialsException when password is incorrect`() {
+    fun `login should throw InvalidCredentialsException when password is incorrect`() = runTest {
         // Given
-        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
+        coEvery { authenticationDataSource.getUserByUserName(user1.username) } returns user1
         // When & Then
         assertThrows<InvalidCredentialsException> {
             authenticationRepository.loginUser(user1.username, "wrongPassword")
         }
     }
     @Test
-    fun `login should throw InvalidCredentialsException when password is empty`() {
-        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
+    fun `login should throw InvalidCredentialsException when password is empty`() = runTest {
+        coEvery { authenticationDataSource.getUserByUserName(user1.username) } returns user1
         assertThrows<InvalidCredentialsException> {
             authenticationRepository.loginUser(user1.username, "")
         }
     }
     @Test
-    fun `getUserByName should return user when username exists`() {
+    fun `getUserByName should return user when username exists`() = runTest {
         // Given
-        every { authenticationDataSource.getUserByUserName(user1.username) } returns user1
+        coEvery { authenticationDataSource.getUserByUserName(user1.username) } returns user1
         // When
         val result = authenticationRepository.getUserByName(user1.username)
         // Then
         assertThat(result).isEqualTo(user1)
     }
     @Test
-    fun `createUser should create user when username does not exist`() {
+    fun `createUser should create user when username does not exist`() = runTest {
         // Given
-        every { authenticationDataSource.getUserByUserName(user2.username) } returns null
-        every { authenticationDataSource.createUser(user2) } just Runs
+        coEvery { authenticationDataSource.getUserByUserName(user2.username) } returns null
+        coEvery { authenticationDataSource.createUser(user2) } just Runs
         // When
         authenticationRepository.createUser(user2)
         // Then
-        verify(exactly = 1) { authenticationDataSource.createUser(user2) }
+        coVerify(exactly = 1) { authenticationDataSource.createUser(user2) }
     }
     @Test
-    fun `createUser should check if the user already exists before adding`() {
+    fun `createUser should check if the user already exists before adding`() = runTest {
         // Given
-        every { authenticationDataSource.getUserByUserName(user2.username) } returns null
-        every { authenticationDataSource.createUser(user2) } just Runs
+        coEvery { authenticationDataSource.getUserByUserName(user2.username) } returns null
+        coEvery { authenticationDataSource.createUser(user2) } just Runs
         // When
         authenticationRepository.createUser(user2)
         // Then
-        verify(exactly = 1) { authenticationDataSource.createUser(user2) }
+        coVerify(exactly = 1) { authenticationDataSource.createUser(user2) }
     }
     @Test
-    fun `login should throw InvalidCredentialsException when user is not found`() {
+    fun `login should throw InvalidCredentialsException when user is not found`() = runTest {
         // Given
-        every { authenticationDataSource.getUserByUserName(user1.username) } returns null
+        coEvery { authenticationDataSource.getUserByUserName(user1.username) } returns null
         // When & Then
         assertThrows<InvalidCredentialsException> {
             authenticationRepository.loginUser(user1.username, user1.password)
         }
     }
     @Test
-    fun `saveLoggedUser should save user correctly`(){
+    fun `saveLoggedUser should save user correctly`() = runTest {
         val user = User(
             username = "",
             password = "ValidPass123!",
             userType = UserType.MATE
         )
-        every { loggedUserDataSource.getLoggedUser() } returns user
+        coEvery { loggedUserDataSource.getLoggedUser() } returns user
         authenticationRepository.saveLoggedUser(user)
         assertThat(authenticationRepository.getLoggedUser()).isEqualTo(user)
     }
     @Test
-    fun `getLoggedUser should return null when no user was logged`(){
-        every { loggedUserDataSource.getLoggedUser() } returns null
+    fun `getLoggedUser should return null when no user was logged`() = runTest {
+        coEvery { loggedUserDataSource.getLoggedUser() } returns null
         val res=authenticationRepository.getLoggedUser()
         assertThat(res).isNull()
     }
