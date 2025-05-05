@@ -8,27 +8,27 @@ class CsvProjectDataSource(
     private val csvProjectParser: CsvProjectParser,
     private val fileName: String
 ) : ProjectDataSource {
-    override fun getAllProjects(): List<Project> {
+    override suspend fun getAllProjects(): List<Project> {
         return fileHelper.readFile(fileName)
             .map(csvProjectParser::parseStringToProject)
     }
 
-    override fun createProject(project: Project) {
+    override suspend fun createProject(project: Project) {
         appendProject(project)
     }
 
-    override fun editProject(project: Project) {
+    override suspend fun editProject(project: Project) {
         val projects = getAllProjects()
         val newProjects = projects.map { currentProject -> currentProject.isEqualProject(project) }
         writeProjects(newProjects)
     }
 
-    override fun deleteProject(projectId: String) {
+    override suspend fun deleteProject(projectId: String) {
         val projects = getAllProjects()
         writeProjects(projects.filter { it.id != projectId })
     }
 
-    override fun getProjectById(projectId: String): Project? {
+    override suspend fun getProjectById(projectId: String): Project? {
         return getAllProjects().find { it.id == projectId }
     }
 
