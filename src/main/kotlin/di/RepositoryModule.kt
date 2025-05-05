@@ -10,11 +10,11 @@ import data.authentication.repository.AuthenticationRepositoryImpl
 import data.parser.AuditParser
 import data.parser.CsvAuditParser
 import org.koin.dsl.module
-import data.project.datasource.CsvProjectDataSource
-import data.project.datasource.CsvProjectParser
+import data.project.datasource.csv_datasource.CsvProjectDataSource
+import data.project.datasource.csv_datasource.CsvProjectParser
 import data.project.datasource.ProjectDataSource
 import data.project.repository.ProjectRepositoryImpl
-import data.task.datasource.CsvTaskDataSource
+import data.task.datasource.csv_datasource.CsvTaskDataSource
 import data.task.repository.TaskRepositoryImpl
 import squad.abudhabi.data.authentication.datasource.InMemoryLoggedUserDataSource
 import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
