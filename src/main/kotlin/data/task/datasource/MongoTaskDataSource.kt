@@ -1,15 +1,16 @@
 package data.task.datasource
 
 import com.mongodb.client.MongoCollection
-import data.task.TaskMapper
-import data.task.TaskMapper.Companion.DESCRIPTION_FIELD
-import data.task.TaskMapper.Companion.END_DATE
-import data.task.TaskMapper.Companion.PROJECT_ID_FIELD
-import data.task.TaskMapper.Companion.START_DATE
-import data.task.TaskMapper.Companion.STATE_ID_FIELD
-import data.task.TaskMapper.Companion.TASK_ID_FIELD
-import data.task.TaskMapper.Companion.TITLE_FIELD
-import data.task.TaskMapper.Companion.USERNAME_FIELD
+import data.task.mapper.TaskMapper
+import data.task.mapper.TaskMapper.Companion.DESCRIPTION_FIELD
+import data.task.mapper.TaskMapper.Companion.END_DATE
+import data.task.mapper.TaskMapper.Companion.PROJECT_ID_FIELD
+import data.task.mapper.TaskMapper.Companion.START_DATE
+import data.task.mapper.TaskMapper.Companion.STATE_ID_FIELD
+import data.task.mapper.TaskMapper.Companion.TASK_ID_FIELD
+import data.task.mapper.TaskMapper.Companion.TITLE_FIELD
+import data.task.mapper.TaskMapper.Companion.USERNAME_FIELD
+
 import org.bson.Document
 import squad.abudhabi.data.task.datasource.TaskDataSource
 import squad.abudhabi.logic.model.Task
