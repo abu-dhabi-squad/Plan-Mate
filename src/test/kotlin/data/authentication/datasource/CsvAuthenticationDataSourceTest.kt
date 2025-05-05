@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.authentication.datasource.CsvAuthenticationDataSource
 import data.authentication.datasource.CsvUserParser
+import kotlinx.coroutines.test.runTest
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.exceptions.CanNotParseUserException
 import squad.abudhabi.logic.model.User
@@ -32,7 +33,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getUserByUserName should return user when username exists`() {
+    fun `getUserByUserName should return user when username exists`() = runTest {
         // Given
         every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { csvUserParser.parseStringToUser(userString1) } returns user1
@@ -42,10 +43,10 @@ class CsvAuthenticationDataSourceTest {
 
         // Then
         Truth.assertThat(user).isEqualTo(user1)
-    }
+}
 
     @Test
-    fun `getUserByUserName should return null when username does not exist`() {
+    fun `getUserByUserName should return null when username does not exist`() = runTest {
         // Given
         every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { csvUserParser.parseStringToUser(userString1) } returns user1
@@ -58,7 +59,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getAllUsers should return a list of users when readFile returns valid data`() {
+    fun `getAllUsers should return a list of users when readFile returns valid data`() = runTest {
         // Given
         every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { csvUserParser.parseStringToUser(userString1) } returns user1
@@ -71,7 +72,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getAllUsers should return empty list when readFile returns empty list`() {
+    fun `getAllUsers should return empty list when readFile returns empty list`() = runTest {
         // Given
         every { fileHelper.readFile(any()) } returns emptyList()
 
@@ -80,7 +81,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getAllUsers should throw Exception when readFile throws Exception`() {
+    fun `getAllUsers should throw Exception when readFile throws Exception`() = runTest {
         // Given
         every { fileHelper.readFile(filePath) } throws Exception()
 
@@ -91,7 +92,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getAllUsers should throw Exception when parseStringToUser throws Exception`() {
+    fun `getAllUsers should throw Exception when parseStringToUser throws Exception`() = runTest {
         // Given
         every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { csvUserParser.parseStringToUser(any()) } throws CanNotParseUserException()
@@ -103,7 +104,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `createUser should save new user when file is empty`() {
+    fun `createUser should save new user when file is empty`() = runTest {
         // Given
         every { fileHelper.readFile(filePath) } returns emptyList()
         every { csvUserParser.parseUserToString(user2) } returns userString2
