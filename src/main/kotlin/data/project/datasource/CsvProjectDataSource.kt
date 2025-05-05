@@ -25,11 +25,11 @@ class CsvProjectDataSource(
 
     override suspend fun deleteProject(projectId: String) {
         val projects = getAllProjects()
-        writeProjects(projects.filter { it.id != projectId })
+        writeProjects(projects.filter { it.id.toString() != projectId })
     }
 
     override suspend fun getProjectById(projectId: String): Project? {
-        return getAllProjects().find { it.id == projectId }
+        return getAllProjects().find { it.id.toString() == projectId }
     }
 
     private fun writeProjects(projects: List<Project>) {
