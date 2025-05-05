@@ -5,14 +5,14 @@ import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.repository.AuditRepository
 
 class AuditRepositoryImpl(
-    private val dataSource: AuditDataSource
+    private val auditdataSource: AuditDataSource
 ) : AuditRepository {
 
-    override fun createAuditLog(auditLog: Audit) {
-        dataSource.createAuditLog(auditLog)
+    override suspend fun createAuditLog(auditLog: Audit) {
+        auditdataSource.createAuditLog(auditLog)
     }
 
-    override fun getAuditByEntityId(entityId: String): List<Audit> {
-        return dataSource.getAuditByEntityId(entityId)
+    override suspend fun getAuditByEntityId(entityId: String): List<Audit> {
+        return auditdataSource.getAuditByEntityId(entityId)
     }
 }
