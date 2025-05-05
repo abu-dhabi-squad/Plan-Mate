@@ -1,5 +1,12 @@
 package data.audit.AduitMapper
 
+import data.audit.AduitMapper.AuditMapperFields.CREATED_BY_FIELD
+import data.audit.AduitMapper.AuditMapperFields.DATE_FIELD
+import data.audit.AduitMapper.AuditMapperFields.ENTITY_ID_FIELD
+import data.audit.AduitMapper.AuditMapperFields.ENTITY_TYPE_FIELD
+import data.audit.AduitMapper.AuditMapperFields.ID_FIELD
+import data.audit.AduitMapper.AuditMapperFields.NEW_STATE_FIELD
+import data.audit.AduitMapper.AuditMapperFields.OLD_STATE_FIELD
 import org.bson.Document
 import squad.abudhabi.logic.model.Audit
 import squad.abudhabi.logic.model.EntityType
@@ -7,7 +14,7 @@ import java.time.LocalDateTime
 import java.util.*
 
 class AuditMapper {
-    companion object {
+    /*companion object {
         const val ID_FIELD = "id"
         const val CREATED_BY_FIELD = "createdBy"
         const val ENTITY_ID_FIELD = "entityId"
@@ -15,7 +22,7 @@ class AuditMapper {
         const val OLD_STATE_FIELD = "oldState"
         const val NEW_STATE_FIELD = "newState"
         const val DATE_FIELD = "date"
-    }
+    }*/
 
     fun auditToDocument(audit: Audit): Document {
         return Document().apply {
@@ -40,4 +47,5 @@ class AuditMapper {
             date = LocalDateTime.parse(doc.getString(DATE_FIELD))
         )
     }
+
 }
