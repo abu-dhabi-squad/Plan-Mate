@@ -13,7 +13,6 @@ fun createTask(id : String = "",
     endDate :LocalDate = LocalDate.now()
 ): Task {
     return Task(
-        id = id,
         userName = userName,
         projectId = projectId,
         stateId = stateId,

@@ -8,4 +8,4 @@ fun createProject(
     id: String = UUID.randomUUID().toString(),
     name: String = "project name",
     states: List<State> = listOf()
-): Project = Project(id = id, projectName = name, states = states)
+): Project = Project( projectName = name, states = states)
