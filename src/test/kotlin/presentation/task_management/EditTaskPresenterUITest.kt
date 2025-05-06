@@ -6,6 +6,7 @@ import helper.createTask
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -51,7 +52,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should update title, description, dates, and state`() {
+    fun `should update title, description, dates, and state`() = runTest{
         // Given
         val state1 = createState("s1", "Open")
         val state2 = createState("s2", "Closed")
@@ -96,7 +97,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should displayLn list of tasks when there are projects`() {
+    fun `should displayLn list of tasks when there are projects`() = runTest{
         val project = createProject(name = "Project A")
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returns 1
@@ -106,7 +107,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should display message when no projects found`() {
+    fun `should display message when no projects found`() = runTest{
         every { getAllProjectsUseCase() } returns emptyList()
 
         presenter.launchUi()
@@ -115,7 +116,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should display error when loading projects fails`() {
+    fun `should display error when loading projects fails`() = runTest{
         every { getAllProjectsUseCase() } throws NoProjectsFoundException()
 
         presenter.launchUi()
@@ -124,7 +125,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should display message when no tasks in project`() {
+    fun `should display message when no tasks in project`() = runTest{
         val project = createProject()
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returns 1
@@ -136,7 +137,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should re-prompt when user enters invalid project selection`() {
+    fun `should re-prompt when user enters invalid project selection`() = runTest{
         val project = createProject("1", "Project A")
         every { getAllProjectsUseCase() } returns listOf(project)
 
@@ -149,7 +150,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should display error when loading tasks fails`() {
+    fun `should display error when loading tasks fails`() = runTest{
         val project = createProject("1", "Test Project")
         every { getAllProjectsUseCase() } returns listOf(project)
         every { inputReader.readInt() } returns 1
@@ -161,7 +162,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should successfully update task when the input is valid`() {
+    fun `should successfully update task when the input is valid`() = runTest{
         val state = createState("s1", "Open")
         val project = createProject("1", "Project A", states = listOf(state))
         val task = createTask("t1", projectId = "1", stateId = state.id)
@@ -183,7 +184,7 @@ class EditTaskPresenterUITest {
 
 
     @Test
-    fun `should show error message while updating task when the input is not valid`() {
+    fun `should show error message while updating task when the input is not valid`() = runTest{
         val state = createState("s1", "Open")
         val project = createProject("1", "Project A", states = listOf(state))
         val task = createTask("t1", projectId = "1", stateId = state.id)
@@ -200,7 +201,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should re-prompt when user enters invalid task selection`() {
+    fun `should re-prompt when user enters invalid task selection`() = runTest{
         val state = createState("s1", "Open")
         val project = createProject("1", "Project A", states = listOf(state))
         val task = createTask("t1", projectId = "1", stateId = state.id)
@@ -222,7 +223,7 @@ class EditTaskPresenterUITest {
 
 
     @Test
-    fun `should keep existing title and description if user inputs are empty`() {
+    fun `should keep existing title and description if user inputs are empty`() = runTest{
         val state = createState("s1", "Open")
         val project = createProject("1", "Project A", states = listOf(state))
         val task = createTask(
@@ -244,7 +245,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should keep existing title and description if user inputs are null`() {
+    fun `should keep existing title and description if user inputs are null`() = runTest{
         val state = createState("s1", "Open")
         val project = createProject("1", "Project A", states = listOf(state))
         val task = createTask(
@@ -266,7 +267,7 @@ class EditTaskPresenterUITest {
     }
 
     @Test
-    fun `should re-prompt if readInt returns null`() {
+    fun `should re-prompt if readInt returns null`() = runTest{
         val state = createState("s1", "Open")
         val project = createProject("1", "Project A", states = listOf(state))
         val task = createTask("t1", projectId = "1", stateId = state.id)
@@ -283,7 +284,7 @@ class EditTaskPresenterUITest {
 
 
     @Test
-    fun `should show date format error message when user enter invalid date format`() {
+    fun `should show date format error message when user enter invalid date format`() = runTest{
         // Given
         val state1 = createState("s1", "Open")
         val state2 = createState("s2", "Closed")

@@ -5,6 +5,7 @@ import helper.createState
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import logic.validation.DateParser
 import org.junit.jupiter.api.BeforeEach
@@ -53,7 +54,7 @@ class CreateTaskPresenterUITest {
 
 
     @Test
-    fun `should create a task when user input is valid`() {
+    fun `should create a task when user input is valid`() = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
 
@@ -75,7 +76,7 @@ class CreateTaskPresenterUITest {
     fun `should display error message when user enter empty or null title`(
         firstEnterTitle: String?,
         secondEnterTitle: String
-    ) {
+    ) = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
 
@@ -97,7 +98,7 @@ class CreateTaskPresenterUITest {
     fun `should display error message when user enter empty or null description`(
         firstEnterDescription: String?,
         secondEnterDescription: String
-    ) {
+    ) = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
 
@@ -118,7 +119,7 @@ class CreateTaskPresenterUITest {
 
 
     @Test
-    fun `should display message when no projects are available`() {
+    fun `should display message when no projects are available`() = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
         every { getAllProjectsUseCase() } returns emptyList() andThen listOf(fakeProject)
@@ -131,7 +132,7 @@ class CreateTaskPresenterUITest {
     }
 
     @Test
-    fun `should display error message when get all projects use case throw error`() {
+    fun `should display error message when get all projects use case throw error`() = runTest{
         // Given
         every { getAllProjectsUseCase() } throws NoProjectsFoundException()
         every { reader.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
@@ -143,7 +144,7 @@ class CreateTaskPresenterUITest {
     }
 
     @Test
-    fun `should display error message when failed to create task`() {
+    fun `should display error message when failed to create task`() = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
 
@@ -166,7 +167,7 @@ class CreateTaskPresenterUITest {
     fun `should display error when user enter empty or null date`(
         firstEnterDate: String?,
         secondEnterDate: String
-    ) {
+    ) = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
@@ -185,7 +186,7 @@ class CreateTaskPresenterUITest {
     }
 
     @Test
-    fun `should display error when user enter date in invalid formatter`() {
+    fun `should display error when user enter date in invalid formatter`() = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
         every { getAllProjectsUseCase() } returns listOf(fakeProject)
@@ -212,7 +213,7 @@ class CreateTaskPresenterUITest {
     fun `should display error when user enter  invalid project or task number`(
         firstEnterIndex: Int?,
         secondEnterIndex: Int
-    ) {
+    ) = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
         every { getAllProjectsUseCase() } returns listOf(fakeProject)

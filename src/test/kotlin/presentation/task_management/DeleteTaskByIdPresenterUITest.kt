@@ -6,6 +6,7 @@ import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -53,7 +54,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should delete task successfully when user input is valid`() {
+    fun `should delete task successfully when user input is valid`() = runTest{
         // Given
         val project = createProject(id = "1")
         val task = createTask(id = "1")
@@ -71,7 +72,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display error message when task successfully when user input is valid`() {
+    fun `should display error message when task successfully when user input is valid`() = runTest{
         // Given
         val project = createProject(id = "1")
         val task = createTask(id = "1")
@@ -89,7 +90,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display error when loading projects fails`() {
+    fun `should display error when loading projects fails`() = runTest{
         // Given
         every { getAllProjectsUseCase() } throws NoProjectsFoundException()
         // When
@@ -99,7 +100,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display warning when no projects are available`() {
+    fun `should display warning when no projects are available`() = runTest{
         // Given
         every { getAllProjectsUseCase() } returns emptyList()
         // When
@@ -109,7 +110,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display error when loading tasks fails`() {
+    fun `should display error when loading tasks fails`() = runTest{
         //Given
         val project = createProject()
         every { getAllProjectsUseCase() } returns listOf(project)
@@ -122,7 +123,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display warning when no tasks are found in project`() {
+    fun `should display warning when no tasks are found in project`() = runTest{
         // Given
         val project = createProject()
         every { getAllProjectsUseCase() } returns listOf(project)
@@ -135,7 +136,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display error when deletion fails`() {
+    fun `should display error when deletion fails`() = runTest{
         // Given
         val project = createProject()
         val task = createTask()
@@ -159,7 +160,7 @@ class DeleteTaskByIdPresenterUITest {
     fun `should prompt again when invalid project index is entered`(
         firstAttemptIndexEnter: Int?,
         secondAttemptIndexEnter: Int
-    ) {
+    ) = runTest{
         // Given
         val project = createProject()
         val task = createTask()
@@ -174,7 +175,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should prompt again when invalid task index is entered`() {
+    fun `should prompt again when invalid task index is entered`() = runTest{
         // Given
         val task = createTask()
         val project = createProject()
@@ -189,7 +190,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should show error message when get tasks by project id failed`() {
+    fun `should show error message when get tasks by project id failed`() = runTest{
         // Given
         val project = createProject()
         every { reader.readInt() } returns 1 andThen 1

@@ -17,7 +17,7 @@ class LoginByUserNameUseCaseUI(
     private val consoleMenuViewUser: ConsoleUserMenuView,
     private val consoleMenuViewAdmin: ConsoleAdminMenuView
 ) : UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.displayLn("===== Login =====")
 
         val username = promptNonEmptyString("Enter username: ")

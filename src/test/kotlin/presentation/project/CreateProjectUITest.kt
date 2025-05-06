@@ -1,6 +1,7 @@
 package presentation.project
 
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import logic.project.CreateProjectUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -32,7 +33,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should print error when project name is null`() {
+    fun `should print error when project name is null`() = runTest{
         every { inputReader.readString() } returns null
 
         createProjectUI.launchUi()
@@ -42,7 +43,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should print error when project name is blank`() {
+    fun `should print error when project name is blank`() = runTest{
         every { inputReader.readString() } returns "  "
 
         createProjectUI.launchUi()
@@ -52,7 +53,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should print error when number of states is invalid`() {
+    fun `should print error when number of states is invalid`() = runTest{
         every { inputReader.readString() } returns "My Project"
         every { inputReader.readInt() } returns null // simulate invalid input
 
@@ -63,7 +64,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should print error when number of states is negative`() {
+    fun `should print error when number of states is negative`() = runTest{
         every { inputReader.readString() } returns "My Project"
         every { inputReader.readInt() } returns -2
 
@@ -74,7 +75,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should print error when state name is blank`() {
+    fun `should print error when state name is blank`() = runTest{
         every { inputReader.readString() } returnsMany listOf("My Project", "   ") // project name, then blank state
         every { inputReader.readInt() } returns 1
 
@@ -84,7 +85,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should call use case and print success when input is valid`() {
+    fun `should call use case and print success when input is valid`() = runTest{
         every { inputReader.readString() } returnsMany listOf("My Project", "To Do", "In Progress")
         every { inputReader.readInt() } returns 2
 
@@ -97,7 +98,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should print error when exception is thrown`() {
+    fun `should print error when exception is thrown`() = runTest{
         every { inputReader.readString() } returnsMany listOf("My Project", "Design")
         every { inputReader.readInt() } returns 1
 
@@ -109,7 +110,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should print error when state name is null`() {
+    fun `should print error when state name is null`() = runTest{
         every { inputReader.readString() } returnsMany listOf("My Project", null) // project name, then null
         every { inputReader.readInt() } returns 1
 
@@ -119,7 +120,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should allow project creation with zero states`() {
+    fun `should allow project creation with zero states`() = runTest{
         every { inputReader.readString() } returns "Empty Project"
         every { inputReader.readInt() } returns 0
 
@@ -130,7 +131,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `should throw exception when create audit throw exception`(){
+    fun `should throw exception when create audit throw exception`() = runTest{
 
         every { inputReader.readString() } returnsMany listOf("My Project", "To Do", "In Progress")
         every { inputReader.readInt() } returns 2

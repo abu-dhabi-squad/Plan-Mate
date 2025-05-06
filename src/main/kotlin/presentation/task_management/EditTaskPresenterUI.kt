@@ -26,7 +26,7 @@ class EditTaskPresenterUI(
 
 ) : UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {

@@ -11,7 +11,7 @@ class GetTaskByIdPresenterUI(
     private val getTaskByIdUseCase: GetTaskByIdUseCase
 ) : UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.displayLn("Retrieve Task by ID")
         printer.display("Enter task ID:")
 

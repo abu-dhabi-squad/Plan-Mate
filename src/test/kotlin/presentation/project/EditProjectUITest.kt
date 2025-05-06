@@ -3,6 +3,7 @@ package presentation.project
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
@@ -25,7 +26,7 @@ class EditProjectUITest {
     }
 
     @Test
-    fun `launchUI should display Exception message when get all projects throw Exception`() {
+    fun `launchUI should display Exception message when get all projects throw Exception`() = runTest{
         //given
         every { getAllProjectsUseCase() } throws Exception()
         //when
@@ -35,7 +36,7 @@ class EditProjectUITest {
     }
 
     @Test
-    fun `launchUI should display there is no project in list when get all projects return empty list`() {
+    fun `launchUI should display there is no project in list when get all projects return empty list`() = runTest{
         //given
         every { getAllProjectsUseCase() } returns listOf()
         //when
@@ -45,7 +46,7 @@ class EditProjectUITest {
     }
 
     @Test
-    fun `launchUI should display list details when get all projects return list`() {
+    fun `launchUI should display list details when get all projects return list`() = runTest{
         //given
         val projects = listOf(
             Project("id1", "name1", listOf(State("id2", "name2"))),
@@ -70,7 +71,7 @@ class EditProjectUITest {
     }
 
     @Test
-    fun `launchUI should display wrong input when enter wrong input or not entering at all for project id`() {
+    fun `launchUI should display wrong input when enter wrong input or not entering at all for project id`() = runTest{
         //given
         every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
         every { reader.readString() } returns null
@@ -81,7 +82,7 @@ class EditProjectUITest {
     }
 
     @Test
-    fun `launchUI should display wrong input when enter wrong input or not entering at all for project name`() {
+    fun `launchUI should display wrong input when enter wrong input or not entering at all for project name`() = runTest{
         //given
         every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
         every { reader.readString() } returns "id1" andThen null
@@ -92,7 +93,7 @@ class EditProjectUITest {
     }
 
     @Test
-    fun `launchUI should display Exception message when edit project use case throw Exception`() {
+    fun `launchUI should display Exception message when edit project use case throw Exception`() = runTest{
         // Given
         every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
         every { reader.readString() } returns "id1" andThen "name1"

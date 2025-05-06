@@ -1,6 +1,7 @@
 package presentation.admin
 
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UIFeature
@@ -34,7 +35,7 @@ class ConsoleAdminMenuViewTest {
     }
 
     @Test
-    fun `launchUi should print expected feature labels and welcome message`() {
+    fun `launchUi should print expected feature labels and welcome message`() = runTest{
         try {
             view.launchUi()
         } catch (_: RuntimeException) {
@@ -50,7 +51,7 @@ class ConsoleAdminMenuViewTest {
     }
 
     @Test
-    fun `launchUi should print Invalid input when input is not in range`() {
+    fun `launchUi should print Invalid input when input is not in range`() = runTest{
         // Simulate invalid input first, then break the loop
         every { reader.readInt() } returns 999 andThenThrows RuntimeException("stop loop")
 

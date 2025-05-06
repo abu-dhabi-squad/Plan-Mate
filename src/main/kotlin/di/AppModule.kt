@@ -4,8 +4,8 @@ import data.authentication.datasource.CsvUserParser
 import logic.validation.DateParser
 import logic.validation.DateParserImpl
 import org.koin.dsl.module
-import data.project.datasource.CsvProjectDataSource
-import data.project.datasource.CsvProjectParser
+import data.project.datasource.csv_datasource.CsvProjectDataSource
+import data.project.datasource.csv_datasource.CsvProjectParser
 import data.project.datasource.ProjectDataSource
 import logic.utils.Md5Hashing
 import squad.abudhabi.data.utils.filehelper.CsvFileHelper

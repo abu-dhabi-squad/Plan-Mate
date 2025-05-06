@@ -1,6 +1,7 @@
 package presentation.project
 
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import logic.project.DeleteProjectUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -30,7 +31,7 @@ class DeleteProjectUITest{
     }
 
     @Test
-    fun `should print error message when project ID is blank`() {
+    fun `should print error message when project ID is blank`() = runTest{
         every { inputReader.readString() } returns ""
 
         deleteProjectUI.launchUi()
@@ -41,7 +42,7 @@ class DeleteProjectUITest{
     }
 
     @Test
-    fun `should delete project and print success message when project ID is valid`() {
+    fun `should delete project and print success message when project ID is valid`() = runTest{
         val projectId = "PRJ-123"
         every { inputReader.readString() } returns projectId
         every { deleteProjectUseCase(projectId) } just Runs
@@ -53,7 +54,7 @@ class DeleteProjectUITest{
     }
 
     @Test
-    fun `should print error message when use case throws exception`() {
+    fun `should print error message when use case throws exception`() = runTest{
         val projectId = "PRJ-456"
         every { inputReader.readString() } returns projectId
         every { deleteProjectUseCase(projectId) } throws RuntimeException("Deletion failed")
@@ -64,7 +65,7 @@ class DeleteProjectUITest{
     }
 
     @Test
-    fun `should print error message when project ID is blank with spaces`() {
+    fun `should print error message when project ID is blank with spaces`() = runTest{
         every { inputReader.readString() } returns "   "
 
         deleteProjectUI.launchUi()
@@ -75,7 +76,7 @@ class DeleteProjectUITest{
     }
 
     @Test
-    fun `should print error message when project ID is null`() {
+    fun `should print error message when project ID is null`() = runTest{
         every { inputReader.readString() } returns null
 
         deleteProjectUI.launchUi()
@@ -86,7 +87,7 @@ class DeleteProjectUITest{
     }
 
     @Test
-    fun `should throw exception when create audit throw exception`(){
+    fun `should throw exception when create audit throw exception`() = runTest{
 
         every { inputReader.readString() } returns "projectId"
         every { deleteProjectUseCase(any()) } just Runs
