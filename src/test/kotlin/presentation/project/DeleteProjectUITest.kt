@@ -8,8 +8,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
-import squad.abudhabi.presentation.project.DeleteProjectUI
+import logic.user.GetLoggedUserUseCase
 
 
 class DeleteProjectUITest{

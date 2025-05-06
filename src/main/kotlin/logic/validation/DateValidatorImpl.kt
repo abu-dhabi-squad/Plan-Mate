@@ -1,7 +1,7 @@
 package logic.validation
 
-import squad.abudhabi.logic.exceptions.InvalidDateFormatException
-import squad.abudhabi.logic.exceptions.InvalidYearException
+import logic.exceptions.InvalidDateFormatException
+import logic.exceptions.InvalidYearException
 import java.time.LocalDate
 
 class DateValidatorImpl(

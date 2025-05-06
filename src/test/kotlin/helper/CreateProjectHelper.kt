@@ -1,7 +1,7 @@
 package helper
 
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
+import logic.model.Project
+import logic.model.State
 import java.util.UUID
 
 fun createProject(

@@ -1,9 +1,9 @@
 package data.task.datasource.csv_datasource
 
-import squad.abudhabi.data.task.datasource.TaskDataSource
-import squad.abudhabi.data.task.parser.TaskParser
-import squad.abudhabi.data.utils.filehelper.FileHelper
-import squad.abudhabi.logic.model.Task
+import data.task.datasource.TaskDataSource
+import data.task.parser.TaskParser
+import data.utils.filehelper.FileHelper
+import logic.model.Task
 
 class CsvTaskDataSource(
     private val csvFileHelper: FileHelper,

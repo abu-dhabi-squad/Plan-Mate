@@ -3,8 +3,8 @@ package logic.project
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.model.Project
+import logic.repository.ProjectRepository
 
 class CreateProjectUseCaseTest{
     private lateinit var projectRepository: ProjectRepository

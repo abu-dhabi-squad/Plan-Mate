@@ -1,15 +1,15 @@
-package data.audit.AduitMapper
+package data.audit.auditmapper
 
-import data.audit.AduitMapper.AuditMapperFields.CREATED_BY_FIELD
-import data.audit.AduitMapper.AuditMapperFields.DATE_FIELD
-import data.audit.AduitMapper.AuditMapperFields.ENTITY_ID_FIELD
-import data.audit.AduitMapper.AuditMapperFields.ENTITY_TYPE_FIELD
-import data.audit.AduitMapper.AuditMapperFields.ID_FIELD
-import data.audit.AduitMapper.AuditMapperFields.NEW_STATE_FIELD
-import data.audit.AduitMapper.AuditMapperFields.OLD_STATE_FIELD
+import data.audit.auditmapper.AuditMapperFields.CREATED_BY_FIELD
+import data.audit.auditmapper.AuditMapperFields.DATE_FIELD
+import data.audit.auditmapper.AuditMapperFields.ENTITY_ID_FIELD
+import data.audit.auditmapper.AuditMapperFields.ENTITY_TYPE_FIELD
+import data.audit.auditmapper.AuditMapperFields.ID_FIELD
+import data.audit.auditmapper.AuditMapperFields.NEW_STATE_FIELD
+import data.audit.auditmapper.AuditMapperFields.OLD_STATE_FIELD
 import org.bson.Document
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.model.EntityType
+import logic.model.Audit
+import logic.model.EntityType
 import java.time.LocalDateTime
 import java.util.*
 

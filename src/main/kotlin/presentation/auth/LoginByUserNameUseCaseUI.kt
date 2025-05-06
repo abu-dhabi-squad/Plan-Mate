@@ -6,8 +6,8 @@ import presentation.admin.ConsoleAdminMenuView
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
 import presentation.user.ConsoleUserMenuView
-import squad.abudhabi.logic.model.UserType
-import squad.abudhabi.logic.user.SaveLoggedUserUseCase
+import logic.model.UserType
+import logic.user.SaveLoggedUserUseCase
 
 class LoginByUserNameUseCaseUI(
     private val loginUseCase: LoginByUserNameUseCase,

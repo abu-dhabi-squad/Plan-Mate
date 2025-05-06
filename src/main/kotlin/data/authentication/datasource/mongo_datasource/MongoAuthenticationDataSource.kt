@@ -1,16 +1,17 @@
-package data.authentication.datasource
+package data.authentication.datasource.mongo_datasource
 
 import com.mongodb.client.MongoCollection
-import data.authentication.UserMapper
+import data.authentication.datasource.AuthenticationDataSource
+import data.authentication.usermapper.UserMapper
 import org.bson.Document
-import squad.abudhabi.logic.model.User
+import logic.model.User
 
 class MongoAuthenticationDataSource(
     private val collection: MongoCollection<Document>,
     private val mapper: UserMapper
 ): AuthenticationDataSource {
     override suspend fun getUserByUserName(userName: String): User? {
-        return collection.find(Document(UserMapper.USERNAME_FIELD, userName)).first()
+        return collection.find(Document(UserMapper.Companion.USERNAME_FIELD, userName)).first()
             ?.let { mapper.documentToUser(it) }
     }
 

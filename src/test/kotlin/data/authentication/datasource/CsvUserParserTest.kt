@@ -3,8 +3,8 @@ import data.TestData.user1
 import data.TestData.userString1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import data.authentication.datasource.CsvUserParser
-import squad.abudhabi.logic.exceptions.CanNotParseUserException
+import data.authentication.datasource.csv_datasource.CsvUserParser
+import logic.exceptions.CanNotParseUserException
 import kotlin.test.assertFailsWith
 
 class CsvUserParserTest {

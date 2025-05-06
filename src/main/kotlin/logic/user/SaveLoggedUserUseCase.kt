@@ -1,7 +1,7 @@
-package squad.abudhabi.logic.user
+package logic.user
 
-import squad.abudhabi.logic.exceptions.EmptyUsernameException
-import squad.abudhabi.logic.model.User
+import logic.exceptions.EmptyUsernameException
+import logic.model.User
 import logic.repository.AuthenticationRepository
 
 class SaveLoggedUserUseCase(

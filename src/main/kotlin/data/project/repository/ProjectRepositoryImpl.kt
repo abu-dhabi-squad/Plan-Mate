@@ -1,8 +1,8 @@
 package data.project.repository
 
 import data.project.datasource.ProjectDataSource
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.model.Project
+import logic.repository.ProjectRepository
 
 class ProjectRepositoryImpl(
     private val projectDataSource: ProjectDataSource

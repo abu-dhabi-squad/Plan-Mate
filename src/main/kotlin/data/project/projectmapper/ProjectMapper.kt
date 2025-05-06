@@ -1,9 +1,8 @@
-package data.project.mapper
+package data.project.projectmapper
 
-import data.task.mapper.TaskMapper.Companion.STATE_ID_FIELD
 import org.bson.Document
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
+import logic.model.Project
+import logic.model.State
 import java.util.UUID
 
 class ProjectMapper {

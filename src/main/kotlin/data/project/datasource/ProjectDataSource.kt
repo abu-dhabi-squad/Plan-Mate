@@ -1,6 +1,6 @@
 package data.project.datasource
 
-import squad.abudhabi.logic.model.Project
+import logic.model.Project
 
 interface ProjectDataSource {
    suspend fun getAllProjects(): List<Project>

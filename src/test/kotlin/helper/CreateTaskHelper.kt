@@ -1,6 +1,6 @@
 package helper
 
-import squad.abudhabi.logic.model.Task
+import logic.model.Task
 import java.time.LocalDate
 
 fun createTask(id : String = "",

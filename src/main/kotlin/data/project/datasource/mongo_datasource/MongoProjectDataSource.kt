@@ -1,10 +1,10 @@
 package data.project.datasource.mongo_datasource
 
 import com.mongodb.client.MongoCollection
-import data.project.mapper.ProjectMapper
+import data.project.projectmapper.ProjectMapper
 import data.project.datasource.ProjectDataSource
 import org.bson.Document
-import squad.abudhabi.logic.model.Project
+import logic.model.Project
 
 class MongoProjectDataSource(private val collection: MongoCollection<Document>, private val mapper: ProjectMapper) :
     ProjectDataSource {

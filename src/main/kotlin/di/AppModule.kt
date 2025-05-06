@@ -1,6 +1,6 @@
 package di
 
-import data.authentication.datasource.CsvUserParser
+import data.authentication.datasource.csv_datasource.CsvUserParser
 import data.database.MongoDataBaseProvider
 import logic.validation.DateParser
 import logic.validation.DateParserImpl
@@ -9,8 +9,8 @@ import data.project.datasource.csv_datasource.CsvProjectDataSource
 import data.project.datasource.csv_datasource.CsvProjectParser
 import data.project.datasource.ProjectDataSource
 import logic.utils.Md5Hashing
-import squad.abudhabi.data.utils.filehelper.CsvFileHelper
-import squad.abudhabi.data.utils.filehelper.FileHelper
+import data.utils.filehelper.CsvFileHelper
+import data.utils.filehelper.FileHelper
 import logic.validation.DateValidator
 import logic.validation.DateValidatorImpl
 import logic.validation.PasswordValidator

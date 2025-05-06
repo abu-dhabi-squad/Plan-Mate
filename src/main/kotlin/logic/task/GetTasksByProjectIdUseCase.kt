@@ -1,8 +1,8 @@
 package logic.task
 
-import squad.abudhabi.logic.exceptions.NoTasksFoundException
-import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.repository.TaskRepository
+import logic.exceptions.NoTasksFoundException
+import logic.model.Task
+import logic.repository.TaskRepository
 
 class GetTasksByProjectIdUseCase(private val taskRepository: TaskRepository) {
 

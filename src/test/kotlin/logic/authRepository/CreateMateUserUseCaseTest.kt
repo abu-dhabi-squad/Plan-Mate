@@ -6,10 +6,10 @@ import logic.validation.PasswordValidator
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.EmptyUsernameException
-import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import logic.exceptions.EmptyUsernameException
+import logic.exceptions.UserAlreadyExistsException
+import logic.model.User
+import logic.model.UserType
 import logic.repository.AuthenticationRepository
 class CreateMateUserUseCaseTest {
     private lateinit var authRepository: AuthenticationRepository

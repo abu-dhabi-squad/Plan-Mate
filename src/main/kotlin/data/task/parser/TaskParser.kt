@@ -1,6 +1,6 @@
-package squad.abudhabi.data.task.parser
+package data.task.parser
 
-import squad.abudhabi.logic.model.Task
+import logic.model.Task
 
 interface TaskParser {
     fun getCsvLineFromTask(task: Task): String

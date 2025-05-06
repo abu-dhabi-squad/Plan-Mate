@@ -9,13 +9,13 @@ import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import data.authentication.datasource.LoggedUserDataSource
+import data.authentication.datasource.localdatasource.LoggedUserDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.test.runTest
-import squad.abudhabi.logic.exceptions.InvalidCredentialsException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import logic.exceptions.InvalidCredentialsException
+import logic.model.User
+import logic.model.UserType
 class AuthenticationRepositoryImplTest {
     private lateinit var authenticationDataSource: AuthenticationDataSource
     private lateinit var authenticationRepository: AuthenticationRepositoryImpl

@@ -1,6 +1,6 @@
 package presentation.project
 
-import squad.abudhabi.logic.model.State
+import logic.model.State
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher

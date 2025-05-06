@@ -1,9 +1,13 @@
 package logic.validation
 
+import logic.exceptions.NoLowerCaseInPasswordException
+import logic.exceptions.NoNumberInPasswordException
+import logic.exceptions.NoSpecialCharsInPasswordException
+import logic.exceptions.NoUpperCaseInPasswordException
+import logic.exceptions.ShortPasswordException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.*
 
 class StandardPasswordValidatorTest {
 

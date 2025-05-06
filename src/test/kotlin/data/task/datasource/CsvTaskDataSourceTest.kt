@@ -11,8 +11,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
-import squad.abudhabi.data.task.parser.CsvTaskParser
-import squad.abudhabi.data.utils.filehelper.CsvFileHelper
+import data.task.parser.CsvTaskParser
+import data.utils.filehelper.CsvFileHelper
 
 class CsvTaskDataSourceTest {
     private lateinit var csvFileHelper: CsvFileHelper

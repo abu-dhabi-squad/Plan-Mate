@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.model
+package logic.model
 
 import java.time.LocalDate
 import java.util.UUID

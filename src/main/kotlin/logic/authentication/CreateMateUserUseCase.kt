@@ -1,7 +1,7 @@
 package logic.authentication
-import squad.abudhabi.logic.exceptions.EmptyUsernameException
-import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
-import squad.abudhabi.logic.model.User
+import logic.exceptions.EmptyUsernameException
+import logic.exceptions.UserAlreadyExistsException
+import logic.model.User
 import logic.utils.HashingService
 import logic.validation.PasswordValidator
 import logic.repository.AuthenticationRepository

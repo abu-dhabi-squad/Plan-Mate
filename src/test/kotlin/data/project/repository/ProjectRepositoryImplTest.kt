@@ -7,8 +7,8 @@ import org.junit.jupiter.api.assertThrows
 import data.project.datasource.ProjectDataSource
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
+import logic.model.Project
+import logic.model.State
 import java.util.*
 
 class ProjectRepositoryImplTest {
