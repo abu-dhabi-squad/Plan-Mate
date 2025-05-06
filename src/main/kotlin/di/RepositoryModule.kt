@@ -1,7 +1,7 @@
 package di
 
 import data.audit.datasource.AuditDataSource
-import data.audit.datasource.CsvAuditDataSource
+import data.audit.datasource.csvdatasource.CsvAuditDataSource
 import data.audit.repository.AuditRepositoryImpl
 import data.authentication.datasource.AuthenticationDataSource
 import data.authentication.datasource.CsvAuthenticationDataSource
@@ -14,10 +14,10 @@ import data.project.datasource.csv_datasource.CsvProjectDataSource
 import data.project.datasource.csv_datasource.CsvProjectParser
 import data.project.datasource.ProjectDataSource
 import data.project.repository.ProjectRepositoryImpl
-import data.task.datasource.csv_datasource.CsvTaskDataSource
 import data.task.repository.TaskRepositoryImpl
 import squad.abudhabi.data.authentication.datasource.InMemoryLoggedUserDataSource
 import data.authentication.datasource.LoggedUserDataSource
+import data.task.datasource.csv_datasource.CsvTaskDataSource
 import squad.abudhabi.data.task.datasource.TaskDataSource
 import squad.abudhabi.data.task.parser.CsvTaskParser
 import squad.abudhabi.data.task.parser.TaskParser

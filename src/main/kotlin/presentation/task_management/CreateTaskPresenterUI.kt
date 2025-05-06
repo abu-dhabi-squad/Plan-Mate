@@ -54,7 +54,7 @@ class CreateTaskPresenterUI(
 
         val task = Task(
             userName = getLoggedUserUseCase().username,
-            projectId = selectedProject.id,
+            projectId = selectedProject.id.toString(),
             stateId = selectedState.id,
             title = title,
             description = description,
@@ -66,7 +66,7 @@ class CreateTaskPresenterUI(
             createTaskUseCase(task)
             createAuditUseCase(
                 Audit(
-                    entityId = task.id,
+                    entityId = task.id.toString(),
                     entityType = EntityType.TASK,
                     oldState = "",
                     newState = "Created",

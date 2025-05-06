@@ -44,7 +44,7 @@ class EditTaskPresenterUI(
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
-            getTasksByProjectIdUseCase(selectedProject.id)
+            getTasksByProjectIdUseCase(selectedProject.id.toString())
         } catch (e: Exception) {
             printer.displayLn("Failed to load tasks: ${e.message}")
             return
@@ -89,7 +89,7 @@ class EditTaskPresenterUI(
 
             createAuditUseCase(
                 Audit(
-                    entityId = updatedTask.id,
+                    entityId = updatedTask.id.toString(),
                     entityType = EntityType.TASK,
                     oldState = oldState.id,
                     newState = newState.id,

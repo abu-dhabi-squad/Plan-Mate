@@ -55,10 +55,10 @@ class GetAuditForTaskUI(
         showTaskAudit(selectedProject)
     }
 
-    private fun showTaskAudit(project: Project) {
+    private suspend fun showTaskAudit(project: Project) {
 
         val tasks = try {
-            getTasksByProjectIdUseCase(project.id)
+            getTasksByProjectIdUseCase(project.id.toString())
         } catch (e: Exception) {
             printer.displayLn("Failed to fetch tasks: ${e.message}")
             return
@@ -90,10 +90,10 @@ class GetAuditForTaskUI(
             return
         }
 
-        showAuditLogs(selectedTask.id)
+        showAuditLogs(selectedTask.id.toString())
     }
 
-    private fun showAuditLogs(entityId: String) {
+    private suspend fun showAuditLogs(entityId: String) {
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
             if (audits.isEmpty()) {

@@ -51,10 +51,10 @@ class GetAuditForProjectUI(
             return
         }
 
-        showAuditLogs(selected.id)
+        showAuditLogs(selected.id.toString())
     }
 
-    private fun showAuditLogs(entityId: String) {
+    private suspend fun showAuditLogs(entityId: String) {
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
             if (audits.isEmpty()) {

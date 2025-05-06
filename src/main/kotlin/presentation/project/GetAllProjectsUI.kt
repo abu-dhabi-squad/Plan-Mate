@@ -13,7 +13,7 @@ class GetAllProjectsUI(
         getAllProjects()
     }
 
-    private fun getAllProjects() {
+    private suspend fun getAllProjects() {
         try {
             getAllProjectsUseCase().forEachIndexed { index, project ->
                 printer.displayLn("${index + 1}) ${project.projectName}")

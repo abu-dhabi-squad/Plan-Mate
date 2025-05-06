@@ -21,7 +21,7 @@ class GetProjectByIdUI(
         getProjectById(id)
     }
 
-    private fun getProjectById(projectId: String) {
+    private suspend fun getProjectById(projectId: String) {
         try {
             val project = getProjectByIdUseCase(projectId)
             printer.displayLn("Project found: ${project.projectName}")

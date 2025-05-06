@@ -53,7 +53,7 @@ class CreateProjectUI(
                 Audit(
                     createdBy = getLoggedUserUseCase().username,
                     entityType = EntityType.PROJECT,
-                    entityId = newProject.id,
+                    entityId = newProject.id.toString(),
                     oldState = "",
                     newState = "Created"
                 )
