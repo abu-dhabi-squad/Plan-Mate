@@ -2,6 +2,7 @@ package presentation.audit
 
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.audit.GetAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -39,7 +40,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should show audit logs for valid project`() {
+    fun `should show audit logs for valid project`() = runTest{
 
         val project = Project("p1", "Project A", states = listOf())
         val audits = listOf(
@@ -58,7 +59,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should show error if no projects exist`() {
+    fun `should show error if no projects exist`() = runTest{
         every { getAllProjectsUseCase() } returns emptyList()
 
         ui.launchUi()
@@ -68,7 +69,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle null input selection`() {
+    fun `should handle null input selection`() = runTest{
         val project = Project("p1", "Project A", states = listOf())
 
         every { getAllProjectsUseCase() } returns listOf(project)
@@ -81,7 +82,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle invalid project index`() {
+    fun `should handle invalid project index`() = runTest{
 
         val project = Project("p1", "Project A", states = listOf())
 
@@ -95,7 +96,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should show message when no audit logs found`() {
+    fun `should show message when no audit logs found`() = runTest{
 
         val project = Project("p1", "Project A", states = listOf())
 
@@ -110,7 +111,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle WrongInputException gracefully`() {
+    fun `should handle WrongInputException gracefully`() = runTest{
 
         val project = Project("p1", "Project A", states = listOf())
 
@@ -125,7 +126,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle EmptyList exception gracefully`() {
+    fun `should handle EmptyList exception gracefully`() = runTest{
 
         val project = Project("p1", "Project A", states = listOf())
 
@@ -140,7 +141,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle unexpected exception`() {
+    fun `should handle unexpected exception`() = runTest{
 
         val project = Project("p1", "Project A", states = listOf())
 

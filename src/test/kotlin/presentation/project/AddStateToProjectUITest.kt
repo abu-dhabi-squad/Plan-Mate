@@ -1,6 +1,7 @@
 package presentation.project
 
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.exceptions.DuplicateStateException
@@ -25,7 +26,7 @@ class AddStateToProjectUITest{
     }
 
     @Test
-    fun `should print error when project ID is blank`() {
+    fun `should print error when project ID is blank`() = runTest{
         every { inputReader.readString() } returns ""
 
         addStateToProjectUI.launchUi()
@@ -36,7 +37,7 @@ class AddStateToProjectUITest{
     }
 
     @Test
-    fun `should print error when state name is blank`() {
+    fun `should print error when state name is blank`() = runTest{
         every { inputReader.readString() } returns "project123" andThen ""
 
         addStateToProjectUI.launchUi()
@@ -49,7 +50,7 @@ class AddStateToProjectUITest{
 
 
     @Test
-    fun `should call use case and print success when inputs are valid`() {
+    fun `should call use case and print success when inputs are valid`() = runTest{
         every { inputReader.readString() } returns "project123" andThen "In Progress"
 
         val state = State(name = "In Progress")
@@ -62,7 +63,7 @@ class AddStateToProjectUITest{
     }
 
     @Test
-    fun `should print error when project not found exception is thrown`() {
+    fun `should print error when project not found exception is thrown`() = runTest{
         every { inputReader.readString() } returns "project123" andThen "In Progress"
         every { addStateToProjectUseCase(any(), any()) } throws ProjectNotFoundException()
 
@@ -72,7 +73,7 @@ class AddStateToProjectUITest{
     }
 
     @Test
-    fun `should print error when duplicate state exception is thrown`() {
+    fun `should print error when duplicate state exception is thrown`() = runTest{
         every { inputReader.readString() } returns "project123" andThen "In Progress"
         every { addStateToProjectUseCase(any(), any()) } throws DuplicateStateException("In Progress")
 
@@ -83,7 +84,7 @@ class AddStateToProjectUITest{
     }
 
     @Test
-    fun `should print error when unexpected exception is thrown`() {
+    fun `should print error when unexpected exception is thrown`() = runTest{
         every { inputReader.readString() } returns "project123" andThen "In Progress"
         every { addStateToProjectUseCase(any(), any()) } throws RuntimeException("Unexpected error")
 
@@ -93,7 +94,7 @@ class AddStateToProjectUITest{
     }
 
     @Test
-    fun `should print error when projectId is null`() {
+    fun `should print error when projectId is null`() = runTest{
         every { inputReader.readString() } returns null andThen "In Progress"  // projectId is null
 
         addStateToProjectUI.launchUi()
@@ -104,7 +105,7 @@ class AddStateToProjectUITest{
     }
 
     @Test
-    fun `should print error when stateName is null`() {
+    fun `should print error when stateName is null`() = runTest{
         every { inputReader.readString() } returns "project123" andThen null  // stateName is null
 
         addStateToProjectUI.launchUi()

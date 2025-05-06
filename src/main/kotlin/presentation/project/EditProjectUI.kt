@@ -12,7 +12,7 @@ class EditProjectUI(
     private val reader: InputReader,
     private val printer: Printer
 ) : UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         try {
             getAllProjectsUseCase().takeIf { it.isNotEmpty() }
                 ?.forEach { project ->

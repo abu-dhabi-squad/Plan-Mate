@@ -2,5 +2,5 @@ package presentation
 
 
 interface UiLauncher {
-    fun launchUi()
+    suspend fun launchUi()
 }
