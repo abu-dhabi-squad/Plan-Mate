@@ -4,7 +4,7 @@ import java.time.LocalDate
 import java.util.UUID
 
 data class Task(
-    val id: String = UUID.randomUUID().toString(),
+    val id: UUID = UUID.randomUUID(),
     val userName: String,
     val projectId: String,
     val stateId: String,
