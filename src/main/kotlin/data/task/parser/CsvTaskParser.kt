@@ -2,6 +2,7 @@ package squad.abudhabi.data.task.parser
 
 import logic.validation.DateParser
 import squad.abudhabi.logic.model.Task
+import java.util.*
 
 class CsvTaskParser(
     private val dateParser: DateParser
@@ -15,7 +16,7 @@ class CsvTaskParser(
         return taskLine.split(",")
             .let {
                 Task(
-                    id = it[TaskColumnIndex.ID],
+                    id = UUID.fromString(it[TaskColumnIndex.ID]),
                     userName = it[TaskColumnIndex.USERNAME],
                     projectId = it[TaskColumnIndex.PROJECT_ID],
                     stateId = it[TaskColumnIndex.STATE_ID],

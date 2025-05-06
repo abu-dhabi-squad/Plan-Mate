@@ -1,15 +1,15 @@
 package data.project.repository
 
 import com.google.common.truth.Truth
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.project.datasource.ProjectDataSource
+import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
+import java.util.*
 
 class ProjectRepositoryImplTest {
 
@@ -22,9 +22,9 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `getProjects should throw Exception when projectDataSource readProjects throw Exception`() {
+    fun `getProjects should throw Exception when projectDataSource readProjects throw Exception`()= runTest {
         //given
-        every { projectDataSource.getAllProjects() } throws Exception()
+        coEvery { projectDataSource.getAllProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
             projectRepositoryImpl.getAllProjects()
@@ -32,27 +32,27 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `getProjects should return empty when projectDataSource readProjects return empty list`() {
+    fun `getProjects should return empty when projectDataSource readProjects return empty list`() = runTest {
         //given
-        every { projectDataSource.getAllProjects() } returns listOf()
+        coEvery { projectDataSource.getAllProjects() } returns listOf()
         //when & then
         Truth.assertThat(projectRepositoryImpl.getAllProjects()).isEmpty()
     }
 
     @Test
-    fun `getProjects should return list of projects when projectDataSource readProjects return list of projects`() {
+    fun `getProjects should return list of projects when projectDataSource readProjects return list of projects`()= runTest {
         //given
-        val list = listOf(Project("id1", "name1", listOf()))
-        every { projectDataSource.getAllProjects() } returns list
+        val list = listOf(Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf()))
+        coEvery { projectDataSource.getAllProjects() } returns list
         //when & then
         Truth.assertThat(projectRepositoryImpl.getAllProjects()).isEqualTo(list)
     }
 
     @Test
-    fun `addProject should throw Exception when projectDataSource writeProject throw Exception`() {
+    fun `addProject should throw Exception when projectDataSource writeProject throw Exception`()= runTest {
         //given
-        val res = Project("1", "name1", listOf())
-        every { projectDataSource.createProject(any()) } throws Exception()
+        val res = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf())
+        coEvery { projectDataSource.createProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
             projectRepositoryImpl.addProject(res)
@@ -60,20 +60,20 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `addProject should be successful when no error occur (best case scenario)`(){
+    fun `addProject should be successful when no error occur (best case scenario)`()= runTest{
         //given
-        val res = Project("1", "name1", listOf())
+        val res = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf())
         //when
         projectRepositoryImpl.addProject(res)
         //then
-        verify(exactly = 1) { projectDataSource.createProject(res) }
+        coVerify(exactly = 1) { projectDataSource.createProject(res) }
     }
 
     @Test
-    fun `editProject should throw Exception when projectDataSource editProject throw Exception`() {
+    fun `editProject should throw Exception when projectDataSource editProject throw Exception`()= runTest {
         //given
-        val res = Project("1", "name1", listOf())
-        every { projectDataSource.editProject(any()) } throws Exception()
+        val res = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf())
+        coEvery { projectDataSource.editProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
             projectRepositoryImpl.editProject(res)
@@ -81,20 +81,20 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `editProject should be successful when no error occur (best case scenario)`() {
+    fun `editProject should be successful when no error occur (best case scenario)`() = runTest{
         //given
-        val res = Project("1", "name1", listOf())
+        val res = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf())
         //when
         projectRepositoryImpl.editProject(res)
         //then
-        verify(exactly = 1) { projectDataSource.editProject(res) }
+        coVerify(exactly = 1) { projectDataSource.editProject(res) }
     }
 
     @Test
-    fun `deleteProject should throw Exception when projectDataSource deleteProject throw Exception`() {
+    fun `deleteProject should throw Exception when projectDataSource deleteProject throw Exception`() = runTest{
         //given
         val res = "1"
-        every { projectDataSource.deleteProject(any()) } throws Exception()
+        coEvery { projectDataSource.deleteProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
             projectRepositoryImpl.deleteProject(res)
@@ -102,19 +102,19 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `deleteProject should be successful when no error occur (best case scenario)`() {
+    fun `deleteProject should be successful when no error occur (best case scenario)`() = runTest{
         //given
         val res = "1"
         //when
         projectRepositoryImpl.deleteProject(res)
         //when & then
-        verify(exactly = 1) { projectDataSource.deleteProject(res) }
+        coVerify(exactly = 1) { projectDataSource.deleteProject(res) }
     }
 
     @Test
-    fun `getProjectById should throw Exception when projectDataSource getProject throw Exception`() {
+    fun `getProjectById should throw Exception when projectDataSource getProject throw Exception`()= runTest {
         //given
-        every { projectDataSource.getProjectById(any()) } throws Exception()
+        coEvery { projectDataSource.getProjectById(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
             projectRepositoryImpl.getProjectById("1")
@@ -122,18 +122,18 @@ class ProjectRepositoryImplTest {
     }
 
     @Test
-    fun `getProjectById should return null when projectDataSource getProject return null`() {
+    fun `getProjectById should return null when projectDataSource getProject return null`() = runTest{
         //given
-        every { projectDataSource.getProjectById(any()) } returns null
+        coEvery { projectDataSource.getProjectById(any()) } returns null
         //when & then
         Truth.assertThat(projectRepositoryImpl.getProjectById("1")).isNull()
     }
 
     @Test
-    fun `getProjectById should return project when projectDataSource getProject return project`() {
+    fun `getProjectById should return project when projectDataSource getProject return project`() = runTest{
         //given
-        val res = Project("1", "name1", listOf(State("1", "name1")))
-        every { projectDataSource.getProjectById(any()) } returns res
+        val res = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("1", "name1")))
+        coEvery { projectDataSource.getProjectById(any()) } returns res
         //when & then
         Truth.assertThat(projectRepositoryImpl.getProjectById("1")).isEqualTo(res)
     }

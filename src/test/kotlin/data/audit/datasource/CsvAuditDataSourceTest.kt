@@ -2,6 +2,7 @@ package data.audit.datasource
 
 import com.google.common.truth.Truth
 import createAudit
+import data.audit.datasource.csvdatasource.CsvAuditDataSource
 import data.parser.CsvAuditParser
 import io.mockk.every
 import io.mockk.mockk
@@ -26,7 +27,7 @@ class CsvAuditDataSourceTest {
     }
 
     @Test
-    fun `addAudit should call appendFile once when new audit is added successfully`(){
+    suspend fun `addAudit should call appendFile once when new audit is added successfully`(){
 
         // given
         val audit = createAudit()
@@ -39,7 +40,7 @@ class CsvAuditDataSourceTest {
     }
 
     @Test
-    fun `addAudit should rethrow exception when file throw exception`(){
+    suspend fun `addAudit should rethrow exception when file throw exception`(){
 
         // given
         val audit = createAudit()
@@ -51,7 +52,7 @@ class CsvAuditDataSourceTest {
 
 
     @Test
-    fun `getAuditByEntityId should return list of audits that match entity id`(){
+    suspend fun `getAuditByEntityId should return list of audits that match entity id`(){
 
         // given
         val audits = listOf(
@@ -72,7 +73,7 @@ class CsvAuditDataSourceTest {
 
 
     @Test
-    fun `getAuditByEntityId should return empty list when file is empty`() {
+    suspend fun `getAuditByEntityId should return empty list when file is empty`() {
 
         // given
         every { csvFileHelper.readFile(any()) } returns emptyList()
@@ -82,7 +83,7 @@ class CsvAuditDataSourceTest {
     }
 
     @Test
-    fun `getAuditByEntityId should rethrow exception when file throws Exception`() {
+    suspend fun `getAuditByEntityId should rethrow exception when file throws Exception`() {
 
         // given
         every { csvFileHelper.readFile(any()) } throws Exception()

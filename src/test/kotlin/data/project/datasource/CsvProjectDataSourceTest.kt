@@ -1,15 +1,20 @@
 package data.project.datasource
 
 import com.google.common.truth.Truth
+import data.project.datasource.csv_datasource.CsvProjectDataSource
+import data.project.datasource.csv_datasource.CsvProjectParser
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
+import java.util.*
 
 class CsvProjectDataSourceTest {
     private lateinit var fileHelper: FileHelper
@@ -24,7 +29,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getAllProjects should throw Exception when read file throw Exception`() {
+    fun `getAllProjects should throw Exception when read file throw Exception`() = runTest {
         //given
         every { fileHelper.readFile(any()) } throws Exception()
         //when & then
@@ -34,7 +39,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getAllProjects should returns empty list when read file returns empty list`() {
+    fun `getAllProjects should returns empty list when read file returns empty list`()= runTest{
         //given
         every { fileHelper.readFile(any()) } returns listOf()
         //when
@@ -44,7 +49,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getAllProjects should throw Exception when parser throw Exception`() {
+    fun `getAllProjects should throw Exception when parser throw Exception`()= runTest {
         //given
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } throws Exception()
@@ -55,16 +60,16 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getAllProjects should return list of projects when read file returns list`() {
+    fun `getAllProjects should return list of projects when read file returns list`() = runTest{
         //given
         val resState = listOf(
             State("1", "state1"),
             State("2", "state2"),
             State("3", "state3")
         )
-        val res = listOf(Project("1", "name1", resState))
+        val res = listOf(Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", resState))
         every { fileHelper.readFile(any()) } returns listOf("1,name1,1-state1|2-state2|3-state3")
-        every { csvProjectParser.parseStringToProject(any()) } returns Project("1", "name1", resState)
+        every { csvProjectParser.parseStringToProject(any()) } returns Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", resState)
         // when
         val result = csvProjectDataSource.getAllProjects()
         // then
@@ -72,9 +77,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `createProject should be success when there is no error occur`() {
+    fun `createProject should be success when there is no error occur`() = runTest{
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         every { csvProjectParser.parseProjectToString(any()) } returns "id1,name1,id1-name1"
         //when
         csvProjectDataSource.createProject(project)
@@ -83,9 +88,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `createProject should throw Exception when parser throw Exception`() {
+    fun `createProject should throw Exception when parser throw Exception`() = runTest{
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         every { csvProjectParser.parseProjectToString(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -94,9 +99,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `createProject should throw Exception when append file throw Exception`() {
+    fun `createProject should throw Exception when append file throw Exception`()= runTest {
         //given
-        val project = Project("id1", "name1", listOf())
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf())
         every { fileHelper.appendFile(any(), any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -105,10 +110,10 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `editProject should throw Exception when readProjects throw Exception`() {
+    fun `editProject should throw Exception when readProjects throw Exception`()= runTest {
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        every { csvProjectDataSource.getAllProjects() } throws Exception()
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
+        coEvery { csvProjectDataSource.getAllProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
             csvProjectDataSource.editProject(project)
@@ -116,9 +121,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `editProject should throw Exception when readFile throw Exception`() {
+    fun `editProject should throw Exception when readFile throw Exception`()= runTest {
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         every { fileHelper.readFile(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -127,9 +132,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `editProject should throw Exception when parser throw Exception`() {
+    fun `editProject should throw Exception when parser throw Exception`()= runTest {
         //given
-        val project = Project("id1", "name2", listOf(State("id1", "name1")))
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name2", listOf(State("id1", "name1")))
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } throws Exception()
         //when & then
@@ -139,9 +144,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `editProject should write nothing when read projects returns empty list`() {
+    fun `editProject should write nothing when read projects returns empty list`()= runTest {
         //given
-        val editProject = Project("id2", "name1", listOf(State("id1", "name1")))
+        val editProject = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         every { fileHelper.readFile(any()) } returns listOf()
         //when
         csvProjectDataSource.editProject(editProject)
@@ -150,10 +155,10 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `editProject should throw Exception when write file throw Exception`() {
+    fun `editProject should throw Exception when write file throw Exception`()= runTest {
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        every { csvProjectDataSource.getAllProjects() } returns listOf(project)
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
+        coEvery { csvProjectDataSource.getAllProjects() } returns listOf(project)
         every { fileHelper.writeFile(any(), any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -162,11 +167,11 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `editProject should edit when project in list`() {
+    fun `editProject should edit when project in list`()= runTest {
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        val project2 = Project("id2", "name1", listOf(State("id1", "name1")))
-        val editProject = Project("id2", "name2", listOf())
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
+        val project2 = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
+        val editProject = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name2", listOf())
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1", "id2,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project andThen project2
         every { csvProjectParser.parseProjectToString(any()) } returns "id1,name1,id1-name1" andThen "id2,name2,"
@@ -177,10 +182,10 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `deleteProject should throw Exception when readProjects throw Exception`() {
+    fun `deleteProject should throw Exception when readProjects throw Exception`() = runTest{
         //given
         val projectId = "id1"
-        every { csvProjectDataSource.getAllProjects() } throws Exception()
+        coEvery { csvProjectDataSource.getAllProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
             csvProjectDataSource.deleteProject(projectId)
@@ -188,7 +193,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `deleteProject should throw Exception when readFile throw Exception`() {
+    fun `deleteProject should throw Exception when readFile throw Exception`()= runTest {
         //given
         val projectId = "id1"
         every { fileHelper.readFile(any()) } throws Exception()
@@ -199,7 +204,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `deleteProject should throw Exception when parser throw Exception`() {
+    fun `deleteProject should throw Exception when parser throw Exception`()= runTest {
         //given
         val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
@@ -211,7 +216,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `deleteProject should write nothing when read projects returns empty list`() {
+    fun `deleteProject should write nothing when read projects returns empty list`()= runTest {
         //given
         val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf()
@@ -222,9 +227,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `deleteProject should throw Exception when write file throw Exception`() {
+    fun `deleteProject should throw Exception when write file throw Exception`() = runTest{
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
@@ -236,10 +241,10 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `deleteProject should delete when id in list`() {
+    fun `deleteProject should delete when id in list`() = runTest{
         //given
-        val project1 = Project("id1", "name1", listOf(State("id1", "name1")))
-        val project2 = Project("id2", "name1", listOf(State("id1", "name1")))
+        val project1 = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
+        val project2 = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         val projectId = "id2"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1", "id2,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project1 andThen project2
@@ -251,9 +256,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `deleteProject should delete when delete the only project in list`() {
+    fun `deleteProject should delete when delete the only project in list`() = runTest{
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
@@ -265,9 +270,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getProjectById should throw Exception when readProjects throw Exception`() {
+    fun `getProjectById should throw Exception when readProjects throw Exception`()= runTest {
         //given
-        every { csvProjectDataSource.getAllProjects() } throws Exception()
+        coEvery { csvProjectDataSource.getAllProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
             csvProjectDataSource.getProjectById("id1")
@@ -275,7 +280,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getProjectById should return null when readProjects returns empty list`() {
+    fun `getProjectById should return null when readProjects returns empty list`() = runTest{
         //given
         every { fileHelper.readFile(any()) } returns listOf()
         //when & then
@@ -283,7 +288,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getProjectById should throw Exception when readFile throw Exception`() {
+    fun `getProjectById should throw Exception when readFile throw Exception`() = runTest{
         //given
         every { fileHelper.readFile(any()) } throws Exception()
         //when & then
@@ -293,7 +298,7 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getProjectById should throw Exception when parser throw Exception`() {
+    fun `getProjectById should throw Exception when parser throw Exception`() = runTest{
         //given
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } throws Exception()
@@ -304,9 +309,9 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getProjectById should return null when the id not in the data`() {
+    fun `getProjectById should return null when the id not in the data`()= runTest {
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
         //when & then
@@ -314,10 +319,10 @@ class CsvProjectDataSourceTest {
     }
 
     @Test
-    fun `getProjectById should return the prject when the id in the data`() {
+    fun `getProjectById should return the prject when the id in the data`()= runTest {
         //given
-        val project = Project("id1", "name1", listOf(State("id1", "name1")))
-        val project2 = Project("id2", "name1", listOf(State("id1", "name1")))
+        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
+        val project2 = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf(State("id1", "name1")))
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project andThen project2
         //when & then
