@@ -1,15 +1,16 @@
-package data.project.datasource
+package data.project.datasource.csv_datasource
 
 import squad.abudhabi.data.project.datasource.ProjectColumnIndex
 import squad.abudhabi.logic.exceptions.CanNotParseProjectException
 import squad.abudhabi.logic.exceptions.CanNotParseStateException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
+import java.util.UUID
 
 class CsvProjectParser {
 
     fun parseProjectToString(project: Project): String {
-        var res = project.id + "," + project.projectName + ","
+        var res = project.id.toString() + "," + project.projectName + ","
         if (project.states.isEmpty()) return res
         project.states.forEach {
             res += it.id + ";" + it.name + "|"
@@ -22,7 +23,7 @@ class CsvProjectParser {
             .takeIf(::isValidProject)
             ?.let { projectRegex ->
                 return Project(
-                    projectRegex[ProjectColumnIndex.ID],
+                    UUID.fromString(projectRegex[ProjectColumnIndex.ID]),
                     projectRegex[ProjectColumnIndex.NAME],
                     parseStringToListOfState(projectRegex[ProjectColumnIndex.STATES])
                 )
