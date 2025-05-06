@@ -1,8 +1,8 @@
 package data.audit.datasource.mongodatabase
 
 import com.mongodb.client.MongoCollection
-import data.audit.auditmapper.AuditMapper
-import data.audit.auditmapper.AuditMapperFields.ENTITY_ID_FIELD
+import data.audit.mapper.AuditMapper
+import data.audit.mapper.AuditMapperFields.ENTITY_ID_FIELD
 import data.audit.datasource.AuditDataSource
 import org.bson.Document
 import logic.model.Audit

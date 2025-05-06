@@ -2,7 +2,7 @@ package data.authentication.datasource.mongo_datasource
 
 import com.mongodb.client.MongoCollection
 import data.authentication.datasource.AuthenticationDataSource
-import data.authentication.usermapper.UserMapper
+import data.authentication.mapper.UserMapper
 import org.bson.Document
 import logic.model.User
 

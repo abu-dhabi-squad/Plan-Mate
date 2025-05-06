@@ -1,4 +1,4 @@
-package data.authentication.usermapper
+package data.authentication.mapper
 
 import org.bson.Document
 import logic.model.User

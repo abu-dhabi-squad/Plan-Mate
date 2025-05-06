@@ -1,7 +1,7 @@
 package data.task.datasource.mongo_datasource
 
 import com.mongodb.client.MongoCollection
-import data.task.taskmapper.TaskMapper
+import data.task.mapper.TaskMapper
 import org.bson.Document
 import data.task.datasource.TaskDataSource
 import logic.model.Task

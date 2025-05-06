@@ -1,4 +1,4 @@
-package data.project.projectmapper
+package data.project.mapper
 
 import org.bson.Document
 import logic.model.Project

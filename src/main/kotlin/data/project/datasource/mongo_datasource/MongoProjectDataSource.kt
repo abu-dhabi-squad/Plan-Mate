@@ -1,7 +1,7 @@
 package data.project.datasource.mongo_datasource
 
 import com.mongodb.client.MongoCollection
-import data.project.projectmapper.ProjectMapper
+import data.project.mapper.ProjectMapper
 import data.project.datasource.ProjectDataSource
 import org.bson.Document
 import logic.model.Project

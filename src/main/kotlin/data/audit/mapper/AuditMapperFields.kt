@@ -1,4 +1,4 @@
-package data.audit.auditmapper
+package data.audit.mapper
 
 object AuditMapperFields {
     const val ID_FIELD = "id"

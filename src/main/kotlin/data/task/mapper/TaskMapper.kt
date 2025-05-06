@@ -1,4 +1,4 @@
-package data.task.taskmapper
+package data.task.mapper
 
 import org.bson.Document
 import logic.model.Task

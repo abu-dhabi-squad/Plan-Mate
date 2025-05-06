@@ -1,12 +1,12 @@
-package data.audit.auditmapper
+package data.audit.mapper
 
-import data.audit.auditmapper.AuditMapperFields.CREATED_BY_FIELD
-import data.audit.auditmapper.AuditMapperFields.DATE_FIELD
-import data.audit.auditmapper.AuditMapperFields.ENTITY_ID_FIELD
-import data.audit.auditmapper.AuditMapperFields.ENTITY_TYPE_FIELD
-import data.audit.auditmapper.AuditMapperFields.ID_FIELD
-import data.audit.auditmapper.AuditMapperFields.NEW_STATE_FIELD
-import data.audit.auditmapper.AuditMapperFields.OLD_STATE_FIELD
+import data.audit.mapper.AuditMapperFields.CREATED_BY_FIELD
+import data.audit.mapper.AuditMapperFields.DATE_FIELD
+import data.audit.mapper.AuditMapperFields.ENTITY_ID_FIELD
+import data.audit.mapper.AuditMapperFields.ENTITY_TYPE_FIELD
+import data.audit.mapper.AuditMapperFields.ID_FIELD
+import data.audit.mapper.AuditMapperFields.NEW_STATE_FIELD
+import data.audit.mapper.AuditMapperFields.OLD_STATE_FIELD
 import org.bson.Document
 import logic.model.Audit
 import logic.model.EntityType

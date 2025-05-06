@@ -1,10 +1,10 @@
 package di
 
-import data.audit.auditmapper.AuditMapper
+import data.audit.mapper.AuditMapper
 import data.audit.datasource.AuditDataSource
 import data.audit.datasource.mongodatabase.MongoAuditDataSource
 import data.audit.repository.AuditRepositoryImpl
-import data.authentication.usermapper.UserMapper
+import data.authentication.mapper.UserMapper
 import data.authentication.datasource.AuthenticationDataSource
 import data.authentication.datasource.csv_datasource.CsvAuthenticationDataSource
 import data.authentication.datasource.csv_datasource.CsvUserParser
@@ -19,9 +19,9 @@ import data.task.repository.TaskRepositoryImpl
 import data.authentication.datasource.localdatasource.InMemoryLoggedUserDataSource
 import data.authentication.datasource.localdatasource.LoggedUserDataSource
 import data.project.datasource.mongo_datasource.MongoProjectDataSource
-import data.project.projectmapper.ProjectMapper
+import data.project.mapper.ProjectMapper
 import data.task.datasource.mongo_datasource.MongoTaskDataSource
-import data.task.taskmapper.TaskMapper
+import data.task.mapper.TaskMapper
 import data.task.datasource.TaskDataSource
 import data.task.parser.CsvTaskParser
 import data.task.parser.TaskParser
