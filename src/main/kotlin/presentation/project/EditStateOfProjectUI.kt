@@ -13,7 +13,7 @@ class EditStateOfProjectUI(
     private val reader: InputReader,
     private val printer: Printer
 ) : UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         try {
             val projects = getAllProjectsUseCase()
             if (projects.isEmpty()) {

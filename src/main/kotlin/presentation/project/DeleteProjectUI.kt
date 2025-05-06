@@ -17,7 +17,7 @@ class DeleteProjectUI(
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ): UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.display("Enter the project ID to delete: ")
         val projectId = inputReader.readString()
 

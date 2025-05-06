@@ -26,7 +26,7 @@ class CreateTaskPresenterUI(
 
 ) : UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         val title = promptNonEmptyString("Enter task title:")
         val description = promptNonEmptyString("Enter task description:")
         val startDate = promptDate("Enter task start date (YYYY-MM-DD):")

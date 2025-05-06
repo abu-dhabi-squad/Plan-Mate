@@ -1,6 +1,7 @@
 package presentation.project
 
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.model.State
@@ -26,7 +27,7 @@ class EditStateOfProjectUITest {
     }
 
     @Test
-    fun `should print exception message if getAllProjectsUseCase throws`() {
+    fun `should print exception message if getAllProjectsUseCase throws`() = runTest{
         val exception = Exception("Boom")
         every { getAllProjectsUseCase() } throws exception
 
@@ -36,7 +37,7 @@ class EditStateOfProjectUITest {
     }
 
     @Test
-    fun `should print message when no projects exist`() {
+    fun `should print message when no projects exist`() = runTest{
         every { getAllProjectsUseCase() } returns emptyList()
 
         ui.launchUi()
@@ -45,7 +46,7 @@ class EditStateOfProjectUITest {
     }
 
     @Test
-    fun `should display projects and ask for inputs`() {
+    fun `should display projects and ask for inputs`() = runTest{
         val projects = listOf(Project("id1", "name1", listOf(State("s1", "state1"))))
         every { getAllProjectsUseCase() } returns projects
         every { reader.readString() } returnsMany listOf("id1", "s1", "newName")
@@ -60,7 +61,7 @@ class EditStateOfProjectUITest {
     }
 
     @Test
-    fun `should prompt again when input is null or blank`() {
+    fun `should prompt again when input is null or blank`() = runTest{
         val projects = listOf(Project("id1", "name1", listOf()))
         every { getAllProjectsUseCase() } returns projects
 
@@ -78,7 +79,7 @@ class EditStateOfProjectUITest {
 
     @ParameterizedTest
     @CsvSource("null,An error occurred.","Update failed,Update failed" , nullValues =["null"] )
-    fun `should print error if editStateOfProjectUseCase throws`(errorMessage:String?,actualMessage:String) {
+    fun `should print error if editStateOfProjectUseCase throws`(errorMessage:String?,actualMessage:String) = runTest{
         val projects = listOf(Project("id1", "name1", listOf()))
         val exception = Exception(errorMessage)
         every { getAllProjectsUseCase() } returns projects

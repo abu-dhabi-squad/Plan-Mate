@@ -8,7 +8,7 @@ class GetAllProjectsUI(
     private val printer: Printer,
     private val getAllProjectsUseCase: GetAllProjectsUseCase
 ) : UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.displayLn("All Created Projects:")
         getAllProjects()
     }

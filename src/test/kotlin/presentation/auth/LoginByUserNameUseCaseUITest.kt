@@ -1,6 +1,7 @@
 package presentation.auth
 
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.authentication.LoginByUserNameUseCase
@@ -44,7 +45,7 @@ class LoginByUserNameUseCaseUITest {
 
 
     @Test
-    fun `should show error for empty username`() {
+    fun `should show error for empty username`() = runTest{
         // Given
         every { inputReader.readString() } returnsMany listOf("", "shahd", "12345678")
 
@@ -56,7 +57,7 @@ class LoginByUserNameUseCaseUITest {
     }
 
     @Test
-    fun `should show error for empty password`() {
+    fun `should show error for empty password`() = runTest{
         // Given
         every { inputReader.readString() } returnsMany listOf("someUser", "", "12345678")
 
@@ -68,43 +69,43 @@ class LoginByUserNameUseCaseUITest {
     }
 
     @Test
-    fun `should login successfully as ADMIN and launch admin menu`() {
+    fun `should login successfully as ADMIN and launch admin menu`() =runTest{
         // Given
         val user = User("2", "adminUser", "adminPass", UserType.ADMIN)
         every { inputReader.readString() } returnsMany listOf("adminUser", "adminPass")
-        every { loginUseCase.invoke("adminUser", "adminPass") } returns user
+        coEvery { loginUseCase.invoke("adminUser", "adminPass") } returns user
 
         // When
         loginUi.launchUi()
 
         // Then
         verify { printer.displayLn("Login successful! Welcome adminUser [ADMIN]") }
-        verify { consoleMenuViewAdmin.launchUi() }
-        verify(exactly = 0) { consoleMenuViewUser.launchUi() }
+        coVerify { consoleMenuViewAdmin.launchUi() }
+        coVerify(exactly = 0) { consoleMenuViewUser.launchUi() }
     }
 
     @Test
-    fun `should login successfully as MATE and launch user menu`() {
+    fun `should login successfully as MATE and launch user menu`() = runTest{
         // Given
         val user = User("3", "mateUser", "matePass", UserType.MATE)
         every { inputReader.readString() } returnsMany listOf("mateUser", "matePass")
-        every { loginUseCase.invoke("mateUser", "matePass") } returns user
+        coEvery { loginUseCase.invoke("mateUser", "matePass") } returns user
 
         // When
         loginUi.launchUi()
 
         // Then
         verify { printer.displayLn("Login successful! Welcome mateUser [MATE]") }
-        verify { consoleMenuViewUser.launchUi() }
-        verify(exactly = 0) { consoleMenuViewAdmin.launchUi() }
+        coVerify { consoleMenuViewUser.launchUi() }
+        coVerify(exactly = 0) { consoleMenuViewAdmin.launchUi() }
     }
 
     @Test
-    fun `should show error message when login fails with UserNotFoundException`() {
+    fun `should show error message when login fails with UserNotFoundException`() = runTest{
         // Given
         val username = "wrongUser"
         every { inputReader.readString() } returnsMany listOf(username, "wrongPass")
-        every { loginUseCase.invoke(username, "wrongPass") } throws UserNotFoundException(username)
+        coEvery { loginUseCase.invoke(username, "wrongPass") } throws UserNotFoundException(username)
 
         // When
         loginUi.launchUi()
@@ -114,7 +115,7 @@ class LoginByUserNameUseCaseUITest {
     }
 
     @Test
-    fun `should show error for null username`() {
+    fun `should show error for null username`() = runTest{
         // Given
         every { inputReader.readString() } returnsMany listOf(null, "shahd", "12345678")
 
@@ -126,7 +127,7 @@ class LoginByUserNameUseCaseUITest {
     }
 
     @Test
-    fun `should show error for null password`() {
+    fun `should show error for null password`() = runTest {
         // Given
         every { inputReader.readString() } returnsMany listOf("shahd", null, "12345678")
 
