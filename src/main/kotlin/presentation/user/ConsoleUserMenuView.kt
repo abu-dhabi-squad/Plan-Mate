@@ -12,7 +12,7 @@ class ConsoleUserMenuView(
     private val printer: Printer,
     private val inputReader: InputReader
 ) : UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         sortMenu()
         showWelcome()
         presentFeature()
@@ -22,7 +22,7 @@ class ConsoleUserMenuView(
         printer.displayLn("Welcome to PlanMate App ")
     }
 
-    private fun presentFeature() {
+    private suspend fun presentFeature() {
         showOptions()
         print("Enter your choice: ")
         val input = inputReader.readInt()

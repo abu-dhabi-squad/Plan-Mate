@@ -23,7 +23,7 @@ class DeleteTaskByIdPresenterUI(
     private val createAuditUseCase: CreateAuditUseCase
 ) : UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {

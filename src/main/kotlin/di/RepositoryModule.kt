@@ -17,14 +17,14 @@ import data.project.repository.ProjectRepositoryImpl
 import data.task.datasource.csv_datasource.CsvTaskDataSource
 import data.task.repository.TaskRepositoryImpl
 import squad.abudhabi.data.authentication.datasource.InMemoryLoggedUserDataSource
-import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
+import data.authentication.datasource.LoggedUserDataSource
 import squad.abudhabi.data.task.datasource.TaskDataSource
 import squad.abudhabi.data.task.parser.CsvTaskParser
 import squad.abudhabi.data.task.parser.TaskParser
 import squad.abudhabi.data.utils.filehelper.CsvFileHelper
 import squad.abudhabi.data.utils.filehelper.FileHelper
 import squad.abudhabi.logic.repository.AuditRepository
-import squad.abudhabi.logic.repository.AuthenticationRepository
+import logic.repository.AuthenticationRepository
 import squad.abudhabi.logic.repository.ProjectRepository
 import squad.abudhabi.logic.repository.TaskRepository
 

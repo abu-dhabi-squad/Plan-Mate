@@ -7,6 +7,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.verifySequence
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -37,7 +38,7 @@ class GetTasksByProjectIdPresenterUITest {
     }
 
     @Test
-    fun `should display error when loading projects fails`() {
+    fun `should display error when loading projects fails`() = runTest{
         // Given
         every { getAllProjectsUseCase() } throws RuntimeException("DB error")
         // When
@@ -47,7 +48,7 @@ class GetTasksByProjectIdPresenterUITest {
     }
 
     @Test
-    fun `should display message when no projects are available`() {
+    fun `should display message when no projects are available`() = runTest{
         // Given
         every { getAllProjectsUseCase() } returns emptyList()
         // When
@@ -57,7 +58,7 @@ class GetTasksByProjectIdPresenterUITest {
     }
 
     @Test
-    fun `should display error when loading tasks fails`() {
+    fun `should display error when loading tasks fails`() = runTest{
         // Given
         val project = createProject("p1", name = "Project A")
         every { getAllProjectsUseCase() } returns listOf(project)
@@ -70,7 +71,7 @@ class GetTasksByProjectIdPresenterUITest {
     }
 
     @Test
-    fun `should display message when no tasks found for selected project`() {
+    fun `should display message when no tasks found for selected project`() = runTest{
         // Given
         val project =
             createProject("p1", name = "Project A", states = listOf(createState(id = "s1")))
@@ -84,7 +85,7 @@ class GetTasksByProjectIdPresenterUITest {
     }
 
     @Test
-    fun `should show project list and task list successfully`() {
+    fun `should show project list and task list successfully`() = runTest{
         // Given
         val project = createProject("p1", name = "Project A", states = listOf(createState(id = "s1")))
         val task = createTask(
@@ -124,7 +125,7 @@ class GetTasksByProjectIdPresenterUITest {
     fun `should prompt again if invalid project number is entered`(
         firstAttemptEnterNumber: Int?,
         secondAttemptEnterIndex: Int
-    ) {
+    ) = runTest{
         // Given
         val project =
             createProject("p1", name = "Project A", states = listOf(createState(id = "s1")))

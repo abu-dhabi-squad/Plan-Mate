@@ -15,7 +15,7 @@ class CreateMateUserUseCaseUI(
     private val printer: Printer
 ): UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.displayLn("===== Create User =====")
 
         val username = promptNonEmptyString("Enter username: ")

@@ -3,6 +3,7 @@ package presentation.user
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UIFeature
@@ -35,7 +36,7 @@ class ConsoleUserMenuViewTest {
     }
 
     @Test
-    fun `launchUi should print expected feature labels and welcome message`() {
+    fun `launchUi should print expected feature labels and welcome message`() = runTest{
         try {
             view.launchUi()
         } catch (_: RuntimeException) {
@@ -51,7 +52,7 @@ class ConsoleUserMenuViewTest {
     }
 
     @Test
-    fun `launchUi should print Invalid input when input is not in range`() {
+    fun `launchUi should print Invalid input when input is not in range`() = runTest{
         // Simulate invalid input first, then break the loop
         every { reader.readInt() } returns 999 andThenThrows RuntimeException("stop loop")
 

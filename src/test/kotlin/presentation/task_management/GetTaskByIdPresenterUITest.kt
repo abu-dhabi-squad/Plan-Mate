@@ -3,6 +3,7 @@ package presentation.task_management
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -28,7 +29,7 @@ class GetTaskByIdPresenterUITest {
 
     @ParameterizedTest
     @CsvSource("''", "'  '", "null", nullValues = ["null"])
-    fun `should display error when task ID is blank`(taskID: String?) {
+    fun `should display error when task ID is blank`(taskID: String?) = runTest{
         // Given
         every { inputReader.readString() } returns taskID
         // When
@@ -38,7 +39,7 @@ class GetTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display task details when task is found`() {
+    fun `should display task details when task is found`() = runTest{
         // Given
         val task = Task(
             id = "t1",
@@ -67,7 +68,7 @@ class GetTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display error message when task is not found`() {
+    fun `should display error message when task is not found`() = runTest{
         // Given
         every { inputReader.readString() } returns "invalid-id"
         every { getTaskByIdUseCase("invalid-id") } throws NoSuchElementException("Task not found")

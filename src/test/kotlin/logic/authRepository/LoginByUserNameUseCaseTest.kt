@@ -1,11 +1,14 @@
 package logic.authRepository
 
 import com.google.common.truth.Truth.assertThat
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import logic.authentication.LoginByUserNameUseCase
 import logic.utils.HashingService
 import logic.validation.PasswordValidator
@@ -16,7 +19,7 @@ import squad.abudhabi.logic.exceptions.InvalidCredentialsException
 import squad.abudhabi.logic.exceptions.UserNotFoundException
 import squad.abudhabi.logic.model.User
 import squad.abudhabi.logic.model.UserType
-import squad.abudhabi.logic.repository.AuthenticationRepository
+import logic.repository.AuthenticationRepository
 import kotlin.test.Test
 
 class LoginByUserNameUseCaseTest {
@@ -35,67 +38,67 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `getUser should return user when credentials are valid`() {
+    fun `getUser should return user when credentials are valid`() = runTest {
         val username = "testUser"
         val password = "correctPassword"
         val hashedPassword = "hashedPassword"
         val expectedUser = User(username, hashedPassword, "role", UserType.MATE)
 
         every { hashingService.hash(password) } returns hashedPassword
-        every { authRepository.loginUser(username, hashedPassword) } returns expectedUser
+        coEvery { authRepository.loginUser(username, hashedPassword) } returns expectedUser
 
         val result = loginByUserNameUseCase(username, password)
 
         assertThat(result).isEqualTo(expectedUser)
-        verify {
+        coVerify {
             hashingService.hash(password)
             authRepository.loginUser(username, hashedPassword)
         }
     }
 
     @Test
-    fun `getUser should throw UserNotFoundException when user not found`() {
+    fun `getUser should throw UserNotFoundException when user not found`() = runTest {
         val username = "nonExistingUser"
         val password = "anyPassword"
         val hashedPassword = "hashedPassword"
 
         every { hashingService.hash(password) } returns hashedPassword
-        every { authRepository.loginUser(username, hashedPassword) } returns null
+        coEvery { authRepository.loginUser(username, hashedPassword) } returns null
 
         assertThrows<UserNotFoundException> {
             loginByUserNameUseCase(username, password)
         }
 
-        verify {
+        coVerify {
             hashingService.hash(password)
             authRepository.loginUser(username, hashedPassword)
         }
     }
 
     @Test
-    fun `getUser should hash password before calling repository`() {
+    fun `getUser should hash password before calling repository`() = runTest{
         val username = "testUser"
         val password = "password123"
         val hashedPassword = "hashed123"
         val expectedUser = User(username, hashedPassword, "role", UserType.MATE)
 
         every { hashingService.hash(password) } returns hashedPassword
-        every { authRepository.loginUser(username, hashedPassword) } returns expectedUser
+        coEvery { authRepository.loginUser(username, hashedPassword) } returns expectedUser
 
         loginByUserNameUseCase(username, password)
 
         verify(exactly = 1) { hashingService.hash(password) }
-        verify(exactly = 1) { authRepository.loginUser(username, hashedPassword) }
+        coVerify(exactly = 1) { authRepository.loginUser(username, hashedPassword) }
     }
 
     @Test
-    fun `getUser should propagate InvalidCredentialsException from repository`() {
+    fun `getUser should propagate InvalidCredentialsException from repository`() = runTest{
         val username = "testUser"
         val password = "wrongPassword"
         val hashedPassword = "hashedWrong"
 
         every { hashingService.hash(password) } returns hashedPassword
-        every { authRepository.loginUser(username, hashedPassword) } throws InvalidCredentialsException()
+        coEvery { authRepository.loginUser(username, hashedPassword) } throws InvalidCredentialsException()
 
         assertThrows<InvalidCredentialsException> {
             loginByUserNameUseCase(username, password)
@@ -103,7 +106,7 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `createUser should call password validator`() {
+    fun `createUser should call password validator`() = runTest{
         val user = User(
             username = "newUser",
             password = "ValidPass123!",
@@ -117,7 +120,7 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `createUser should throw EmptyUsernameException when username is blank`(){
+    fun `createUser should throw EmptyUsernameException when username is blank`() = runTest{
         val user = User(
             username = "",
             password = "ValidPass123!",

@@ -10,11 +10,11 @@ class CsvAuditDataSource(
     private val csvAuditParser: AuditParser,
 ) : AuditDataSource {
 
-    override fun createAuditLog(audit: Audit) {
+    override suspend fun createAuditLog(audit: Audit) {
         return csvFileHelper.appendFile(csvFileName, listOf(csvAuditParser.getLineFromAudit(audit)))
     }
 
-    override fun getAuditByEntityId(entityId: String): List<Audit> {
+    override suspend fun getAuditByEntityId(entityId: String): List<Audit> {
         return csvFileHelper.readFile(csvFileName).map { csvAuditParser.getAuditFromLine(it) }.filter { audit ->
             audit.entityId == entityId
         }

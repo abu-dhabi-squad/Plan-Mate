@@ -14,7 +14,7 @@ class ConsoleAdminMenuView(
 ) : UiLauncher {
 
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         sortMenu()
         showWelcome()
         presentFeature()
@@ -24,7 +24,7 @@ class ConsoleAdminMenuView(
         printer.displayLn("Welcome to PlanMate Admin Dashboard ")
     }
 
-    private fun presentFeature() {
+    private suspend fun presentFeature() {
         showOptions()
         print("Enter your choice: ")
         val input = inputReader.readInt()

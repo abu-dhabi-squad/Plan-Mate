@@ -3,6 +3,7 @@ package presentation.project
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import squad.abudhabi.logic.model.Project
 import logic.project.GetAllProjectsUseCase
@@ -25,7 +26,7 @@ class GetAllProjectsUITest {
     }
 
     @Test
-    fun `should print all projects`() {
+    fun `should print all projects`() = runTest{
         // Given
         val projects = listOf(
             Project(id = "p1", projectName = "Project One", states = emptyList()),
@@ -43,7 +44,7 @@ class GetAllProjectsUITest {
     }
 
     @Test
-    fun `should print error message when exception occurs`() {
+    fun `should print error message when exception occurs`() = runTest {
         // Given
         every { getAllProjectsUseCase.invoke() } throws RuntimeException("Something went wrong")
 

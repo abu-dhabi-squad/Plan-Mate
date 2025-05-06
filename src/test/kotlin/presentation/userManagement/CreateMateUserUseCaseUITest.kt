@@ -1,8 +1,11 @@
 package presentation.userManagement
 
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import logic.authentication.CreateMateUserUseCase
 import squad.abudhabi.logic.exceptions.EmptyUsernameException
@@ -29,7 +32,7 @@ class CreateMateUserUseCaseUITest {
     }
 
     @Test
-    fun `should create user successfully`() {
+    fun `should create user successfully`() = runTest{
         // Given
         every { inputReader.readString() } returnsMany listOf("shahd", "123456")
 
@@ -37,7 +40,7 @@ class CreateMateUserUseCaseUITest {
         createMateUserUI.launchUi()
 
         // Then:
-        verify {
+        coVerify {
             useCase.invoke(
                 match {
                     it.username == "shahd" &&
@@ -51,7 +54,7 @@ class CreateMateUserUseCaseUITest {
     }
 
     @Test
-    fun `should show error when username is empty`() {
+    fun `should show error when username is empty`() = runTest{
         // Given:
         every { inputReader.readString() } returnsMany listOf("", "shahd", "123456789")
 
@@ -63,7 +66,7 @@ class CreateMateUserUseCaseUITest {
     }
 
     @Test
-    fun `should show error when password is empty`() {
+    fun `should show error when password is empty`() = runTest{
         // Given:
         every { inputReader.readString() } returnsMany listOf("shahd", "", "1223455")
 
@@ -75,11 +78,11 @@ class CreateMateUserUseCaseUITest {
     }
 
     @Test
-    fun `should show error when user already exists`() {
+    fun `should show error when user already exists`() = runTest{
         val name = "shahd"
         // Given:
         every { inputReader.readString() } returnsMany listOf("shahd", "123456")
-        every { useCase.invoke(any()) } throws UserAlreadyExistsException(name)
+        coEvery { useCase.invoke(any()) } throws UserAlreadyExistsException(name)
 
         // When:
         createMateUserUI.launchUi()
@@ -89,7 +92,7 @@ class CreateMateUserUseCaseUITest {
     }
 
     @Test
-    fun `should show error when username is null`() {
+    fun `should show error when username is null`() = runTest{
         // Given:
         every { inputReader.readString() } returnsMany listOf(null, "shahd", "123455")
 
@@ -101,10 +104,10 @@ class CreateMateUserUseCaseUITest {
     }
 
     @Test
-    fun `should throw exception when username is empty`() {
+    fun `should throw exception when username is empty`() = runTest{
         // Given:
         every { inputReader.readString() } returnsMany listOf("", "123456")
-        every { useCase.invoke(any()) } throws EmptyUsernameException()
+        coEvery { useCase.invoke(any()) } throws EmptyUsernameException()
 
         // When:
         createMateUserUI.launchUi()
@@ -114,7 +117,7 @@ class CreateMateUserUseCaseUITest {
     }
 
     @Test
-    fun `should show error for null username`() {
+    fun `should show error for null username`() = runTest{
         // Given
         every { inputReader.readString() } returnsMany listOf(null, "somePass")
 
@@ -126,7 +129,7 @@ class CreateMateUserUseCaseUITest {
     }
 
     @Test
-    fun `should show error for null password`() {
+    fun `should show error for null password`() = runTest{
         // Given:
         every { inputReader.readString() } returnsMany listOf("shahd", null, "12343")
 

@@ -11,7 +11,7 @@ class AddStateToProjectUI(
     private val inputReader: InputReader,
     private val printer: Printer
 ): UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.display("Enter the project ID to add a state to: ")
         val projectId = inputReader.readString()
 

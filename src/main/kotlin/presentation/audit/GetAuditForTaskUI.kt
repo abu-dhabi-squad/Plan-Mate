@@ -17,7 +17,7 @@ class GetAuditForTaskUI(
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
 ) : UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
 
         val projects = try {
             getAllProjectsUseCase()

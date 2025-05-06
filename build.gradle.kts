@@ -21,6 +21,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     implementation("com.soywiz.korlibs.krypto:krypto:3.4.0")
     implementation("org.mongodb:mongodb-driver-sync:4.11.1")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     implementation("org.slf4j:slf4j-simple:2.0.12")
 }
 

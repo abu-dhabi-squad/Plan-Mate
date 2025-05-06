@@ -20,7 +20,7 @@ class CreateProjectUI(
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ): UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.display("Enter project name: ")
         val projectName = inputReader.readString()?.takeIf { it.isNotBlank() }
         if (projectName == null) {

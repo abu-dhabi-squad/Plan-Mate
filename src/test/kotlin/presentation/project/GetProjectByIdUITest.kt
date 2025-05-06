@@ -3,6 +3,7 @@ package presentation.project
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import squad.abudhabi.logic.model.Project
 import logic.project.GetProjectByIdUseCase
@@ -26,7 +27,7 @@ class GetProjectByIdUITest {
     }
 
     @Test
-    fun `should print project name when project is found`() {
+    fun `should print project name when project is found`() = runTest{
         // Given
         val projectId = "p1"
         val project = Project(id = projectId, projectName = "Test Project", states = emptyList())
@@ -43,7 +44,7 @@ class GetProjectByIdUITest {
     }
 
     @Test
-    fun `should print error message when exception is thrown`() {
+    fun `should print error message when exception is thrown`() = runTest{
         // Given
         val projectId = "p1"
         val errorMessage = "Project not found"
@@ -60,7 +61,7 @@ class GetProjectByIdUITest {
     }
 
     @Test
-    fun `should not call use case when user input is null or empty`() {
+    fun `should not call use case when user input is null or empty`() = runTest{
         // Given
         every { inputReader.readString() } returns null
 
@@ -74,7 +75,7 @@ class GetProjectByIdUITest {
     }
 
     @Test
-    fun `should not call use case when user input is empty`() {
+    fun `should not call use case when user input is empty`() = runTest{
         // Given
         every { inputReader.readString() } returns ""
 

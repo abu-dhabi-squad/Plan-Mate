@@ -2,6 +2,7 @@ package presentation.audit
 
 import io.mockk.every
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.audit.GetAuditUseCase
 import logic.helper.createTask
 import org.junit.jupiter.api.BeforeEach
@@ -43,7 +44,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should show audit logs for selected task`() {
+    fun `should show audit logs for selected task`() = runTest{
         val project = Project("p1", "Project A", listOf())
         val task = createTask(id = "t1", title = "Task A")
         val audits = listOf(
@@ -62,7 +63,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should show error if no projects exist`() {
+    fun `should show error if no projects exist`() = runTest{
 
         every { getAllProjectsUseCase() } returns emptyList()
 
@@ -73,7 +74,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should show error if no tasks exist for selected project`() {
+    fun `should show error if no tasks exist for selected project`() = runTest{
 
         val project = Project("p1", "Project A", listOf())
 
@@ -88,7 +89,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle null input for project`() {
+    fun `should handle null input for project`() = runTest{
         val project = Project("p1", "Project A", listOf())
 
         every { getAllProjectsUseCase() } returns listOf(project)
@@ -101,7 +102,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle invalid project index`() {
+    fun `should handle invalid project index`() = runTest{
         val project = Project("p1", "Project A", listOf())
 
         every { getAllProjectsUseCase() } returns listOf(project)
@@ -114,7 +115,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle null input for task`() {
+    fun `should handle null input for task`() = runTest{
         val project = Project("p1", "Project A", listOf())
         val task = createTask(id = "t1", title = "Task A")
 
@@ -129,7 +130,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle invalid task index`() {
+    fun `should handle invalid task index`() = runTest{
 
         val project = Project("p1", "Project A", listOf())
         val task = createTask(id = "t1", title = "Task A")
@@ -145,7 +146,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should show message when no audit logs found`() {
+    fun `should show message when no audit logs found`() = runTest{
         val project = Project("p1", "Project A", listOf())
         val task = createTask(id = "t1", title = "Task A")
 
@@ -161,7 +162,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle WrongInputException from use case`() {
+    fun `should handle WrongInputException from use case`() = runTest{
         val project = Project("p1", "Project A", listOf())
         val task = createTask(id = "t1", title = "Task A")
 
@@ -177,7 +178,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle EmptyList exception from use case`() {
+    fun `should handle EmptyList exception from use case`() = runTest{
         val project = Project("p1", "Project A", listOf())
         val task = createTask(id = "t1", title = "Task A")
 
@@ -193,7 +194,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle unexpected exception`() {
+    fun `should handle unexpected exception`() = runTest{
         val project = Project("p1", "Project A", listOf())
         val task = createTask(id = "t1", title = "Task A")
 
@@ -209,7 +210,7 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should throw exception when get all projects fails`(){
+    fun `should throw exception when get all projects fails`() = runTest{
 
         every { getAllProjectsUseCase() } throws Exception()
 
