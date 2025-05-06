@@ -28,21 +28,15 @@ import org.koin.core.qualifier.named
 
 val appModule = module {
     single { MongoDataBaseProvider("sayedmagdy", "mongodb://localhost:27017/") }
+
     single(named("projects")) { get<MongoDataBaseProvider>().getCollection("projects") }
     single(named("tasks")) { get<MongoDataBaseProvider>().getCollection("tasks") }
     single(named("audits")) { get<MongoDataBaseProvider>().getCollection("audits") }
     single(named("states")) { get<MongoDataBaseProvider>().getCollection("states") }
     single(named("users")) { get<MongoDataBaseProvider>().getCollection("users") }
-    single<DateParser> { DateParserImpl() }
-    single<DateValidator> { DateValidatorImpl(get()) }
-    single<PasswordValidator> { StandardPasswordValidator() }
-    single<TaskValidator> { TaskValidatorImpl() }
-    single<HashingService> { Md5Hashing() }
-    single<InputReader> { ConsoleReader() }
-    single<Printer> { ConsolePrinter() }
-    single<CsvUserParser> { CsvUserParser() }
-    single<FileHelper> { CsvFileHelper() }
-    single { CsvProjectParser() }
+
+
+
     single<ProjectDataSource> {
         CsvProjectDataSource(
             fileHelper = get(),
@@ -51,5 +45,19 @@ val appModule = module {
         )
     }
 
+    single<HashingService> { Md5Hashing() }
+
+    single<InputReader> { ConsoleReader() }
+    single<Printer> { ConsolePrinter() }
+
+    single<FileHelper> { CsvFileHelper() }
+
+    single<PasswordValidator> { StandardPasswordValidator() }
+    single<DateValidator> { DateValidatorImpl(get()) }
+    single<TaskValidator> { TaskValidatorImpl() }
+
+    single<DateParser> { DateParserImpl() }
+    single { CsvProjectParser() }
+    single<CsvUserParser> { CsvUserParser() }
     single<DateTimeParser> { DateTimeParserImpl() }
 }
