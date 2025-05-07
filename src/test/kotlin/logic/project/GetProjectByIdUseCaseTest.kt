@@ -3,11 +3,11 @@ package logic.project
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
+import logic.exceptions.ProjectNotFoundException
+import logic.model.Project
+import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.repository.ProjectRepository
 import java.util.*
 import kotlin.test.Test
 

@@ -1,12 +1,12 @@
 import com.google.common.truth.Truth.assertThat
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
+import logic.exceptions.NoProjectsFoundException
+import logic.model.Project
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.NoProjectsFoundException
-import squad.abudhabi.logic.model.Project
 import logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.repository.ProjectRepository
 import java.util.*
 import kotlin.test.Test
 

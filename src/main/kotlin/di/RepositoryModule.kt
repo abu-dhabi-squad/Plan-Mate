@@ -2,7 +2,7 @@ package di
 
 import data.audit.mapper.AuditMapper
 import data.audit.datasource.AuditDataSource
-import data.audit.datasource.mongodatabase.MongoAuditDataSource
+import data.audit.datasource.mongo_database.MongoAuditDataSource
 import data.audit.repository.AuditRepositoryImpl
 import data.authentication.mapper.UserMapper
 import data.authentication.datasource.AuthenticationDataSource

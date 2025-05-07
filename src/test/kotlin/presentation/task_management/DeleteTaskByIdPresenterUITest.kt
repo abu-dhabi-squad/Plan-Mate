@@ -5,18 +5,18 @@ import helper.createTask
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
+import logic.exceptions.NoProjectsFoundException
+import logic.exceptions.NoTasksFoundException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import squad.abudhabi.logic.exceptions.NoProjectsFoundException
-import squad.abudhabi.logic.exceptions.NoTasksFoundException
 import logic.project.GetAllProjectsUseCase
 import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
+import logic.user.GetLoggedUserUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
 import java.util.*
 
 class DeleteTaskByIdPresenterUITest {
