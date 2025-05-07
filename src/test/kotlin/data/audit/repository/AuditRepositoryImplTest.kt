@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test
 import data.audit.datasource.AuditDataSource
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import squad.abudhabi.logic.repository.AuditRepository
+import logic.repository.AuditRepository
 import kotlin.test.assertFails
 import kotlin.test.assertTrue
 

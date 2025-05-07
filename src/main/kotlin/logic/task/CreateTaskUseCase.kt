@@ -1,7 +1,7 @@
 package logic.task
 
-import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.repository.TaskRepository
+import logic.model.Task
+import logic.repository.TaskRepository
 import logic.validation.TaskValidator
 
 class CreateTaskUseCase(private val taskRepository: TaskRepository, private val taskValidator: TaskValidator) {

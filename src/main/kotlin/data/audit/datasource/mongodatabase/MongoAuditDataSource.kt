@@ -1,11 +1,11 @@
 package data.audit.datasource.mongodatabase
 
 import com.mongodb.client.MongoCollection
-import data.audit.AduitMapper.AuditMapper
-import data.audit.AduitMapper.AuditMapperFields.ENTITY_ID_FIELD
+import data.audit.mapper.AuditMapper
+import data.audit.mapper.AuditMapperFields.ENTITY_ID_FIELD
 import data.audit.datasource.AuditDataSource
 import org.bson.Document
-import squad.abudhabi.logic.model.Audit
+import logic.model.Audit
 
 class MongoAuditDataSource(
     private val collection: MongoCollection<Document>,

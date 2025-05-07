@@ -6,11 +6,11 @@ import kotlinx.coroutines.test.runTest
 import logic.audit.GetAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.exceptions.EmptyList
-import squad.abudhabi.logic.exceptions.WrongInputException
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.model.EntityType
-import squad.abudhabi.logic.model.Project
+import logic.exceptions.EmptyList
+import logic.exceptions.WrongInputException
+import logic.model.Audit
+import logic.model.EntityType
+import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import presentation.ui_io.ConsolePrinter
 import presentation.ui_io.InputReader

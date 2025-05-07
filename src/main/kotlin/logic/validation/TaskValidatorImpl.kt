@@ -1,7 +1,7 @@
 package logic.validation
 
-import squad.abudhabi.logic.exceptions.InvalidTaskDateException
-import squad.abudhabi.logic.model.Task
+import logic.exceptions.InvalidTaskDateException
+import logic.model.Task
 
 
 class TaskValidatorImpl: TaskValidator {

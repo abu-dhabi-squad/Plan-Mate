@@ -6,7 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import squad.abudhabi.logic.model.Task
+import logic.model.Task
 import logic.task.GetTaskByIdUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer

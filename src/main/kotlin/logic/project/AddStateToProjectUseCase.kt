@@ -1,9 +1,9 @@
 package logic.project
 
-import squad.abudhabi.logic.exceptions.DuplicateStateException
-import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.exceptions.DuplicateStateException
+import logic.exceptions.ProjectNotFoundException
+import logic.model.State
+import logic.repository.ProjectRepository
 
 class AddStateToProjectUseCase(private val projectRepository: ProjectRepository) {
     suspend operator fun invoke(projectId: String, newState: State) {

@@ -1,6 +1,6 @@
-package squad.abudhabi.logic.repository
+package logic.repository
 
-import squad.abudhabi.logic.model.Audit
+import logic.model.Audit
 
 interface AuditRepository {
     suspend fun createAuditLog(auditLog: Audit)

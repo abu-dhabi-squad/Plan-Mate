@@ -1,7 +1,6 @@
-package squad.abudhabi.data.authentication.datasource
+package data.authentication.datasource.localdatasource
 
-import data.authentication.datasource.LoggedUserDataSource
-import squad.abudhabi.logic.model.User
+import logic.model.User
 
 class InMemoryLoggedUserDataSource : LoggedUserDataSource {
 

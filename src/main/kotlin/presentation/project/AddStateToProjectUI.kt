@@ -1,6 +1,6 @@
 package presentation.project
 
-import squad.abudhabi.logic.model.State
+import logic.model.State
 import logic.project.AddStateToProjectUseCase
 import presentation.UiLauncher
 import presentation.ui_io.InputReader

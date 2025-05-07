@@ -7,11 +7,10 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.NoLoggedInUserException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import logic.exceptions.NoLoggedInUserException
+import logic.model.User
+import logic.model.UserType
 import logic.repository.AuthenticationRepository
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
 
 class GetLoggedUserUseCaseTest{
     private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase

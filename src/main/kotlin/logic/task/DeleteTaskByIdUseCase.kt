@@ -1,7 +1,7 @@
 package logic.task
 
-import squad.abudhabi.logic.exceptions.TaskNotFoundException
-import squad.abudhabi.logic.repository.TaskRepository
+import logic.exceptions.TaskNotFoundException
+import logic.repository.TaskRepository
 
 class DeleteTaskByIdUseCase(private val taskRepository: TaskRepository) {
     suspend operator fun invoke(taskId: String) {

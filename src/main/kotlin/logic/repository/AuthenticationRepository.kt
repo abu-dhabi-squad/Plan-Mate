@@ -1,5 +1,5 @@
 package logic.repository
-import squad.abudhabi.logic.model.User
+import logic.model.User
 
 interface AuthenticationRepository {
     suspend fun loginUser(username: String, password: String): User?

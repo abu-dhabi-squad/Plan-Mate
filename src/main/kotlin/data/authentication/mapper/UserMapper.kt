@@ -1,8 +1,8 @@
-package data.authentication
+package data.authentication.mapper
 
 import org.bson.Document
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import logic.model.User
+import logic.model.UserType
 
 class UserMapper {
         fun documentToUser(doc: Document): User {

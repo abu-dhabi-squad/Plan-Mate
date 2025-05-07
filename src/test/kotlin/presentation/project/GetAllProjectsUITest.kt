@@ -3,7 +3,7 @@ package presentation.project
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import squad.abudhabi.logic.model.Project
+import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer

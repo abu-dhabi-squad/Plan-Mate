@@ -1,8 +1,8 @@
 package logic.project
 
-import squad.abudhabi.logic.exceptions.NoProjectsFoundException
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.exceptions.NoProjectsFoundException
+import logic.model.Project
+import logic.repository.ProjectRepository
 
 class GetAllProjectsUseCase(private val projectRepository: ProjectRepository) {
     suspend operator fun invoke(): List<Project> {

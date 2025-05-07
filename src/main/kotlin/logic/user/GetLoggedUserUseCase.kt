@@ -1,7 +1,7 @@
-package squad.abudhabi.logic.user
+package logic.user
 
-import squad.abudhabi.logic.exceptions.NoLoggedInUserException
-import squad.abudhabi.logic.model.User
+import logic.exceptions.NoLoggedInUserException
+import logic.model.User
 import logic.repository.AuthenticationRepository
 
 class GetLoggedUserUseCase (

@@ -1,9 +1,9 @@
 package data.authentication.repository
 
 import data.authentication.datasource.AuthenticationDataSource
-import data.authentication.datasource.LoggedUserDataSource
-import squad.abudhabi.logic.exceptions.InvalidCredentialsException
-import squad.abudhabi.logic.model.User
+import data.authentication.datasource.localdatasource.LoggedUserDataSource
+import logic.exceptions.InvalidCredentialsException
+import logic.model.User
 import logic.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(

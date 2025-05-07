@@ -7,9 +7,9 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.exceptions.WrongInputException
-import squad.abudhabi.logic.model.EntityType
-import squad.abudhabi.logic.repository.AuditRepository
+import logic.exceptions.WrongInputException
+import logic.model.EntityType
+import logic.repository.AuditRepository
 import kotlin.test.assertFails
 
 class GetAuditUseCaseTest {

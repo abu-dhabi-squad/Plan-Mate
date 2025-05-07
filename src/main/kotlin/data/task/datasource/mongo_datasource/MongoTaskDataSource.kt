@@ -3,8 +3,8 @@ package data.task.datasource.mongo_datasource
 import com.mongodb.client.MongoCollection
 import data.task.mapper.TaskMapper
 import org.bson.Document
-import squad.abudhabi.data.task.datasource.TaskDataSource
-import squad.abudhabi.logic.model.Task
+import data.task.datasource.TaskDataSource
+import logic.model.Task
 
 class MongoTaskDataSource(private val collection: MongoCollection<Document>, private val mapper: TaskMapper) :
     TaskDataSource {

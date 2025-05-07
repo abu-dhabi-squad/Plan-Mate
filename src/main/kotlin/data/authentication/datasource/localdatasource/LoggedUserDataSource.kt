@@ -1,6 +1,6 @@
-package data.authentication.datasource
+package data.authentication.datasource.localdatasource
 
-import squad.abudhabi.logic.model.User
+import logic.model.User
 
 interface LoggedUserDataSource {
     fun saveLoggedUser(user: User)

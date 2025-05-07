@@ -14,11 +14,11 @@ import logic.utils.HashingService
 import logic.validation.PasswordValidator
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.EmptyUsernameException
-import squad.abudhabi.logic.exceptions.InvalidCredentialsException
-import squad.abudhabi.logic.exceptions.UserNotFoundException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import logic.exceptions.EmptyUsernameException
+import logic.exceptions.InvalidCredentialsException
+import logic.exceptions.UserNotFoundException
+import logic.model.User
+import logic.model.UserType
 import logic.repository.AuthenticationRepository
 import kotlin.test.Test
 

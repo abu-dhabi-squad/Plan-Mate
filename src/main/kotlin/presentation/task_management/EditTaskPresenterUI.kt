@@ -2,16 +2,18 @@ package presentation.task_management
 
 import logic.audit.CreateAuditUseCase
 import logic.validation.DateParser
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.model.EntityType
-import squad.abudhabi.logic.model.Task
+import logic.model.Audit
+import logic.model.EntityType
+import logic.model.Project
+import logic.model.State
+import logic.model.Task
 import logic.project.GetAllProjectsUseCase
 import logic.task.EditTaskUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import logic.user.GetLoggedUserUseCase
 import java.time.LocalDate
 
 class EditTaskPresenterUI(
@@ -102,7 +104,7 @@ class EditTaskPresenterUI(
         }
     }
 
-    private fun showProjects(projects: List<squad.abudhabi.logic.model.Project>) {
+    private fun showProjects(projects: List<Project>) {
         printer.displayLn("📁 Available Projects:")
         projects.forEachIndexed { index, project ->
             printer.displayLn("${index + 1}. ${project.projectName}")
@@ -116,7 +118,7 @@ class EditTaskPresenterUI(
         }
     }
 
-    private fun showStates(states: List<squad.abudhabi.logic.model.State>) {
+    private fun showStates(states: List<State>) {
         printer.displayLn("📍 Available States:")
         states.forEachIndexed { index, state ->
             printer.displayLn("${index + 1}. ${state.name}")

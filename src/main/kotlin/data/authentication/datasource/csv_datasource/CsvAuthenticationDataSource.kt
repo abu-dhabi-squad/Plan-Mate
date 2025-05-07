@@ -1,8 +1,8 @@
-package data.authentication.datasource
+package data.authentication.datasource.csv_datasource
 
-
-import squad.abudhabi.data.utils.filehelper.FileHelper
-import squad.abudhabi.logic.model.User
+import data.authentication.datasource.AuthenticationDataSource
+import data.utils.filehelper.FileHelper
+import logic.model.User
 
 class CsvAuthenticationDataSource(
     private val csvUserParser: CsvUserParser,

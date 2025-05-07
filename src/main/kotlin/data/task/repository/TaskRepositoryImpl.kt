@@ -1,8 +1,8 @@
 package data.task.repository
 
-import squad.abudhabi.data.task.datasource.TaskDataSource
-import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.repository.TaskRepository
+import data.task.datasource.TaskDataSource
+import logic.model.Task
+import logic.repository.TaskRepository
 
 class TaskRepositoryImpl(
     private val taskDataSource: TaskDataSource,

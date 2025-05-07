@@ -8,8 +8,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.NoTasksFoundException
-import squad.abudhabi.logic.repository.TaskRepository
+import logic.exceptions.NoTasksFoundException
+import logic.repository.TaskRepository
 import java.util.UUID
 
 class GetTasksByProjectIdUseCaseTest {

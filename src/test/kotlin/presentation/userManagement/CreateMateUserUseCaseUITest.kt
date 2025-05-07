@@ -8,9 +8,9 @@ import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import logic.authentication.CreateMateUserUseCase
-import squad.abudhabi.logic.exceptions.EmptyUsernameException
-import squad.abudhabi.logic.exceptions.UserAlreadyExistsException
-import squad.abudhabi.logic.model.UserType
+import logic.exceptions.EmptyUsernameException
+import logic.exceptions.UserAlreadyExistsException
+import logic.model.UserType
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
 import kotlin.test.Test

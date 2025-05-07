@@ -1,7 +1,7 @@
 package presentation.task_management
 
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.Task
+import logic.model.Project
+import logic.model.Task
 import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher

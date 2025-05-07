@@ -8,9 +8,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.InvalidTaskDateException
-import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.repository.TaskRepository
+import logic.exceptions.InvalidTaskDateException
+import logic.model.Task
+import logic.repository.TaskRepository
 import logic.validation.TaskValidator
 import java.time.LocalDate
 

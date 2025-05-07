@@ -1,6 +1,6 @@
-package squad.abudhabi.data.task.datasource
+package data.task.datasource
 
-import squad.abudhabi.logic.model.Task
+import logic.model.Task
 
 interface TaskDataSource {
     suspend fun getAllTasks(): List<Task>

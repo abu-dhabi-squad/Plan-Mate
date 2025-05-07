@@ -10,13 +10,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import squad.abudhabi.logic.exceptions.InvalidTaskDateException
-import squad.abudhabi.logic.exceptions.NoProjectsFoundException
+import logic.exceptions.InvalidTaskDateException
+import logic.exceptions.NoProjectsFoundException
 import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import logic.user.GetLoggedUserUseCase
 import java.time.LocalDate
 
 class CreateTaskPresenterUITest {
