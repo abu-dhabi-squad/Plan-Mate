@@ -1,14 +1,16 @@
 package logic.task
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
+import helper.createTask
+import io.mockk.coEvery
 import io.mockk.mockk
-import logic.helper.createTask
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.TaskNotFoundException
 import squad.abudhabi.logic.repository.TaskRepository
+import java.util.*
 
 class GetTaskByIdUseCaseTest {
     private lateinit var taskRepository: TaskRepository
@@ -21,24 +23,25 @@ class GetTaskByIdUseCaseTest {
     }
 
     @Test
-    fun `should get task by task id when task with same id exists`() {
+    fun `should get task by task id when task with same id exists`() = runTest{
         // Given
-        val taskId = "1"
+        val uuid= UUID.randomUUID()
+        val taskId = uuid
         val task = createTask(id = taskId)
-        every { taskRepository.getTaskById(any()) } returns task
+        coEvery { taskRepository.getTaskById(any()) } returns task
 
         // When
-        val result = getTasksByIdUseCaseTest(taskId)
+        val result = getTasksByIdUseCaseTest(taskId.toString())
 
         // Then
         assertThat(result).isEqualTo(task)
     }
 
     @Test
-    fun `should throw TaskNotFoundException when there is no task with the same id`() {
+    fun `should throw TaskNotFoundException when there is no task with the same id`() = runTest{
         // Given
         val taskId = "1"
-        every { taskRepository.getTaskById(any()) } returns null
+        coEvery { taskRepository.getTaskById(any()) } returns null
 
         // When && Then
         assertThrows<TaskNotFoundException> {

@@ -1,13 +1,13 @@
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.NoProjectsFoundException
 import squad.abudhabi.logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import squad.abudhabi.logic.repository.ProjectRepository
+import java.util.*
 import kotlin.test.Test
 
 class GetAllProjectsUseCaseTest {
@@ -21,29 +21,29 @@ class GetAllProjectsUseCaseTest {
     }
 
     @Test
-    fun `should return the project when a project with the given id exists`() {
+    fun `should return the project when a project with the given id exists`()= runTest {
         //Given
         val projects = listOf(
-            Project(id = "1", projectName = "Project One", states = emptyList()),
-            Project(id = "2", projectName = "Project Two", states = emptyList())
+            Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project One", states = emptyList()),
+            Project(id =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project Two", states = emptyList())
         )
-        every { projectRepository.getAllProjects() } returns projects
+        coEvery { projectRepository.getAllProjects() } returns projects
         // When
         val result = getAllProjectsUseCase()
         //Then
         assertThat(result).isEqualTo(projects)
-        verify(exactly = 1) { projectRepository.getAllProjects() }
+        coVerify(exactly = 1) { projectRepository.getAllProjects() }
     }
 
     @Test
-    fun `should throw NoProjectsFoundException when no projects exist`() {
+    fun `should throw NoProjectsFoundException when no projects exist`() = runTest{
         // Given
-        every { projectRepository.getAllProjects() } returns emptyList()
+        coEvery { projectRepository.getAllProjects() } returns emptyList()
         // When & Then
         assertThrows<NoProjectsFoundException> {
             getAllProjectsUseCase()
         }
-        verify(exactly = 1) { projectRepository.getAllProjects() }
+        coVerify(exactly = 1) { projectRepository.getAllProjects() }
     }
 
 

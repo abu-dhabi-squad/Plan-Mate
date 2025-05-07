@@ -2,9 +2,7 @@ package presentation.task_management
 
 import helper.createProject
 import helper.createState
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import logic.validation.DateParser
@@ -58,17 +56,17 @@ class CreateTaskPresenterUITest {
         // Given
         val fakeProject = createProject(states = listOf(createState()))
 
-        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
-        every { reader.readInt() } returns 1 andThen 1
+        coEvery { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        coEvery { reader.readInt() } returns 1 andThen 1
 
-        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
-        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+        coEvery { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        coEvery { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
         // When
         presenter.launchUi()
         // Then
-        verify(exactly = 1) { createTaskUseCase(any()) }
+        coVerify(exactly = 1) { createTaskUseCase(any()) }
     }
 
     @ParameterizedTest
@@ -80,17 +78,17 @@ class CreateTaskPresenterUITest {
         // Given
         val fakeProject = createProject(states = listOf(createState()))
 
-        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { reader.readString() } returns firstEnterTitle andThen secondEnterTitle andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
-        every { reader.readInt() } returns 1 andThen 1
+        coEvery { reader.readString() } returns firstEnterTitle andThen secondEnterTitle andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        coEvery { reader.readInt() } returns 1 andThen 1
 
-        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
-        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+        coEvery { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        coEvery { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn(match { it == "Input cannot be empty." }) }
+        coVerify { printer.displayLn(match { it == "Input cannot be empty." }) }
     }
 
     @ParameterizedTest
@@ -102,19 +100,19 @@ class CreateTaskPresenterUITest {
         // Given
         val fakeProject = createProject(states = listOf(createState()))
 
-        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { reader.readString() } returns "title" andThen firstEnterDescription andThen secondEnterDescription andThen "2025-10-10" andThen "2025-10-30"
-        every { reader.readInt() } returns 1 andThen 1
+        coEvery { reader.readString() } returns "title" andThen firstEnterDescription andThen secondEnterDescription andThen "2025-10-10" andThen "2025-10-30"
+        coEvery { reader.readInt() } returns 1 andThen 1
 
-        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
-        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+        coEvery { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        coEvery { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
 
         // When
         presenter.launchUi()
 
         // Then
-        verify { printer.displayLn(match { it == "Input cannot be empty." }) }
+        coVerify { printer.displayLn(match { it == "Input cannot be empty." }) }
     }
 
 
@@ -122,25 +120,25 @@ class CreateTaskPresenterUITest {
     fun `should display message when no projects are available`() = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
-        every { getAllProjectsUseCase() } returns emptyList() andThen listOf(fakeProject)
-        every { reader.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        coEvery { getAllProjectsUseCase() } returns emptyList() andThen listOf(fakeProject)
+        coEvery { reader.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
 
         //When
         presenter.launchUi()
         //Then
-        verify { printer.displayLn(match { it == "No projects available." }) }
+        coVerify { printer.displayLn(match { it == "No projects available." }) }
     }
 
     @Test
     fun `should display error message when get all projects use case throw error`() = runTest{
         // Given
-        every { getAllProjectsUseCase() } throws NoProjectsFoundException()
-        every { reader.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        coEvery { getAllProjectsUseCase() } throws NoProjectsFoundException()
+        coEvery { reader.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
 
         //When
         presenter.launchUi()
         //Then
-        verify { printer.displayLn(match { it.toString().contains("No projects Found") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("No projects Found") }) }
     }
 
     @Test
@@ -148,18 +146,18 @@ class CreateTaskPresenterUITest {
         // Given
         val fakeProject = createProject(states = listOf(createState()))
 
-        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
-        every { reader.readInt() } returns 1 andThen 1
+        coEvery { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
+        coEvery { reader.readInt() } returns 1 andThen 1
 
-        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
-        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
-        every { createTaskUseCase(any()) } throws InvalidTaskDateException()
+        coEvery { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        coEvery { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+        coEvery { createTaskUseCase(any()) } throws InvalidTaskDateException()
         //When
         presenter.launchUi()
         //Then
-        verify { printer.displayLn(match { it.toString().contains("Invalid task date") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("Invalid task date") }) }
     }
 
     @ParameterizedTest
@@ -170,38 +168,38 @@ class CreateTaskPresenterUITest {
     ) = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
-        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { reader.readString() } returns "Title" andThen "Description" andThen firstEnterDate andThen secondEnterDate andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
-        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
-        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+        coEvery { reader.readString() } returns "Title" andThen "Description" andThen firstEnterDate andThen secondEnterDate andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        coEvery { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        coEvery { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
 
-        every { reader.readInt() } returns 1 andThen 1
+        coEvery { reader.readInt() } returns 1 andThen 1
 
         // When
         presenter.launchUi()
 
         // Then
-        verify { printer.displayLn(match { it.toString().contains("Date cannot be empty.") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("Date cannot be empty.") }) }
     }
 
     @Test
     fun `should display error when user enter date in invalid formatter`() = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
-        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
-        every { parserDate.parseDateFromString("2025-10-10") } throws Exception()
-        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+        coEvery { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        coEvery { parserDate.parseDateFromString("2025-10-10") } throws Exception()
+        coEvery { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
 
-        every { reader.readInt() } returns 1 andThen 1
+        coEvery { reader.readInt() } returns 1 andThen 1
 
         // When
         presenter.launchUi()
 
         // Then
-        verify {
+        coVerify {
             printer.displayLn(match {
                 it.toString().contains("Invalid date format. Please use YYYY-MM-DD.")
             })
@@ -216,19 +214,19 @@ class CreateTaskPresenterUITest {
     ) = runTest{
         // Given
         val fakeProject = createProject(states = listOf(createState()))
-        every { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
-        every { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
-        every { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
-        every { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
+        coEvery { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
+        coEvery { parserDate.parseDateFromString("2025-10-10") } returns LocalDate.of(2025, 10, 10)
+        coEvery { parserDate.parseDateFromString("2025-10-30") } returns LocalDate.of(2025, 10, 30)
 
-        every { reader.readInt() } returns firstEnterIndex andThen secondEnterIndex andThen 1
+        coEvery { reader.readInt() } returns firstEnterIndex andThen secondEnterIndex andThen 1
 
         // When
         presenter.launchUi()
 
         // Then
-        verify {
+        coVerify {
             printer.displayLn(match {
                 it.toString().contains("Please enter a number between 1 and 1")
             })

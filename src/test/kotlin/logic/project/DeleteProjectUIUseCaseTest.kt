@@ -1,15 +1,15 @@
 package logic.project
 
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import squad.abudhabi.logic.exceptions.ProjectNotFoundException
 import squad.abudhabi.logic.model.Project
 import squad.abudhabi.logic.repository.ProjectRepository
+import java.util.*
 
 class DeleteProjectUIUseCaseTest {
 
@@ -23,66 +23,66 @@ class DeleteProjectUIUseCaseTest {
     }
 
     @Test
-    fun `given valid project ID, should delete project successfully`() {
+    fun `given valid project ID, should delete project successfully`() = runTest{
         // Given
-        val projectId = "Test Project"
-        every { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
+        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        coEvery { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
         // When
-        deleteProjectUseCase.invoke(projectId)
+        deleteProjectUseCase.invoke(projectId.toString())
 
         // Then
-        verify { projectRepository.deleteProject(projectId) }
+        coVerify { projectRepository.deleteProject(projectId.toString()) }
     }
 
     @Test
-    fun `return false when delete project return false`() {
+    fun `return false when delete project return false`() = runTest{
         // Given
-        val projectId = "invalid-id"
-        every { projectRepository.deleteProject(projectId) } throws Exception()
-        every { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
+        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        coEvery { projectRepository.deleteProject(projectId.toString()) } throws Exception()
+        coEvery { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
 
         // When & Then
         assertThrows<Exception> {
-            deleteProjectUseCase.invoke(projectId)
+            deleteProjectUseCase.invoke(projectId.toString())
         }
     }
 
     @Test
-    fun `should throw exception when data is not exist`() {
+    fun `should throw exception when data is not exist`()= runTest {
+        // Given
+        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        coEvery { projectRepository.getProjectById(any()) } returns null
+
+        // When & Then
+        assertThrows<ProjectNotFoundException> {
+            deleteProjectUseCase.invoke(projectId.toString())
+        }
+        coVerify(exactly = 0) { projectRepository.deleteProject(any()) }
+    }
+
+    @Test
+    fun `given non-existent project ID, should throw exception`() = runTest{
         // Given
         val projectId = "invalid-id"
-        every { projectRepository.getProjectById(any()) } returns null
+        coEvery { projectRepository.getProjectById(any()) } returns null
 
         // When & Then
         assertThrows<ProjectNotFoundException> {
             deleteProjectUseCase.invoke(projectId)
         }
-        verify(exactly = 0) { projectRepository.deleteProject(any()) }
+        coVerify(exactly = 0) { projectRepository.deleteProject(any()) }
     }
 
     @Test
-    fun `given non-existent project ID, should throw exception`() {
+    fun `should throw exception when their is an issue in getProject`() = runTest{
         // Given
         val projectId = "invalid-id"
-        every { projectRepository.getProjectById(any()) } returns null
-
-        // When & Then
-        assertThrows<ProjectNotFoundException> {
-            deleteProjectUseCase.invoke(projectId)
-        }
-        verify(exactly = 0) { projectRepository.deleteProject(any()) }
-    }
-
-    @Test
-    fun `should throw exception when their is an issue in getProject`() {
-        // Given
-        val projectId = "invalid-id"
-        every { projectRepository.getProjectById(any()) } throws Exception()
+        coEvery { projectRepository.getProjectById(any()) } throws Exception()
 
         // When & Then
         assertThrows<Exception> {
             deleteProjectUseCase.invoke(projectId)
         }
-        verify(exactly = 0) { projectRepository.deleteProject(any()) }
+        coVerify(exactly = 0) { projectRepository.deleteProject(any()) }
     }
 }

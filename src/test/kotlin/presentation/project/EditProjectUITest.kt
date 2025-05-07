@@ -1,8 +1,6 @@
 package presentation.project
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import squad.abudhabi.logic.model.Project
@@ -11,6 +9,7 @@ import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.ui_io.ConsoleReader
 import presentation.ui_io.Printer
+import java.util.*
 import kotlin.test.BeforeTest
 
 class EditProjectUITest {
@@ -28,36 +27,36 @@ class EditProjectUITest {
     @Test
     fun `launchUI should display Exception message when get all projects throw Exception`() = runTest{
         //given
-        every { getAllProjectsUseCase() } throws Exception()
+        coEvery { getAllProjectsUseCase() } throws Exception()
         //when
         editProjectUI.launchUi()
         //then
-        verify { printer.displayLn(Exception().message) }
+        coVerify { printer.displayLn(Exception().message) }
     }
 
     @Test
     fun `launchUI should display there is no project in list when get all projects return empty list`() = runTest{
         //given
-        every { getAllProjectsUseCase() } returns listOf()
+        coEvery { getAllProjectsUseCase() } returns listOf()
         //when
         editProjectUI.launchUi()
         //then
-        verify { printer.displayLn("there is no project in list") }
+        coVerify { printer.displayLn("there is no project in list") }
     }
 
     @Test
     fun `launchUI should display list details when get all projects return list`() = runTest{
         //given
         val projects = listOf(
-            Project("id1", "name1", listOf(State("id2", "name2"))),
-            Project("id1", "name1", listOf(State("id2", "name2")))
+            Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State("id2", "name2"))),
+            Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State("id2", "name2")))
         )
-        every { getAllProjectsUseCase() } returns projects
-        every { reader.readString() } returns null
+        coEvery { getAllProjectsUseCase() } returns projects
+        coEvery { reader.readString() } returns null
         //when
         editProjectUI.launchUi()
         //then
-        verify {
+        coVerify {
             projects.forEach{ project ->
                 printer.displayLn(
                     "project id: " + project.id +
@@ -67,41 +66,41 @@ class EditProjectUITest {
             }
 
         }
-        verify { printer.displayLn("wrong input") }
+        coVerify { printer.displayLn("wrong input") }
     }
 
     @Test
     fun `launchUI should display wrong input when enter wrong input or not entering at all for project id`() = runTest{
         //given
-        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
-        every { reader.readString() } returns null
+        coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
+        coEvery { reader.readString() } returns null
         //when
         editProjectUI.launchUi()
         //then
-        verify { printer.displayLn("wrong input") }
+        coVerify { printer.displayLn("wrong input") }
     }
 
     @Test
     fun `launchUI should display wrong input when enter wrong input or not entering at all for project name`() = runTest{
         //given
-        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
-        every { reader.readString() } returns "id1" andThen null
+        coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
+        coEvery { reader.readString() } returns "id1" andThen null
         //when
         editProjectUI.launchUi()
         //then
-        verify { printer.displayLn("wrong input") }
+        coVerify { printer.displayLn("wrong input") }
     }
 
     @Test
     fun `launchUI should display Exception message when edit project use case throw Exception`() = runTest{
         // Given
-        every { getAllProjectsUseCase() } returns listOf(Project("id1","name1", listOf()))
-        every { reader.readString() } returns "id1" andThen "name1"
-        every { editProjectUseCase(any(), any()) } throws Exception()
+        coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
+        coEvery { reader.readString() } returns "id1" andThen "name1"
+        coEvery { editProjectUseCase(any(), any()) } throws Exception()
         // When
         editProjectUI.launchUi()
         //then
-        verify(exactly = 1) { editProjectUseCase(any(), any()) }
-        verify { printer.displayLn(Exception().message) }
+        coVerify(exactly = 1) { editProjectUseCase(any(), any()) }
+        coVerify { printer.displayLn(Exception().message) }
     }
 }

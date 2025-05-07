@@ -2,10 +2,7 @@ package presentation.task_management
 
 import helper.createProject
 import helper.createTask
-import io.mockk.every
-import io.mockk.justRun
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -20,6 +17,7 @@ import logic.task.GetTasksByProjectIdUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
 import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import java.util.*
 
 class DeleteTaskByIdPresenterUITest {
 
@@ -56,83 +54,85 @@ class DeleteTaskByIdPresenterUITest {
     @Test
     fun `should delete task successfully when user input is valid`() = runTest{
         // Given
-        val project = createProject(id = "1")
-        val task = createTask(id = "1")
+        val uuid=UUID.randomUUID()
+        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString())
+        val task = createTask(id = uuid)
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { reader.readInt() } returns 1
-        justRun { deleteTaskByIdUseCase("1") }
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { reader.readInt() } returns 1
+        coEvery { deleteTaskByIdUseCase("1") }just runs
         // When
         presenter.launchUi()
         // Then
-        verify { deleteTaskByIdUseCase(task.id) }
-        verify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
+        coVerify { deleteTaskByIdUseCase(task.id.toString()) }
+        coVerify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
     @Test
     fun `should display error message when task successfully when user input is valid`() = runTest{
         // Given
-        val project = createProject(id = "1")
-        val task = createTask(id = "1")
+        val uuid=UUID.randomUUID()
+        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString())
+        val task = createTask(id = uuid)
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { reader.readInt() } returns 1
-        justRun { deleteTaskByIdUseCase("1") }
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { reader.readInt() } returns 1
+        coEvery { deleteTaskByIdUseCase("1") } just runs
         // When
         presenter.launchUi()
         // Then
-        verify { deleteTaskByIdUseCase(task.id) }
-        verify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
+        coVerify { deleteTaskByIdUseCase(task.id.toString()) }
+        coVerify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
     @Test
     fun `should display error when loading projects fails`() = runTest{
         // Given
-        every { getAllProjectsUseCase() } throws NoProjectsFoundException()
+        coEvery { getAllProjectsUseCase() } throws NoProjectsFoundException()
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn(match { it.toString().contains("Error loading projects") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("Error loading projects") }) }
     }
 
     @Test
     fun `should display warning when no projects are available`() = runTest{
         // Given
-        every { getAllProjectsUseCase() } returns emptyList()
+        coEvery { getAllProjectsUseCase() } returns emptyList()
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn("No projects available.") }
+        coVerify { printer.displayLn("No projects available.") }
     }
 
     @Test
     fun `should display error when loading tasks fails`() = runTest{
         //Given
         val project = createProject()
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getTasksByProjectIdUseCase("1") } throws NoTasksFoundException()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getTasksByProjectIdUseCase("1") } throws NoTasksFoundException()
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
     }
 
     @Test
     fun `should display warning when no tasks are found in project`() = runTest{
         // Given
         val project = createProject()
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getTasksByProjectIdUseCase("1") } returns emptyList()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getTasksByProjectIdUseCase("1") } returns emptyList()
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn("No tasks found in this project.") }
+        coVerify { printer.displayLn("No tasks found in this project.") }
     }
 
     @Test
@@ -141,14 +141,14 @@ class DeleteTaskByIdPresenterUITest {
         val project = createProject()
         val task = createTask()
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1 andThen 1
-        every { getTasksByProjectIdUseCase(any()) } returns listOf(task)
-        every { deleteTaskByIdUseCase(any()) } throws Exception("There are error when deleting")
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1 andThen 1
+        coEvery { getTasksByProjectIdUseCase(any()) } returns listOf(task)
+        coEvery { deleteTaskByIdUseCase(any()) } throws Exception("There are error when deleting")
         // When
         presenter.launchUi()
         // Then
-        verify {
+        coVerify {
             printer.displayLn(match {
                 it.toString().contains("There are error when deleting")
             })
@@ -165,13 +165,13 @@ class DeleteTaskByIdPresenterUITest {
         val project = createProject()
         val task = createTask()
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { reader.readInt() } returns firstAttemptIndexEnter andThen secondAttemptIndexEnter andThen 1
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { getTasksByProjectIdUseCase("1") } returns listOf(task)
+        coEvery { reader.readInt() } returns firstAttemptIndexEnter andThen secondAttemptIndexEnter andThen 1
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn("Please enter a number between 1 and 1.") }
+        coVerify { printer.displayLn("Please enter a number between 1 and 1.") }
     }
 
     @Test
@@ -180,25 +180,25 @@ class DeleteTaskByIdPresenterUITest {
         val task = createTask()
         val project = createProject()
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { getTasksByProjectIdUseCase(any()) } returns listOf(task)
-        every { reader.readInt() } returns 1 andThen 2 andThen 1
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { getTasksByProjectIdUseCase(any()) } returns listOf(task)
+        coEvery { reader.readInt() } returns 1 andThen 2 andThen 1
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn("Please enter a number between 1 and 1.") }
+        coVerify { printer.displayLn("Please enter a number between 1 and 1.") }
     }
 
     @Test
     fun `should show error message when get tasks by project id failed`() = runTest{
         // Given
         val project = createProject()
-        every { reader.readInt() } returns 1 andThen 1
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { getTasksByProjectIdUseCase(any()) } throws NoTasksFoundException()
+        coEvery { reader.readInt() } returns 1 andThen 1
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { getTasksByProjectIdUseCase(any()) } throws NoTasksFoundException()
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
     }
 }

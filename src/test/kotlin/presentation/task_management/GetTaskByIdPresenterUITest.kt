@@ -1,8 +1,6 @@
 package presentation.task_management
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,18 +29,17 @@ class GetTaskByIdPresenterUITest {
     @CsvSource("''", "'  '", "null", nullValues = ["null"])
     fun `should display error when task ID is blank`(taskID: String?) = runTest{
         // Given
-        every { inputReader.readString() } returns taskID
+        coEvery { inputReader.readString() } returns taskID
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn("Task ID cannot be empty.") }
+        coVerify { printer.displayLn("Task ID cannot be empty.") }
     }
 
     @Test
     fun `should display task details when task is found`() = runTest{
         // Given
         val task = Task(
-            id = "t1",
             title = "Task 1",
             description = "Some description",
             startDate = LocalDate.of(2025, 5, 1),
@@ -52,29 +49,29 @@ class GetTaskByIdPresenterUITest {
             userName = "John Doe"
         )
 
-        every { inputReader.readString() } returns "t1"
-        every { getTaskByIdUseCase("t1") } returns task
+        coEvery { inputReader.readString() } returns "t1"
+        coEvery { getTaskByIdUseCase("t1") } returns task
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn("Task Found:") }
-        verify { printer.displayLn("Title: ${task.title}") }
-        verify { printer.displayLn("Description: ${task.description}") }
-        verify { printer.displayLn("Start Date: ${task.startDate}") }
-        verify { printer.displayLn("End Date: ${task.endDate}") }
-        verify { printer.displayLn("Project ID: ${task.projectId}") }
-        verify { printer.displayLn("State ID: ${task.stateId}") }
-        verify { printer.displayLn("Assigned to: ${task.userName}") }
+        coVerify { printer.displayLn("Task Found:") }
+        coVerify { printer.displayLn("Title: ${task.title}") }
+        coVerify { printer.displayLn("Description: ${task.description}") }
+        coVerify { printer.displayLn("Start Date: ${task.startDate}") }
+        coVerify { printer.displayLn("End Date: ${task.endDate}") }
+        coVerify { printer.displayLn("Project ID: ${task.projectId}") }
+        coVerify { printer.displayLn("State ID: ${task.stateId}") }
+        coVerify { printer.displayLn("Assigned to: ${task.userName}") }
     }
 
     @Test
     fun `should display error message when task is not found`() = runTest{
         // Given
-        every { inputReader.readString() } returns "invalid-id"
-        every { getTaskByIdUseCase("invalid-id") } throws NoSuchElementException("Task not found")
+        coEvery { inputReader.readString() } returns "invalid-id"
+        coEvery { getTaskByIdUseCase("invalid-id") } throws NoSuchElementException("Task not found")
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn("Failed to retrieve task: Task not found") }
+        coVerify { printer.displayLn("Failed to retrieve task: Task not found") }
     }
 }

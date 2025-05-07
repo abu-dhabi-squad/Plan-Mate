@@ -1,8 +1,9 @@
 package logic.task
 
-import io.mockk.every
+import helper.createTask
+import io.mockk.coEvery
 import io.mockk.mockk
-import logic.helper.createTask
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -26,10 +27,9 @@ class CreateTaskUseCaseTest {
     }
 
     @Test
-    fun `should create a task when valid data is provided`() {
+    fun `should create a task when valid data is provided`()= runTest {
         // Given
         val task = Task(
-            id = "11111",
             userName = "11111",
             projectId = "11111",
             stateId = "11111",
@@ -45,13 +45,13 @@ class CreateTaskUseCaseTest {
 
     @Test
     fun `should throw InvalidTaskDateException when task start data is before end date`(
-    ) {
+    ) = runTest{
         // Given
         val task = createTask(
             startDate = LocalDate.parse("2025-05-01"),
             endDate = LocalDate.parse("2025-04-01"),
         )
-        every { taskValidator.validateOrThrow(any()) } throws InvalidTaskDateException()
+        coEvery { taskValidator.validateOrThrow(any()) } throws InvalidTaskDateException()
 
         // When && Then
         assertThrows<InvalidTaskDateException> { createTaskUseCase(task) }
@@ -59,8 +59,8 @@ class CreateTaskUseCaseTest {
 
     @Test
     fun `should throw Exception when repository throws Exception`(
-    ) {
-        every { taskRepository.createTask(any()) } throws Exception()
+    )= runTest {
+        coEvery { taskRepository.createTask(any()) } throws Exception()
 
         // When && Then
         assertThrows<Exception> { createTaskUseCase(createTask()) }
