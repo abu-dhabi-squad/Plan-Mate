@@ -18,6 +18,7 @@ import data.project.repository.ProjectRepositoryImpl
 import data.task.repository.TaskRepositoryImpl
 import data.authentication.datasource.localdatasource.InMemoryLoggedUserDataSource
 import data.authentication.datasource.localdatasource.LoggedUserDataSource
+import data.authentication.datasource.mongo_datasource.MongoAuthenticationDataSource
 import data.project.datasource.mongo_datasource.MongoProjectDataSource
 import data.project.mapper.ProjectMapper
 import data.task.datasource.mongo_datasource.MongoTaskDataSource
@@ -51,13 +52,13 @@ val repositoryModule = module {
     single<TaskParser> { CsvTaskParser(get()) }
     single<AuditParser> { CsvAuditParser(get()) }
 
-    single<AuthenticationDataSource> { CsvAuthenticationDataSource(get(), get(), "auth.csv") }
+  //  single<AuthenticationDataSource> { CsvAuthenticationDataSource(get(), get(), "auth.csv") }
     single<LoggedUserDataSource> { InMemoryLoggedUserDataSource() }
     //    single<ProjectDataSource> {  CsvProjectDataSource(get(),get(),"project.csv")}
     //    single<TaskDataSource> { CsvTaskDataSource(get(),"task.csv",get())  }
     //    single<AuditDataSource> { CsvAuditDataSource(get(),"audit.csv",get() ) }
 
-    //  single<AuthenticationDataSource> { MongoAuthenticationDataSource(get(named("users")), get()) }
+      single<AuthenticationDataSource> { MongoAuthenticationDataSource(get(named("users")), get()) }
     single<ProjectDataSource> {
         MongoProjectDataSource(get(named("projects")), get())
     }
