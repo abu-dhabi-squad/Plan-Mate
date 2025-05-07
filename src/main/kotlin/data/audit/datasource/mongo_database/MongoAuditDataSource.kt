@@ -1,4 +1,4 @@
-package data.audit.datasource.mongodatabase
+package data.audit.datasource.mongo_database
 
 import com.mongodb.client.MongoCollection
 import data.audit.mapper.AuditMapper

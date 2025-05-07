@@ -10,6 +10,7 @@ class MongoProjectDataSource(private val collection: MongoCollection<Document>, 
     ProjectDataSource {
     override suspend fun getAllProjects(): List<Project> {
         return collection.find().map { doc -> mapper.documentToProject(doc) }.toList()
+//        collection.find().iterator().asSequence().map { mapper.documentToProject(it) }.toList()
     }
 
     override suspend fun createProject(project: Project) {
@@ -17,13 +18,6 @@ class MongoProjectDataSource(private val collection: MongoCollection<Document>, 
         collection.insertOne(doc)
     }
 
-//    override suspend fun editProject(project: Project) {
-//        val updateDoc = Document(
-//            "\$set", Document(ProjectMapper.Companion.PROJECT_NAME_FIELD, project.projectName)
-//                .append(ProjectMapper.Companion.STATES_FIELD, project.states)
-//        )
-//        collection.updateOne(Document(ProjectMapper.Companion.ID_FIELD, project.id), updateDoc)
-//    }
 override suspend fun editProject(project: Project) {
     val statesDocs = project.states.map { state ->
         Document()
