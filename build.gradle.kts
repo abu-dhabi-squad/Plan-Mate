@@ -16,6 +16,7 @@ dependencies {
     implementation("io.insert-koin:koin-core:4.0.2")
     implementation("io.insert-koin:koin-annotations:2.0.0")
 
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation ("com.google.truth:truth:1.4.4")
     testImplementation("io.mockk:mockk:1.14.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
