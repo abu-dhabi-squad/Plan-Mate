@@ -1,15 +1,16 @@
 package data.task.parser
 
 import com.google.common.truth.Truth
+import helper.createTask
 import io.mockk.every
 import io.mockk.mockk
-import logic.helper.createTask
 import logic.validation.DateParserImpl
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
+import java.util.UUID
 
 class CsvTaskParserTest {
     private lateinit var dateParserImpl: DateParserImpl
@@ -24,11 +25,12 @@ class CsvTaskParserTest {
     @Test
     fun `getTaskFromCsvLine should return task when csv line is valid`() {
         // Given
-        val csvLine = "1,Test User,1,1,Test Task,Test Description,2023-01-01,2023-01-01"
+        val uuid=UUID.randomUUID()
+        val csvLine = "${uuid},Test User,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,1,Test Task,Test Description,2023-01-01,2023-01-01"
         val task = createTask(
-            id = "1",
+            id = uuid,
             userName = "Test User",
-            projectId = "1",
+            projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
             stateId = "1",
             title = "Test Task",
             description = "Test Description",
@@ -46,7 +48,8 @@ class CsvTaskParserTest {
     @Test
     fun `getTaskFromCsvLine should throws DateTimeParseException when date in csv line is not valid`() {
         // Given
-        val csvLine = "1,Test User,1,1,Test Task,Test Description,2023-20-20,2023-20-20"
+        val uuid=UUID.randomUUID()
+        val csvLine = "${uuid},Test User,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,1,Test Task,Test Description,2023-20-20,2023-20-20"
         every { dateParserImpl.parseDateFromString(any()) } throws DateTimeParseException("", "", 0)
 
         // When && Then
@@ -56,11 +59,11 @@ class CsvTaskParserTest {
     @Test
     fun `getCsvLineFromTask should return csv task line when task is valid`() {
         // Given
-        val csvLine = "1,Test User,1,1,Test Task,Test Description,2023-01-01,2023-01-01"
+        val csvLine = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,Test User,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,1,Test Task,Test Description,2023-01-01,2023-01-01"
         val task = createTask(
-            id = "1",
+            id=UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             userName = "Test User",
-            projectId = "1",
+            projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
             stateId = "1",
             title = "Test Task",
             description = "Test Description",

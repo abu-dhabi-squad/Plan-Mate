@@ -3,9 +3,7 @@ package presentation.task_management
 import helper.createProject
 import helper.createState
 import helper.createTask
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
@@ -20,6 +18,7 @@ import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
 import logic.user.GetLoggedUserUseCase
 import java.time.LocalDate
+import java.util.*
 
 class EditTaskPresenterUITest {
 
@@ -54,12 +53,13 @@ class EditTaskPresenterUITest {
     @Test
     fun `should update title, description, dates, and state`() = runTest{
         // Given
+        val uuid=UUID.randomUUID()
         val state1 = createState("s1", "Open")
         val state2 = createState("s2", "Closed")
-        val project = createProject(id = "p1", name = "Project A", states = listOf(state1, state2))
+        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), name = "Project A", states = listOf(state1, state2))
         val task = createTask(
-            "t1",
-            projectId = "p1",
+            id=uuid,
+            projectId = project.id.toString(),
             stateId = "s1",
             title = "Old",
             description = "OldDesc",
@@ -67,19 +67,19 @@ class EditTaskPresenterUITest {
             endDate = LocalDate.of(2025, 1, 2)
         )
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returnsMany listOf(
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returnsMany listOf(
             1,
             1,
             1,
         )
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
         // Strings: newTitle, newDesc, newStart, newEnd
-        every { inputReader.readString() } returnsMany listOf(
+        coEvery { inputReader.readString() } returnsMany listOf(
             "NewTitle", "NewDesc", "2025-05-05", "2025-05-10"
         )
-        every { dateParser.parseDateFromString("2025-05-05") } returns LocalDate.of(2025, 5, 5)
-        every { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025, 5, 10)
+        coEvery { dateParser.parseDateFromString("2025-05-05") } returns LocalDate.of(2025, 5, 5)
+        coEvery { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025, 5, 10)
 
         // When
         presenter.launchUi()
@@ -92,124 +92,127 @@ class EditTaskPresenterUITest {
             endDate = LocalDate.of(2025, 5, 10),
             stateId = "s1" // first state selected
         )
-        verify { editTaskUseCase(expected) }
-        verify { printer.displayLn("✅ Task updated successfully.") }
+        coVerify { editTaskUseCase(expected) }
+        coVerify { printer.displayLn("✅ Task updated successfully.") }
     }
 
     @Test
     fun `should displayLn list of tasks when there are projects`() = runTest{
         val project = createProject(name = "Project A")
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returns 1
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returns 1
         presenter.launchUi()
 
-        verify { printer.displayLn(match { it.toString().contains(project.projectName) }) }
+        coVerify { printer.displayLn(match { it.toString().contains(project.projectName) }) }
     }
 
     @Test
     fun `should display message when no projects found`() = runTest{
-        every { getAllProjectsUseCase() } returns emptyList()
+        coEvery { getAllProjectsUseCase() } returns emptyList()
 
         presenter.launchUi()
 
-        verify { printer.displayLn("No projects available.") }
+        coVerify { printer.displayLn("No projects available.") }
     }
 
     @Test
     fun `should display error when loading projects fails`() = runTest{
-        every { getAllProjectsUseCase() } throws NoProjectsFoundException()
+        coEvery { getAllProjectsUseCase() } throws NoProjectsFoundException()
 
         presenter.launchUi()
 
-        verify { printer.displayLn(match { it.toString().contains("No projects Found") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("No projects Found") }) }
     }
 
     @Test
     fun `should display message when no tasks in project`() = runTest{
         val project = createProject()
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returns 1
-        every { getTasksByProjectIdUseCase(any()) } returns emptyList()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returns 1
+        coEvery { getTasksByProjectIdUseCase(any()) } returns emptyList()
 
         presenter.launchUi()
 
-        verify { printer.displayLn("No tasks found in this project.") }
+        coVerify { printer.displayLn("No tasks found in this project.") }
     }
 
     @Test
     fun `should re-prompt when user enters invalid project selection`() = runTest{
         val project = createProject("1", "Project A")
-        every { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
 
-        every { inputReader.readInt() } returnsMany listOf(0, 1)
-        every { getTasksByProjectIdUseCase("1") } returns emptyList()
+        coEvery { inputReader.readInt() } returnsMany listOf(0, 1)
+        coEvery { getTasksByProjectIdUseCase("1") } returns emptyList()
 
         presenter.launchUi()
 
-        verify { printer.displayLn("Please enter a valid number between 1 and 1.") }
+        coVerify { printer.displayLn("Please enter a valid number between 1 and 1.") }
     }
 
     @Test
     fun `should display error when loading tasks fails`() = runTest{
-        val project = createProject("1", "Test Project")
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returns 1
-        every { getTasksByProjectIdUseCase("1") } throws NoTasksFoundException()
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Test Project")
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returns 1
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } throws NoTasksFoundException()
 
         presenter.launchUi()
 
-        verify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
     }
 
     @Test
     fun `should successfully update task when the input is valid`() = runTest{
+        val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject("1", "Project A", states = listOf(state))
-        val task = createTask("t1", projectId = "1", stateId = state.id)
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Project A", states = listOf(state))
+        val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), stateId = state.id)
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { inputReader.readString() } returnsMany listOf("New Title", "New Desc", "", "")
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { inputReader.readString() } returnsMany listOf("New Title", "New Desc", "", "")
 
         presenter.launchUi()
 
-        verify {
+        coVerify {
             editTaskUseCase(
                 task.copy(title = "New Title", description = "New Desc", stateId = state.id)
             )
         }
-        verify { printer.displayLn("✅ Task updated successfully.") }
+        coVerify { printer.displayLn("✅ Task updated successfully.") }
     }
 
 
     @Test
     fun `should show error message while updating task when the input is not valid`() = runTest{
+        val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject("1", "Project A", states = listOf(state))
-        val task = createTask("t1", projectId = "1", stateId = state.id)
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Project A", states = listOf(state))
+        val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), stateId = state.id)
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { inputReader.readString() } returnsMany listOf("New Title", "New Desc", "", "")
-        every { editTaskUseCase(any()) } throws RuntimeException("Failed to update task")
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { inputReader.readString() } returnsMany listOf("New Title", "New Desc", "", "")
+        coEvery { editTaskUseCase(any()) } throws RuntimeException("Failed to update task")
 
         presenter.launchUi()
 
-        verify { printer.displayLn(match { it.toString().contains("Failed to update task") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("Failed to update task") }) }
     }
 
     @Test
     fun `should re-prompt when user enters invalid task selection`() = runTest{
+        val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject("1", "Project A", states = listOf(state))
-        val task = createTask("t1", projectId = "1", stateId = state.id)
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Project A", states = listOf(state))
+        val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), stateId = state.id)
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returnsMany listOf(1, 0, 1, 1)
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { inputReader.readString() } returnsMany listOf(
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returnsMany listOf(1, 0, 1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { inputReader.readString() } returnsMany listOf(
             "Updated Title",
             "Updated Desc",
             "",
@@ -218,80 +221,84 @@ class EditTaskPresenterUITest {
 
         presenter.launchUi()
 
-        verify { printer.displayLn("Please enter a valid number between 1 and 1.") }
+        coVerify { printer.displayLn("Please enter a valid number between 1 and 1.") }
     }
 
 
     @Test
     fun `should keep existing title and description if user inputs are empty`() = runTest{
+        val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject("1", "Project A", states = listOf(state))
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Project A", states = listOf(state))
         val task = createTask(
-            "t1",
+            id=uuid,
             title = "Old Title",
             description = "Old Desc",
-            projectId = "1",
+            projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
             stateId = state.id
         )
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { inputReader.readString() } returnsMany listOf("", "", "", "")
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { inputReader.readString() } returnsMany listOf("", "", "", "")
 
         presenter.launchUi()
 
-        verify { editTaskUseCase(task) }
+        coVerify { editTaskUseCase(task) }
     }
 
     @Test
     fun `should keep existing title and description if user inputs are null`() = runTest{
+        val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject("1", "Project A", states = listOf(state))
+        val project = createProject("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", "Project A", states = listOf(state))
         val task = createTask(
-            "t1",
+            id=uuid,
             title = "Old Title",
             description = "Old Desc",
-            projectId = "1",
+            projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
             stateId = state.id
         )
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { inputReader.readString() } returnsMany listOf(null, null, "", "")
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { inputReader.readString() } returnsMany listOf(null, null, "", "")
 
         presenter.launchUi()
 
-        verify { editTaskUseCase(task) }
+        coVerify { editTaskUseCase(task) }
     }
 
     @Test
     fun `should re-prompt if readInt returns null`() = runTest{
+        val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject("1", "Project A", states = listOf(state))
-        val task = createTask("t1", projectId = "1", stateId = state.id)
+        val project = createProject("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", "Project A", states = listOf(state))
+        val task = createTask(uuid, projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", stateId = state.id)
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returnsMany listOf(null, 1, 1, 1)
-        every { getTasksByProjectIdUseCase("1") } returns listOf(task)
-        every { inputReader.readString() } returnsMany listOf("New", "Updated", "", "")
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returnsMany listOf(null, 1, 1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { inputReader.readString() } returnsMany listOf("New", "Updated", "", "")
 
         presenter.launchUi()
 
-        verify { printer.displayLn("Please enter a valid number between 1 and 1.") }
+        coVerify { printer.displayLn("Please enter a valid number between 1 and 1.") }
     }
 
 
     @Test
     fun `should show date format error message when user enter invalid date format`() = runTest{
         // Given
+        val uuid=UUID.randomUUID()
         val state1 = createState("s1", "Open")
         val state2 = createState("s2", "Closed")
-        val project = createProject(id = "p1", name = "Project A", states = listOf(state1, state2))
+        val project = createProject(id = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", name = "Project A", states = listOf(state1, state2))
         val task = createTask(
-            "t1",
-            projectId = "p1",
+            id=uuid,
+            projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
             stateId = "s1",
             title = "Old",
             description = "OldDesc",
@@ -299,19 +306,19 @@ class EditTaskPresenterUITest {
             endDate = LocalDate.of(2025, 1, 2)
         )
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { inputReader.readInt() } returnsMany listOf(
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { inputReader.readInt() } returnsMany listOf(
             1,
             1,
             1,
         )
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
         // Strings: newTitle, newDesc, newStart, newEnd
-        every { inputReader.readString() } returnsMany listOf(
+        coEvery { inputReader.readString() } returnsMany listOf(
             "NewTitle", "NewDesc", "Invalid date", "2025-05-10"
         )
-        every { dateParser.parseDateFromString("Invalid date") } throws Exception("Invalid format")
-        every { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025, 5, 10)
+        coEvery { dateParser.parseDateFromString("Invalid date") } throws Exception("Invalid format")
+        coEvery { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025, 5, 10)
 
         // When
         presenter.launchUi()
@@ -324,7 +331,7 @@ class EditTaskPresenterUITest {
             endDate = LocalDate.of(2025, 5, 10),
             stateId = "s1" // first state selected
         )
-        verify {
+        coVerify {
             printer.displayLn(match {
                 it.toString().contains("Invalid date format. Keeping current value.")
             })

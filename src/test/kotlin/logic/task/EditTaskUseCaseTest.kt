@@ -1,8 +1,10 @@
 package logic.task
 
+import helper.createTask
+import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import logic.helper.createTask
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -27,10 +29,9 @@ class EditTaskUseCaseTest {
     }
 
     @Test
-    fun `should update a task when valid data is provided`() {
+    fun `should update a task when valid data is provided`() = runTest{
         // Given
         val task = Task(
-            id = "11111",
             userName = "11111",
             projectId = "11111",
             stateId = "11111",
@@ -46,13 +47,13 @@ class EditTaskUseCaseTest {
 
     @Test
     fun `should throw InvalidTaskDateException when task start data is before end date`(
-    ) {
+    ) = runTest{
         // Given
         val task = createTask(
             startDate = LocalDate.parse("2025-05-01"),
             endDate = LocalDate.parse("2025-04-01"),
         )
-        every { taskValidator.validateOrThrow(any()) } throws InvalidTaskDateException()
+        coEvery { taskValidator.validateOrThrow(any()) } throws InvalidTaskDateException()
 
         // When && Then
         assertThrows<InvalidTaskDateException> { editTaskUseCase(task) }
@@ -60,10 +61,9 @@ class EditTaskUseCaseTest {
 
     @Test
     fun `should throw TaskNotFoundException when task id not found in non empty list`(
-    ) {
+    )= runTest {
         // Given
         val task = Task(
-            id = "11111",
             userName = "11111",
             projectId = "11111",
             stateId = "11111",
@@ -72,7 +72,7 @@ class EditTaskUseCaseTest {
             startDate = LocalDate.parse("2025-01-01"),
             endDate = LocalDate.parse("2025-02-01"),
         )
-        every { taskRepository.getTaskById(any()) } returns null
+        coEvery { taskRepository.getTaskById(any()) } returns null
 
         // When && Then
         assertThrows<TaskNotFoundException> { editTaskUseCase(task) }
@@ -80,8 +80,8 @@ class EditTaskUseCaseTest {
 
     @Test
     fun `should throw Exception when repository throws Exception`(
-    ) {
-        every { taskRepository.editTask(any()) } throws Exception()
+    ) = runTest{
+        coEvery { taskRepository.editTask(any()) } throws Exception()
 
         // When && Then
         assertThrows<Exception> { editTaskUseCase(createTask()) }

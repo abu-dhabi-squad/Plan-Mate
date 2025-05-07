@@ -2,8 +2,10 @@ package helper
 
 import logic.model.Task
 import java.time.LocalDate
+import java.util.UUID
 
-fun createTask(id : String = "",
+fun createTask(
+    id : UUID =UUID.randomUUID(),
     userName :String = "",
     projectId :String = "",
     stateId :String = "",
@@ -13,6 +15,7 @@ fun createTask(id : String = "",
     endDate :LocalDate = LocalDate.now()
 ): Task {
     return Task(
+        id=id,
         userName = userName,
         projectId = projectId,
         stateId = stateId,

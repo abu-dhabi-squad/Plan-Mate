@@ -47,15 +47,15 @@ class CsvProjectParserTest {
     @ParameterizedTest
     @ValueSource(
         strings = [
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b;state2|f1925419-22c9-48f5-9e5b;r;state3",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|;state2|f1925419-22c9-48f5-9e5b;state3",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b;|f1925419-22c9-48f5-9e5b;state3",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b|f1925419-22c9-48f5-9e5b;state3",
-            "f1925419-22c9-48f5-9e5b,name1,|",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;r;state1",
-            "f1925419-22c9-48f5-9e5b,name1,state1",
-            "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;",
-            "f1925419-22c9-48f5-9e5b,name1,;state1",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state2|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;r;state3",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1|;state2|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state3",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state3",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state3",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,|",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;r;state1",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,state1",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;",
+            "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,;state1",
         ]
     )
     fun `parseStringToProject should throw CanNotParseStateException when the string is not valid`(input: String) {
@@ -70,53 +70,53 @@ class CsvProjectParserTest {
     fun `parseStringToProject should return Project when the string could be splited`() {
         //given
         val resState = listOf(
-            State("f1925419-22c9-48f5-9e5b", "state1"),
-            State("f1925419-22c9-48f5-9e5b", "state2"),
-            State("f1925419-22c9-48f5-9e5b", "state3")
+            State("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", "state1"),
+            State("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", "state2"),
+            State("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", "state3")
         )
-        val line = "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1|f1925419-22c9-48f5-9e5b;state2|f1925419-22c9-48f5-9e5b;state3"
+        val line = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state2|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state3"
         //when & then
-        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", resState))
+        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resState))
     }
 
     @Test
     fun `parseStringToProject should return Project when the string could be splited with one state`() {
         //given
-        val resState = listOf(State("f1925419-22c9-48f5-9e5b", "state1"))
-        val line = "f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;state1"
+        val resState = listOf(State("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", "state1"))
+        val line = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1"
         //when & then
-        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", resState))
+        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resState))
     }
 
     @Test
     fun `parseStringToProject should return Project when the string could be splited with no state`() {
         //given
-        val line = "f1925419-22c9-48f5-9e5b,name1,"
+        val line = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,"
         //when & then
-        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("f1925419-22c9-48f5-9e5b"), "name1", listOf()))
+        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf()))
     }
 
     @Test
     fun`parseProjectToString should return a string when get a project with empty states`(){
         //given
-        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"),"name1", listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf())
         //when & then
-        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("f1925419-22c9-48f5-9e5b,name1,")
+        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,")
     }
 
     @Test
     fun`parseProjectToString should return a string when get a project with state`(){
         //given
-        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"),"name1", listOf(State("f1925419-22c9-48f5-9e5b","name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(State("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a","name1")))
         //when & then
-        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;name1")
+        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name1")
     }
 
     @Test
     fun`parseProjectToString should return a string when get a project with states`(){
         //given
-        val project = Project(UUID.fromString("f1925419-22c9-48f5-9e5b"),"name1", listOf(State("f1925419-22c9-48f5-9e5b","name1"),State("f1925419-22c9-48f5-9e5b","name2")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(State("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a","name1"),State("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a","name2")))
         //when & then
-        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("f1925419-22c9-48f5-9e5b,name1,f1925419-22c9-48f5-9e5b;name1|f1925419-22c9-48f5-9e5b;name2")
+        Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name2")
     }
 }

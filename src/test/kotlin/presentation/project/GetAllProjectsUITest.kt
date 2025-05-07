@@ -1,14 +1,13 @@
 package presentation.project
 
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
+import java.util.*
 import kotlin.test.Test
 
 class GetAllProjectsUITest {
@@ -29,29 +28,29 @@ class GetAllProjectsUITest {
     fun `should print all projects`() = runTest{
         // Given
         val projects = listOf(
-            Project(id = "p1", projectName = "Project One", states = emptyList()),
-            Project(id = "p2", projectName = "Project Two", states = emptyList())
+            Project(id =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project One", states = emptyList()),
+            Project(id =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project Two", states = emptyList())
         )
-        every { getAllProjectsUseCase.invoke() } returns projects
+        coEvery { getAllProjectsUseCase.invoke() } returns projects
 
         // When
         getAllProjectsUI.launchUi()
 
         // Then
-        verify { printer.displayLn("All Created Projects:") }
-        verify { printer.displayLn("1) Project One") }
-        verify { printer.displayLn("2) Project Two") }
+        coVerify { printer.displayLn("All Created Projects:") }
+        coVerify { printer.displayLn("1) Project One") }
+        coVerify { printer.displayLn("2) Project Two") }
     }
 
     @Test
     fun `should print error message when exception occurs`() = runTest {
         // Given
-        every { getAllProjectsUseCase.invoke() } throws RuntimeException("Something went wrong")
+        coEvery { getAllProjectsUseCase.invoke() } throws RuntimeException("Something went wrong")
 
         // When
         getAllProjectsUI.launchUi()
 
         // Then
-        verify { printer.displayLn("Error retrieving projects: Something went wrong") }
+        coVerify { printer.displayLn("Error retrieving projects: Something went wrong") }
     }
 }
