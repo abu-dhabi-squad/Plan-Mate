@@ -27,15 +27,14 @@ import logic.validation.DateTimeParserImpl
 import org.koin.core.qualifier.named
 
 val appModule = module {
-    single { MongoDataBaseProvider("sayedmagdy", "mongodb://localhost:27017/") }
+
+   single { MongoDataBaseProvider("PlanMate", "mongodb+srv://abudhabi:DhXobvmTriIWl9y5@planmate.sj0lbdm.mongodb.net/?retryWrites=true&w=majority&appName=PlanMate") }
 
     single(named("projects")) { get<MongoDataBaseProvider>().getCollection("projects") }
     single(named("tasks")) { get<MongoDataBaseProvider>().getCollection("tasks") }
     single(named("audits")) { get<MongoDataBaseProvider>().getCollection("audits") }
     single(named("states")) { get<MongoDataBaseProvider>().getCollection("states") }
     single(named("users")) { get<MongoDataBaseProvider>().getCollection("users") }
-
-
 
     single<ProjectDataSource> {
         CsvProjectDataSource(
