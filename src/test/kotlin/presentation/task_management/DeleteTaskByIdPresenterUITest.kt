@@ -55,7 +55,7 @@ class DeleteTaskByIdPresenterUITest {
     fun `should delete task successfully when user input is valid`() = runTest{
         // Given
         val uuid=UUID.randomUUID()
-        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString())
+        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
         val task = createTask(id = uuid)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
@@ -74,7 +74,7 @@ class DeleteTaskByIdPresenterUITest {
     fun `should display error message when task successfully when user input is valid`() = runTest{
         // Given
         val uuid=UUID.randomUUID()
-        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString())
+        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
         val task = createTask(id = uuid)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)

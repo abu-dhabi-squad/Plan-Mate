@@ -56,7 +56,7 @@ class EditTaskPresenterUITest {
         val uuid=UUID.randomUUID()
         val state1 = createState("s1", "Open")
         val state2 = createState("s2", "Closed")
-        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), name = "Project A", states = listOf(state1, state2))
+        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(state1, state2))
         val task = createTask(
             id=uuid,
             projectId = project.id.toString(),
@@ -138,7 +138,7 @@ class EditTaskPresenterUITest {
 
     @Test
     fun `should re-prompt when user enters invalid project selection`() = runTest{
-        val project = createProject("1", "Project A")
+        val project = createProject(UUID.fromString("1"), "Project A")
         coEvery { getAllProjectsUseCase() } returns listOf(project)
 
         coEvery { inputReader.readInt() } returnsMany listOf(0, 1)
@@ -151,7 +151,7 @@ class EditTaskPresenterUITest {
 
     @Test
     fun `should display error when loading tasks fails`() = runTest{
-        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Test Project")
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Test Project")
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returns 1
         coEvery { getTasksByProjectIdUseCase(project.id.toString()) } throws NoTasksFoundException()
@@ -165,7 +165,7 @@ class EditTaskPresenterUITest {
     fun `should successfully update task when the input is valid`() = runTest{
         val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Project A", states = listOf(state))
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), stateId = state.id)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
@@ -188,7 +188,7 @@ class EditTaskPresenterUITest {
     fun `should show error message while updating task when the input is not valid`() = runTest{
         val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Project A", states = listOf(state))
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), stateId = state.id)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
@@ -206,7 +206,7 @@ class EditTaskPresenterUITest {
     fun `should re-prompt when user enters invalid task selection`() = runTest{
         val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Project A", states = listOf(state))
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), stateId = state.id)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
@@ -229,7 +229,7 @@ class EditTaskPresenterUITest {
     fun `should keep existing title and description if user inputs are empty`() = runTest{
         val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "Project A", states = listOf(state))
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(
             id=uuid,
             title = "Old Title",
@@ -252,7 +252,7 @@ class EditTaskPresenterUITest {
     fun `should keep existing title and description if user inputs are null`() = runTest{
         val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", "Project A", states = listOf(state))
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(
             id=uuid,
             title = "Old Title",
@@ -275,7 +275,7 @@ class EditTaskPresenterUITest {
     fun `should re-prompt if readInt returns null`() = runTest{
         val uuid=UUID.randomUUID()
         val state = createState("s1", "Open")
-        val project = createProject("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", "Project A", states = listOf(state))
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(uuid, projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", stateId = state.id)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
@@ -295,7 +295,7 @@ class EditTaskPresenterUITest {
         val uuid=UUID.randomUUID()
         val state1 = createState("s1", "Open")
         val state2 = createState("s2", "Closed")
-        val project = createProject(id = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", name = "Project A", states = listOf(state1, state2))
+        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(state1, state2))
         val task = createTask(
             id=uuid,
             projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
