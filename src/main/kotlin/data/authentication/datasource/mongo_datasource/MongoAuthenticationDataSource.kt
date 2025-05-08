@@ -1,6 +1,5 @@
 package data.authentication.datasource.mongo_datasource
 
-import data.authentication.mapper.UserMapper
 import kotlinx.coroutines.flow.toList
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoCollection
@@ -13,7 +12,7 @@ class MongoAuthenticationDataSource(
 ) : RemoteAuthenticationDataSource {
 
     override suspend fun getUserByUserName(userName: String): UserDto? {
-        return userCollection.find(Filters.eq(UserMapper.USERNAME_FIELD, userName)).firstOrNull()
+        return userCollection.find(Filters.eq(USERNAME_FIELD, userName)).firstOrNull()
     }
 
     override suspend fun getAllUsers(): List<UserDto> {
@@ -22,5 +21,8 @@ class MongoAuthenticationDataSource(
 
     override suspend fun createUser(user: UserDto) {
         userCollection.insertOne(user)
+    }
+    companion object {
+        const val USERNAME_FIELD = "username"
     }
 }

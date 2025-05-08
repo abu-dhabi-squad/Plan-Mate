@@ -1,7 +1,6 @@
 package data.authentication.mapper
 
 import data.authentication.model.UserDto
-import org.bson.Document
 import logic.model.User
 import logic.model.UserType
 
@@ -23,10 +22,5 @@ class UserMapper {
             password = dto.password,
             userType = UserType.valueOf(dto.userType)
         )
-    }
-
-
-    companion object {
-        const val USERNAME_FIELD = "username"
     }
 }

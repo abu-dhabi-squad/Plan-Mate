@@ -1,7 +1,5 @@
 package data.authentication.repository
 
-import data.authentication.datasource.mongo_datasource.RemoteAuthenticationDataSource
-import data.authentication.datasource.localdatasource.LoggedUserDataSource
 import data.authentication.mapper.UserMapper
 import logic.exceptions.InvalidCredentialsException
 import logic.model.User
@@ -35,5 +33,4 @@ class AuthenticationRepositoryImpl(
     override fun getLoggedUser(): User? {
         return loggedUserDataSource.getLoggedUser()
     }
-
 }
