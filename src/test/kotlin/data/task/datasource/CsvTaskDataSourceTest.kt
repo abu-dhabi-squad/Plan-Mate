@@ -6,12 +6,11 @@ import helper.createTask
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
-import data.task.parser.CsvTaskParser
+import data.task.datasource.csv_datasource.CsvTaskParser
 import data.utils.filehelper.CsvFileHelper
 
 class CsvTaskDataSourceTest {

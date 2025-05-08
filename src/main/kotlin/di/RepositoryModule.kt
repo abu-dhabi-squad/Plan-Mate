@@ -27,12 +27,11 @@ import data.project.datasource.mongo_datasource.MongoProjectDataSource
 import data.project.repository.RemoteProjectDataSource
 import data.project.mapper.ProjectMapper
 import data.project.model.ProjectDto
+import data.task.datasource.csv_datasource.CsvTaskParser
 import data.task.datasource.mongo_datasource.MongoTaskDataSource
 import data.task.repository.RemoteTaskDataSource
 import data.task.mapper.TaskMapper
 import data.task.model.TaskDto
-import data.task.parser.CsvTaskParser
-import data.task.parser.TaskParser
 import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper
 import logic.repository.AuditRepository
@@ -56,7 +55,7 @@ val repositoryModule = module {
 
     single { CsvProjectParser() }
     single<CsvUserParser> { CsvUserParser() }
-    single<TaskParser> { CsvTaskParser(get()) }
+    single { CsvTaskParser(get()) }
     single<AuditParser> { CsvAuditParser(get()) }
 
     single<LoggedUserDataSource> { InMemoryLoggedUserDataSource() }

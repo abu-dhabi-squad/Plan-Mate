@@ -1,6 +1,5 @@
 package data.task.datasource.csv_datasource
 
-import data.task.parser.TaskParser
 import data.task.repository.LocalTaskDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.Task
@@ -8,8 +7,9 @@ import logic.model.Task
 class CsvTaskDataSource(
     private val csvFileHelper: FileHelper,
     private val csvFileName: String,
-    private val csvTaskParser: TaskParser,
+    private val csvTaskParser: CsvTaskParser,
 ) : LocalTaskDataSource {
+
     override fun getAllTasks(): List<Task> {
         return csvFileHelper.readFile(csvFileName).map { csvTaskParser.getTaskFromCsvLine(it) }
     }
