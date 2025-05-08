@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.toList
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.authentication.model.UserDto
+import data.authentication.repository.RemoteAuthenticationDataSource
 import kotlinx.coroutines.flow.firstOrNull
 
 class MongoAuthenticationDataSource(

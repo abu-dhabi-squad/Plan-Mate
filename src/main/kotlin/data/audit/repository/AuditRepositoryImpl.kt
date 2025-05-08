@@ -1,6 +1,5 @@
 package data.audit.repository
 
-import data.audit.datasource.mongo_database.RemoteAuditDataSource
 import data.audit.mapper.AuditMapper
 import logic.model.Audit
 import logic.repository.AuditRepository

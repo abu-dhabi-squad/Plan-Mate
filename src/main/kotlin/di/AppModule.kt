@@ -6,7 +6,7 @@ import logic.validation.DateParserImpl
 import org.koin.dsl.module
 import data.project.datasource.csv_datasource.CsvProjectDataSource
 import data.project.datasource.csv_datasource.CsvProjectParser
-import data.project.datasource.csv_datasource.LocalProjectDataSource
+import data.project.repository.LocalProjectDataSource
 import logic.utils.Md5Hashing
 import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper

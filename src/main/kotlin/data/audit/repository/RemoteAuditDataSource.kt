@@ -1,4 +1,4 @@
-package data.audit.datasource.mongo_database
+package data.audit.repository
 
 import data.audit.model.AuditDto
 

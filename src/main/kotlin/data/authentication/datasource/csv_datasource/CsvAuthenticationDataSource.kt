@@ -1,6 +1,6 @@
 package data.authentication.datasource.csv_datasource
 
-import data.authentication.datasource.localdatasource.LocalAuthenticationDataSource
+import data.authentication.repository.LocalAuthenticationDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.User
 

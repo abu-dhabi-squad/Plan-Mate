@@ -1,4 +1,4 @@
-package data.authentication.datasource.localdatasource
+package data.authentication.repository
 
 import logic.model.User
 

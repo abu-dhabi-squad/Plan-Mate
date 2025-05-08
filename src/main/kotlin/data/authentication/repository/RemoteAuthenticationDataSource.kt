@@ -1,4 +1,4 @@
-package data.authentication.datasource.mongo_datasource
+package data.authentication.repository
 
 import data.authentication.model.UserDto
 

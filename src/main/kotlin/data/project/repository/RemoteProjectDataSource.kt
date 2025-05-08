@@ -1,4 +1,4 @@
-package data.project.datasource.mongo_datasource
+package data.project.repository
 
 import data.project.model.ProjectDto
 
