@@ -42,6 +42,6 @@ class CsvProjectDataSource(
     }
 
     private fun Project.isEqualProject(project: Project): Project {
-        if (this.id == project.id) return project else return this
+        return if (this.id == project.id) project else this
     }
 }
