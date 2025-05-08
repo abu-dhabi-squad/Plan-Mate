@@ -7,8 +7,7 @@ import java.time.ZoneId
 import java.util.Date
 import java.util.UUID
 
-class AuditMapper {
-
+class MongoAuditMapper {
     fun auditToDto(audit: Audit): AuditDto {
         return AuditDto(
             id = audit.id.toString(),

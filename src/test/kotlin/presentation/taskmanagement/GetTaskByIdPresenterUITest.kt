@@ -1,4 +1,4 @@
-package presentation.task_management
+package presentation.taskmanagement
 
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
@@ -8,8 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import logic.model.Task
 import logic.task.GetTaskByIdUseCase
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import java.time.LocalDate
 
 class GetTaskByIdPresenterUITest {

@@ -1,4 +1,4 @@
-package presentation.task_management
+package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
 import logic.model.Audit
@@ -9,8 +9,8 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
 
 class DeleteTaskByIdPresenterUI(

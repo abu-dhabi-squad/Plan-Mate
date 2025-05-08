@@ -1,12 +1,12 @@
 package data.task.repository
 
-import data.task.mapper.TaskMapper
+import data.task.mapper.MongoTaskMapper
 import logic.model.Task
 import logic.repository.TaskRepository
 
 class TaskRepositoryImpl(
     private val remoteTaskDataSource: RemoteTaskDataSource,
-    private val remoteTaskParser: TaskMapper
+    private val remoteTaskParser: MongoTaskMapper
 ) : TaskRepository {
 
     override suspend fun getAllTasks(): List<Task> {

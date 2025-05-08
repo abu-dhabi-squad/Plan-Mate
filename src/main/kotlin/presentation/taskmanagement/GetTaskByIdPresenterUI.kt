@@ -1,9 +1,9 @@
-package presentation.task_management
+package presentation.taskmanagement
 
 import logic.task.GetTaskByIdUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 
 class GetTaskByIdPresenterUI(
     private val printer: Printer,

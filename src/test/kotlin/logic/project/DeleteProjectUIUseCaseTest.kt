@@ -31,14 +31,14 @@ class DeleteProjectUIUseCaseTest {
         deleteProjectUseCase.invoke(projectId.toString())
 
         // Then
-        coVerify { projectRepository.deleteProject(projectId.toString()) }
+        coVerify { projectRepository.deleteProjectById(projectId.toString()) }
     }
 
     @Test
     fun `return false when delete project return false`() = runTest{
         // Given
         val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
-        coEvery { projectRepository.deleteProject(projectId.toString()) } throws Exception()
+        coEvery { projectRepository.deleteProjectById(projectId.toString()) } throws Exception()
         coEvery { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
 
         // When & Then
@@ -57,7 +57,7 @@ class DeleteProjectUIUseCaseTest {
         assertThrows<ProjectNotFoundException> {
             deleteProjectUseCase.invoke(projectId.toString())
         }
-        coVerify(exactly = 0) { projectRepository.deleteProject(any()) }
+        coVerify(exactly = 0) { projectRepository.deleteProjectById(any()) }
     }
 
     @Test
@@ -70,7 +70,7 @@ class DeleteProjectUIUseCaseTest {
         assertThrows<ProjectNotFoundException> {
             deleteProjectUseCase.invoke(projectId)
         }
-        coVerify(exactly = 0) { projectRepository.deleteProject(any()) }
+        coVerify(exactly = 0) { projectRepository.deleteProjectById(any()) }
     }
 
     @Test
@@ -83,6 +83,6 @@ class DeleteProjectUIUseCaseTest {
         assertThrows<Exception> {
             deleteProjectUseCase.invoke(projectId)
         }
-        coVerify(exactly = 0) { projectRepository.deleteProject(any()) }
+        coVerify(exactly = 0) { projectRepository.deleteProjectById(any()) }
     }
 }

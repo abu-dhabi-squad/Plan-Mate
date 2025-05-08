@@ -1,4 +1,4 @@
-package presentation.task_management
+package presentation.taskmanagement
 
 import helper.createProject
 import helper.createTask
@@ -15,8 +15,8 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import java.util.*
 
 class DeleteTaskByIdPresenterUITest {

@@ -1,4 +1,4 @@
-package presentation.task_management
+package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
 import logic.validation.DateParser
@@ -11,8 +11,8 @@ import logic.user.GetLoggedUserUseCase
 import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import java.time.LocalDate
 
 class CreateTaskPresenterUI(

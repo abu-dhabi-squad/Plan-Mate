@@ -1,9 +1,9 @@
 package di
 
-import data.audit.mapper.AuditMapper
+import data.audit.mapper.MongoAuditMapper
 import data.audit.model.AuditDto
 import data.audit.repository.AuditRepositoryImpl
-import data.authentication.mapper.UserMapper
+import data.authentication.mapper.MongoUserMapper
 import data.authentication.datasource.csv_datasource.CsvUserParser
 import data.authentication.repository.AuthenticationRepositoryImpl
 import data.audit.datasource.csvdatasource.csvparser.AuditParser
@@ -25,12 +25,12 @@ import data.authentication.datasource.mongo_datasource.MongoAuthenticationDataSo
 import data.authentication.model.UserDto
 import data.project.datasource.mongo_datasource.MongoProjectDataSource
 import data.project.repository.RemoteProjectDataSource
-import data.project.mapper.ProjectMapper
+import data.project.mapper.MongoProjectMapper
 import data.project.model.ProjectDto
 import data.task.datasource.csv_datasource.CsvTaskParser
 import data.task.datasource.mongo_datasource.MongoTaskDataSource
 import data.task.repository.RemoteTaskDataSource
-import data.task.mapper.TaskMapper
+import data.task.mapper.MongoTaskMapper
 import data.task.model.TaskDto
 import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper
@@ -40,10 +40,10 @@ import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 
 val repositoryModule = module {
-    single { ProjectMapper() }
-    single { TaskMapper() }
-    single { AuditMapper() }
-    single { UserMapper() }
+    single { MongoProjectMapper() }
+    single { MongoTaskMapper() }
+    single { MongoAuditMapper() }
+    single { MongoUserMapper() }
 
     single<FileHelper> { CsvFileHelper() }
 
@@ -94,6 +94,4 @@ val repositoryModule = module {
         val database: MongoDatabase = get()
         database.getCollection<UserDto>("users")
     }
-
-
 }

@@ -7,6 +7,6 @@ class DeleteProjectUseCase(private val projectRepository: ProjectRepository) {
     suspend operator fun invoke(projectId: String) {
         projectRepository.getProjectById(projectId)
             ?: throw ProjectNotFoundException()
-        projectRepository.deleteProject(projectId)
+        projectRepository.deleteProjectById(projectId)
     }
 }

@@ -12,8 +12,8 @@ import logic.model.Audit
 import logic.model.EntityType
 import logic.model.Project
 import logic.project.GetAllProjectsUseCase
-import presentation.ui_io.ConsolePrinter
-import presentation.ui_io.InputReader
+import presentation.io.ConsolePrinter
+import presentation.io.InputReader
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.util.*

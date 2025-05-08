@@ -1,4 +1,4 @@
-package presentation.userManagement
+package presentation.usermanagement
 
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -8,11 +8,12 @@ import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import logic.authentication.CreateMateUserUseCase
+import presentation.usermanagement.CreateMateUserUseCaseUI
 import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.UserType
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import kotlin.test.Test
 
 

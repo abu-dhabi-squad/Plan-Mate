@@ -3,8 +3,8 @@ package presentation.project
 import logic.audit.CreateAuditUseCase
 import logic.project.CreateProjectUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import logic.model.Audit
 import logic.model.EntityType
 import logic.model.Project

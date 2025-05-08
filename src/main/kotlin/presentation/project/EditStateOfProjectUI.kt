@@ -4,8 +4,8 @@ import logic.model.State
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 
 class EditStateOfProjectUI(
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase,

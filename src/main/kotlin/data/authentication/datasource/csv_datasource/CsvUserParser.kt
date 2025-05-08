@@ -3,6 +3,7 @@ package data.authentication.datasource.csv_datasource
 import logic.exceptions.CanNotParseUserException
 import logic.model.User
 import logic.model.UserType
+import java.util.*
 
 class CsvUserParser {
     fun parseUserToString(user: User): String {
@@ -13,7 +14,7 @@ class CsvUserParser {
         val parts = line.split(",")
         if (parts.size != USER_PARTS) throw CanNotParseUserException()
         return User(
-            id = parts[ID],
+            id = UUID.fromString(parts[ID]),
             username = parts[USERNAME],
             password = parts[PASSWORD],
             userType = UserType.valueOf(parts[USER_TYPE])

@@ -16,10 +16,10 @@ import logic.validation.PasswordValidator
 import logic.validation.StandardPasswordValidator
 import logic.validation.TaskValidator
 import logic.validation.TaskValidatorImpl
-import presentation.ui_io.ConsolePrinter
-import presentation.ui_io.ConsoleReader
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.ConsolePrinter
+import presentation.io.ConsoleReader
+import presentation.io.InputReader
+import presentation.io.Printer
 import logic.utils.HashingService
 import logic.validation.DateTimeParser
 import logic.validation.DateTimeParserImpl

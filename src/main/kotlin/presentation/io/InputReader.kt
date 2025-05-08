@@ -1,4 +1,4 @@
-package presentation.ui_io
+package presentation.io
 
 interface InputReader {
     fun readString(): String?

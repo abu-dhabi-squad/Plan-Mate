@@ -8,8 +8,8 @@ import logic.exceptions.DuplicateStateException
 import logic.exceptions.ProjectNotFoundException
 import logic.model.State
 import logic.project.AddStateToProjectUseCase
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 
 class AddStateToProjectUITest{
     private lateinit var addStateToProjectUI: AddStateToProjectUI

@@ -1,33 +1,33 @@
 package data.project.repository
 
-import data.project.mapper.ProjectMapper
+import data.project.mapper.MongoProjectMapper
 import logic.model.Project
 import logic.repository.ProjectRepository
 
 class ProjectRepositoryImpl(
     private val projectDataSource: RemoteProjectDataSource,
-    private val projectMapper: ProjectMapper
+    private val mongoProjectMapper: MongoProjectMapper
 
 ) : ProjectRepository {
 
     override suspend fun getAllProjects(): List<Project> {
-        return projectDataSource.getAllProjects().map { projectMapper.mapDtoToProject(it) }
+        return projectDataSource.getAllProjects().map { mongoProjectMapper.mapDtoToProject(it) }
     }
 
     override suspend fun addProject(project: Project) {
-        projectDataSource.createProject(projectMapper.mapProjectToDto(project))
+        projectDataSource.createProject(mongoProjectMapper.mapProjectToDto(project))
     }
 
     override suspend fun editProject(project: Project) {
-        projectDataSource.editProject(projectMapper.mapProjectToDto(project))
+        projectDataSource.editProject(mongoProjectMapper.mapProjectToDto(project))
     }
 
-    override suspend fun deleteProject(projectId: String) {
+    override suspend fun deleteProjectById(projectId: String) {
         projectDataSource.deleteProject(projectId)
     }
 
     override suspend fun getProjectById(projectId: String): Project? {
-        return projectDataSource.getProjectById(projectId)?.let { projectMapper.mapDtoToProject(it) }
+        return projectDataSource.getProjectById(projectId)?.let { mongoProjectMapper.mapDtoToProject(it) }
     }
 
 }

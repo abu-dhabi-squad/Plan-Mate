@@ -6,8 +6,7 @@ import logic.model.Project
 import logic.model.State
 import java.util.UUID
 
-
-class ProjectMapper {
+class MongoProjectMapper {
     fun mapDtoToProject(projectDto: ProjectDto): Project {
         return Project(
             id = UUID.fromString(projectDto.id),
@@ -36,5 +35,4 @@ class ProjectMapper {
             name = state.name
         )
     }
-
 }

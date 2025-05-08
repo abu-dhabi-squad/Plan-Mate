@@ -1,4 +1,4 @@
-package presentation.task_management
+package presentation.taskmanagement
 
 import helper.createProject
 import helper.createState
@@ -14,8 +14,8 @@ import logic.exceptions.InvalidTaskDateException
 import logic.exceptions.NoProjectsFoundException
 import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
 import java.time.LocalDate
 

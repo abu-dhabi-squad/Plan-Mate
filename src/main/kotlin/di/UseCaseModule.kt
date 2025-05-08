@@ -43,6 +43,4 @@ val useCaseModule = module {
 
     single { GetLoggedUserUseCase(get()) }
     single { SaveLoggedUserUseCase(get()) }
-
-
 }

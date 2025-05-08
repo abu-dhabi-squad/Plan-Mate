@@ -3,8 +3,8 @@ package presentation.project
 import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 
 class EditProjectUI(
     private val editProjectUseCase: EditProjectUseCase,

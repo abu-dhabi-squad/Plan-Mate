@@ -22,38 +22,34 @@ class DuplicateStateException(state: String) : AppException("State '$state' alre
 
 class NoProjectsFoundException : AppException("No projects Found")
 
-class ProjectNotFoundException() : AppException("Project Not Found")
+class ProjectNotFoundException : AppException("Project Not Found")
 
-class ProjectStateNotFoundException() : AppException("State Not Found")
-
-class InvalidPasswordException(password: String) : AppException("Invalid password")
+class ProjectStateNotFoundException : AppException("State Not Found")
 
 class UserAlreadyExistsException(username: String) : AppException("Username '$username' already exists")
 
 class CanNotParseUserException : AppException("Cannot parse User data from CSV")
 
-class UserNotFoundException(username: String) :
-    AppException("User with username '$username' not found")
+class UserNotFoundException(username: String) : AppException("User with username '$username' not found")
 
-open class DataException(msg: String) : AppException(msg)
+class CanNotParseProjectException : AppException("can't parse string to project")
 
-class CanNotParseProjectException : DataException("can't parse string to project")
+class CanNotParseStateException : AppException("can't parse string to State")
 
-class CanNotParseStateException : DataException("can't parse string to State")
+class ShortPasswordException : AppException("Password must be at least 8 characters long")
 
-open class PasswordException(msg: String) : AppException(msg)
+class NoUpperCaseInPasswordException : AppException("Password must contain at least one uppercase letter")
 
-class ShortPasswordException : PasswordException("Password must be at least 8 characters long")
+class NoLowerCaseInPasswordException : AppException("Password must contain at least one lowercase letter")
 
-class NoUpperCaseInPasswordException : PasswordException("Password must contain at least one uppercase letter")
+class NoNumberInPasswordException : AppException("Password must contain at least one number")
 
-class NoLowerCaseInPasswordException : PasswordException("Password must contain at least one lowercase letter")
-
-class NoNumberInPasswordException : PasswordException("Password must contain at least one number")
-
-class NoSpecialCharsInPasswordException : PasswordException("Password must contain at least one special character")
+class NoSpecialCharsInPasswordException : AppException("Password must contain at least one special character")
 
 class InvalidCredentialsException : RuntimeException("Invalid credentials")
 
 class EmptyUsernameException(message: String = "Username cannot be empty") : IllegalArgumentException(message)
+
 class NoLoggedInUserException : IllegalStateException("No user is currently logged in")
+
+class UserTypeNotFoundException : AppException("User type is not found in data")

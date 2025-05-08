@@ -1,4 +1,4 @@
-package presentation.userManagement
+package presentation.usermanagement
 
 import logic.authentication.CreateMateUserUseCase
 import logic.exceptions.EmptyUsernameException
@@ -6,8 +6,8 @@ import logic.exceptions.UserAlreadyExistsException
 import logic.model.User
 import logic.model.UserType
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 
 class CreateMateUserUseCaseUI(
     private val createUserUseCase: CreateMateUserUseCase,

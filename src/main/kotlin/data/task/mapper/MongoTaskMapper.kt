@@ -6,10 +6,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.UUID
 
-class TaskMapper {
-
+class MongoTaskMapper {
     private val dateFormatter = DateTimeFormatter.ISO_DATE
-
     fun taskToTaskDto(task: Task): TaskDto {
         return TaskDto(
             id = task.id.toString(),
@@ -22,7 +20,6 @@ class TaskMapper {
             endDate = task.endDate.format(dateFormatter)
         )
     }
-
     fun taskDtoToTask(taskDto: TaskDto): Task {
         return Task(
             id = UUID.fromString(taskDto.id),

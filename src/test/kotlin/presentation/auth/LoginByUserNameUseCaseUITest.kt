@@ -9,10 +9,11 @@ import logic.exceptions.UserNotFoundException
 import logic.model.User
 import logic.model.UserType
 import presentation.admin.ConsoleAdminMenuView
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import presentation.user.ConsoleUserMenuView
 import logic.user.SaveLoggedUserUseCase
+import java.util.*
 
 class LoginByUserNameUseCaseUITest {
 
@@ -71,7 +72,7 @@ class LoginByUserNameUseCaseUITest {
     @Test
     fun `should login successfully as ADMIN and launch admin menu`() =runTest{
         // Given
-        val user = User("2", "adminUser", "adminPass", UserType.ADMIN)
+        val user = User(UUID.fromString("2"), "adminUser", "adminPass", UserType.ADMIN)
         every { inputReader.readString() } returnsMany listOf("adminUser", "adminPass")
         coEvery { loginUseCase.invoke("adminUser", "adminPass") } returns user
 
@@ -87,7 +88,7 @@ class LoginByUserNameUseCaseUITest {
     @Test
     fun `should login successfully as MATE and launch user menu`() = runTest{
         // Given
-        val user = User("3", "mateUser", "matePass", UserType.MATE)
+        val user = User(UUID.fromString("3"), "mateUser", "matePass", UserType.MATE)
         every { inputReader.readString() } returnsMany listOf("mateUser", "matePass")
         coEvery { loginUseCase.invoke("mateUser", "matePass") } returns user
 
