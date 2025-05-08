@@ -2,7 +2,7 @@ package presentation.project
 
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
-import presentation.ui_io.Printer
+import presentation.io.Printer
 
 class GetAllProjectsUI(
     private val printer: Printer,

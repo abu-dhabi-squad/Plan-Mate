@@ -2,8 +2,8 @@ package presentation.project
 
 import logic.project.GetProjectByIdUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 
 class GetProjectByIdUI(
     private val inputReader: InputReader,

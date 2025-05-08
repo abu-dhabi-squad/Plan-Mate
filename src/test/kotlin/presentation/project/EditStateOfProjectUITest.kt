@@ -9,8 +9,8 @@ import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import presentation.ui_io.ConsoleReader
-import presentation.ui_io.Printer
+import presentation.io.ConsoleReader
+import presentation.io.Printer
 import java.util.*
 import kotlin.test.BeforeTest
 

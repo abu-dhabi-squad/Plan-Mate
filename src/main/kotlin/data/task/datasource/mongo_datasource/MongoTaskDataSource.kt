@@ -3,28 +3,29 @@ package data.task.datasource.mongo_datasource
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.task.model.TaskDto
+import data.task.repository.RemoteTaskDataSource
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
 import org.bson.Document
 
 class MongoTaskDataSource(
-    private val collection: MongoCollection<TaskDto>
+    private val taskCollection: MongoCollection<TaskDto>
 ) : RemoteTaskDataSource {
 
     override suspend fun getAllTasks(): List<TaskDto> {
-        return collection.find().toList()
+        return taskCollection.find().toList()
     }
 
     override suspend fun getTaskById(taskId: String): TaskDto? {
-        return collection.find(Filters.eq("id", taskId)).firstOrNull()
+        return taskCollection.find(Filters.eq("id", taskId)).firstOrNull()
     }
 
     override suspend fun getTaskByProjectId(projectId: String): List<TaskDto> {
-        return collection.find(Filters.eq("projectId", projectId)).toList()
+        return taskCollection.find(Filters.eq("projectId", projectId)).toList()
     }
 
     override suspend fun createTask(task: TaskDto) {
-        collection.insertOne(task)
+        taskCollection.insertOne(task)
     }
 
     override suspend fun editTask(task: TaskDto) {
@@ -37,13 +38,13 @@ class MongoTaskDataSource(
             append("startDate", task.startDate)
             append("endDate", task.endDate)
         })
-        collection.updateOne(
+        taskCollection.updateOne(
             Filters.eq("id", task.id),
             updateDoc
         )
     }
 
     override suspend fun deleteTask(taskId: String) {
-        collection.deleteOne(Filters.eq("id", taskId))
+        taskCollection.deleteOne(Filters.eq("id", taskId))
     }
 }

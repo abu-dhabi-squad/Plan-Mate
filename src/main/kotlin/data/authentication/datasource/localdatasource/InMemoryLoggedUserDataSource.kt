@@ -1,5 +1,6 @@
 package data.authentication.datasource.localdatasource
 
+import data.authentication.repository.LoggedUserDataSource
 import logic.model.User
 
 class InMemoryLoggedUserDataSource : LoggedUserDataSource {

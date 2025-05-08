@@ -6,8 +6,8 @@ import logic.audit.CreateAuditUseCase
 import logic.project.CreateProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import logic.exceptions.ProjectNotFoundException
 import logic.user.GetLoggedUserUseCase
 

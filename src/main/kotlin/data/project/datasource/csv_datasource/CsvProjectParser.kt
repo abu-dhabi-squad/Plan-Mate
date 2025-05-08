@@ -22,9 +22,9 @@ class CsvProjectParser {
             .takeIf(::isValidProject)
             ?.let { projectRegex ->
                 return Project(
-                    UUID.fromString(projectRegex[ProjectColumnIndex.ID]),
-                    projectRegex[ProjectColumnIndex.NAME],
-                    parseStringToListOfState(projectRegex[ProjectColumnIndex.STATES])
+                    UUID.fromString(projectRegex[ID]),
+                    projectRegex[NAME],
+                    parseStringToListOfState(projectRegex[STATES])
                 )
             }
             ?: throw CanNotParseProjectException()
@@ -48,7 +48,7 @@ class CsvProjectParser {
             .forEach { stateRegex ->
                 stateRegex.split(";").also {
                     it.takeIf(::isValidState) ?: throw CanNotParseStateException()
-                    result.add(State(it[ProjectColumnIndex.STATE_ID], it[ProjectColumnIndex.STATE_NAME]))
+                    result.add(State(it[STATE_ID], it[STATE_NAME]))
                 }
             }
         return result
@@ -57,24 +57,29 @@ class CsvProjectParser {
     private fun parseOneState(subLine: String): List<State> {
         val listOfRegex: List<String> = subLine.split(";")
             .takeIf(::isValidState) ?: throw CanNotParseStateException()
-        return listOf(State(listOfRegex[ProjectColumnIndex.STATE_ID], listOfRegex[ProjectColumnIndex.STATE_NAME]))
+        return listOf(State(listOfRegex[STATE_ID], listOfRegex[STATE_NAME]))
     }
 
     private fun isValidProject(projectRegex: List<String>): Boolean {
         return projectRegex.size == PROJECT_LINE_REGEX_NUMBERS
-                && projectRegex[ProjectColumnIndex.ID] != ""
-                && projectRegex[ProjectColumnIndex.NAME] != ""
+                && projectRegex[ID] != ""
+                && projectRegex[NAME] != ""
     }
 
     private fun isValidState(stateRegex: List<String>): Boolean {
         return stateRegex.size == STATE_LINE_REGEX_NUMBERS
-                && stateRegex[ProjectColumnIndex.STATE_ID] != ""
-                && stateRegex[ProjectColumnIndex.STATE_NAME] != ""
+                && stateRegex[STATE_ID] != ""
+                && stateRegex[STATE_NAME] != ""
     }
 
     private companion object {
         const val UNUSED_CHARACTER = 1
         const val PROJECT_LINE_REGEX_NUMBERS = 3
         const val STATE_LINE_REGEX_NUMBERS = 2
+        const val ID = 0
+        const val NAME = 1
+        const val STATES = 2
+        const val STATE_ID = 0
+        const val STATE_NAME = 1
     }
 }

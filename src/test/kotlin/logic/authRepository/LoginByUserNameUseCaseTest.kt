@@ -20,6 +20,7 @@ import logic.exceptions.UserNotFoundException
 import logic.model.User
 import logic.model.UserType
 import logic.repository.AuthenticationRepository
+import java.util.*
 import kotlin.test.Test
 
 class LoginByUserNameUseCaseTest {
@@ -28,13 +29,12 @@ class LoginByUserNameUseCaseTest {
     private lateinit var loginByUserNameUseCase: LoginByUserNameUseCase
     private lateinit var passwordValidator: PasswordValidator
 
-
     @BeforeEach
     fun setup() {
         authRepository = mockk(relaxed = true)
         hashingService = mockk(relaxed = true)
         passwordValidator = mockk(relaxed = true)
-        loginByUserNameUseCase = LoginByUserNameUseCase(authRepository,hashingService,passwordValidator)
+        loginByUserNameUseCase = LoginByUserNameUseCase(authRepository, hashingService, passwordValidator)
     }
 
     @Test
@@ -42,7 +42,7 @@ class LoginByUserNameUseCaseTest {
         val username = "testUser"
         val password = "correctPassword"
         val hashedPassword = "hashedPassword"
-        val expectedUser = User(username, hashedPassword, "role", UserType.MATE)
+        val expectedUser = User(UUID.fromString("1"), username, hashedPassword, UserType.MATE)
 
         every { hashingService.hash(password) } returns hashedPassword
         coEvery { authRepository.loginUser(username, hashedPassword) } returns expectedUser
@@ -76,11 +76,11 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `getUser should hash password before calling repository`() = runTest{
+    fun `getUser should hash password before calling repository`() = runTest {
         val username = "testUser"
         val password = "password123"
         val hashedPassword = "hashed123"
-        val expectedUser = User(username, hashedPassword, "role", UserType.MATE)
+        val expectedUser = User(UUID.fromString("1"), username, hashedPassword, UserType.MATE)
 
         every { hashingService.hash(password) } returns hashedPassword
         coEvery { authRepository.loginUser(username, hashedPassword) } returns expectedUser
@@ -92,7 +92,7 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `getUser should propagate InvalidCredentialsException from repository`() = runTest{
+    fun `getUser should propagate InvalidCredentialsException from repository`() = runTest {
         val username = "testUser"
         val password = "wrongPassword"
         val hashedPassword = "hashedWrong"
@@ -106,7 +106,7 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `createUser should call password validator`() = runTest{
+    fun `createUser should call password validator`() = runTest {
         val user = User(
             username = "newUser",
             password = "ValidPass123!",
@@ -114,13 +114,13 @@ class LoginByUserNameUseCaseTest {
         )
         every { passwordValidator.validatePassword(any()) } just runs
 
-        loginByUserNameUseCase(user.username,user.password)
+        loginByUserNameUseCase(user.username, user.password)
 
         verify { passwordValidator.validatePassword(user.password) }
     }
 
     @Test
-    fun `createUser should throw EmptyUsernameException when username is blank`() = runTest{
+    fun `createUser should throw EmptyUsernameException when username is blank`() = runTest {
         val user = User(
             username = "",
             password = "ValidPass123!",
@@ -128,11 +128,7 @@ class LoginByUserNameUseCaseTest {
         )
 
         assertThrows<EmptyUsernameException> {
-            loginByUserNameUseCase(user.username,user.password)
+            loginByUserNameUseCase(user.username, user.password)
         }
     }
-
-
-
-
 }

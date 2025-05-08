@@ -9,7 +9,6 @@ class GetAuditUseCase(
     private val auditRepository: AuditRepository
 ){
     suspend operator fun invoke(entityId: String): List<Audit> {
-
         if (entityId.isEmpty()) throw WrongInputException()
         return auditRepository.getAuditByEntityId(entityId).takeIf { it.isNotEmpty() } ?: throw EmptyList()
     }

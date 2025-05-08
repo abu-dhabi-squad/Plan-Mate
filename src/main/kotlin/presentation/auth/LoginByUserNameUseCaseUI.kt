@@ -3,8 +3,8 @@ package presentation.auth
 import logic.authentication.LoginByUserNameUseCase
 import presentation.UiLauncher
 import presentation.admin.ConsoleAdminMenuView
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import presentation.user.ConsoleUserMenuView
 import logic.model.UserType
 import logic.user.SaveLoggedUserUseCase

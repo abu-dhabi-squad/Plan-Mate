@@ -1,7 +1,7 @@
 package logic.authentication
-import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.User
+import logic.exceptions.EmptyUsernameException
 import logic.utils.HashingService
 import logic.validation.PasswordValidator
 import logic.repository.AuthenticationRepository

@@ -7,8 +7,8 @@ import logic.model.Project
 import logic.model.State
 import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
-import presentation.ui_io.ConsoleReader
-import presentation.ui_io.Printer
+import presentation.io.ConsoleReader
+import presentation.io.Printer
 import java.util.*
 import kotlin.test.BeforeTest
 

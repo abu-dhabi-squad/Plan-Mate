@@ -5,8 +5,8 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import logic.model.Project
 import logic.project.GetProjectByIdUseCase
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import java.util.*
 import kotlin.test.Test
 

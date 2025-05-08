@@ -6,12 +6,11 @@ import helper.createTask
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
-import data.task.parser.CsvTaskParser
+import data.task.datasource.csv_datasource.CsvTaskParser
 import data.utils.filehelper.CsvFileHelper
 
 class CsvTaskDataSourceTest {
@@ -27,7 +26,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getAllTasks should returns list of tasks when csv file is not empty`()= runTest {
+    fun `getAllTasks should returns list of tasks when csv file is not empty`(){
         // Given
         val tasks = listOf(createTask(), createTask(), createTask(), createTask())
         every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
@@ -41,7 +40,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getAllTasks should returns empty list when csv file is empty`()= runTest {
+    fun `getAllTasks should returns empty list when csv file is empty`(){
         // Given
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
@@ -50,7 +49,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getAllTasks should rethrows Exception when file throws Exception`() = runTest{
+    fun `getAllTasks should rethrows Exception when file throws Exception`(){
         // Given
         every { csvFileHelper.readFile(any()) } throws Exception()
 
@@ -59,7 +58,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getTaskByProjectId should returns list of tasks when csv file is not empty`() = runTest{
+    fun `getTaskByProjectId should returns list of tasks when csv file is not empty`(){
         // Given
         val tasks = listOf(createTask(), createTask(), createTask(), createTask())
         every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
@@ -73,7 +72,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getTaskByProjectId should returns empty list when csv file is empty`() = runTest{
+    fun `getTaskByProjectId should returns empty list when csv file is empty`(){
         // Given
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
@@ -82,7 +81,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getTaskByProjectId should rethrows Exception when file throws Exception`() = runTest{
+    fun `getTaskByProjectId should rethrows Exception when file throws Exception`(){
         // Given
         every { csvFileHelper.readFile(any()) } throws Exception()
 
@@ -91,7 +90,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getTaskById should returns task when csv file contains a task with the same id`()= runTest {
+    fun `getTaskById should returns task when csv file contains a task with the same id`(){
         // Given
         val tasks = listOf(createTask(), createTask(), createTask(), createTask())
         val task = tasks[0]
@@ -106,7 +105,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getTaskById should returns null when csv file not contains a task with the same id`()= runTest {
+    fun `getTaskById should returns null when csv file not contains a task with the same id`(){
         // Given
         val tasks = listOf(createTask(), createTask(), createTask(), createTask())
         val task = createTask()
@@ -121,7 +120,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `getTaskById should rethrows Exception when file throws Exception`()= runTest {
+    fun `getTaskById should rethrows Exception when file throws Exception`(){
         // Given
         val task = createTask()
         every { csvFileHelper.readFile(any()) } throws Exception()
@@ -131,7 +130,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `createTask should returns when added new task successfully added to the csv file`() = runTest{
+    fun `createTask should returns when added new task successfully added to the csv file`(){
         // Given
         val newTask = createTask()
 
@@ -143,7 +142,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `createTask should rethrows Exception when file throws Exception`()= runTest {
+    fun `createTask should rethrows Exception when file throws Exception`(){
         // Given
         val task = createTask()
         every { csvFileHelper.appendFile(any(), any()) } throws Exception()
@@ -153,7 +152,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `editTask should returns when updating task successfully into the csv file`() = runTest{
+    fun `editTask should returns when updating task successfully into the csv file`(){
         // Given
         val tasks = listOf(createTask(), createTask(), createTask(), createTask())
         val newTask = tasks[0]
@@ -168,7 +167,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `editTask should rethrows Exception when file throws Exception`() = runTest{
+    fun `editTask should rethrows Exception when file throws Exception`(){
         // Given
         val task = createTask()
         every { csvFileHelper.readFile(any()) } throws Exception()
@@ -178,7 +177,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `deleteTask should returns when deleted task successfully from the csv file`()= runTest {
+    fun `deleteTask should returns when deleted task successfully from the csv file`(){
         // Given
         val tasks = listOf(createTask(), createTask(), createTask(), createTask())
         val task = tasks[0]
@@ -193,7 +192,7 @@ class CsvTaskDataSourceTest {
     }
 
     @Test
-    fun `deleteTask should rethrows Exception when file throws Exception`() = runTest{
+    fun `deleteTask should rethrows Exception when file throws Exception`(){
         // Given
         val task = createTask()
         every { csvFileHelper.readFile(any()) } throws Exception()

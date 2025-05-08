@@ -1,6 +1,7 @@
 package data.audit.datasource.csvdatasource
 
-import data.parser.AuditParser
+import data.audit.datasource.csvdatasource.csvparser.AuditParser
+import data.audit.repository.LocalAuditDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.Audit
 
@@ -10,11 +11,11 @@ class CsvAuditDataSource(
     private val csvAuditParser: AuditParser,
 ) : LocalAuditDataSource {
 
-    override suspend fun createAuditLog(audit: Audit) {
+    override fun createAuditLog(audit: Audit) {
         return csvFileHelper.appendFile(csvFileName, listOf(csvAuditParser.getLineFromAudit(audit)))
     }
 
-    override suspend fun getAuditByEntityId(entityId: String): List<Audit> {
+    override fun getAuditByEntityId(entityId: String): List<Audit> {
         return csvFileHelper.readFile(csvFileName).map { csvAuditParser.getAuditFromLine(it) }.filter { audit ->
             audit.entityId == entityId
         }

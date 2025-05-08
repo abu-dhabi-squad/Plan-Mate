@@ -1,38 +1,37 @@
 package di
 
-import data.audit.mapper.AuditMapper
+import data.audit.mapper.MongoAuditMapper
 import data.audit.model.AuditDto
 import data.audit.repository.AuditRepositoryImpl
-import data.authentication.mapper.UserMapper
+import data.authentication.mapper.MongoUserMapper
 import data.authentication.datasource.csv_datasource.CsvUserParser
 import data.authentication.repository.AuthenticationRepositoryImpl
-import data.parser.AuditParser
+import data.audit.datasource.csvdatasource.csvparser.AuditParser
 import org.koin.core.qualifier.named
 
-import data.parser.CsvAuditParser
+import data.audit.datasource.csvdatasource.csvparser.CsvAuditParser
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import data.audit.datasource.mongo_database.MongoAuditDataSource
-import data.audit.datasource.mongo_database.RemoteAuditDataSource
-import data.authentication.datasource.mongo_datasource.RemoteAuthenticationDataSource
+import data.audit.repository.RemoteAuditDataSource
+import data.authentication.repository.RemoteAuthenticationDataSource
 import org.koin.dsl.module
 import data.project.datasource.csv_datasource.CsvProjectParser
 import data.project.repository.ProjectRepositoryImpl
 import data.task.repository.TaskRepositoryImpl
 import data.authentication.datasource.localdatasource.InMemoryLoggedUserDataSource
-import data.authentication.datasource.localdatasource.LoggedUserDataSource
+import data.authentication.repository.LoggedUserDataSource
 import data.authentication.datasource.mongo_datasource.MongoAuthenticationDataSource
 import data.authentication.model.UserDto
 import data.project.datasource.mongo_datasource.MongoProjectDataSource
-import data.project.datasource.mongo_datasource.RemoteProjectDataSource
-import data.project.mapper.ProjectMapper
+import data.project.repository.RemoteProjectDataSource
+import data.project.mapper.MongoProjectMapper
 import data.project.model.ProjectDto
+import data.task.datasource.csv_datasource.CsvTaskParser
 import data.task.datasource.mongo_datasource.MongoTaskDataSource
-import data.task.datasource.mongo_datasource.RemoteTaskDataSource
-import data.task.mapper.TaskMapper
+import data.task.repository.RemoteTaskDataSource
+import data.task.mapper.MongoTaskMapper
 import data.task.model.TaskDto
-import data.task.parser.CsvTaskParser
-import data.task.parser.TaskParser
 import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper
 import logic.repository.AuditRepository
@@ -41,10 +40,10 @@ import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
 
 val repositoryModule = module {
-    single { ProjectMapper() }
-    single { TaskMapper() }
-    single { AuditMapper() }
-    single { UserMapper() }
+    single { MongoProjectMapper() }
+    single { MongoTaskMapper() }
+    single { MongoAuditMapper() }
+    single { MongoUserMapper() }
 
     single<FileHelper> { CsvFileHelper() }
 
@@ -56,16 +55,12 @@ val repositoryModule = module {
 
     single { CsvProjectParser() }
     single<CsvUserParser> { CsvUserParser() }
-    single<TaskParser> { CsvTaskParser(get()) }
+    single { CsvTaskParser(get()) }
     single<AuditParser> { CsvAuditParser(get()) }
 
-  //  single<LocalAuthenticationDataSource> { CsvAuthenticationDataSource(get(), get(), "auth.csv") }
     single<LoggedUserDataSource> { InMemoryLoggedUserDataSource() }
-    //    single<ProjectDataSource> {  CsvProjectDataSource(get(),get(),"project.csv")}
-    //    single<LocalTaskDataSource> { CsvTaskDataSource(get(),"task.csv",get())  }
-    //    single<AuditDataSource> { CsvAuditDataSource(get(),"audit.csv",get() ) }
 
-     single<RemoteAuthenticationDataSource> { MongoAuthenticationDataSource(get(named("users"))) }
+    single<RemoteAuthenticationDataSource> { MongoAuthenticationDataSource(get(named("users"))) }
     single<RemoteProjectDataSource> {
         MongoProjectDataSource(get(named("projects")))
     }
@@ -99,6 +94,4 @@ val repositoryModule = module {
         val database: MongoDatabase = get()
         database.getCollection<UserDto>("users")
     }
-
-
 }

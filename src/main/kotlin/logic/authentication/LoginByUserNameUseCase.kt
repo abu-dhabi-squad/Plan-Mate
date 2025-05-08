@@ -21,6 +21,5 @@ class LoginByUserNameUseCase(
         username.takeIf { it.isNotBlank() } ?:
         throw EmptyUsernameException()
         standardPasswordValidator.validatePassword(password)
-        // is there any need to validate password again in login??
     }
 }
