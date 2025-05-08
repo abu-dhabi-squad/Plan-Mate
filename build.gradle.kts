@@ -35,15 +35,16 @@ kotlin {
 }
 
 val includedPackages = listOf(
-    "squad/abudhabi/data/**",
-    "squad/abudhabi/logic/**"
+    "**/data/**",
+    "**/logic/**",
+    "**/presentation/**"
 )
 
 val excludedPackages = listOf(
-    "squad/abudhabi/di/**",
-    "squad/abudhabi/data/utils/**",
-    "squad/abudhabi/logic/model/**",
-    "squad/abudhabi/logic/exceptions/**"
+    "**/di/**",
+    "**/data/utils/**",
+    "**/logic/model/**",
+    "**/logic/exceptions/**"
 )
 
 tasks.jacocoTestReport {

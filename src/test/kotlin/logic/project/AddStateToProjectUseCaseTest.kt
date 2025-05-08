@@ -12,6 +12,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.*
+import logic.exceptions.DuplicateStateException
+import logic.exceptions.ProjectNotFoundException
+import logic.model.Project
+import logic.model.State
+import logic.repository.ProjectRepository
 
 class AddStateToProjectUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
