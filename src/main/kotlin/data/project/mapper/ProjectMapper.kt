@@ -8,29 +8,29 @@ import java.util.UUID
 
 
 class ProjectMapper {
-    fun projectDtoToProject(projectDto: ProjectDto): Project {
+    fun mapDtoToProject(projectDto: ProjectDto): Project {
         return Project(
             id = UUID.fromString(projectDto.id),
             projectName = projectDto.projectName,
-            states = projectDto.states.map { stateDto -> stateDtoToState(stateDto) }
+            states = projectDto.states.map { stateDto -> mapDtoToState(stateDto) }
         )
     }
-    fun stateDtoToState(stateDto: StateDto): State {
+    fun mapDtoToState(stateDto: StateDto): State {
         return State(
             id = stateDto.id,
             name = stateDto.name
         )
     }
 
-    fun projectToProjectDto(project: Project): ProjectDto {
+    fun mapProjectToDto(project: Project): ProjectDto {
         return ProjectDto(
             id = project.id.toString(),
             projectName = project.projectName,
-            states = project.states.map { state -> stateToStateDto(state) }
+            states = project.states.map { state -> mapStateToDto(state) }
         )
     }
 
-    fun stateToStateDto(state: State): StateDto {
+    fun mapStateToDto(state: State): StateDto {
         return StateDto(
             id = state.id,
             name = state.name

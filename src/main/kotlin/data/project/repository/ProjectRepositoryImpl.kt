@@ -11,15 +11,15 @@ class ProjectRepositoryImpl(
 ) : ProjectRepository {
 
     override suspend fun getAllProjects(): List<Project> {
-        return projectDataSource.getAllProjects().map { projectMapper.projectDtoToProject(it) }
+        return projectDataSource.getAllProjects().map { projectMapper.mapDtoToProject(it) }
     }
 
     override suspend fun addProject(project: Project) {
-        projectDataSource.createProject(projectMapper.projectToProjectDto(project))
+        projectDataSource.createProject(projectMapper.mapProjectToDto(project))
     }
 
     override suspend fun editProject(project: Project) {
-        projectDataSource.editProject(projectMapper.projectToProjectDto(project))
+        projectDataSource.editProject(projectMapper.mapProjectToDto(project))
     }
 
     override suspend fun deleteProject(projectId: String) {
@@ -27,7 +27,7 @@ class ProjectRepositoryImpl(
     }
 
     override suspend fun getProjectById(projectId: String): Project? {
-        return projectDataSource.getProjectById(projectId)?.let { projectMapper.projectDtoToProject(it) }
+        return projectDataSource.getProjectById(projectId)?.let { projectMapper.mapDtoToProject(it) }
     }
 
 }
