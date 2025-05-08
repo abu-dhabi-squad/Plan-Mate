@@ -1,42 +1,40 @@
 package data.audit.mapper
 
-import data.audit.mapper.AuditMapperFields.CREATED_BY_FIELD
-import data.audit.mapper.AuditMapperFields.DATE_FIELD
-import data.audit.mapper.AuditMapperFields.ENTITY_ID_FIELD
-import data.audit.mapper.AuditMapperFields.ENTITY_TYPE_FIELD
-import data.audit.mapper.AuditMapperFields.ID_FIELD
-import data.audit.mapper.AuditMapperFields.NEW_STATE_FIELD
-import data.audit.mapper.AuditMapperFields.OLD_STATE_FIELD
-import org.bson.Document
+import data.audit.model.AuditDto
 import logic.model.Audit
 import logic.model.EntityType
-import java.time.LocalDateTime
-import java.util.*
+import java.time.ZoneId
+import java.util.Date
+import java.util.UUID
 
 class AuditMapper {
 
-    fun auditToDocument(audit: Audit): Document {
-        return Document().apply {
-            append(ID_FIELD, audit.id.toString())
-            append(CREATED_BY_FIELD, audit.createdBy)
-            append(ENTITY_ID_FIELD, audit.entityId)
-            append(ENTITY_TYPE_FIELD, audit.entityType.name)
-            append(OLD_STATE_FIELD, audit.oldState)
-            append(NEW_STATE_FIELD, audit.newState)
-            append(DATE_FIELD, audit.date.toString())
-        }
-    }
-
-    fun documentToAudit(doc: Document): Audit {
-        return Audit(
-            id = UUID.fromString(doc.getString(ID_FIELD)),
-            createdBy = doc.getString(CREATED_BY_FIELD),
-            entityId = doc.getString(ENTITY_ID_FIELD),
-            entityType = EntityType.valueOf(doc.getString(ENTITY_TYPE_FIELD)),
-            oldState = doc.getString(OLD_STATE_FIELD),
-            newState = doc.getString(NEW_STATE_FIELD),
-            date = LocalDateTime.parse(doc.getString(DATE_FIELD))
+    fun auditToDto(audit: Audit): AuditDto {
+        return AuditDto(
+            id = audit.id.toString(),
+            createdBy = audit.createdBy,
+            entityId = audit.entityId,
+            entityType = audit.entityType.name,
+            oldState = audit.oldState,
+            newState = audit.newState,
+            date = Date.from(audit.date.atZone(ZoneId.systemDefault()).toInstant())
         )
     }
+
+    fun dtoToAudit(dto: AuditDto): Audit {
+        return Audit(
+            id = UUID.fromString(dto.id),
+            createdBy = dto.createdBy,
+            entityId = dto.entityId,
+            entityType = EntityType.valueOf(dto.entityType),
+            oldState = dto.oldState,
+            newState = dto.newState,
+            date = dto.date
+                .toInstant()
+                .atZone(ZoneId.systemDefault())
+                .toLocalDateTime()
+        )
+    }
+
 
 }

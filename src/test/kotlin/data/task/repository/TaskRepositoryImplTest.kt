@@ -8,24 +8,24 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
-import data.task.datasource.TaskDataSource
+import data.task.datasource.csv_datasource.LocalTaskDataSource
 import logic.repository.TaskRepository
 
 class TaskRepositoryImplTest {
-    private lateinit var taskDataSource: TaskDataSource
+    private lateinit var localTaskDataSource: LocalTaskDataSource
     private lateinit var taskRepository: TaskRepository
 
     @BeforeEach
     fun setup() {
-        taskDataSource = mockk(relaxed = true)
-        taskRepository = TaskRepositoryImpl(taskDataSource)
+        localTaskDataSource = mockk(relaxed = true)
+        taskRepository = TaskRepositoryImpl(localTaskDataSource)
     }
 
     @Test
     fun `getAllTasks should returns list of tasks when datasource is not empty`() = runTest{
         // Given
         val tasks = listOf(createTask(), createTask(), createTask(), createTask())
-        coEvery { taskDataSource.getAllTasks() } returns tasks
+        coEvery { localTaskDataSource.getAllTasks() } returns tasks
 
         // When
         val result = taskRepository.getAllTasks()
@@ -37,7 +37,7 @@ class TaskRepositoryImplTest {
     @Test
     fun `getAllTasks should returns empty list when datasource is empty`()= runTest {
         // Given
-        coEvery { taskDataSource.getAllTasks() } returns emptyList()
+        coEvery { localTaskDataSource.getAllTasks() } returns emptyList()
 
         // When && Then
         assertTrue { taskRepository.getAllTasks().isEmpty() }
@@ -46,7 +46,7 @@ class TaskRepositoryImplTest {
     @Test
     fun `getAllTasks should rethrows Exception when datasource throws Exception`() = runTest{
         // Given
-        coEvery { taskDataSource.getAllTasks() } throws Exception()
+        coEvery { localTaskDataSource.getAllTasks() } throws Exception()
 
         // When && Then
         assertThrows<Exception> { taskRepository.getAllTasks() }
@@ -56,7 +56,7 @@ class TaskRepositoryImplTest {
     fun `getTaskByProjectId should returns list of tasks when datasource is not empty`()= runTest {
         // Given
         val tasks = listOf(createTask(), createTask(), createTask(), createTask())
-        coEvery { taskDataSource.getTaskByProjectId(any()) } returns tasks
+        coEvery { localTaskDataSource.getTaskByProjectId(any()) } returns tasks
 
         // When
         val result = taskRepository.getTaskByProjectId(tasks[0].projectId)
@@ -68,7 +68,7 @@ class TaskRepositoryImplTest {
     @Test
     fun `getTaskByProjectId should returns empty list when datasource is empty`() = runTest{
         // Given
-        coEvery { taskDataSource.getTaskByProjectId(any()) } returns emptyList()
+        coEvery { localTaskDataSource.getTaskByProjectId(any()) } returns emptyList()
 
         // When && Then
         assertTrue { taskRepository.getTaskByProjectId("1").isEmpty() }
@@ -77,7 +77,7 @@ class TaskRepositoryImplTest {
     @Test
     fun `getTaskByProjectId should rethrows Exception when datasource throws Exception`() = runTest{
         // Given
-        coEvery { taskDataSource.getTaskByProjectId(any()) } throws Exception()
+        coEvery { localTaskDataSource.getTaskByProjectId(any()) } throws Exception()
 
         // When && Then
         assertThrows<Exception> { taskRepository.getTaskByProjectId("1") }
@@ -87,7 +87,7 @@ class TaskRepositoryImplTest {
     fun `getTaskById should returns task when datasource contains a task with the same id`() = runTest{
         // Given
         val task = createTask()
-        coEvery { taskDataSource.getTaskById(any()) } returns task
+        coEvery { localTaskDataSource.getTaskById(any()) } returns task
 
         // When
         val result = taskRepository.getTaskById(task.id.toString())
@@ -100,7 +100,7 @@ class TaskRepositoryImplTest {
     fun `getTaskById should returns null when datasource not contains a task with the same id`()= runTest {
         // Given
         val task = createTask()
-        coEvery { taskDataSource.getTaskById(any()) } returns null
+        coEvery { localTaskDataSource.getTaskById(any()) } returns null
 
         // When
         val result = taskRepository.getTaskById(task.id.toString())
@@ -113,7 +113,7 @@ class TaskRepositoryImplTest {
     fun `getTaskById should rethrows Exception when datasource throws Exception`() = runTest{
         // Given
         val task = createTask()
-        coEvery { taskDataSource.getTaskById(any()) } throws Exception()
+        coEvery { localTaskDataSource.getTaskById(any()) } throws Exception()
 
         // When && Then
         assertThrows<Exception> { taskRepository.getTaskById(task.id.toString()) }
@@ -128,7 +128,7 @@ class TaskRepositoryImplTest {
         taskRepository.createTask(newTask)
 
         // Then
-        coVerify(exactly = 1) { taskDataSource.createTask(any()) }
+        coVerify(exactly = 1) { localTaskDataSource.createTask(any()) }
     }
 
     @Test
@@ -140,14 +140,14 @@ class TaskRepositoryImplTest {
         taskRepository.createTask(newTask)
 
         // Then
-        coVerify(exactly = 1) { taskDataSource.createTask(any()) }
+        coVerify(exactly = 1) { localTaskDataSource.createTask(any()) }
     }
 
     @Test
     fun `createTask should rethrows Exception when datasource throws Exception`()= runTest {
         // Given
         val task = createTask()
-        coEvery { taskDataSource.createTask(any()) } throws Exception()
+        coEvery { localTaskDataSource.createTask(any()) } throws Exception()
 
         // When && Then
         assertThrows<Exception> { taskRepository.createTask(task) }
@@ -162,14 +162,14 @@ class TaskRepositoryImplTest {
         taskRepository.editTask(newTask)
 
         // Then
-        coVerify(exactly = 1) { taskDataSource.editTask(any()) }
+        coVerify(exactly = 1) { localTaskDataSource.editTask(any()) }
     }
 
     @Test
     fun `editTask should rethrows Exception when datasource throws Exception`()= runTest {
         // Given
         val newTask = createTask()
-        coEvery { taskDataSource.editTask(any()) } throws Exception()
+        coEvery { localTaskDataSource.editTask(any()) } throws Exception()
 
         // When && Then
         assertThrows<Exception> { taskRepository.editTask(newTask) }
@@ -184,14 +184,14 @@ class TaskRepositoryImplTest {
         taskRepository.deleteTask(task.id.toString())
 
         // Then
-        coVerify(exactly = 1) { taskDataSource.deleteTask(any()) }
+        coVerify(exactly = 1) { localTaskDataSource.deleteTask(any()) }
     }
 
     @Test
     fun `deleteTask should rethrows Exception when datasource throws Exception`() = runTest{
         // Given
         val task = createTask()
-        coEvery { taskDataSource.deleteTask(any()) } throws Exception()
+        coEvery { localTaskDataSource.deleteTask(any()) } throws Exception()
 
         // When && Then
         assertThrows<Exception> { taskRepository.deleteTask(task.id.toString()) }

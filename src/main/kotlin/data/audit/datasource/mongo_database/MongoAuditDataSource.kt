@@ -1,24 +1,20 @@
 package data.audit.datasource.mongo_database
 
-import com.mongodb.client.MongoCollection
-import data.audit.mapper.AuditMapper
+import com.mongodb.client.model.Filters
+import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.audit.mapper.AuditMapperFields.ENTITY_ID_FIELD
-import data.audit.datasource.AuditDataSource
-import org.bson.Document
-import logic.model.Audit
+import data.audit.model.AuditDto
+import kotlinx.coroutines.flow.toList
 
 class MongoAuditDataSource(
-    private val collection: MongoCollection<Document>,
-    private val mapper: AuditMapper
-) : AuditDataSource {
+    private val collection: MongoCollection<AuditDto>
+) : RemoteAuditDataSource {
 
-    override suspend fun createAuditLog(audit: Audit) {
-            val doc = mapper.auditToDocument(audit)
-            collection.insertOne(doc)
+    override suspend fun createAuditLog(audit: AuditDto) {
+            collection.insertOne(audit)
     }
-
-    override suspend fun getAuditByEntityId(entityId: String): List<Audit> {
-        val docs = collection.find(Document(ENTITY_ID_FIELD, entityId)) ?: return emptyList()
-        return docs.map { mapper.documentToAudit(it) }.toList()
+    override suspend fun getAuditByEntityId(entityId: String): List<AuditDto> {
+        val filter = Filters.eq(ENTITY_ID_FIELD,entityId )
+          return collection.find(filter).toList()
     }
 }

@@ -4,7 +4,8 @@ import com.google.common.truth.Truth
 import createAudit
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import data.audit.datasource.AuditDataSource
+import data.audit.datasource.mongo_database.RemoteAuditDataSource
+import data.audit.mapper.AuditMapper
 import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import logic.repository.AuditRepository
@@ -13,14 +14,16 @@ import kotlin.test.assertTrue
 
 class AuditRepositoryImplTest {
 
-    lateinit var dataSource: AuditDataSource
+    lateinit var dataSource: RemoteAuditDataSource
+    lateinit var auditMapper: AuditMapper
     lateinit var auditRepository: AuditRepository
 
 
     @BeforeEach
     fun setup(){
         dataSource = mockk(relaxed = true)
-        auditRepository = AuditRepositoryImpl(dataSource)
+        auditMapper = mockk(relaxed = true)
+        auditRepository = AuditRepositoryImpl(dataSource,auditMapper)
     }
 
 

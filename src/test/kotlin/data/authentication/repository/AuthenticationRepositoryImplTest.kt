@@ -1,7 +1,6 @@
 import com.google.common.truth.Truth.assertThat
 import data.TestData.user1
 import data.TestData.user2
-import data.authentication.datasource.AuthenticationDataSource
 import data.authentication.repository.AuthenticationRepositoryImpl
 import io.mockk.Runs
 import io.mockk.just
@@ -10,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.authentication.datasource.localdatasource.LoggedUserDataSource
+import data.authentication.datasource.mongo_datasource.RemoteAuthenticationDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.test.runTest
@@ -17,7 +17,7 @@ import logic.exceptions.InvalidCredentialsException
 import logic.model.User
 import logic.model.UserType
 class AuthenticationRepositoryImplTest {
-    private lateinit var authenticationDataSource: AuthenticationDataSource
+    private lateinit var authenticationDataSource: RemoteAuthenticationDataSource
     private lateinit var authenticationRepository: AuthenticationRepositoryImpl
     private lateinit var loggedUserDataSource: LoggedUserDataSource
     @BeforeEach

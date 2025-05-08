@@ -1,6 +1,5 @@
 package data.project.datasource.csv_datasource
 
-import data.project.datasource.ProjectDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.Project
 
@@ -8,7 +7,7 @@ class CsvProjectDataSource(
     private val fileHelper: FileHelper,
     private val csvProjectParser: CsvProjectParser,
     private val fileName: String
-) : ProjectDataSource {
+) : LocalProjectDataSource {
     override suspend fun getAllProjects(): List<Project> {
         return fileHelper.readFile(fileName)
             .map(csvProjectParser::parseStringToProject)

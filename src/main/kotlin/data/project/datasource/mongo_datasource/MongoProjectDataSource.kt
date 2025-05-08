@@ -1,45 +1,57 @@
 package data.project.datasource.mongo_datasource
 
-import com.mongodb.client.MongoCollection
-import data.project.mapper.ProjectMapper
-import data.project.datasource.ProjectDataSource
+import com.mongodb.client.model.Filters
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import data.project.model.ProjectDto
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 import org.bson.Document
-import logic.model.Project
 
-class MongoProjectDataSource(private val collection: MongoCollection<Document>, private val mapper: ProjectMapper) :
-    ProjectDataSource {
-    override suspend fun getAllProjects(): List<Project> {
-        return collection.find().map { doc -> mapper.documentToProject(doc) }.toList()
-//        collection.find().iterator().asSequence().map { mapper.documentToProject(it) }.toList()
+class MongoProjectDataSource(
+    private val collection: MongoCollection<ProjectDto>,
+) : RemoteProjectDataSource {
+
+    override suspend fun getAllProjects(): List<ProjectDto> {
+        return collection.find().toList()
     }
 
-    override suspend fun createProject(project: Project) {
-        val doc = mapper.projectToDocument(project)
-        collection.insertOne(doc)
+    override suspend fun createProject(project: ProjectDto) {
+        collection.insertOne(project)
     }
 
-override suspend fun editProject(project: Project) {
-    val statesDocs = project.states.map { state ->
-        Document()
-            .append(ProjectMapper.STATE_ID_FIELD, state.id)
-            .append(ProjectMapper.STATE_NAME_FIELD, state.name)
+    override suspend fun editProject(project: ProjectDto) {
+        val statesDocs = project.states.map { state ->
+            Document()
+                .append(STATE_ID_FIELD, state.id)
+                .append(STATE_NAME_FIELD, state.name)
+        }
+
+        val updateDoc = Document(
+            "\$set", Document()
+                .append(PROJECT_NAME_FIELD, project.projectName)
+                .append(STATES_FIELD, statesDocs)
+        )
+
+        collection.updateOne(
+            Filters.eq(PROJECT_ID_FIELD, project.id.toString()),
+            updateDoc
+        )
     }
-
-    val updateDoc = Document(
-        "\$set", Document(ProjectMapper.PROJECT_NAME_FIELD, project.projectName)
-            .append(ProjectMapper.STATES_FIELD, statesDocs) // ✅
-    )
-
-    collection.updateOne(Document(ProjectMapper.ID_FIELD, project.id.toString()), updateDoc)
-}
 
     override suspend fun deleteProject(projectId: String) {
-        collection.deleteOne(Document(ProjectMapper.Companion.ID_FIELD, projectId))
+        collection.deleteOne(Filters.eq(PROJECT_ID_FIELD, projectId))
     }
 
-    override suspend fun getProjectById(projectId: String): Project? {
-        val doc = collection.find(Document(ProjectMapper.Companion.ID_FIELD, projectId)).first() ?: return null
-        return mapper.documentToProject(doc)
+    override suspend fun getProjectById(projectId: String): ProjectDto? {
+        return collection.find(Filters.eq(PROJECT_ID_FIELD, projectId))
+            .firstOrNull()
     }
 
+    companion object {
+        private const val STATE_ID_FIELD = "id"
+        private const val STATE_NAME_FIELD = "name"
+        private const val PROJECT_ID_FIELD = "id"
+        private const val PROJECT_NAME_FIELD = "projectName"
+        private const val STATES_FIELD = "states"
+    }
 }

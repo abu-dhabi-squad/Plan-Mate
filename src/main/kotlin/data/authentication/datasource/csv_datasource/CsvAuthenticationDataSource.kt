@@ -1,6 +1,6 @@
 package data.authentication.datasource.csv_datasource
 
-import data.authentication.datasource.AuthenticationDataSource
+import data.authentication.datasource.localdatasource.LocalAuthenticationDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.User
 
@@ -8,7 +8,7 @@ class CsvAuthenticationDataSource(
     private val csvUserParser: CsvUserParser,
     private val fileHelper: FileHelper,
     private val filePath: String
-) : AuthenticationDataSource {
+) : LocalAuthenticationDataSource {
     override suspend fun getUserByUserName(userName: String): User? {
         return getAllUsers().find { it.username == userName }
     }

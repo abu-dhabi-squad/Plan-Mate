@@ -3,6 +3,7 @@ package data.audit.datasource
 import com.google.common.truth.Truth
 import createAudit
 import data.audit.datasource.csvdatasource.CsvAuditDataSource
+import data.audit.datasource.csvdatasource.LocalAuditDataSource
 import data.parser.CsvAuditParser
 import io.mockk.every
 import io.mockk.mockk
@@ -18,7 +19,7 @@ class CsvAuditDataSourceTest {
 
     private lateinit var csvFileHelper: CsvFileHelper
     private lateinit var csvAuditParser: CsvAuditParser
-    private lateinit var csvAuditDataSource: AuditDataSource
+    private lateinit var csvAuditDataSource: LocalAuditDataSource
 
     @BeforeEach
     fun setup() {

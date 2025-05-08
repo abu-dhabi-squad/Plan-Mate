@@ -1,43 +1,40 @@
 package data.project.mapper
 
-import org.bson.Document
+import data.project.model.ProjectDto
+import data.project.model.StateDto
 import logic.model.Project
 import logic.model.State
 import java.util.UUID
 
+
 class ProjectMapper {
-    fun documentToProject(doc: Document): Project {
-        val statesDocs = doc.getList(STATES_FIELD, Document::class.java)
-        val states = statesDocs.map { stateDoc ->
-            State(
-                id = stateDoc.getString(STATE_ID_FIELD),
-                name = stateDoc.getString(STATE_NAME_FIELD)
-            )
-        }
+    fun projectDtoToProject(projectDto: ProjectDto): Project {
         return Project(
-            id = UUID.fromString(doc.getString(ID_FIELD)),
-            projectName = doc.getString(PROJECT_NAME_FIELD),
-            states = states
+            id = UUID.fromString(projectDto.id),
+            projectName = projectDto.projectName,
+            states = projectDto.states.map { stateDto -> stateDtoToState(stateDto) }
+        )
+    }
+    fun stateDtoToState(stateDto: StateDto): State {
+        return State(
+            id = stateDto.id,
+            name = stateDto.name
         )
     }
 
-    fun projectToDocument(project: Project): Document {
-        val statesDocs = project.states.map { state ->
-            Document()
-                .append(STATE_ID_FIELD, state.id)
-                .append(STATE_NAME_FIELD, state.name)
-        }
-
-        return Document(ID_FIELD, project.id.toString())
-            .append(PROJECT_NAME_FIELD, project.projectName)
-            .append(STATES_FIELD, statesDocs)
+    fun projectToProjectDto(project: Project): ProjectDto {
+        return ProjectDto(
+            id = project.id.toString(),
+            projectName = project.projectName,
+            states = project.states.map { state -> stateToStateDto(state) }
+        )
     }
 
-    companion object {
-        const val STATE_ID_FIELD = "id"
-        const val STATE_NAME_FIELD = "name"
-        const val ID_FIELD = "id"
-        const val PROJECT_NAME_FIELD = "projectName"
-        const val STATES_FIELD = "states"
+    fun stateToStateDto(state: State): StateDto {
+        return StateDto(
+            id = state.id,
+            name = state.name
+        )
     }
+
 }

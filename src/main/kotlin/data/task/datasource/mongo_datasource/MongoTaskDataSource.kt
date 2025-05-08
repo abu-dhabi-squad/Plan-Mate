@@ -1,51 +1,49 @@
 package data.task.datasource.mongo_datasource
 
-import com.mongodb.client.MongoCollection
-import data.task.mapper.TaskMapper
+import com.mongodb.client.model.Filters
+import com.mongodb.kotlin.client.coroutine.MongoCollection
+import data.task.model.TaskDto
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 import org.bson.Document
-import data.task.datasource.TaskDataSource
-import logic.model.Task
 
-class MongoTaskDataSource(private val collection: MongoCollection<Document>, private val mapper: TaskMapper) :
-    TaskDataSource {
-    override suspend fun getAllTasks(): List<Task> {
-        return collection.find().map { doc ->
-            mapper.documentToTask(doc)
-        }.toList()
+class MongoTaskDataSource(
+    private val collection: MongoCollection<TaskDto>
+) : RemoteTaskDataSource {
+
+    override suspend fun getAllTasks(): List<TaskDto> {
+        return collection.find().toList()
     }
 
-    override suspend fun getTaskById(taskId: String): Task? {
-        val doc = collection.find(Document(TaskMapper.Companion.TASK_ID_FIELD, taskId)).first() ?: return null
-        return mapper.documentToTask(doc)
+    override suspend fun getTaskById(taskId: String): TaskDto? {
+        return collection.find(Filters.eq("id", taskId)).firstOrNull()
     }
 
-    override suspend fun getTaskByProjectId(projectId: String): List<Task> {
-        val doc = collection.find(Document(TaskMapper.Companion.TASK_ID_FIELD, projectId)) ?: return emptyList()
-        return doc.map { mapper.documentToTask(it) }.toList()
+    override suspend fun getTaskByProjectId(projectId: String): List<TaskDto> {
+        return collection.find(Filters.eq("projectId", projectId)).toList()
     }
 
-    override suspend fun createTask(task: Task) {
-        val doc = mapper.taskToDocument(task)
-        collection.insertOne(doc)
+    override suspend fun createTask(task: TaskDto) {
+        collection.insertOne(task)
     }
 
-    override suspend fun editTask(task: Task) {
-        val updateDoc = Document(
-            "\$set", Document(TaskMapper.Companion.USERNAME_FIELD, task.userName)
-                .append(TaskMapper.Companion.PROJECT_ID_FIELD, task.projectId)
-                .append(TaskMapper.Companion.STATE_ID_FIELD, task.stateId)
-                .append(TaskMapper.Companion.TITLE_FIELD, task.title)
-                .append(TaskMapper.Companion.DESCRIPTION_FIELD, task.description)
-                .append(TaskMapper.Companion.START_DATE, task.startDate.toString())
-                .append(
-                    TaskMapper.Companion.END_DATE, task.endDate.toString(
-                    )
-                )
+    override suspend fun editTask(task: TaskDto) {
+        val updateDoc = Document("\$set", Document().apply {
+            append("userName", task.userName)
+            append("projectId", task.projectId)
+            append("stateId", task.stateId)
+            append("title", task.title)
+            append("description", task.description)
+            append("startDate", task.startDate)
+            append("endDate", task.endDate)
+        })
+        collection.updateOne(
+            Filters.eq("id", task.id),
+            updateDoc
         )
-        collection.updateOne(Document(TaskMapper.Companion.TASK_ID_FIELD, task.id), updateDoc)
     }
 
     override suspend fun deleteTask(taskId: String) {
-        collection.deleteOne(Document(TaskMapper.Companion.TASK_ID_FIELD, taskId))
+        collection.deleteOne(Filters.eq("id", taskId))
     }
 }
