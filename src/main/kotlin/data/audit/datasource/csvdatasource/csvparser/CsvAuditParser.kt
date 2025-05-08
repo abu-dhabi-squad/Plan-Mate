@@ -3,7 +3,6 @@ package data.audit.datasource.csvdatasource.csvparser
 import logic.validation.DateTimeParser
 import logic.model.Audit
 import logic.model.EntityType
-
 import java.util.UUID
 
 class CsvAuditParser(
@@ -28,13 +27,23 @@ class CsvAuditParser(
         }
 
         return Audit(
-            id = UUID.fromString(parts[AuditColumnIndex.ID]),
-            createdBy = parts[AuditColumnIndex.CREATED_BY],
-            entityId = parts[AuditColumnIndex.ENTITY_ID],
-            entityType = EntityType.valueOf(parts[AuditColumnIndex.ENTITY_TYPE]),
-            oldState = parts[AuditColumnIndex.OLD_STATE],
-            newState = parts[AuditColumnIndex.NEW_STATE],
-            date = dateParser.parseDateFromString(parts[AuditColumnIndex.DATE]),
+            id = UUID.fromString(parts[ID]),
+            createdBy = parts[CREATED_BY],
+            entityId = parts[ENTITY_ID],
+            entityType = EntityType.valueOf(parts[ENTITY_TYPE]),
+            oldState = parts[OLD_STATE],
+            newState = parts[NEW_STATE],
+            date = dateParser.parseDateFromString(parts[DATE]),
         )
+    }
+
+    private companion object{
+        const val ID = 0
+        const val CREATED_BY = 1
+        const val ENTITY_ID = 2
+        const val ENTITY_TYPE = 3
+        const val OLD_STATE = 4
+        const val NEW_STATE = 5
+        const val DATE = 6
     }
 }
