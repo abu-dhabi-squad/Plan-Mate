@@ -33,7 +33,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getUserByUserName should return user when username exists`() = runTest {
+    fun `getUserByUserName should return user when username exists`() {
         // Given
         every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { csvUserParser.parseStringToUser(userString1) } returns user1
@@ -46,7 +46,7 @@ class CsvAuthenticationDataSourceTest {
 }
 
     @Test
-    fun `getUserByUserName should return null when username does not exist`() = runTest {
+    fun `getUserByUserName should return null when username does not exist`() {
         // Given
         every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { csvUserParser.parseStringToUser(userString1) } returns user1
@@ -59,7 +59,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getAllUsers should return a list of users when readFile returns valid data`() = runTest {
+    fun `getAllUsers should return a list of users when readFile returns valid data`()  {
         // Given
         every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { csvUserParser.parseStringToUser(userString1) } returns user1
@@ -72,7 +72,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getAllUsers should return empty list when readFile returns empty list`() = runTest {
+    fun `getAllUsers should return empty list when readFile returns empty list`() {
         // Given
         every { fileHelper.readFile(any()) } returns emptyList()
 
@@ -81,7 +81,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getAllUsers should throw Exception when readFile throws Exception`() = runTest {
+    fun `getAllUsers should throw Exception when readFile throws Exception`() {
         // Given
         every { fileHelper.readFile(filePath) } throws Exception()
 
@@ -92,7 +92,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `getAllUsers should throw Exception when parseStringToUser throws Exception`() = runTest {
+    fun `getAllUsers should throw Exception when parseStringToUser throws Exception`() {
         // Given
         every { fileHelper.readFile(filePath) } returns listOf(userString1)
         every { csvUserParser.parseStringToUser(any()) } throws CanNotParseUserException()
@@ -104,7 +104,7 @@ class CsvAuthenticationDataSourceTest {
     }
 
     @Test
-    fun `createUser should save new user when file is empty`() = runTest {
+    fun `createUser should save new user when file is empty`() {
         // Given
         every { fileHelper.readFile(filePath) } returns emptyList()
         every { csvUserParser.parseUserToString(user2) } returns userString2
