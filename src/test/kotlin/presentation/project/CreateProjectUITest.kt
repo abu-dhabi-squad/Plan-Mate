@@ -7,9 +7,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
-import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
-import squad.abudhabi.presentation.project.CreateProjectUI
+import logic.exceptions.ProjectNotFoundException
+import logic.user.GetLoggedUserUseCase
+import presentation.project.CreateProjectUI
 
 
 class CreateProjectUITest{

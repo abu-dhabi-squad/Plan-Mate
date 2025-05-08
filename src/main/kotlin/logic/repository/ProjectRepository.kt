@@ -1,6 +1,6 @@
-package squad.abudhabi.logic.repository
+package logic.repository
 
-import squad.abudhabi.logic.model.Project
+import logic.model.Project
 
 interface ProjectRepository {
     fun getAllProjects(): List<Project>

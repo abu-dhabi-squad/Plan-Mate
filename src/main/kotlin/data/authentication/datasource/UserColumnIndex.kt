@@ -1,4 +1,4 @@
-package squad.abudhabi.data.authentication.datasource
+package data.authentication.datasource
 
 object UserColumnIndex {
     const val ID = 0

@@ -1,7 +1,7 @@
 package data
 
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import logic.model.User
+import logic.model.UserType
 
 object TestData {
     val user1 = User("1", "user1", "pass1", UserType.MATE)

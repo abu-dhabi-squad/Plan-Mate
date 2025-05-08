@@ -9,15 +9,15 @@ import io.mockk.verify
 import logic.audit.CreateAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.exceptions.NoProjectsFoundException
-import squad.abudhabi.logic.exceptions.NoTasksFoundException
+import logic.exceptions.NoProjectsFoundException
+import logic.exceptions.NoTasksFoundException
 import logic.project.GetAllProjectsUseCase
 import logic.task.EditTaskUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.validation.DateParser
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import logic.user.GetLoggedUserUseCase
 import java.time.LocalDate
 
 class EditTaskPresenterUITest {

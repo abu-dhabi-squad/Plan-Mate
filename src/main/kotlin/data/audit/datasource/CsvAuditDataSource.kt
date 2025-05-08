@@ -1,8 +1,8 @@
 package data.audit.datasource
 
 import data.parser.AuditParser
-import squad.abudhabi.data.utils.filehelper.FileHelper
-import squad.abudhabi.logic.model.Audit
+import data.utils.filehelper.FileHelper
+import logic.model.Audit
 
 class CsvAuditDataSource(
     private val csvFileHelper: FileHelper,

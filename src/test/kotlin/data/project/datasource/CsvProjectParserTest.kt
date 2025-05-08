@@ -6,10 +6,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import squad.abudhabi.logic.exceptions.CanNotParseProjectException
-import squad.abudhabi.logic.exceptions.CanNotParseStateException
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
+import logic.exceptions.CanNotParseProjectException
+import logic.exceptions.CanNotParseStateException
+import logic.model.Project
+import logic.model.State
 
 class CsvProjectParserTest {
 

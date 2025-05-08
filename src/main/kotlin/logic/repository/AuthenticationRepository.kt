@@ -1,5 +1,5 @@
-package squad.abudhabi.logic.repository
-import squad.abudhabi.logic.model.User
+package logic.repository
+import logic.model.User
 
 interface AuthenticationRepository {
     fun loginUser(username: String, password: String): User?

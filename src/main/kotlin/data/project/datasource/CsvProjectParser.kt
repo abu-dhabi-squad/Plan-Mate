@@ -1,10 +1,10 @@
 package data.project.datasource
 
-import squad.abudhabi.data.project.datasource.ProjectColumnIndex
-import squad.abudhabi.logic.exceptions.CanNotParseProjectException
-import squad.abudhabi.logic.exceptions.CanNotParseStateException
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
+import data.project.datasource.ProjectColumnIndex
+import logic.exceptions.CanNotParseProjectException
+import logic.exceptions.CanNotParseStateException
+import logic.model.Project
+import logic.model.State
 
 class CsvProjectParser {
 

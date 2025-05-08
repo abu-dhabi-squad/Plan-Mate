@@ -1,7 +1,7 @@
 package data.project.datasource
 
-import squad.abudhabi.data.utils.filehelper.FileHelper
-import squad.abudhabi.logic.model.Project
+import data.utils.filehelper.FileHelper
+import logic.model.Project
 
 class CsvProjectDataSource(
     private val fileHelper: FileHelper,

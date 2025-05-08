@@ -1,9 +1,9 @@
 package logic.audit
 
-import squad.abudhabi.logic.exceptions.EmptyList
-import squad.abudhabi.logic.exceptions.WrongInputException
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.repository.AuditRepository
+import logic.exceptions.EmptyList
+import logic.exceptions.WrongInputException
+import logic.model.Audit
+import logic.repository.AuditRepository
 
 class GetAuditUseCase(
     private val auditRepository: AuditRepository

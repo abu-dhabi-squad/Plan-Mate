@@ -4,7 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
-import squad.abudhabi.logic.model.Project
+import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer

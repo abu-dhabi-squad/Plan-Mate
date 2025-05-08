@@ -1,6 +1,6 @@
 package data.parser
 
-import squad.abudhabi.logic.model.Audit
+import logic.model.Audit
 
 interface AuditParser {
     fun getLineFromAudit(audit: Audit): String

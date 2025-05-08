@@ -6,11 +6,11 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.exceptions.ProjectStateNotFoundException
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.exceptions.ProjectNotFoundException
+import logic.exceptions.ProjectStateNotFoundException
+import logic.model.Project
+import logic.model.State
+import logic.repository.ProjectRepository
 
 class EditStateOfProjectUIOfProjectUseCaseTest {
     private lateinit var editStateToProjectUseCase: EditStateOfProjectUseCase

@@ -8,7 +8,7 @@ import logic.validation.DateParserImpl
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.data.task.parser.CsvTaskParser
+import data.task.parser.CsvTaskParser
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 

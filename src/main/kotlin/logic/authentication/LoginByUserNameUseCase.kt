@@ -1,10 +1,10 @@
 package logic.authentication
-import squad.abudhabi.logic.exceptions.UserNotFoundException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.repository.AuthenticationRepository
+import logic.exceptions.UserNotFoundException
+import logic.model.User
+import logic.repository.AuthenticationRepository
 import logic.utils.HashingService
 import logic.validation.PasswordValidator
-import squad.abudhabi.logic.exceptions.EmptyUsernameException
+import logic.exceptions.EmptyUsernameException
 
 class LoginByUserNameUseCase(
     private val authRepository: AuthenticationRepository,
