@@ -8,12 +8,12 @@ import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import logic.authentication.CreateMateUserUseCase
-import presentation.usermanagement.CreateMateUserUseCaseUI
 import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.UserType
 import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.usermanagement.*
 import kotlin.test.Test
 
 

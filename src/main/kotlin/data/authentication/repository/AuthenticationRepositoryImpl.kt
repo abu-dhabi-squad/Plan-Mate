@@ -4,8 +4,6 @@ import data.authentication.mapper.MongoUserMapper
 import logic.exceptions.InvalidCredentialsException
 import logic.model.User
 import logic.repository.AuthenticationRepository
-import data.authentication.datasource.AuthenticationDataSource
-import data.authentication.datasource.LoggedUserDataSource
 
 class AuthenticationRepositoryImpl(
     private val remoteAuthenticationDataSource: RemoteAuthenticationDataSource,
@@ -13,14 +11,14 @@ class AuthenticationRepositoryImpl(
     private val mongoUserMapper : MongoUserMapper
 ) : AuthenticationRepository {
 
-    override suspend fun loginUser(userName: String, password: String): User {
-        return mongoUserMapper.dtoToUser(remoteAuthenticationDataSource.getUserByUserName(userName)
+    override suspend fun loginUser(username: String, password: String): User {
+        return mongoUserMapper.dtoToUser(remoteAuthenticationDataSource.getUserByUserName(username)
             ?.takeIf { it.password == password }
             ?: throw InvalidCredentialsException())
     }
 
-    override suspend fun getUserByName(userName: String): User? {
-        val userDto = remoteAuthenticationDataSource.getUserByUserName(userName)
+    override suspend fun getUserByName(username: String): User? {
+        val userDto = remoteAuthenticationDataSource.getUserByUserName(username)
         return userDto?.let { mongoUserMapper.dtoToUser(it) }
     }
 

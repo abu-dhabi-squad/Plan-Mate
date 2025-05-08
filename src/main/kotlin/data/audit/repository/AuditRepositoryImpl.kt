@@ -2,7 +2,6 @@ package data.audit.repository
 
 import data.audit.mapper.MongoAuditMapper
 import logic.model.Audit
-import data.audit.datasource.AuditDataSource
 import logic.repository.AuditRepository
 
 class AuditRepositoryImpl(
