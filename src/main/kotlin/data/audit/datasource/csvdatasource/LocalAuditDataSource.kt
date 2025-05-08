@@ -4,6 +4,6 @@ import logic.model.Audit
 
 interface LocalAuditDataSource {
 
-     fun createAuditLog(audit: Audit)
-     fun getAuditByEntityId(entityId: String) : List<Audit>
+    suspend fun createAuditLog(audit: Audit)
+    suspend fun getAuditByEntityId(entityId: String) : List<Audit>
 }
