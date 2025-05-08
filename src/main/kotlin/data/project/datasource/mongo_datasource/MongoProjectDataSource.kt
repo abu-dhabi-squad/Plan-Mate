@@ -33,7 +33,7 @@ class MongoProjectDataSource(
         )
 
         projectCollection.updateOne(
-            Filters.eq(PROJECT_ID_FIELD, project.id.toString()),
+            Filters.eq(PROJECT_ID_FIELD, project.id),
             updateDoc
         )
     }
