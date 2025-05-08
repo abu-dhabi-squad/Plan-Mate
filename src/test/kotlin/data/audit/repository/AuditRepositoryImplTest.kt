@@ -8,7 +8,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import data.audit.datasource.AuditDataSource
-import squad.abudhabi.logic.repository.AuditRepository
+import logic.repository.AuditRepository
 import kotlin.test.assertFails
 import kotlin.test.assertTrue
 

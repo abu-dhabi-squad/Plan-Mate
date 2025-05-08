@@ -2,8 +2,8 @@ package presentation.project
 
 import io.mockk.*
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
+import logic.model.Project
+import logic.model.State
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import org.junit.jupiter.params.ParameterizedTest

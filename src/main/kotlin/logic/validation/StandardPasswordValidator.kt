@@ -1,6 +1,6 @@
 package logic.validation
 
-import squad.abudhabi.logic.exceptions.*
+import logic.exceptions.*
 
 class StandardPasswordValidator : PasswordValidator {
 

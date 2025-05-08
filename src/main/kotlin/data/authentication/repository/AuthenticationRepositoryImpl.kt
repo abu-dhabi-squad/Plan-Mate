@@ -1,10 +1,10 @@
 package data.authentication.repository
 
 import data.authentication.datasource.AuthenticationDataSource
-import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
-import squad.abudhabi.logic.exceptions.InvalidCredentialsException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.repository.AuthenticationRepository
+import data.authentication.datasource.LoggedUserDataSource
+import logic.exceptions.InvalidCredentialsException
+import logic.model.User
+import logic.repository.AuthenticationRepository
 
 class AuthenticationRepositoryImpl(
     private val authenticationDataSource: AuthenticationDataSource,

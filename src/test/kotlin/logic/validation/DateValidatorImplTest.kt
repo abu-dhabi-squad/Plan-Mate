@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import squad.abudhabi.logic.exceptions.InvalidDateFormatException
-import squad.abudhabi.logic.exceptions.InvalidYearException
+import logic.exceptions.InvalidDateFormatException
+import logic.exceptions.InvalidYearException
 import java.time.LocalDate
 import kotlin.test.Test
 

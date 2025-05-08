@@ -1,17 +1,17 @@
 package presentation.task_management
 
 import logic.audit.CreateAuditUseCase
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.model.EntityType
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.Task
+import logic.model.Audit
+import logic.model.EntityType
+import logic.model.Project
+import logic.model.Task
 import logic.project.GetAllProjectsUseCase
 import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import logic.user.GetLoggedUserUseCase
 
 class DeleteTaskByIdPresenterUI(
     private val printer: Printer,

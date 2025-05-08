@@ -9,8 +9,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
-import squad.abudhabi.data.task.datasource.TaskDataSource
-import squad.abudhabi.logic.repository.TaskRepository
+import data.task.datasource.TaskDataSource
+import logic.repository.TaskRepository
 
 class TaskRepositoryImplTest {
     private lateinit var taskDataSource: TaskDataSource

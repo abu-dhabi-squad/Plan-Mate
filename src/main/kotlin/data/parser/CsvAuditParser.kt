@@ -1,8 +1,8 @@
 package data.parser
 
 import logic.validation.DateTimeParser
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.model.EntityType
+import logic.model.Audit
+import logic.model.EntityType
 
 import java.util.UUID
 

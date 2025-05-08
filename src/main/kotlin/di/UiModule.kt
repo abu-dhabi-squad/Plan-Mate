@@ -13,15 +13,15 @@ import presentation.task_management.CreateTaskPresenterUI
 import presentation.task_management.EditTaskPresenterUI
 import presentation.task_management.GetTasksByProjectIdPresenterUI
 import presentation.userManagement.CreateMateUserUseCaseUI
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import logic.model.User
+import logic.model.UserType
 import presentation.ui_io.ConsolePrinter
 import presentation.ui_io.ConsoleReader
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
 import presentation.user.ConsoleUserMenuView
-import squad.abudhabi.presentation.project.CreateProjectUI
-import squad.abudhabi.presentation.project.DeleteProjectUI
+import presentation.project.CreateProjectUI
+import presentation.project.DeleteProjectUI
 
 val uiModule = module {
 

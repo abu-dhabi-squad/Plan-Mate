@@ -1,4 +1,4 @@
-package squad.abudhabi.logic.exceptions
+package logic.exceptions
 
 open class AppException(msg: String) : Exception(msg)
 

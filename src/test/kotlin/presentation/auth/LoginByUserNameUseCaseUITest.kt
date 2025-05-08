@@ -4,14 +4,14 @@ import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.authentication.LoginByUserNameUseCase
-import squad.abudhabi.logic.exceptions.UserNotFoundException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import logic.exceptions.UserNotFoundException
+import logic.model.User
+import logic.model.UserType
 import presentation.admin.ConsoleAdminMenuView
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
 import presentation.user.ConsoleUserMenuView
-import squad.abudhabi.logic.user.SaveLoggedUserUseCase
+import logic.user.SaveLoggedUserUseCase
 
 class LoginByUserNameUseCaseUITest {
 

@@ -1,8 +1,8 @@
 package presentation.audit
 
 import logic.audit.GetAuditUseCase
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.model.Project
+import logic.model.Audit
+import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher

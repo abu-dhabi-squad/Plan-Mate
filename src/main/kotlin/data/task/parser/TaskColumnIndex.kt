@@ -1,4 +1,4 @@
-package squad.abudhabi.data.task.parser
+package data.task.parser
 
 object TaskColumnIndex {
     const val ID = 0

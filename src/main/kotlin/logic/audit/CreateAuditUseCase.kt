@@ -1,8 +1,8 @@
 package logic.audit
 
-import squad.abudhabi.logic.exceptions.InvalidAudit
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.repository.AuditRepository
+import logic.exceptions.InvalidAudit
+import logic.model.Audit
+import logic.repository.AuditRepository
 
 class CreateAuditUseCase(
     private val auditRepository: AuditRepository
