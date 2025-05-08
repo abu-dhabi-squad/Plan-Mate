@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.authentication.datasource.csv_datasource.CsvAuthenticationDataSource
 import data.authentication.datasource.csv_datasource.CsvUserParser
-import kotlinx.coroutines.test.runTest
 import data.utils.filehelper.FileHelper
 import logic.exceptions.CanNotParseUserException
 import logic.model.User
