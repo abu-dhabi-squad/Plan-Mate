@@ -1,7 +1,7 @@
 package logic.project
 
-import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.exceptions.ProjectNotFoundException
+import logic.repository.ProjectRepository
 
 class EditProjectUseCase(
     private val projectRepository: ProjectRepository

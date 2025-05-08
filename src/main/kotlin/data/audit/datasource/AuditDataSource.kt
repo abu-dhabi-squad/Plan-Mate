@@ -1,6 +1,6 @@
 package data.audit.datasource
 
-import squad.abudhabi.logic.model.Audit
+import logic.model.Audit
 
 interface AuditDataSource {
 

@@ -1,15 +1,15 @@
-package squad.abudhabi.presentation.project
+package presentation.project
 
 import logic.audit.CreateAuditUseCase
 import logic.project.CreateProjectUseCase
 import presentation.UiLauncher
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.model.EntityType
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import logic.model.Audit
+import logic.model.EntityType
+import logic.model.Project
+import logic.model.State
+import logic.user.GetLoggedUserUseCase
 
 
 class CreateProjectUI(

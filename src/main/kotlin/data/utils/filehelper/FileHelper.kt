@@ -1,4 +1,4 @@
-package squad.abudhabi.data.utils.filehelper
+package data.utils.filehelper
 
 
 interface FileHelper {

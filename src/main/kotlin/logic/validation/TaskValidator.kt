@@ -1,6 +1,6 @@
 package logic.validation
 
-import squad.abudhabi.logic.model.Task
+import logic.model.Task
 
 interface TaskValidator {
     fun validateOrThrow(task: Task)

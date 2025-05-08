@@ -3,9 +3,9 @@ package presentation.project
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.exceptions.DuplicateStateException
-import squad.abudhabi.logic.exceptions.ProjectNotFoundException
-import squad.abudhabi.logic.model.State
+import logic.exceptions.DuplicateStateException
+import logic.exceptions.ProjectNotFoundException
+import logic.model.State
 import logic.project.AddStateToProjectUseCase
 import presentation.ui_io.InputReader
 import presentation.ui_io.Printer

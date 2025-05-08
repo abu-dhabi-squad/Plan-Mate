@@ -4,7 +4,7 @@ import data.TestData.userString1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import data.authentication.datasource.CsvUserParser
-import squad.abudhabi.logic.exceptions.CanNotParseUserException
+import logic.exceptions.CanNotParseUserException
 import kotlin.test.assertFailsWith
 
 class CsvUserParserTest {

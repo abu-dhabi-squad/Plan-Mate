@@ -2,12 +2,12 @@ package presentation.task_management
 
 import logic.audit.CreateAuditUseCase
 import logic.validation.DateParser
-import squad.abudhabi.logic.model.Audit
-import squad.abudhabi.logic.model.EntityType
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.model.Task
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import logic.model.Audit
+import logic.model.EntityType
+import logic.model.Project
+import logic.model.State
+import logic.model.Task
+import logic.user.GetLoggedUserUseCase
 import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import presentation.UiLauncher

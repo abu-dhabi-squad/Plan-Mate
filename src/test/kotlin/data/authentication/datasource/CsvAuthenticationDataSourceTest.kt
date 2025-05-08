@@ -13,9 +13,9 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.authentication.datasource.CsvAuthenticationDataSource
 import data.authentication.datasource.CsvUserParser
-import squad.abudhabi.data.utils.filehelper.FileHelper
-import squad.abudhabi.logic.exceptions.CanNotParseUserException
-import squad.abudhabi.logic.model.User
+import data.utils.filehelper.FileHelper
+import logic.exceptions.CanNotParseUserException
+import logic.model.User
 
 class CsvAuthenticationDataSourceTest {
 

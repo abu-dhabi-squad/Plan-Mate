@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.data.authentication.datasource.LoggedUserDataSource
-import squad.abudhabi.logic.exceptions.NoLoggedInUserException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
-import squad.abudhabi.logic.repository.AuthenticationRepository
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
+import data.authentication.datasource.LoggedUserDataSource
+import logic.exceptions.NoLoggedInUserException
+import logic.model.User
+import logic.model.UserType
+import logic.repository.AuthenticationRepository
+import logic.user.GetLoggedUserUseCase
 
 class GetLoggedUserUseCaseTest{
     private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase

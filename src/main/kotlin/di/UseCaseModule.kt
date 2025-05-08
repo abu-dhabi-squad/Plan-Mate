@@ -17,8 +17,8 @@ import logic.task.EditTaskUseCase
 import logic.task.GetTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import org.koin.dsl.module
-import squad.abudhabi.logic.user.GetLoggedUserUseCase
-import squad.abudhabi.logic.user.SaveLoggedUserUseCase
+import logic.user.GetLoggedUserUseCase
+import logic.user.SaveLoggedUserUseCase
 
 val useCaseModule = module {
     single { CreateAuditUseCase(get()) }

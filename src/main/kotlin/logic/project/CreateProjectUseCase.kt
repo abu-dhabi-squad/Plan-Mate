@@ -1,8 +1,8 @@
 package logic.project
 
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.model.Project
+import logic.model.State
+import logic.repository.ProjectRepository
 
 class CreateProjectUseCase(
     private val projectRepository: ProjectRepository

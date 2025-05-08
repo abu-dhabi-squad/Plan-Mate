@@ -4,8 +4,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
+import logic.model.Project
+import logic.model.State
 import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.ui_io.ConsoleReader

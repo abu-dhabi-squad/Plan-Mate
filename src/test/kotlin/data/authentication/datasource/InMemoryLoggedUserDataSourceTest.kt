@@ -4,9 +4,9 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import squad.abudhabi.data.authentication.datasource.InMemoryLoggedUserDataSource
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import data.authentication.datasource.InMemoryLoggedUserDataSource
+import logic.model.User
+import logic.model.UserType
 
 class InMemoryLoggedUserDataSourceTest{
     private lateinit var inMemoryLoggedUserDataSource: InMemoryLoggedUserDataSource

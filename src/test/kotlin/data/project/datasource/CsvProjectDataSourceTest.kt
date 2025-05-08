@@ -7,9 +7,9 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.data.utils.filehelper.FileHelper
-import squad.abudhabi.logic.model.Project
-import squad.abudhabi.logic.model.State
+import data.utils.filehelper.FileHelper
+import logic.model.Project
+import logic.model.State
 
 class CsvProjectDataSourceTest {
     private lateinit var fileHelper: FileHelper

@@ -4,10 +4,10 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.NoProjectsFoundException
-import squad.abudhabi.logic.model.Project
+import logic.exceptions.NoProjectsFoundException
+import logic.model.Project
 import logic.project.GetAllProjectsUseCase
-import squad.abudhabi.logic.repository.ProjectRepository
+import logic.repository.ProjectRepository
 import kotlin.test.Test
 
 class GetAllProjectsUseCaseTest {

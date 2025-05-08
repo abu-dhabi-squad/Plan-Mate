@@ -1,6 +1,6 @@
-package squad.abudhabi.logic.repository
+package logic.repository
 
-import squad.abudhabi.logic.model.Task
+import logic.model.Task
 
 interface TaskRepository {
     fun getAllTasks(): List<Task>

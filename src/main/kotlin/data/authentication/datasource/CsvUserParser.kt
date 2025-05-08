@@ -1,13 +1,13 @@
 package data.authentication.datasource
 
-import squad.abudhabi.data.authentication.datasource.UserColumnIndex.ID
-import squad.abudhabi.data.authentication.datasource.UserColumnIndex.PASSWORD
-import squad.abudhabi.data.authentication.datasource.UserColumnIndex.USERNAME
-import squad.abudhabi.data.authentication.datasource.UserColumnIndex.USER_PARTS
-import squad.abudhabi.data.authentication.datasource.UserColumnIndex.USER_TYPE
-import squad.abudhabi.logic.exceptions.CanNotParseUserException
-import squad.abudhabi.logic.model.User
-import squad.abudhabi.logic.model.UserType
+import data.authentication.datasource.UserColumnIndex.ID
+import data.authentication.datasource.UserColumnIndex.PASSWORD
+import data.authentication.datasource.UserColumnIndex.USERNAME
+import data.authentication.datasource.UserColumnIndex.USER_PARTS
+import data.authentication.datasource.UserColumnIndex.USER_TYPE
+import logic.exceptions.CanNotParseUserException
+import logic.model.User
+import logic.model.UserType
 
 class CsvUserParser {
     fun parseUserToString(user: User): String {

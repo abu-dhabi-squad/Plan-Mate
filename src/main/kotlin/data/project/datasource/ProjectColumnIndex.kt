@@ -1,4 +1,4 @@
-package squad.abudhabi.data.project.datasource
+package data.project.datasource
 
 object ProjectColumnIndex {
     const val ID = 0

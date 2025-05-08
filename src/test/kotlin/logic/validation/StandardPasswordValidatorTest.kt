@@ -3,7 +3,7 @@ package logic.validation
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import squad.abudhabi.logic.exceptions.*
+import logic.exceptions.*
 
 class StandardPasswordValidatorTest {
 
