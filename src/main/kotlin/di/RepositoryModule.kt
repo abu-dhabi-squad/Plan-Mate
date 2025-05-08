@@ -6,10 +6,10 @@ import data.audit.repository.AuditRepositoryImpl
 import data.authentication.mapper.UserMapper
 import data.authentication.datasource.csv_datasource.CsvUserParser
 import data.authentication.repository.AuthenticationRepositoryImpl
-import data.parser.AuditParser
+import data.audit.datasource.csvdatasource.csvparser.AuditParser
 import org.koin.core.qualifier.named
 
-import data.parser.CsvAuditParser
+import data.audit.datasource.csvdatasource.csvparser.CsvAuditParser
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import data.audit.datasource.mongo_database.MongoAuditDataSource
@@ -59,13 +59,9 @@ val repositoryModule = module {
     single<TaskParser> { CsvTaskParser(get()) }
     single<AuditParser> { CsvAuditParser(get()) }
 
-  //  single<LocalAuthenticationDataSource> { CsvAuthenticationDataSource(get(), get(), "auth.csv") }
     single<LoggedUserDataSource> { InMemoryLoggedUserDataSource() }
-    //    single<ProjectDataSource> {  CsvProjectDataSource(get(),get(),"project.csv")}
-    //    single<LocalTaskDataSource> { CsvTaskDataSource(get(),"task.csv",get())  }
-    //    single<AuditDataSource> { CsvAuditDataSource(get(),"audit.csv",get() ) }
 
-     single<RemoteAuthenticationDataSource> { MongoAuthenticationDataSource(get(named("users"))) }
+    single<RemoteAuthenticationDataSource> { MongoAuthenticationDataSource(get(named("users"))) }
     single<RemoteProjectDataSource> {
         MongoProjectDataSource(get(named("projects")))
     }

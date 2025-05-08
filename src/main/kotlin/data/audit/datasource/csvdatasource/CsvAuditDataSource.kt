@@ -1,6 +1,6 @@
 package data.audit.datasource.csvdatasource
 
-import data.parser.AuditParser
+import data.audit.datasource.csvdatasource.csvparser.AuditParser
 import data.utils.filehelper.FileHelper
 import logic.model.Audit
 

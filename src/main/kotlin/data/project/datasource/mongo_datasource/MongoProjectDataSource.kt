@@ -8,15 +8,15 @@ import kotlinx.coroutines.flow.toList
 import org.bson.Document
 
 class MongoProjectDataSource(
-    private val collection: MongoCollection<ProjectDto>,
+    private val projectCollection: MongoCollection<ProjectDto>,
 ) : RemoteProjectDataSource {
 
     override suspend fun getAllProjects(): List<ProjectDto> {
-        return collection.find().toList()
+        return projectCollection.find().toList()
     }
 
     override suspend fun createProject(project: ProjectDto) {
-        collection.insertOne(project)
+        projectCollection.insertOne(project)
     }
 
     override suspend fun editProject(project: ProjectDto) {
@@ -32,18 +32,18 @@ class MongoProjectDataSource(
                 .append(STATES_FIELD, statesDocs)
         )
 
-        collection.updateOne(
+        projectCollection.updateOne(
             Filters.eq(PROJECT_ID_FIELD, project.id.toString()),
             updateDoc
         )
     }
 
     override suspend fun deleteProject(projectId: String) {
-        collection.deleteOne(Filters.eq(PROJECT_ID_FIELD, projectId))
+        projectCollection.deleteOne(Filters.eq(PROJECT_ID_FIELD, projectId))
     }
 
     override suspend fun getProjectById(projectId: String): ProjectDto? {
-        return collection.find(Filters.eq(PROJECT_ID_FIELD, projectId))
+        return projectCollection.find(Filters.eq(PROJECT_ID_FIELD, projectId))
             .firstOrNull()
     }
 

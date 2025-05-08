@@ -8,18 +8,18 @@ import data.authentication.model.UserDto
 import kotlinx.coroutines.flow.firstOrNull
 
 class MongoAuthenticationDataSource(
-    private val collection: MongoCollection<UserDto>,
+    private val userCollection: MongoCollection<UserDto>,
 ) : RemoteAuthenticationDataSource {
 
     override suspend fun getUserByUserName(userName: String): UserDto? {
-        return collection.find(Filters.eq(UserMapper.USERNAME_FIELD, userName)).firstOrNull()
+        return userCollection.find(Filters.eq(UserMapper.USERNAME_FIELD, userName)).firstOrNull()
     }
 
     override suspend fun getAllUsers(): List<UserDto> {
-        return collection.find().toList()
+        return userCollection.find().toList()
     }
 
     override suspend fun createUser(user: UserDto) {
-        collection.insertOne(user)
+        userCollection.insertOne(user)
     }
 }

@@ -1,4 +1,4 @@
-package data.parser
+package data.audit.datasource.csvdatasource.csvparser
 
 import io.mockk.every
 import io.mockk.mockk
@@ -30,7 +30,7 @@ class CsvAuditParserTest {
         // given
         val id = UUID.randomUUID()
         val customDateTime = LocalDate.of(2025, 5, 24).atTime(20, 0)
-      val audit =   Audit(
+        val audit =   Audit(
             id = id,
             createdBy = "user123",
             entityId = "42",

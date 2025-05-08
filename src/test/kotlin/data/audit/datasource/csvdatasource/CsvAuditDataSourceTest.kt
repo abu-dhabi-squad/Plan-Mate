@@ -4,7 +4,7 @@ import com.google.common.truth.Truth
 import createAudit
 import data.audit.datasource.csvdatasource.CsvAuditDataSource
 import data.audit.datasource.csvdatasource.LocalAuditDataSource
-import data.parser.CsvAuditParser
+import data.audit.datasource.csvdatasource.csvparser.CsvAuditParser
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
