@@ -11,6 +11,8 @@ import logic.task.GetTaskByIdUseCase
 import presentation.io.InputReader
 import presentation.io.Printer
 import java.time.LocalDate
+import java.util.*
+import kotlin.NoSuchElementException
 
 class GetTaskByIdPresenterUITest {
 
@@ -44,13 +46,13 @@ class GetTaskByIdPresenterUITest {
             description = "Some description",
             startDate = LocalDate.of(2025, 5, 1),
             endDate = LocalDate.of(2025, 5, 10),
-            projectId = "p1",
-            stateId = "s1",
+            projectId = UUID.fromString("p1"),
+            stateId = UUID.fromString("s1"),
             userName = "John Doe"
         )
 
         coEvery { inputReader.readString() } returns "t1"
-        coEvery { getTaskByIdUseCase("t1") } returns task
+        coEvery { getTaskByIdUseCase(UUID.fromString("t1")) } returns task
         // When
         presenter.launchUi()
         // Then
@@ -68,7 +70,7 @@ class GetTaskByIdPresenterUITest {
     fun `should display error message when task is not found`() = runTest{
         // Given
         coEvery { inputReader.readString() } returns "invalid-id"
-        coEvery { getTaskByIdUseCase("invalid-id") } throws NoSuchElementException("Task not found")
+        coEvery { getTaskByIdUseCase(UUID.fromString("invalid-id")) } throws NoSuchElementException("Task not found")
         // When
         presenter.launchUi()
         // Then

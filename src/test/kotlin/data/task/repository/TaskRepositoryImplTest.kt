@@ -10,6 +10,7 @@ import org.junit.jupiter.api.assertThrows
 import data.task.mapper.MongoTaskMapper
 import data.task.model.TaskDto
 import logic.repository.TaskRepository
+import java.util.*
 
 class TaskRepositoryImplTest {
 
@@ -60,13 +61,13 @@ class TaskRepositoryImplTest {
 
     @Test
     fun `getTaskByProjectId should return list of tasks when datasource is not empty`() = runTest {
-        val projectId = "project123"
+        val projectId = UUID.fromString("project123")
         val taskDto1 = mockk<TaskDto>()
         val taskDto2 = mockk<TaskDto>()
         val task1 = createTask().copy(projectId = projectId)
         val task2 = createTask().copy(projectId = projectId)
 
-        coEvery { remoteTaskDataSource.getTaskByProjectId(projectId) } returns listOf(taskDto1, taskDto2)
+        coEvery { remoteTaskDataSource.getTaskByProjectId(projectId.toString()) } returns listOf(taskDto1, taskDto2)
         every { taskMapper.taskDtoToTask(taskDto1) } returns task1
         every { taskMapper.taskDtoToTask(taskDto2) } returns task2
 
@@ -81,7 +82,7 @@ class TaskRepositoryImplTest {
     fun `getTaskByProjectId should return empty list when datasource is empty`() = runTest {
         coEvery { remoteTaskDataSource.getTaskByProjectId(any()) } returns emptyList()
 
-        val result = taskRepository.getTaskByProjectId("any_project_id")
+        val result = taskRepository.getTaskByProjectId(UUID.fromString("any_project_id"))
 
         assertThat(result).isEmpty()
     }
@@ -90,7 +91,7 @@ class TaskRepositoryImplTest {
     fun `getTaskByProjectId should rethrow Exception when datasource throws Exception`() = runTest {
         coEvery { remoteTaskDataSource.getTaskByProjectId(any()) } throws Exception()
 
-        assertThrows<Exception> { taskRepository.getTaskByProjectId("1") }
+        assertThrows<Exception> { taskRepository.getTaskByProjectId(UUID.fromString("1")) }
     }
 
     @Test
@@ -101,7 +102,7 @@ class TaskRepositoryImplTest {
         coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } returns taskDto
         every { taskMapper.taskDtoToTask(taskDto) } returns task
 
-        val result = taskRepository.getTaskById(task.id.toString())
+        val result = taskRepository.getTaskById(task.id)
 
         assertThat(result).isEqualTo(task)
         verify(exactly = 1) { taskMapper.taskDtoToTask(taskDto) }
@@ -112,7 +113,7 @@ class TaskRepositoryImplTest {
         val task = createTask()
         coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } returns null
 
-        val result = taskRepository.getTaskById(task.id.toString())
+        val result = taskRepository.getTaskById(task.id)
 
         assertThat(result).isNull()
     }
@@ -122,7 +123,7 @@ class TaskRepositoryImplTest {
         val task = createTask()
         coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } throws Exception()
 
-        assertThrows<Exception> { taskRepository.getTaskById(task.id.toString()) }
+        assertThrows<Exception> { taskRepository.getTaskById(task.id) }
     }
 
     @Test
@@ -181,7 +182,7 @@ class TaskRepositoryImplTest {
 
         coEvery { remoteTaskDataSource.deleteTask(task.id.toString()) } just Runs
 
-        taskRepository.deleteTask(task.id.toString())
+        taskRepository.deleteTask(task.id)
 
         coVerify { remoteTaskDataSource.deleteTask(task.id.toString()) }
     }
@@ -192,6 +193,6 @@ class TaskRepositoryImplTest {
 
         coEvery { remoteTaskDataSource.deleteTask(task.id.toString()) } throws Exception()
 
-        assertThrows<Exception> { taskRepository.deleteTask(task.id.toString()) }
+        assertThrows<Exception> { taskRepository.deleteTask(task.id) }
     }
 }

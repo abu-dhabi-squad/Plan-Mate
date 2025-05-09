@@ -54,7 +54,7 @@ class CreateTaskPresenterUI(
 
         val task = Task(
             userName = getLoggedUserUseCase().username,
-            projectId = selectedProject.id.toString(),
+            projectId = selectedProject.id,
             stateId = selectedState.id,
             title = title,
             description = description,

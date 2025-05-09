@@ -26,8 +26,8 @@ class AddStateToProjectUseCaseTest {
     @Test
     fun `should add new state to existing project`() = runTest{
         // Given
-        val existingState = State(id = "s1", name = "TODO")
-        val newState = State(id = "s2", name = "InProgress")
+        val existingState = State(id = UUID.fromString("s1"), name = "TODO")
+        val newState = State(id = UUID.fromString("s2"), name = "InProgress")
         val existingProject = Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Test Project", states = listOf(existingState))
 
         coEvery { projectRepository.getProjectById("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a") } returns existingProject
@@ -48,8 +48,8 @@ class AddStateToProjectUseCaseTest {
     @Test
     fun `should throw DuplicateStateException if state name already exists`() = runTest{
         // Given
-        val existingState = State(id = "s1", name = "TODO")
-        val duplicateState = State(id = "s2", name = "TODO")
+        val existingState = State(id = UUID.fromString("s1"), name = "TODO")
+        val duplicateState = State(id = UUID.fromString("s2"), name = "TODO")
         val existingProject = Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Test Project", states = listOf(existingState))
 
         coEvery { projectRepository.getProjectById(any()) } returns existingProject
@@ -65,7 +65,7 @@ class AddStateToProjectUseCaseTest {
     fun `should throw Project Not FoundException if project id is invalid`()= runTest {
         // Given
         coEvery { projectRepository.getProjectById(any()) } returns null
-        val newState = State(id = "s1", name = "Review")
+        val newState = State(id = UUID.fromString("s1"), name = "Review")
 
         // When & Then
         assertThrows<ProjectNotFoundException> {
@@ -76,8 +76,8 @@ class AddStateToProjectUseCaseTest {
     @Test
     fun `should throw DuplicateStateException if state name matches existing one ignoring case`() = runTest{
         // Given
-        val existingState = State(id = "s1", name = "ToDo")
-        val duplicateState = State(id = "s2", name = "todo") // same name, different case
+        val existingState = State(id = UUID.fromString("s1"), name = "ToDo")
+        val duplicateState = State(id = UUID.fromString("s2"), name = "todo") // same name, different case
         val existingProject = Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Test Project", states = listOf(existingState))
 
         coEvery { projectRepository.getProjectById(any()) } returns existingProject
@@ -93,7 +93,7 @@ class AddStateToProjectUseCaseTest {
     @Test
     fun `should handle adding first state to project with empty states list`() = runTest{
         // Given
-        val newState = State(id = "s1", name = "TODO")
+        val newState = State(id = UUID.fromString("s1"), name = "TODO")
         val existingProject = Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Test Project", states = emptyList())
 
         coEvery { projectRepository.getProjectById(any()) } returns existingProject

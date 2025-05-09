@@ -60,13 +60,13 @@ class DeleteTaskByIdPresenterUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
         coEvery { reader.readInt() } returns 1
-        coEvery { deleteTaskByIdUseCase("1") }just runs
+        coEvery { deleteTaskByIdUseCase(UUID.fromString("1")) }just runs
         // When
         presenter.launchUi()
         // Then
-        coVerify { deleteTaskByIdUseCase(task.id.toString()) }
+        coVerify { deleteTaskByIdUseCase(task.id) }
         coVerify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
@@ -79,13 +79,13 @@ class DeleteTaskByIdPresenterUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
         coEvery { reader.readInt() } returns 1
-        coEvery { deleteTaskByIdUseCase("1") } just runs
+        coEvery { deleteTaskByIdUseCase(UUID.fromString("1")) } just runs
         // When
         presenter.launchUi()
         // Then
-        coVerify { deleteTaskByIdUseCase(task.id.toString()) }
+        coVerify { deleteTaskByIdUseCase(task.id) }
         coVerify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
@@ -115,7 +115,7 @@ class DeleteTaskByIdPresenterUITest {
         val project = createProject()
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase("1") } throws NoTasksFoundException()
+        coEvery { getTasksByProjectIdUseCase(UUID.fromString("1")) } throws NoTasksFoundException()
         // When
         presenter.launchUi()
         // Then
@@ -128,7 +128,7 @@ class DeleteTaskByIdPresenterUITest {
         val project = createProject()
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase("1") } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(UUID.fromString("1")) } returns emptyList()
         // When
         presenter.launchUi()
         // Then
@@ -166,7 +166,7 @@ class DeleteTaskByIdPresenterUITest {
         val task = createTask()
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { getTasksByProjectIdUseCase("1") } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(UUID.fromString("1")) } returns listOf(task)
         coEvery { reader.readInt() } returns firstAttemptIndexEnter andThen secondAttemptIndexEnter andThen 1
         // When
         presenter.launchUi()

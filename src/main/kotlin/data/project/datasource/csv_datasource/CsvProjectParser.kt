@@ -12,7 +12,7 @@ class CsvProjectParser {
         var res = project.id.toString() + "," + project.projectName + ","
         if (project.states.isEmpty()) return res
         project.states.forEach {
-            res += it.id + ";" + it.name + "|"
+            res += it.id.toString() + ";" + it.name + "|"
         }
         return res.dropLast(UNUSED_CHARACTER)
     }
@@ -48,7 +48,7 @@ class CsvProjectParser {
             .forEach { stateRegex ->
                 stateRegex.split(";").also {
                     it.takeIf(::isValidState) ?: throw CanNotParseStateException()
-                    result.add(State(it[STATE_ID], it[STATE_NAME]))
+                    result.add(State(UUID.fromString(it[STATE_ID]), it[STATE_NAME]))
                 }
             }
         return result
@@ -57,7 +57,7 @@ class CsvProjectParser {
     private fun parseOneState(subLine: String): List<State> {
         val listOfRegex: List<String> = subLine.split(";")
             .takeIf(::isValidState) ?: throw CanNotParseStateException()
-        return listOf(State(listOfRegex[STATE_ID], listOfRegex[STATE_NAME]))
+        return listOf(State(UUID.fromString(listOfRegex[STATE_ID]), listOfRegex[STATE_NAME]))
     }
 
     private fun isValidProject(projectRegex: List<String>): Boolean {

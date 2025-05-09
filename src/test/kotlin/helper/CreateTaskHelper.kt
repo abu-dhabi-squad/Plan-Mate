@@ -7,8 +7,8 @@ import java.util.UUID
 fun createTask(
     id : UUID =UUID.randomUUID(),
     userName :String = "",
-    projectId :String = "",
-    stateId :String = "",
+    projectId :UUID = UUID.randomUUID(),
+    stateId :UUID = UUID.randomUUID(),
     title :String= "",
     description :String = "",
     startDate :LocalDate = LocalDate.now(),

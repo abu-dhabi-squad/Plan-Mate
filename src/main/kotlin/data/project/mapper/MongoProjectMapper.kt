@@ -16,7 +16,7 @@ class MongoProjectMapper {
     }
     fun dtoToState(stateDto: StateDto): State {
         return State(
-            id = stateDto.id,
+            id = UUID.fromString(stateDto.id),
             name = stateDto.name
         )
     }
@@ -31,7 +31,7 @@ class MongoProjectMapper {
 
     fun stateToDto(state: State): StateDto {
         return StateDto(
-            id = state.id,
+            id = state.id.toString(),
             name = state.name
         )
     }

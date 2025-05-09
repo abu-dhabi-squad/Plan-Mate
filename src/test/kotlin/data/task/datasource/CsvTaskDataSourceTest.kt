@@ -12,6 +12,7 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
 import data.task.datasource.csv_datasource.CsvTaskParser
 import data.utils.filehelper.CsvFileHelper
+import java.util.*
 
 class CsvTaskDataSourceTest {
     private lateinit var csvFileHelper: CsvFileHelper
@@ -77,7 +78,7 @@ class CsvTaskDataSourceTest {
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
         // When && Then
-        assertTrue { csvTaskDataSource.getTaskByProjectId("1").isEmpty() }
+        assertTrue { csvTaskDataSource.getTaskByProjectId(UUID.fromString("1")).isEmpty() }
     }
 
     @Test
@@ -86,7 +87,7 @@ class CsvTaskDataSourceTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTaskDataSource.getTaskByProjectId("1") }
+        assertThrows<Exception> { csvTaskDataSource.getTaskByProjectId(UUID.fromString("1")) }
     }
 
     @Test
@@ -98,7 +99,7 @@ class CsvTaskDataSourceTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        val result = csvTaskDataSource.getTaskById(task.id.toString())
+        val result = csvTaskDataSource.getTaskById(task.id)
 
         // Then
         Truth.assertThat(result).isEqualTo(task)
@@ -113,7 +114,7 @@ class CsvTaskDataSourceTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        val result = csvTaskDataSource.getTaskById(task.id.toString())
+        val result = csvTaskDataSource.getTaskById(task.id)
 
         // Then
         Truth.assertThat(result).isNull()
@@ -126,7 +127,7 @@ class CsvTaskDataSourceTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTaskDataSource.getTaskById(task.id.toString()) }
+        assertThrows<Exception> { csvTaskDataSource.getTaskById(task.id) }
     }
 
     @Test

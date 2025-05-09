@@ -48,7 +48,7 @@ class EditStateOfProjectUITest {
 
     @Test
     fun `should display projects and ask for inputs`() = runTest{
-        val projects = listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State("s1", "state1"))))
+        val projects = listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("s1"), "state1"))))
         coEvery { getAllProjectsUseCase() } returns projects
         coEvery { reader.readString() } returnsMany listOf(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "s1", "newName")
 
@@ -56,7 +56,7 @@ class EditStateOfProjectUITest {
 
         coVerify {
             printer.displayLn("project id: d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a - project name: name1 - states: [State(id=s1, name=state1)]")
-            editStateOfProjectUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), State("s1", "newName"))
+            editStateOfProjectUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), State(UUID.fromString("s1"), "newName"))
             printer.displayLn("State updated successfully.")
         }
     }
@@ -75,7 +75,7 @@ class EditStateOfProjectUITest {
         ui.launchUi()
 
         coVerify(exactly = 5) { printer.displayLn("Input cannot be empty.") }
-        coVerify { editStateOfProjectUseCase("validId", State("stateId", "newStateName")) }
+        coVerify { editStateOfProjectUseCase("validId", State(UUID.fromString("stateId"), "newStateName")) }
     }
 
     @ParameterizedTest

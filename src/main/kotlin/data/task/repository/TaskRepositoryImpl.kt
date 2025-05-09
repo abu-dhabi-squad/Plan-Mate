@@ -3,6 +3,7 @@ package data.task.repository
 import data.task.mapper.MongoTaskMapper
 import logic.model.Task
 import logic.repository.TaskRepository
+import java.util.UUID
 
 class TaskRepositoryImpl(
     private val remoteTaskDataSource: RemoteTaskDataSource,
@@ -13,14 +14,14 @@ class TaskRepositoryImpl(
         return remoteTaskDataSource.getAllTasks().map { taskDto -> remoteTaskParser.taskDtoToTask(taskDto) }
     }
 
-    override suspend fun getTaskById(taskId: String): Task? {
-        return remoteTaskDataSource.getTaskById(taskId)?.let { taskDto ->
+    override suspend fun getTaskById(taskId: UUID): Task? {
+        return remoteTaskDataSource.getTaskById(taskId.toString())?.let { taskDto ->
             remoteTaskParser.taskDtoToTask(taskDto)
         }
     }
 
-    override suspend fun getTaskByProjectId(projectId: String): List<Task> {
-        return remoteTaskDataSource.getTaskByProjectId(projectId).map { taskDto ->
+    override suspend fun getTaskByProjectId(projectId: UUID): List<Task> {
+        return remoteTaskDataSource.getTaskByProjectId(projectId.toString()).map { taskDto ->
             remoteTaskParser.taskDtoToTask(taskDto)
         }
     }
@@ -35,7 +36,7 @@ class TaskRepositoryImpl(
         remoteTaskDataSource.editTask(taskDto)
     }
 
-    override suspend fun deleteTask(taskId: String) {
-        remoteTaskDataSource.deleteTask(taskId)
+    override suspend fun deleteTask(taskId: UUID) {
+        remoteTaskDataSource.deleteTask(taskId.toString())
     }
 }

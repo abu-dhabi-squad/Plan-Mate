@@ -29,16 +29,16 @@ class DeleteTaskByIdUseCaseTest {
         coEvery { taskRepository.getTaskById(any()) } returns createTask(id = taskId)
 
         // When
-        deleteTaskByIdUseCase(taskId.toString())
+        deleteTaskByIdUseCase(taskId)
 
         // Then
-        coVerify { taskRepository.deleteTask(taskId.toString()) }
+        coVerify { taskRepository.deleteTask(taskId) }
     }
 
     @Test
     fun `should throw TaskNotFoundException exception when task is not exists`() = runTest{
         // Given
-        val taskId = UUID.randomUUID().toString()
+        val taskId = UUID.randomUUID()
         coEvery { taskRepository.getTaskById(any()) } returns null
 
         // When && Then

@@ -27,8 +27,8 @@ class EditStateOfProjectUIOfProjectUseCaseTest {
     fun `editStateOfProject should throw ProjectNotFoundException when projectRepository getProjectById returns null`() = runTest{
 
         //given
-        val newState = State("id1", "newState1")
-        val states = listOf(State("id2", "state1"), State("id3", "state2"))
+        val newState = State(UUID.fromString("id1"), "newState1")
+        val states = listOf(State(UUID.fromString("id2"), "state1"), State(UUID.fromString("id3"), "state2"))
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", states)
         coEvery { projectRepository.getProjectById(any()) } returns null
         //when & then
@@ -40,8 +40,8 @@ class EditStateOfProjectUIOfProjectUseCaseTest {
     @Test
     fun `editStateOfProject should throw Exception when projectRepository getProjectById throw Exception`() = runTest{
         //given
-        val newState = State("id1", "newState1")
-        val states = listOf(State("id2", "state1"), State("id3", "state2"))
+        val newState = State(UUID.fromString("id1"), "newState1")
+        val states = listOf(State(UUID.fromString("id2"), "state1"), State(UUID.fromString("id3"), "state2"))
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", states)
         coEvery { projectRepository.getProjectById(any()) } throws Exception()
         //when & then
@@ -53,8 +53,8 @@ class EditStateOfProjectUIOfProjectUseCaseTest {
     @Test
     fun `editStateOfProject should throw ProjectStateNotFoundException when the new state id not in project's states`() = runTest{
         //given
-        val newState = State("id1", "newState1")
-        val states = listOf(State("id2", "state1"), State("id3", "state2"))
+        val newState = State(UUID.fromString("id1"), "newState1")
+        val states = listOf(State(UUID.fromString("id2"), "state1"), State(UUID.fromString("id3"), "state2"))
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", states)
         coEvery { projectRepository.getProjectById(any()) } returns project
         //when & then
@@ -66,8 +66,8 @@ class EditStateOfProjectUIOfProjectUseCaseTest {
     @Test
     fun `editStateOfProject should throw Exception when the projectRepository editProject throw Exception`() = runTest{
         //given
-        val newState = State("id1", "newState1")
-        val states = listOf(State("id1", "state1"), State("id2", "state2"))
+        val newState = State(UUID.fromString("id1"), "newState1")
+        val states = listOf(State(UUID.fromString("id1"), "state1"), State(UUID.fromString("id2"), "state2"))
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", states)
         coEvery { projectRepository.getProjectById(any()) } returns project
         coEvery { projectRepository.editProject(any()) } throws Exception()
@@ -80,8 +80,8 @@ class EditStateOfProjectUIOfProjectUseCaseTest {
     @Test
     fun `editStateOfProject should call projectRepository editProject function when the state id is found`()= runTest {
         //given
-        val newState = State("id1", "newState1")
-        val states = listOf(State("id1", "state1"), State("id2", "state2"))
+        val newState = State(UUID.fromString("id1"), "newState1")
+        val states = listOf(State(UUID.fromString("id1"), "state1"), State(UUID.fromString("id2"), "state2"))
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", states)
         coEvery { projectRepository.getProjectById(any()) } returns project
         //when

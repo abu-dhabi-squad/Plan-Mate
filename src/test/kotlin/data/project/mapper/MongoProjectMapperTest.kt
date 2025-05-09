@@ -38,8 +38,8 @@ class MongoProjectMapperTest {
             id = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
             projectName = "My Project",
             states = listOf(
-                State("1", "State A"),
-                State("2", "State B")
+                State(UUID.fromString("1"), "State A"),
+                State(UUID.fromString("2"), "State B")
             )
         )
 
@@ -62,7 +62,7 @@ class MongoProjectMapperTest {
 
     @Test
     fun `stateToDto should map State to StateDto correctly`() {
-        val state = State("6", "In Progress")
+        val state = State(UUID.fromString("6"), "In Progress")
         val result = mapper.stateToDto(state)
         assertThat(result.id).isEqualTo("6")
         assertThat(result.name).isEqualTo("In Progress")

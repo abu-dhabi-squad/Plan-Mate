@@ -3,6 +3,7 @@ package data.task.datasource.csv_datasource
 import data.task.repository.LocalTaskDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.Task
+import java.util.UUID
 
 class CsvTaskDataSource(
     private val csvFileHelper: FileHelper,
@@ -14,11 +15,11 @@ class CsvTaskDataSource(
         return csvFileHelper.readFile(csvFileName).map { csvTaskParser.getTaskFromCsvLine(it) }
     }
 
-    override fun getTaskById(taskId: String): Task? {
-        return getAllTasks().find { it.id.toString() == taskId }
+    override fun getTaskById(taskId: UUID): Task? {
+        return getAllTasks().find { it.id == taskId }
     }
 
-    override fun getTaskByProjectId(projectId: String): List<Task> {
+    override fun getTaskByProjectId(projectId: UUID): List<Task> {
         return getAllTasks().filter { it.projectId == projectId }
     }
 

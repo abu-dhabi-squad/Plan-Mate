@@ -31,8 +31,8 @@ class CsvTaskParserTest {
         val task = createTask(
             id = uuid,
             userName = "Test User",
-            projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
-            stateId = "1",
+            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            stateId = UUID.fromString("1"),
             title = "Test Task",
             description = "Test Description",
             startDate = LocalDate.of(2023, 1, 1),
@@ -64,8 +64,8 @@ class CsvTaskParserTest {
         val task = createTask(
             id=UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             userName = "Test User",
-            projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
-            stateId = "1",
+            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            stateId = UUID.fromString("1"),
             title = "Test Task",
             description = "Test Description",
             startDate = LocalDate.of(2023, 1, 1),

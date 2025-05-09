@@ -58,7 +58,7 @@ class GetAuditForTaskUI(
     private suspend fun showTaskAudit(project: Project) {
 
         val tasks = try {
-            getTasksByProjectIdUseCase(project.id.toString())
+            getTasksByProjectIdUseCase(project.id)
         } catch (e: Exception) {
             printer.displayLn("Failed to fetch tasks: ${e.message}")
             return

@@ -41,7 +41,7 @@ class DeleteTaskByIdPresenterUI(
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
-            getTasksByProjectIdUseCase(selectedProject.id.toString())
+            getTasksByProjectIdUseCase(selectedProject.id)
         } catch (e: Exception) {
             printer.displayLn("Error loading tasks: ${e.message}")
             return
@@ -57,7 +57,7 @@ class DeleteTaskByIdPresenterUI(
         val selectedTask = tasks[taskIndex]
 
         try {
-            deleteTaskByIdUseCase(selectedTask.id.toString())
+            deleteTaskByIdUseCase(selectedTask.id)
             createAuditUseCase(
                 Audit(
                     entityId = selectedTask.id.toString(),
