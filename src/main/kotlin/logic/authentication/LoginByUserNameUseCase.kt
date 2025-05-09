@@ -9,7 +9,7 @@ import logic.repository.AuthenticationRepository
 class LoginByUserNameUseCase(
     private val authRepository: AuthenticationRepository,
     private val hashingService: HashingService,
-    private val standardPasswordValidator: PasswordValidator
+    private val loginPasswordValidator: PasswordValidator
 ) {
     suspend operator fun invoke(username: String, password: String): User {
         validateInputs(username, password)
@@ -20,6 +20,6 @@ class LoginByUserNameUseCase(
     private fun validateInputs(username: String, password: String) {
         username.takeIf { it.isNotBlank() } ?:
         throw EmptyUsernameException()
-        standardPasswordValidator.validatePassword(password)
+        loginPasswordValidator.validatePassword(password)
     }
 }

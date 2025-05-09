@@ -12,8 +12,8 @@ import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper
 import logic.validation.DateValidator
 import logic.validation.DateValidatorImpl
-import logic.validation.PasswordValidator
-import logic.validation.StandardPasswordValidator
+import logic.authentication.validtion.CreateUserPasswordValidator
+import logic.authentication.validtion.LoginPasswordValidator
 import logic.validation.TaskValidator
 import logic.validation.TaskValidatorImpl
 import presentation.io.ConsolePrinter
@@ -41,7 +41,9 @@ val appModule = module {
 
     single<FileHelper> { CsvFileHelper() }
 
-    single<PasswordValidator> { StandardPasswordValidator() }
+    single<CreateUserPasswordValidator> { CreateUserPasswordValidator() }
+    single<LoginPasswordValidator> { LoginPasswordValidator() }
+
     single<DateValidator> { DateValidatorImpl(get()) }
     single<TaskValidator> { TaskValidatorImpl() }
 

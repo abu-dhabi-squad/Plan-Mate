@@ -1,12 +1,13 @@
-package logic.validation
+package logic.authentication.validtion
 
 import logic.exceptions.NoLowerCaseInPasswordException
 import logic.exceptions.NoNumberInPasswordException
 import logic.exceptions.NoSpecialCharsInPasswordException
 import logic.exceptions.NoUpperCaseInPasswordException
 import logic.exceptions.ShortPasswordException
+import logic.validation.PasswordValidator
 
-class StandardPasswordValidator : PasswordValidator {
+class CreateUserPasswordValidator : PasswordValidator {
 
     override fun validatePassword(password: String) {
 
