@@ -7,29 +7,29 @@ import logic.model.State
 import java.util.UUID
 
 class MongoProjectMapper {
-    fun mapDtoToProject(projectDto: ProjectDto): Project {
+    fun dtoToProject(projectDto: ProjectDto): Project {
         return Project(
             id = UUID.fromString(projectDto.id),
             projectName = projectDto.projectName,
-            states = projectDto.states.map { stateDto -> mapDtoToState(stateDto) }
+            states = projectDto.states.map { stateDto -> dtoToState(stateDto) }
         )
     }
-    fun mapDtoToState(stateDto: StateDto): State {
+    fun dtoToState(stateDto: StateDto): State {
         return State(
             id = stateDto.id,
             name = stateDto.name
         )
     }
 
-    fun mapProjectToDto(project: Project): ProjectDto {
+    fun projectToDto(project: Project): ProjectDto {
         return ProjectDto(
             id = project.id.toString(),
             projectName = project.projectName,
-            states = project.states.map { state -> mapStateToDto(state) }
+            states = project.states.map { state -> stateToDto(state) }
         )
     }
 
-    fun mapStateToDto(state: State): StateDto {
+    fun stateToDto(state: State): StateDto {
         return StateDto(
             id = state.id,
             name = state.name

@@ -13,7 +13,7 @@ class MongoProjectMapperTest {
     private val mapper = MongoProjectMapper()
 
     @Test
-    fun `mapDtoToProject should map ProjectDto to Project correctly`() {
+    fun `dtoToProject should map ProjectDto to Project correctly`() {
         val projectDto = ProjectDto(
             id = "123e4567-e89b-12d3-a456-426614174000",
             projectName = "My Project",
@@ -23,7 +23,7 @@ class MongoProjectMapperTest {
             )
         )
 
-        val result = mapper.mapDtoToProject(projectDto)
+        val result = mapper.dtoToProject(projectDto)
 
         assertThat(result.id).isEqualTo(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
         assertThat(result.projectName).isEqualTo("My Project")
@@ -33,7 +33,7 @@ class MongoProjectMapperTest {
     }
 
     @Test
-    fun `mapProjectToDto should map Project to ProjectDto correctly`() {
+    fun `projectToDto should map Project to ProjectDto correctly`() {
         val project = Project(
             id = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
             projectName = "My Project",
@@ -43,7 +43,7 @@ class MongoProjectMapperTest {
             )
         )
 
-        val result = mapper.mapProjectToDto(project)
+        val result = mapper.projectToDto(project)
 
         assertThat(result.id).isEqualTo("123e4567-e89b-12d3-a456-426614174000")
         assertThat(result.projectName).isEqualTo("My Project")
@@ -53,17 +53,17 @@ class MongoProjectMapperTest {
     }
 
     @Test
-    fun `mapDtoToState should map StateDto to State correctly`() {
+    fun `dtoToState should map StateDto to State correctly`() {
         val stateDto = StateDto("5", "Ready")
-        val result = mapper.mapDtoToState(stateDto)
+        val result = mapper.dtoToState(stateDto)
         assertThat(result.id).isEqualTo("5")
         assertThat(result.name).isEqualTo("Ready")
     }
 
     @Test
-    fun `mapStateToDto should map State to StateDto correctly`() {
+    fun `stateToDto should map State to StateDto correctly`() {
         val state = State("6", "In Progress")
-        val result = mapper.mapStateToDto(state)
+        val result = mapper.stateToDto(state)
         assertThat(result.id).isEqualTo("6")
         assertThat(result.name).isEqualTo("In Progress")
     }

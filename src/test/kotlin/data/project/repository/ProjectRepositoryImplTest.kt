@@ -29,7 +29,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `getAllProjects should return mapped list`() = runTest {
         coEvery { projectDataSource.getAllProjects() } returns listOf(projectDto)
-        every { mapper.mapDtoToProject(projectDto) } returns project
+        every { mapper.dtoToProject(projectDto) } returns project
 
         val result = repository.getAllProjects()
 
@@ -39,7 +39,7 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `addProject should map and call createProject`() = runTest {
-        every { mapper.mapProjectToDto(project) } returns projectDto
+        every { mapper.projectToDto(project) } returns projectDto
         coEvery { projectDataSource.createProject(projectDto) } just Runs
 
         repository.addProject(project)
@@ -49,7 +49,7 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `editProject should map and call editProject`() = runTest {
-        every { mapper.mapProjectToDto(project) } returns projectDto
+        every { mapper.projectToDto(project) } returns projectDto
         coEvery { projectDataSource.editProject(projectDto) } just Runs
 
         repository.editProject(project)
@@ -71,7 +71,7 @@ class ProjectRepositoryImplTest {
     fun `getProjectById should return mapped project`() = runTest {
         val projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"
         coEvery { projectDataSource.getProjectById(projectId) } returns projectDto
-        every { mapper.mapDtoToProject(projectDto) } returns project
+        every { mapper.dtoToProject(projectDto) } returns project
 
         val result = repository.getProjectById(projectId)
 
