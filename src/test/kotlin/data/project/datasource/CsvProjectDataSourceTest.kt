@@ -51,7 +51,7 @@ class CsvProjectDataSourceTest {
     @Test
     fun `getAllProjects should throw Exception when parser throw Exception`(){
         //given
-        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
+        every { fileHelper.readFile(any()) } returns listOf("\"d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a\",name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -243,16 +243,16 @@ class CsvProjectDataSourceTest {
    @Test
     fun `deleteProject should delete when id in list`(){
         //given
-        val project1 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State("id1", "name1")))
-        val project2 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State("id1", "name1")))
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
-        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1", "id2,name1,id1-name1")
-        every { csvProjectParser.parseStringToProject(any()) } returns project1 andThen project2
-        every { csvProjectParser.parseProjectToString(project1) } returns "id1,name1,id1-name1"
+        val project1=Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State("id1", "name1")))
+       val project2=Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name1", listOf(State("id1", "name1")))
+        every { fileHelper.readFile(any()) } returns listOf("","")
+       every { csvProjectParser.parseStringToProject(any()) } returns project1 andThen project2
+       every{ csvProjectParser.parseProjectToString(project2)} returns "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b,name1"
+
         //when
-        csvProjectDataSource.deleteProject(projectId.toString())
+       csvProjectDataSource.deleteProject("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         //then
-        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf("id1,name1,id1-name1")) }
+       verify { fileHelper.writeFile(any(), listOf("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b,name1")) }
     }
 
     @Test

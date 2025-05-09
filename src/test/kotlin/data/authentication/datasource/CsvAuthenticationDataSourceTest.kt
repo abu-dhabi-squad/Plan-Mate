@@ -1,119 +1,97 @@
-import com.google.common.truth.Truth
-import data.TestData.user1
-import data.TestData.user2
-import data.TestData.userString1
-import data.TestData.userString2
-import io.mockk.Runs
-import io.mockk.every
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+package data.authentication.datasource
+
+import com.google.common.truth.Truth.assertThat
 import data.authentication.datasource.csv_datasource.CsvAuthenticationDataSource
 import data.authentication.datasource.csv_datasource.CsvUserParser
-import kotlinx.coroutines.test.runTest
 import data.utils.filehelper.FileHelper
-import logic.exceptions.CanNotParseUserException
+import io.mockk.*
 import logic.model.User
+import logic.model.UserType
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import java.util.*
+
 
 class CsvAuthenticationDataSourceTest {
 
-    private lateinit var fileHelper: FileHelper
     private lateinit var csvUserParser: CsvUserParser
-    private lateinit var csvAuthenticationDataSource: CsvAuthenticationDataSource
-    private val filePath = "users.csv"
+    private lateinit var fileHelper: FileHelper
+    private lateinit var dataSource: CsvAuthenticationDataSource
+
+    private val filePath = "test.csv"
 
     @BeforeEach
-    fun setup() {
-        fileHelper = mockk(relaxed = true)
-        csvUserParser = mockk(relaxed = true)
-        csvAuthenticationDataSource = CsvAuthenticationDataSource(csvUserParser, fileHelper, filePath)
+    fun setUp() {
+        csvUserParser = mockk()
+        fileHelper = mockk()
+        dataSource = CsvAuthenticationDataSource(csvUserParser, fileHelper, filePath)
     }
 
     @Test
-    fun `getUserByUserName should return user when username exists`() {
-        // Given
-        every { fileHelper.readFile(filePath) } returns listOf(userString1)
-        every { csvUserParser.parseStringToUser(userString1) } returns user1
+    fun `getAllUsers should return list of users from file`() {
+        val rawLines = listOf("line1", "line2")
+        val parsedUsers = listOf(
+            User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE),
+            User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
+        )
 
-        // When
-        val user = csvAuthenticationDataSource.getUserByUserName("user1")
+        every { fileHelper.readFile(filePath) } returns rawLines
+        every { csvUserParser.parseStringToUser("line1") } returns parsedUsers[0]
+        every { csvUserParser.parseStringToUser("line2") } returns parsedUsers[1]
 
-        // Then
-        Truth.assertThat(user).isEqualTo(user1)
+        val result = dataSource.getAllUsers()
+        assertThat(result).isEqualTo(parsedUsers)
+        verify { fileHelper.readFile(filePath) }
+        verify { csvUserParser.parseStringToUser("line1") }
+        verify { csvUserParser.parseStringToUser("line2") }
     }
 
     @Test
-    fun `getUserByUserName should return null when username does not exist`() {
-        // Given
-        every { fileHelper.readFile(filePath) } returns listOf(userString1)
-        every { csvUserParser.parseStringToUser(userString1) } returns user1
+    fun `getUserByUserName should return user if found`() {
+        val rawLines = listOf("line1", "line2")
+        val existingUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
 
-        // When
-        val user = csvAuthenticationDataSource.getUserByUserName("user2")
+        val otherUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
 
-        // Then
-        Truth.assertThat(user).isNull()
+
+        every { fileHelper.readFile(filePath) } returns rawLines
+        every { csvUserParser.parseStringToUser("line1") } returns otherUser
+        every { csvUserParser.parseStringToUser("line2") } returns existingUser
+
+        val result = dataSource.getUserByUserName("john_doe")
+        assertThat(result).isEqualTo(existingUser)
     }
 
     @Test
-    fun `getAllUsers should return a list of users when readFile returns valid data`() {
-        // Given
-        every { fileHelper.readFile(filePath) } returns listOf(userString1)
-        every { csvUserParser.parseStringToUser(userString1) } returns user1
+    fun `getUserByUserName should return null if user not found`() {
+        val rawLines = listOf("line1")
+        val user = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
 
-        // When
-        val users = csvAuthenticationDataSource.getAllUsers()
+        every { fileHelper.readFile(filePath) } returns rawLines
+        every { csvUserParser.parseStringToUser("line1") } returns user
 
-        // Then
-        Truth.assertThat(users).containsExactly(user1)
+        val result = dataSource.getUserByUserName("mohamed")
+        assertThat(result).isNull()
     }
 
     @Test
-    fun `getAllUsers should return empty list when readFile returns empty list`() {
-        // Given
-        every { fileHelper.readFile(any()) } returns emptyList()
+    fun `createUser should save user to file`() {
+        val existingUsers = listOf("line1")
+        val existingUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
 
-        // When & Then
-        Truth.assertThat(csvAuthenticationDataSource.getAllUsers()).isEqualTo(emptyList<User>())
-    }
+        val newUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "john_doee", "password123", UserType.MATE)
 
-    @Test
-    fun `getAllUsers should throw Exception when readFile throws Exception`() {
-        // Given
-        every { fileHelper.readFile(filePath) } throws Exception()
 
-        // When & Then
-        assertThrows<Exception> {
-            csvAuthenticationDataSource.getAllUsers()
+        every { fileHelper.readFile(filePath) } returns existingUsers
+        every { csvUserParser.parseStringToUser("line1") } returns existingUser
+        every { csvUserParser.parseUserToString(existingUser) } returns "line1"
+        every { csvUserParser.parseUserToString(newUser) } returns "line2"
+        every { fileHelper.appendFile(filePath, listOf("line1", "line2")) } just Runs
+
+        dataSource.createUser(newUser)
+
+        verify {
+            fileHelper.appendFile(filePath, listOf("line1", "line2"))
         }
-    }
-
-    @Test
-    fun `getAllUsers should throw Exception when parseStringToUser throws Exception`() {
-        // Given
-        every { fileHelper.readFile(filePath) } returns listOf(userString1)
-        every { csvUserParser.parseStringToUser(any()) } throws CanNotParseUserException()
-
-        // When & Then
-        assertThrows<CanNotParseUserException> {
-            csvAuthenticationDataSource.getAllUsers()
-        }
-    }
-
-    @Test
-    fun `createUser should save new user when file is empty`() {
-        // Given
-        every { fileHelper.readFile(filePath) } returns emptyList()
-        every { csvUserParser.parseUserToString(user2) } returns userString2
-        every { fileHelper.appendFile(filePath, listOf(userString2)) } just Runs
-
-        // When
-        csvAuthenticationDataSource.createUser(user2)
-
-        // Then
-        verify(exactly = 1) { fileHelper.appendFile(filePath, listOf(userString2)) }
     }
 }

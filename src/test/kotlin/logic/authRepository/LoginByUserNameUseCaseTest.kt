@@ -42,7 +42,7 @@ class LoginByUserNameUseCaseTest {
         val username = "testUser"
         val password = "correctPassword"
         val hashedPassword = "hashedPassword"
-        val expectedUser = User(UUID.fromString("1"), username, hashedPassword, UserType.MATE)
+        val expectedUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, hashedPassword, UserType.MATE)
 
         every { hashingService.hash(password) } returns hashedPassword
         coEvery { authRepository.loginUser(username, hashedPassword) } returns expectedUser
@@ -80,7 +80,7 @@ class LoginByUserNameUseCaseTest {
         val username = "testUser"
         val password = "password123"
         val hashedPassword = "hashed123"
-        val expectedUser = User(UUID.fromString("1"), username, hashedPassword, UserType.MATE)
+        val expectedUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, hashedPassword, UserType.MATE)
 
         every { hashingService.hash(password) } returns hashedPassword
         coEvery { authRepository.loginUser(username, hashedPassword) } returns expectedUser

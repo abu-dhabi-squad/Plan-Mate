@@ -72,7 +72,7 @@ class LoginByUserNameUseCaseUITest {
     @Test
     fun `should login successfully as ADMIN and launch admin menu`() =runTest{
         // Given
-        val user = User(UUID.fromString("2"), "adminUser", "adminPass", UserType.ADMIN)
+        val user = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "adminUser", "adminPass", UserType.ADMIN)
         every { inputReader.readString() } returnsMany listOf("adminUser", "adminPass")
         coEvery { loginUseCase.invoke("adminUser", "adminPass") } returns user
 
@@ -88,7 +88,7 @@ class LoginByUserNameUseCaseUITest {
     @Test
     fun `should login successfully as MATE and launch user menu`() = runTest{
         // Given
-        val user = User(UUID.fromString("3"), "mateUser", "matePass", UserType.MATE)
+        val user = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "mateUser", "matePass", UserType.MATE)
         every { inputReader.readString() } returnsMany listOf("mateUser", "matePass")
         coEvery { loginUseCase.invoke("mateUser", "matePass") } returns user
 
