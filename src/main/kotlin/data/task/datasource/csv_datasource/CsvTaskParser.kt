@@ -2,7 +2,8 @@ package data.task.datasource.csv_datasource
 
 import logic.validation.DateParser
 import logic.model.Task
-import java.util.*
+import java.util.UUID
+
 
 class CsvTaskParser(
     private val dateParser: DateParser
@@ -22,8 +23,8 @@ class CsvTaskParser(
                 Task(
                     id = UUID.fromString(it[ID]),
                     userName = it[USERNAME],
-                    projectId = it[PROJECT_ID],
-                    stateId = it[STATE_ID],
+                    projectId = UUID.fromString(it[PROJECT_ID]),
+                    stateId = UUID.fromString(it[STATE_ID]),
                     title = it[TITLE],
                     description = it[DESCRIPTION],
                     startDate = dateParser.parseDateFromString(it[START_DATE]),

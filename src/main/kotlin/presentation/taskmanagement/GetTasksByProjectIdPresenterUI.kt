@@ -33,7 +33,7 @@ class GetTasksByProjectIdPresenterUI(
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
-            getTasksByProjectIdUseCase(selectedProject.id.toString())
+            getTasksByProjectIdUseCase(selectedProject.id)
         } catch (e: Exception) {
             printer.displayLn("Failed to load tasks: ${e.message}")
             return

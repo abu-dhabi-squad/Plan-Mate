@@ -3,7 +3,8 @@ package data.authentication.datasource.csv_datasource
 import logic.exceptions.CanNotParseUserException
 import logic.model.User
 import logic.model.UserType
-import java.util.*
+import java.util.UUID
+
 
 class CsvUserParser {
     fun parseUserToString(user: User): String {

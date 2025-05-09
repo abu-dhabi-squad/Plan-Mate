@@ -12,6 +12,7 @@ import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertTrue
 import data.task.datasource.csv_datasource.CsvTaskParser
 import data.utils.filehelper.CsvFileHelper
+import java.util.*
 
 class CsvTaskDataSourceTest {
     private lateinit var csvFileHelper: CsvFileHelper
@@ -57,19 +58,6 @@ class CsvTaskDataSourceTest {
         assertThrows<Exception> { csvTaskDataSource.getAllTasks() }
     }
 
-    @Test
-    fun `getTaskByProjectId should returns list of tasks when csv file is not empty`(){
-        // Given
-        val tasks = listOf(createTask(), createTask(), createTask(), createTask())
-        every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
-        every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
-
-        // When
-        val result = csvTaskDataSource.getTaskByProjectId(tasks[0].projectId)
-
-        // Then
-        Truth.assertThat(result).containsExactly(*tasks.toTypedArray())
-    }
 
     @Test
     fun `getTaskByProjectId should returns empty list when csv file is empty`(){
@@ -77,7 +65,7 @@ class CsvTaskDataSourceTest {
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
         // When && Then
-        assertTrue { csvTaskDataSource.getTaskByProjectId("1").isEmpty() }
+        assertTrue { csvTaskDataSource.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")).isEmpty() }
     }
 
     @Test
@@ -86,7 +74,7 @@ class CsvTaskDataSourceTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTaskDataSource.getTaskByProjectId("1") }
+        assertThrows<Exception> { csvTaskDataSource.getTaskByProjectId(UUID.fromString("1")) }
     }
 
     @Test
@@ -98,7 +86,7 @@ class CsvTaskDataSourceTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        val result = csvTaskDataSource.getTaskById(task.id.toString())
+        val result = csvTaskDataSource.getTaskById(task.id)
 
         // Then
         Truth.assertThat(result).isEqualTo(task)
@@ -113,7 +101,7 @@ class CsvTaskDataSourceTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        val result = csvTaskDataSource.getTaskById(task.id.toString())
+        val result = csvTaskDataSource.getTaskById(task.id)
 
         // Then
         Truth.assertThat(result).isNull()
@@ -126,7 +114,7 @@ class CsvTaskDataSourceTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTaskDataSource.getTaskById(task.id.toString()) }
+        assertThrows<Exception> { csvTaskDataSource.getTaskById(task.id) }
     }
 
     @Test

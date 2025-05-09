@@ -6,6 +6,7 @@ import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
+import java.util.*
 
 class EditStateOfProjectUI(
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase,
@@ -29,7 +30,7 @@ class EditStateOfProjectUI(
             val stateId = promptNonEmptyString("Enter the id of the state you want to edit: ")
             val stateNewName = promptNonEmptyString("Enter the new name of the state: ")
 
-            editStateOfProjectUseCase(projectId, State(stateId, stateNewName))
+            editStateOfProjectUseCase(projectId, State(UUID.fromString(stateId), stateNewName))
             printer.displayLn("State updated successfully.")
 
         } catch (e: Exception) {

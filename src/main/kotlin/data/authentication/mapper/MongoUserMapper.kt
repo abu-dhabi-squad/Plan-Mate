@@ -4,7 +4,7 @@ import data.authentication.model.UserDto
 import logic.exceptions.UserTypeNotFoundException
 import logic.model.User
 import logic.model.UserType
-import java.util.*
+import java.util.UUID
 
 class MongoUserMapper {
     fun userToDto(user: User): UserDto {

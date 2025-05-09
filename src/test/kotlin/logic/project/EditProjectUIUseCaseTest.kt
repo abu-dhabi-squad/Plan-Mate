@@ -1,6 +1,8 @@
 package logic.project
 
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exceptions.ProjectNotFoundException
 import logic.model.Project
@@ -9,7 +11,7 @@ import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.UUID
 
 class EditProjectUIUseCaseTest {
     private lateinit var editProjectUseCase: EditProjectUseCase
@@ -23,7 +25,7 @@ class EditProjectUIUseCaseTest {
     @Test
     fun `editProject should throw ProjectNotFoundException when the projectRepository getProjectById returns null`() = runTest{
         //given
-        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "stateName")
+        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(state))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } returns null
@@ -36,7 +38,7 @@ class EditProjectUIUseCaseTest {
     @Test
     fun `editProject should throw Exception when the projectRepository getProjectById throw Exception`() = runTest{
         //given
-        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "stateName")
+        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(state))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } throws Exception()
@@ -49,7 +51,7 @@ class EditProjectUIUseCaseTest {
     @Test
     fun `editProject should throw Exception when the projectRepository editProject throw Exception`() = runTest{
         //given
-        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "stateName")
+        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(state))
         val newName = "name2"
         coEvery { projectRepository.editProject(any()) } throws Exception()
@@ -63,7 +65,7 @@ class EditProjectUIUseCaseTest {
     @Test
     fun `editProject should call projectRepository editProject function when the id is found`() = runTest{
         //given
-        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(), "stateName")
+        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(state))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } returns project

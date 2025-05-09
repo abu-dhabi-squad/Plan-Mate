@@ -15,6 +15,7 @@ import logic.model.Task
 import logic.repository.TaskRepository
 import logic.validation.TaskValidator
 import java.time.LocalDate
+import java.util.*
 
 class EditTaskUseCaseTest {
     private lateinit var taskRepository: TaskRepository
@@ -33,8 +34,8 @@ class EditTaskUseCaseTest {
         // Given
         val task = Task(
             userName = "11111",
-            projectId = "11111",
-            stateId = "11111",
+            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"),
             title = "Title",
             description = "Description",
             startDate = LocalDate.parse("2025-01-01"),
@@ -65,8 +66,8 @@ class EditTaskUseCaseTest {
         // Given
         val task = Task(
             userName = "11111",
-            projectId = "11111",
-            stateId = "11111",
+            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"),
             title = "Title",
             description = "Description",
             startDate = LocalDate.parse("2025-01-01"),

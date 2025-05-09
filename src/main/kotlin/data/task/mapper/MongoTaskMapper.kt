@@ -12,8 +12,8 @@ class MongoTaskMapper {
         return TaskDto(
             id = task.id.toString(),
             userName = task.userName,
-            projectId = task.projectId,
-            stateId = task.stateId,
+            projectId = task.projectId.toString(),
+            stateId = task.stateId.toString(),
             title = task.title,
             description = task.description,
             startDate = task.startDate.format(dateFormatter),
@@ -24,8 +24,8 @@ class MongoTaskMapper {
         return Task(
             id = UUID.fromString(taskDto.id),
             userName = taskDto.userName,
-            projectId = taskDto.projectId,
-            stateId = taskDto.stateId,
+            projectId = UUID.fromString(taskDto.projectId),
+            stateId = UUID.fromString(taskDto.stateId),
             title = taskDto.title,
             description = taskDto.description,
             startDate = LocalDate.parse(taskDto.startDate, dateFormatter),

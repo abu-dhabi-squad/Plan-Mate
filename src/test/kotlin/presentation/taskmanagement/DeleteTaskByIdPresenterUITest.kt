@@ -28,7 +28,7 @@ class DeleteTaskByIdPresenterUITest {
     private lateinit var deleteTaskByIdUseCase: DeleteTaskByIdUseCase
     private lateinit var presenter: DeleteTaskByIdPresenterUI
     private lateinit var createAuditUseCase: CreateAuditUseCase
-    private lateinit var getLoggedUserUseCase : GetLoggedUserUseCase
+    private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
 
     @BeforeEach
     fun setUp() {
@@ -38,7 +38,7 @@ class DeleteTaskByIdPresenterUITest {
         getTasksByProjectIdUseCase = mockk(relaxed = true)
         deleteTaskByIdUseCase = mockk(relaxed = true)
         createAuditUseCase = mockk(relaxed = true)
-        getLoggedUserUseCase = mockk(relaxed =true)
+        getLoggedUserUseCase = mockk(relaxed = true)
 
         presenter = DeleteTaskByIdPresenterUI(
             printer,
@@ -52,45 +52,26 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should delete task successfully when user input is valid`() = runTest{
+    fun `should delete task successfully when user input is valid`() = runTest {
         // Given
-        val uuid=UUID.randomUUID()
+        val uuid = UUID.randomUUID()
         val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
         val task = createTask(id = uuid)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
         coEvery { reader.readInt() } returns 1
-        coEvery { deleteTaskByIdUseCase("1") }just runs
+        coEvery { deleteTaskByIdUseCase(uuid) } just runs
         // When
         presenter.launchUi()
         // Then
-        coVerify { deleteTaskByIdUseCase(task.id.toString()) }
+        coVerify { deleteTaskByIdUseCase(task.id) }
         coVerify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
     @Test
-    fun `should display error message when task successfully when user input is valid`() = runTest{
-        // Given
-        val uuid=UUID.randomUUID()
-        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
-        val task = createTask(id = uuid)
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
-        coEvery { reader.readInt() } returns 1
-        coEvery { deleteTaskByIdUseCase("1") } just runs
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { deleteTaskByIdUseCase(task.id.toString()) }
-        coVerify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
-    }
-
-    @Test
-    fun `should display error when loading projects fails`() = runTest{
+    fun `should display error when loading projects fails`() = runTest {
         // Given
         coEvery { getAllProjectsUseCase() } throws NoProjectsFoundException()
         // When
@@ -100,7 +81,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display warning when no projects are available`() = runTest{
+    fun `should display warning when no projects are available`() = runTest {
         // Given
         coEvery { getAllProjectsUseCase() } returns emptyList()
         // When
@@ -110,12 +91,12 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display error when loading tasks fails`() = runTest{
+    fun `should display error when loading tasks fails`() = runTest {
         //Given
         val project = createProject()
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase("1") } throws NoTasksFoundException()
+        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b")) } throws NoTasksFoundException()
         // When
         presenter.launchUi()
         // Then
@@ -123,12 +104,12 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display warning when no tasks are found in project`() = runTest{
+    fun `should display warning when no tasks are found in project`() = runTest {
         // Given
         val project = createProject()
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase("1") } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
         // When
         presenter.launchUi()
         // Then
@@ -136,7 +117,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should display error when deletion fails`() = runTest{
+    fun `should display error when deletion fails`() = runTest {
         // Given
         val project = createProject()
         val task = createTask()
@@ -156,17 +137,17 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @ParameterizedTest
-    @CsvSource("2,1","null,1" , nullValues = ["null"])
+    @CsvSource("2,1", "null,1", nullValues = ["null"])
     fun `should prompt again when invalid project index is entered`(
         firstAttemptIndexEnter: Int?,
         secondAttemptIndexEnter: Int
-    ) = runTest{
+    ) = runTest {
         // Given
         val project = createProject()
         val task = createTask()
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { getTasksByProjectIdUseCase("1") } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
         coEvery { reader.readInt() } returns firstAttemptIndexEnter andThen secondAttemptIndexEnter andThen 1
         // When
         presenter.launchUi()
@@ -175,7 +156,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should prompt again when invalid task index is entered`() = runTest{
+    fun `should prompt again when invalid task index is entered`() = runTest {
         // Given
         val task = createTask()
         val project = createProject()
@@ -190,7 +171,7 @@ class DeleteTaskByIdPresenterUITest {
     }
 
     @Test
-    fun `should show error message when get tasks by project id failed`() = runTest{
+    fun `should show error message when get tasks by project id failed`() = runTest {
         // Given
         val project = createProject()
         coEvery { reader.readInt() } returns 1 andThen 1

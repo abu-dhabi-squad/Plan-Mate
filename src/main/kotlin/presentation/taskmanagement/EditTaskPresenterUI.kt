@@ -27,7 +27,6 @@ class EditTaskPresenterUI(
     private val createAuditUseCase: CreateAuditUseCase
 
 ) : UiLauncher {
-
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
@@ -46,7 +45,7 @@ class EditTaskPresenterUI(
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
-            getTasksByProjectIdUseCase(selectedProject.id.toString())
+            getTasksByProjectIdUseCase(selectedProject.id)
         } catch (e: Exception) {
             printer.displayLn("Failed to load tasks: ${e.message}")
             return
@@ -93,8 +92,8 @@ class EditTaskPresenterUI(
                 Audit(
                     entityId = updatedTask.id.toString(),
                     entityType = EntityType.TASK,
-                    oldState = oldState.id,
-                    newState = newState.id,
+                    oldState = oldState.id.toString(),
+                    newState = newState.id.toString(),
                     createdBy = getLoggedUserUseCase().username
                 )
             )

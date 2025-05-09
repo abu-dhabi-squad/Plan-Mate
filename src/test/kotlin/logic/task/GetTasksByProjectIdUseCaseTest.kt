@@ -25,7 +25,7 @@ class GetTasksByProjectIdUseCaseTest {
     @Test
     fun `should get tasks by project id when project is exists`()= runTest {
         // Given
-        val projectId = UUID.randomUUID().toString()
+        val projectId = UUID.randomUUID()
         val firstRelatedTask = createTask(projectId = projectId)
         val secondRelatedTask = createTask(projectId = projectId)
         coEvery { taskRepository.getTaskByProjectId(projectId) } returns listOf(
@@ -43,7 +43,7 @@ class GetTasksByProjectIdUseCaseTest {
     @Test
     fun `should throw NoTasksFoundException when there are no tasks for provided project id`()= runTest {
         // Given
-        val projectId = UUID.randomUUID().toString()
+        val projectId = UUID.randomUUID()
         coEvery { taskRepository.getAllTasks() } returns listOf(
             createTask(),
             createTask(),

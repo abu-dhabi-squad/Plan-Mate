@@ -54,7 +54,7 @@ class GetAuditForTaskUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returnsMany listOf(1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
         coEvery { getAuditUseCase(any()) } returns audits
 
         ui.launchUi()
@@ -81,7 +81,7 @@ class GetAuditForTaskUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
 
         ui.launchUi()
 
@@ -123,7 +123,7 @@ class GetAuditForTaskUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returnsMany listOf(1, null)
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
 
         ui.launchUi()
 
@@ -139,7 +139,7 @@ class GetAuditForTaskUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returnsMany listOf(1, 5)
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
 
         ui.launchUi()
 
@@ -155,7 +155,7 @@ class GetAuditForTaskUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returnsMany listOf(1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
         coEvery { getAuditUseCase(any()) } returns emptyList()
 
         ui.launchUi()
@@ -172,7 +172,7 @@ class GetAuditForTaskUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returnsMany listOf(1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
         coEvery { getAuditUseCase(any()) } throws WrongInputException()
 
         ui.launchUi()
@@ -189,7 +189,7 @@ class GetAuditForTaskUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returnsMany listOf(1, 1)
-        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")) } returns listOf(task)
         coEvery { getAuditUseCase("t1") } throws EmptyList()
 
         ui.launchUi()
@@ -206,7 +206,7 @@ class GetAuditForTaskUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returnsMany listOf(1, 1)
-        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")) } returns listOf(task)
         coEvery { getAuditUseCase(any()) } throws Exception()
 
         ui.launchUi()

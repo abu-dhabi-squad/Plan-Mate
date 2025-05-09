@@ -4,6 +4,7 @@ import logic.task.GetTaskByIdUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
+import java.util.*
 
 class GetTaskByIdPresenterUI(
     private val printer: Printer,
@@ -22,7 +23,7 @@ class GetTaskByIdPresenterUI(
         }
 
         try {
-            val task = getTaskByIdUseCase(taskId)
+            val task = getTaskByIdUseCase(UUID.fromString(taskId))
             printer.displayLn("Task Found:")
             printer.displayLn("Title: ${task.title}")
             printer.displayLn("Description: ${task.description}")

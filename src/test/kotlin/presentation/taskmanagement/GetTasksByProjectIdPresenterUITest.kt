@@ -61,7 +61,7 @@ class GetTasksByProjectIdPresenterUITest {
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A")
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } throws RuntimeException("Network issue")
+        coEvery { getTasksByProjectIdUseCase(project.id) } throws RuntimeException("Network issue")
         // When
         presenter.launchUi()
         // Then
@@ -72,10 +72,10 @@ class GetTasksByProjectIdPresenterUITest {
     fun `should display message when no tasks found for selected project`() = runTest{
         // Given
         val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(createState(id = "s1")))
+            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"))))
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
         // When
         presenter.launchUi()
         // Then
@@ -86,20 +86,20 @@ class GetTasksByProjectIdPresenterUITest {
     fun `should show project list and task list successfully`() = runTest{
         // Given
         val uuid= UUID.randomUUID()
-        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(createState(id = "s1")))
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"))))
         val task = createTask(
             id = uuid,
             title = "Fix Bug",
             description = "Resolve login issue",
             startDate = LocalDate.of(2025, 5, 1),
             endDate = LocalDate.of(2025, 5, 2),
-            projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
-            stateId = "s1",
+            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"),
             userName = "Alice"
         )
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
 
         // When
         presenter.launchUi()
@@ -115,7 +115,7 @@ class GetTasksByProjectIdPresenterUITest {
                ↳ Description: Resolve login issue
                ↳ Start: 2025-05-01, End: 2025-05-02
                ↳ Assigned to: Alice
-               ↳ State ID: s1
+               ↳ State ID: d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b
         """.trimIndent())
         }
     }
@@ -127,10 +127,10 @@ class GetTasksByProjectIdPresenterUITest {
     ) = runTest{
         // Given
         val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(createState(id = "s1")))
+            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"))))
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returnsMany listOf(firstAttemptEnterNumber,secondAttemptEnterIndex)
-        coEvery { getTasksByProjectIdUseCase(project.id.toString()) } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
         // When
         presenter.launchUi()
         // Then
