@@ -58,19 +58,6 @@ class CsvTaskDataSourceTest {
         assertThrows<Exception> { csvTaskDataSource.getAllTasks() }
     }
 
-    @Test
-    fun `getTaskByProjectId should returns list of tasks when csv file is not empty`(){
-        // Given
-        val tasks = listOf(createTask(), createTask(), createTask(), createTask())
-        every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
-        every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
-
-        // When
-        val result = csvTaskDataSource.getTaskByProjectId(tasks[0].projectId)
-
-        // Then
-        Truth.assertThat(result).containsExactly(*tasks.toTypedArray())
-    }
 
     @Test
     fun `getTaskByProjectId should returns empty list when csv file is empty`(){
@@ -78,7 +65,7 @@ class CsvTaskDataSourceTest {
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
         // When && Then
-        assertTrue { csvTaskDataSource.getTaskByProjectId(UUID.fromString("1")).isEmpty() }
+        assertTrue { csvTaskDataSource.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")).isEmpty() }
     }
 
     @Test

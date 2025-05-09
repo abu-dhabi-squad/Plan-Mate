@@ -48,8 +48,8 @@ class EditProjectUITest {
     fun `launchUI should display list details when get all projects return list`() = runTest{
         //given
         val projects = listOf(
-            Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("id2"), "name2"))),
-            Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("id2"), "name2")))
+            Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name2"))),
+            Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name2")))
         )
         coEvery { getAllProjectsUseCase() } returns projects
         coEvery { reader.readString() } returns null

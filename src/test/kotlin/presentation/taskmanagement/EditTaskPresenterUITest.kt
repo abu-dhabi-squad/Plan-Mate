@@ -54,13 +54,13 @@ class EditTaskPresenterUITest {
     fun `should update title, description, dates, and state`() = runTest{
         // Given
         val uuid=UUID.randomUUID()
-        val state1 = createState(UUID.fromString("s1"), "Open")
-        val state2 = createState(UUID.fromString("s2"), "Closed")
+        val state1 = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
+        val state2 = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1c"), "Closed")
         val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(state1, state2))
         val task = createTask(
             id=uuid,
             projectId = project.id,
-            stateId = UUID.fromString("s1"),
+            stateId = state1.id,
             title = "Old",
             description = "OldDesc",
             startDate = LocalDate.of(2025, 1, 1),
@@ -90,7 +90,7 @@ class EditTaskPresenterUITest {
             description = "NewDesc",
             startDate = LocalDate.of(2025, 5, 5),
             endDate = LocalDate.of(2025, 5, 10),
-            stateId = UUID.fromString("s1") // first state selected
+            stateId = state1.id // first state selected
         )
         coVerify { editTaskUseCase(expected) }
         coVerify { printer.displayLn("✅ Task updated successfully.") }
@@ -164,7 +164,7 @@ class EditTaskPresenterUITest {
     @Test
     fun `should successfully update task when the input is valid`() = runTest{
         val uuid=UUID.randomUUID()
-        val state = createState(UUID.fromString("s1"), "Open")
+        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.id)
 
@@ -187,7 +187,7 @@ class EditTaskPresenterUITest {
     @Test
     fun `should show error message while updating task when the input is not valid`() = runTest{
         val uuid=UUID.randomUUID()
-        val state = createState(UUID.fromString("s1"), "Open")
+        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.id)
 
@@ -205,7 +205,7 @@ class EditTaskPresenterUITest {
     @Test
     fun `should re-prompt when user enters invalid task selection`() = runTest{
         val uuid=UUID.randomUUID()
-        val state = createState(UUID.fromString("s1"), "Open")
+        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.id)
 
@@ -226,7 +226,7 @@ class EditTaskPresenterUITest {
     @Test
     fun `should keep existing title and description if user inputs are empty`() = runTest{
         val uuid=UUID.randomUUID()
-        val state = createState(UUID.fromString("s1"), "Open")
+        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(
             id=uuid,
@@ -249,7 +249,7 @@ class EditTaskPresenterUITest {
     @Test
     fun `should keep existing title and description if user inputs are null`() = runTest{
         val uuid=UUID.randomUUID()
-        val state = createState(UUID.fromString("s1"), "Open")
+        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(
             id=uuid,
@@ -272,7 +272,7 @@ class EditTaskPresenterUITest {
     @Test
     fun `should re-prompt if readInt returns null`() = runTest{
         val uuid=UUID.randomUUID()
-        val state = createState(UUID.fromString("s1"), "Open")
+        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
         val task = createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.id)
 
@@ -291,13 +291,13 @@ class EditTaskPresenterUITest {
     fun `should show date format error message when user enter invalid date format`() = runTest{
         // Given
         val uuid=UUID.randomUUID()
-        val state1 = createState(UUID.fromString("s1"), "Open")
-        val state2 = createState(UUID.fromString("s2"), "Closed")
+        val state1 = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
+        val state2 = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1c"), "Closed")
         val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A", states = listOf(state1, state2))
         val task = createTask(
             id=uuid,
             projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            stateId = UUID.fromString("s1"),
+            stateId = state1.id,
             title = "Old",
             description = "OldDesc",
             startDate = LocalDate.of(2025, 1, 1),
@@ -327,7 +327,7 @@ class EditTaskPresenterUITest {
             description = "NewDesc",
             startDate = LocalDate.of(2025, 5, 5),
             endDate = LocalDate.of(2025, 5, 10),
-            stateId = UUID.fromString("s1") // first state selected
+            stateId = state1.id // first state selected
         )
         coVerify {
             printer.displayLn(match {

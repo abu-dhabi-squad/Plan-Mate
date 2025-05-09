@@ -40,7 +40,7 @@ class GetTaskByIdUseCaseTest {
     @Test
     fun `should throw TaskNotFoundException when there is no task with the same id`() = runTest{
         // Given
-        val taskId = UUID.fromString("1")
+        val taskId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { taskRepository.getTaskById(any()) } returns null
 
         // When && Then

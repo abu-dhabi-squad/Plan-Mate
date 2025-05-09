@@ -61,7 +61,7 @@ class TaskRepositoryImplTest {
 
     @Test
     fun `getTaskByProjectId should return list of tasks when datasource is not empty`() = runTest {
-        val projectId = UUID.fromString("project123")
+        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         val taskDto1 = mockk<TaskDto>()
         val taskDto2 = mockk<TaskDto>()
         val task1 = createTask().copy(projectId = projectId)
@@ -82,7 +82,7 @@ class TaskRepositoryImplTest {
     fun `getTaskByProjectId should return empty list when datasource is empty`() = runTest {
         coEvery { remoteTaskDataSource.getTaskByProjectId(any()) } returns emptyList()
 
-        val result = taskRepository.getTaskByProjectId(UUID.fromString("any_project_id"))
+        val result = taskRepository.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
 
         assertThat(result).isEmpty()
     }

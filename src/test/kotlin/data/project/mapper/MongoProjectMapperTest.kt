@@ -1,12 +1,13 @@
 package data.project.mapper
 
 import com.google.common.truth.Truth.assertThat
+import data.project.mapper.MongoProjectMapper
 import data.project.model.ProjectDto
 import data.project.model.StateDto
 import logic.model.Project
 import logic.model.State
+import org.junit.jupiter.api.Test
 import java.util.*
-import kotlin.test.Test
 
 class MongoProjectMapperTest {
 
@@ -14,57 +15,69 @@ class MongoProjectMapperTest {
 
     @Test
     fun `dtoToProject should map ProjectDto to Project correctly`() {
+        val projectId = UUID.randomUUID()
+        val state1Id = UUID.randomUUID()
+        val state2Id = UUID.randomUUID()
+
         val projectDto = ProjectDto(
-            id = "123e4567-e89b-12d3-a456-426614174000",
-            projectName = "My Project",
+            id = projectId.toString(),
+            projectName = "Test Project",
             states = listOf(
-                StateDto("1", "State A"),
-                StateDto("2", "State B")
+                StateDto(id = state1Id.toString(), name = "State 1"),
+                StateDto(id = state2Id.toString(), name = "State 2")
             )
         )
 
         val result = mapper.dtoToProject(projectDto)
 
-        assertThat(result.id).isEqualTo(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
-        assertThat(result.projectName).isEqualTo("My Project")
+        assertThat(result.id).isEqualTo(projectId)
+        assertThat(result.projectName).isEqualTo("Test Project")
         assertThat(result.states).hasSize(2)
-        assertThat(result.states[0].id).isEqualTo("1")
-        assertThat(result.states[0].name).isEqualTo("State A")
+        assertThat(result.states[0].id).isEqualTo(state1Id)
+        assertThat(result.states[0].name).isEqualTo("State 1")
+        assertThat(result.states[1].id).isEqualTo(state2Id)
+        assertThat(result.states[1].name).isEqualTo("State 2")
     }
 
     @Test
     fun `projectToDto should map Project to ProjectDto correctly`() {
+        val projectId = UUID.randomUUID()
+        val state1Id = UUID.randomUUID()
+
         val project = Project(
-            id = UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
-            projectName = "My Project",
-            states = listOf(
-                State(UUID.fromString("1"), "State A"),
-                State(UUID.fromString("2"), "State B")
-            )
+            id = projectId,
+            projectName = "Sample Project",
+            states = listOf(State(id = state1Id, name = "Done"))
         )
 
         val result = mapper.projectToDto(project)
 
-        assertThat(result.id).isEqualTo("123e4567-e89b-12d3-a456-426614174000")
-        assertThat(result.projectName).isEqualTo("My Project")
-        assertThat(result.states).hasSize(2)
-        assertThat(result.states[1].id).isEqualTo("2")
-        assertThat(result.states[1].name).isEqualTo("State B")
+        assertThat(result.id).isEqualTo(projectId.toString())
+        assertThat(result.projectName).isEqualTo("Sample Project")
+        assertThat(result.states).hasSize(1)
+        assertThat(result.states[0].id).isEqualTo(state1Id.toString())
+        assertThat(result.states[0].name).isEqualTo("Done")
     }
 
     @Test
     fun `dtoToState should map StateDto to State correctly`() {
-        val stateDto = StateDto("5", "Ready")
+        val uuid = UUID.randomUUID()
+        val stateDto = StateDto(id = uuid.toString(), name = "Pending")
+
         val result = mapper.dtoToState(stateDto)
-        assertThat(result.id).isEqualTo("5")
-        assertThat(result.name).isEqualTo("Ready")
+
+        assertThat(result.id).isEqualTo(uuid)
+        assertThat(result.name).isEqualTo("Pending")
     }
 
     @Test
     fun `stateToDto should map State to StateDto correctly`() {
-        val state = State(UUID.fromString("6"), "In Progress")
+        val uuid = UUID.randomUUID()
+        val state = State(id = uuid, name = "In Progress")
+
         val result = mapper.stateToDto(state)
-        assertThat(result.id).isEqualTo("6")
+
+        assertThat(result.id).isEqualTo(uuid.toString())
         assertThat(result.name).isEqualTo("In Progress")
     }
 }

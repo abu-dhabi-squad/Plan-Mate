@@ -32,8 +32,8 @@ class CreateTaskUseCaseTest {
         // Given
         val task = Task(
             userName = "11111",
-            projectId = UUID.fromString("11111"),
-            stateId = UUID.fromString("11111"),
+            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"),
+            stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             title = "Title",
             description = "Description",
             startDate = LocalDate.parse("2025-01-01"),

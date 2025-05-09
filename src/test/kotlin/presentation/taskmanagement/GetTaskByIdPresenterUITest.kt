@@ -46,13 +46,13 @@ class GetTaskByIdPresenterUITest {
             description = "Some description",
             startDate = LocalDate.of(2025, 5, 1),
             endDate = LocalDate.of(2025, 5, 10),
-            projectId = UUID.fromString("p1"),
-            stateId = UUID.fromString("s1"),
+            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1d"),
+            stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"),
             userName = "John Doe"
         )
 
-        coEvery { inputReader.readString() } returns "t1"
-        coEvery { getTaskByIdUseCase(UUID.fromString("t1")) } returns task
+        coEvery { inputReader.readString() } returns task.id.toString()
+        coEvery { getTaskByIdUseCase(task.id) } returns task
         // When
         presenter.launchUi()
         // Then
@@ -69,8 +69,8 @@ class GetTaskByIdPresenterUITest {
     @Test
     fun `should display error message when task is not found`() = runTest{
         // Given
-        coEvery { inputReader.readString() } returns "invalid-id"
-        coEvery { getTaskByIdUseCase(UUID.fromString("invalid-id")) } throws NoSuchElementException("Task not found")
+        coEvery { inputReader.readString() } returns "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"
+        coEvery { getTaskByIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")) } throws NoSuchElementException("Task not found")
         // When
         presenter.launchUi()
         // Then

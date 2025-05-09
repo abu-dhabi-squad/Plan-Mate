@@ -25,8 +25,8 @@ class MongoTaskMapperTest {
         // Then
         assertThat(dto.id).isEqualTo(task.id.toString())
         assertThat(dto.userName).isEqualTo(task.userName)
-        assertThat(dto.projectId).isEqualTo(task.projectId)
-        assertThat(dto.stateId).isEqualTo(task.stateId)
+        assertThat(dto.projectId).isEqualTo(task.projectId.toString())
+        assertThat(dto.stateId).isEqualTo(task.stateId.toString())
         assertThat(dto.title).isEqualTo(task.title)
         assertThat(dto.description).isEqualTo(task.description)
         assertThat(dto.startDate).isEqualTo(task.startDate.format(dateFormatter))
@@ -37,14 +37,16 @@ class MongoTaskMapperTest {
     fun `taskDtoToTask maps correctly`() {
         // Given
         val id = UUID.randomUUID()
+        val stateId = UUID.randomUUID()
+        val projectId = UUID.randomUUID()
         val startDate = LocalDate.now()
         val endDate = startDate.plusDays(5)
 
         val dto = TaskDto(
             id = id.toString(),
             userName = "testUser",
-            projectId = "project123",
-            stateId = "state123",
+            projectId = projectId.toString(),
+            stateId = stateId.toString(),
             title = "Task title",
             description = "Task description",
             startDate = startDate.format(dateFormatter),
@@ -55,10 +57,10 @@ class MongoTaskMapperTest {
         val task = mapper.taskDtoToTask(dto)
 
         // Then
-        assertThat(task.id).isEqualTo(id)
+        assertThat(task.id.toString()).isEqualTo(dto.id)
         assertThat(task.userName).isEqualTo(dto.userName)
-        assertThat(task.projectId).isEqualTo(dto.projectId)
-        assertThat(task.stateId).isEqualTo(dto.stateId)
+        assertThat(task.projectId.toString()).isEqualTo(dto.projectId)
+        assertThat(task.stateId.toString()).isEqualTo(dto.stateId)
         assertThat(task.title).isEqualTo(dto.title)
         assertThat(task.description).isEqualTo(dto.description)
         assertThat(task.startDate).isEqualTo(startDate)
