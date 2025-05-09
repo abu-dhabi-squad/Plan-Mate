@@ -1,5 +1,7 @@
 import com.google.common.truth.Truth.assertThat
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exceptions.NoProjectsFoundException
 import logic.model.Project
@@ -7,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import logic.project.GetAllProjectsUseCase
 import logic.repository.ProjectRepository
-import java.util.*
+import java.util.UUID
 import kotlin.test.Test
 
 class GetAllProjectsUseCaseTest {

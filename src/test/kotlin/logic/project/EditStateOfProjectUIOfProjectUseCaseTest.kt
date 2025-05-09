@@ -1,6 +1,8 @@
 package logic.project
 
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exceptions.ProjectNotFoundException
 import logic.exceptions.ProjectStateNotFoundException
@@ -10,7 +12,7 @@ import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.*
+import java.util.UUID
 
 class EditStateOfProjectUIOfProjectUseCaseTest {
     private lateinit var editStateToProjectUseCase: EditStateOfProjectUseCase
