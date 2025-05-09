@@ -138,11 +138,11 @@ class EditTaskPresenterUITest {
 
     @Test
     fun `should re-prompt when user enters invalid project selection`() = runTest{
-        val project = createProject(UUID.fromString("1"), "Project A")
+        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A")
         coEvery { getAllProjectsUseCase() } returns listOf(project)
 
         coEvery { inputReader.readInt() } returnsMany listOf(0, 1)
-        coEvery { getTasksByProjectIdUseCase("1") } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a") } returns emptyList()
 
         presenter.launchUi()
 
