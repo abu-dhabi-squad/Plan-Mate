@@ -1,4 +1,4 @@
-package data.task.parser
+package data.task.datasource
 
 import com.google.common.truth.Truth
 import data.task.datasource.csv_datasource.CsvTaskParser

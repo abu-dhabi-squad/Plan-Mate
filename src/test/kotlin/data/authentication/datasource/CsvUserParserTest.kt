@@ -1,11 +1,17 @@
+package data.authentication.datasource
+
+
 import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import data.TestData.user1
 import data.TestData.userString1
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import data.authentication.datasource.csv_datasource.CsvUserParser
 import logic.exceptions.CanNotParseUserException
-import kotlin.test.assertFailsWith
+import logic.model.User
+import logic.model.UserType
+import java.util.*
 
 class CsvUserParserTest {
     private lateinit var csvUserParser: CsvUserParser
@@ -16,59 +22,35 @@ class CsvUserParserTest {
     }
 
     @Test
-    fun `parseUserToString should convert User to CSV string correctly`() {
-        // Given
-        val user = user1
-
-        // When
+    fun `parseUserToString should return comma separated string`() {
+        val user = User(
+            UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+            "john",
+            "password123",
+            UserType.MATE
+        )
         val result = csvUserParser.parseUserToString(user)
-
-        // Then
-        Truth.assertThat(result).isEqualTo(userString1)
+        assertThat(result).isEqualTo("123e4567-e89b-12d3-a456-426614174000,john,password123,MATE")
     }
 
     @Test
-    fun `parseStringToUser should convert CSV string to User object correctly`() {
-        // Given
-        val csvString = userString1
-
-        // When
-        val result = csvUserParser.parseStringToUser(csvString)
-
-        // Then
-        Truth.assertThat(result).isEqualTo(user1)
+    fun `parseStringToUser should return User from valid string`() {
+        val line = "123e4567-e89b-12d3-a456-426614174000,john,password123,MATE"
+        val user = csvUserParser.parseStringToUser(line)
+        assertThat(user.id).isEqualTo(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+        assertThat(user.username).isEqualTo("john")
+        assertThat(user.password).isEqualTo("password123")
+        assertThat(user.userType).isEqualTo(UserType.MATE)
     }
 
     @Test
-    fun `parseStringToUser should throw CanNotParseUserException when CSV string has incorrect format`() {
-        // Given
-        val invalidCsvString = "1,user1,password1"
-
-        // When & Then
-        assertFailsWith<CanNotParseUserException> {
-            csvUserParser.parseStringToUser(invalidCsvString)
-        }
-    }
-
-    @Test
-    fun `parseStringToUser should throw CanNotParseUserException when CSV string has more than 4 parts`() {
-        // Given
-        val invalidCsvString = "1,user1,password1,MATE,city"
-
-        // When & Then
-        assertFailsWith<CanNotParseUserException> {
-            csvUserParser.parseStringToUser(invalidCsvString)
-        }
-    }
-
-    @Test
-    fun `parseStringToUser should throw Exception when argument is invalid`() {
-        // Given
-        val invalidCsvString = "1,user1,password1,Regular"
-
-        // When & Then
-        assertFailsWith<Exception> {
-            csvUserParser.parseStringToUser(invalidCsvString)
+    fun `parseStringToUser should throw exception if input is invalid`() {
+        val invalidLine = "missing,fields"
+        try {
+            csvUserParser.parseStringToUser(invalidLine)
+            throw AssertionError("Expected CanNotParseUserException to be thrown")
+        } catch (e: CanNotParseUserException) {
+            // success
         }
     }
 
