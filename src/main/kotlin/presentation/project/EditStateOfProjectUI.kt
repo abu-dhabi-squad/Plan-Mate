@@ -4,8 +4,9 @@ import logic.model.State
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
+import java.util.*
 
 class EditStateOfProjectUI(
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase,
@@ -13,7 +14,7 @@ class EditStateOfProjectUI(
     private val reader: InputReader,
     private val printer: Printer
 ) : UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         try {
             val projects = getAllProjectsUseCase()
             if (projects.isEmpty()) {
@@ -29,7 +30,7 @@ class EditStateOfProjectUI(
             val stateId = promptNonEmptyString("Enter the id of the state you want to edit: ")
             val stateNewName = promptNonEmptyString("Enter the new name of the state: ")
 
-            editStateOfProjectUseCase(projectId, State(stateId, stateNewName))
+            editStateOfProjectUseCase(projectId, State(UUID.fromString(stateId), stateNewName))
             printer.displayLn("State updated successfully.")
 
         } catch (e: Exception) {

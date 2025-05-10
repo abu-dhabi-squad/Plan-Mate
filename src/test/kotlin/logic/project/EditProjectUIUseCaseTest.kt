@@ -1,15 +1,17 @@
 package logic.project
 
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import kotlinx.coroutines.test.runTest
 import logic.exceptions.ProjectNotFoundException
 import logic.model.Project
 import logic.model.State
 import logic.repository.ProjectRepository
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class EditProjectUIUseCaseTest {
     private lateinit var editProjectUseCase: EditProjectUseCase
@@ -21,55 +23,55 @@ class EditProjectUIUseCaseTest {
     }
 
     @Test
-    fun `editProject should throw ProjectNotFoundException when the projectRepository getProjectById returns null`() {
+    fun `editProject should throw ProjectNotFoundException when the projectRepository getProjectById returns null`() = runTest{
         //given
-        val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
+        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(state))
         val newName = "name2"
-        every { projectRepository.getProjectById(any()) } returns null
+        coEvery { projectRepository.getProjectById(any()) } returns null
         //when & then
         assertThrows<ProjectNotFoundException> {
-            editProjectUseCase(project.id,newName)
+            editProjectUseCase(project.id.toString(),newName)
         }
     }
 
     @Test
-    fun `editProject should throw Exception when the projectRepository getProjectById throw Exception`() {
+    fun `editProject should throw Exception when the projectRepository getProjectById throw Exception`() = runTest{
         //given
-        val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
+        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(state))
         val newName = "name2"
-        every { projectRepository.getProjectById(any()) } throws Exception()
+        coEvery { projectRepository.getProjectById(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editProjectUseCase(project.id,newName)
+            editProjectUseCase(project.id.toString(),newName)
         }
     }
 
     @Test
-    fun `editProject should throw Exception when the projectRepository editProject throw Exception`() {
+    fun `editProject should throw Exception when the projectRepository editProject throw Exception`() = runTest{
         //given
-        val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
+        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(state))
         val newName = "name2"
-        every { projectRepository.editProject(any()) } throws Exception()
-        every { projectRepository.getProjectById(any()) } returns project
+        coEvery { projectRepository.editProject(any()) } throws Exception()
+        coEvery { projectRepository.getProjectById(any()) } returns project
         //when & then
         assertThrows<Exception> {
-            editProjectUseCase(project.id,newName)
+            editProjectUseCase(project.id.toString(),newName)
         }
     }
 
     @Test
-    fun `editProject should call projectRepository editProject function when the id is found`() {
+    fun `editProject should call projectRepository editProject function when the id is found`() = runTest{
         //given
-        val state = State("id1", "stateName")
-        val project = Project("id1", "name1", listOf(state))
+        val state = State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(state))
         val newName = "name2"
-        every { projectRepository.getProjectById(any()) } returns project
+        coEvery { projectRepository.getProjectById(any()) } returns project
         //when
-        editProjectUseCase(project.id,newName)
+        editProjectUseCase(project.id.toString(),newName)
         //then
-        verify (exactly = 1){ projectRepository.editProject(any()) }
+        coVerify (exactly = 1){ projectRepository.editProject(any()) }
     }
 }

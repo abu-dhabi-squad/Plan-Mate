@@ -7,7 +7,7 @@ import logic.repository.AuditRepository
 class CreateAuditUseCase(
     private val auditRepository: AuditRepository
 ) {
-    operator fun invoke(
+    suspend operator fun invoke(
         auditLog: Audit
     ){
 

@@ -2,18 +2,18 @@ package presentation.project
 
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
-import presentation.ui_io.Printer
+import presentation.io.Printer
 
 class GetAllProjectsUI(
     private val printer: Printer,
     private val getAllProjectsUseCase: GetAllProjectsUseCase
 ) : UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.displayLn("All Created Projects:")
         getAllProjects()
     }
 
-    private fun getAllProjects() {
+    private suspend fun getAllProjects() {
         try {
             getAllProjectsUseCase().forEachIndexed { index, project ->
                 printer.displayLn("${index + 1}) ${project.projectName}")

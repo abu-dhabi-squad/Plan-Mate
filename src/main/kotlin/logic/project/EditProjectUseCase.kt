@@ -6,7 +6,7 @@ import logic.repository.ProjectRepository
 class EditProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
-    operator fun invoke(projectId: String, newName: String){
+    suspend operator fun invoke(projectId: String, newName: String) {
         val project = projectRepository.getProjectById(projectId)
             ?: throw ProjectNotFoundException()
         projectRepository.editProject(project.copy(projectName = newName))

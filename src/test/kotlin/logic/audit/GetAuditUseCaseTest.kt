@@ -1,9 +1,10 @@
 package logic.audit
 
+import com.google.common.truth.Truth.assertThat
 import createAudit
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
-import org.junit.jupiter.api.Assertions.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.exceptions.WrongInputException
@@ -23,7 +24,7 @@ class GetAuditUseCaseTest {
     }
 
     @Test
-    fun `get Audit History should returns audit list when entityId is valid`() {
+    fun `get Audit History should returns audit list when entityId is valid`() = runTest{
 
         // given
         val entityId = "123"
@@ -37,33 +38,33 @@ class GetAuditUseCaseTest {
             )
         )
 
-        every { auditRepository.getAuditByEntityId(entityId) } returns expectedAudits
+        coEvery { auditRepository.getAuditByEntityId(entityId) } returns expectedAudits
 
         // when
         val result = getAuditUseCase(entityId)
 
         // then
-        assertEquals(expectedAudits, result)
+        assertThat(expectedAudits).isEqualTo(result)
     }
 
     @Test
-    fun `get Audit History throws WrongInputException when entityId is empty`() {
+    fun `get Audit History throws WrongInputException when entityId is empty`()= runTest {
 
         // given
         val entityId = ""
-        every { auditRepository.getAuditByEntityId(entityId) } throws WrongInputException()
+        coEvery { auditRepository.getAuditByEntityId(entityId) } throws WrongInputException()
 
         // then
         assertFails { getAuditUseCase(entityId) }
     }
 
     @Test
-    fun `get Audit History throws Empty List Exception when there is no Audit History`() {
+    fun `get Audit History throws Empty List Exception when there is no Audit History`()= runTest {
 
         // given
         val entityId = "UG7299"
 
-        every { auditRepository.getAuditByEntityId(entityId) } returns emptyList()
+        coEvery { auditRepository.getAuditByEntityId(entityId) } returns emptyList()
 
         // then
         assertFails { getAuditUseCase(entityId) }

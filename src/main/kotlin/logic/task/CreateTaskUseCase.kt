@@ -4,8 +4,8 @@ import logic.model.Task
 import logic.repository.TaskRepository
 import logic.validation.TaskValidator
 
-class CreateTaskUseCase(private val taskRepository: TaskRepository, private val taskValidator: TaskValidator, ) {
-    operator fun invoke(task: Task) {
+class CreateTaskUseCase(private val taskRepository: TaskRepository, private val taskValidator: TaskValidator) {
+    suspend operator fun invoke(task: Task) {
         taskValidator.validateOrThrow(task)
         taskRepository.createTask(task)
     }

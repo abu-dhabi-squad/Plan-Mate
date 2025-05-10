@@ -1,8 +1,9 @@
 package logic.audit
 
 import createAudit
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -22,7 +23,7 @@ class CreateAuditUseCaseTest {
     }
 
     @Test
-    fun `addAudit adds valid audit`() {
+    fun `addAudit adds valid audit`()= runTest {
 
         // given
         val audit = createAudit(
@@ -34,7 +35,7 @@ class CreateAuditUseCaseTest {
 
         // then
 
-        verify(exactly = 1) {
+        coVerify(exactly = 1) {
             auditRepository.createAuditLog(match {
                 it.id == audit.id &&
                         it.createdBy == audit.createdBy &&
@@ -57,7 +58,7 @@ class CreateAuditUseCaseTest {
         entityId: String,
         createdBy: String,
         newState: String
-    ) {
+    )= runTest {
 
         // given
         val audit = createAudit(
@@ -74,7 +75,7 @@ class CreateAuditUseCaseTest {
     }
 
     @Test
-    fun `addAudit throws InvalidAudit when newState equals oldState`() {
+    fun `addAudit throws InvalidAudit when newState equals oldState`() = runTest{
 
         // given
         val audit = createAudit(

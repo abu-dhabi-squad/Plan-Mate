@@ -3,8 +3,8 @@ package presentation.project
 import logic.audit.CreateAuditUseCase
 import logic.project.DeleteProjectUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import logic.model.Audit
 import logic.model.EntityType
 import logic.user.GetLoggedUserUseCase
@@ -17,7 +17,7 @@ class DeleteProjectUI(
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ): UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.display("Enter the project ID to delete: ")
         val projectId = inputReader.readString()
 

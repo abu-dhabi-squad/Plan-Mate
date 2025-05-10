@@ -1,9 +1,10 @@
 package presentation.audit
 
-import io.mockk.every
+import helper.createTask
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.audit.GetAuditUseCase
-import logic.helper.createTask
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.exceptions.EmptyList
@@ -13,20 +14,20 @@ import logic.model.EntityType
 import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
-import presentation.ui_io.ConsolePrinter
-import presentation.ui_io.InputReader
+import presentation.io.ConsolePrinter
+import presentation.io.InputReader
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.util.*
+import java.util.UUID
 import kotlin.test.assertTrue
 
 class GetAuditForTaskUITest {
 
-    private val getAuditUseCase: GetAuditUseCase = mockk()
-    private val reader = mockk<InputReader>()
+    private val getAuditUseCase: GetAuditUseCase = mockk(relaxed = true)
+    private val reader = mockk<InputReader>(relaxed = true)
     private val getAllProjectsUseCase = mockk<GetAllProjectsUseCase>(relaxed = true)
     private val printer = ConsolePrinter()
-    private val getTasksByProjectIdUseCase = mockk<GetTasksByProjectIdUseCase>()
+    private val getTasksByProjectIdUseCase = mockk<GetTasksByProjectIdUseCase>(relaxed = true)
     private val outContent = ByteArrayOutputStream()
     private lateinit var ui: GetAuditForTaskUI
 
@@ -43,17 +44,18 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should show audit logs for selected task`() {
-        val project = Project("p1", "Project A", listOf())
-        val task = createTask(id = "t1", title = "Task A")
+    fun `should show audit logs for selected task`() = runTest{
+        val uuid= UUID.randomUUID()
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
+        val task = createTask(id = uuid, title = "Task A")
         val audits = listOf(
             Audit(UUID.randomUUID(), "admin", "t1", EntityType.TASK, "old", "new")
         )
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returnsMany listOf(1, 1)
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
-        every { getAuditUseCase("t1") } returns audits
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returnsMany listOf(1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getAuditUseCase(any()) } returns audits
 
         ui.launchUi()
 
@@ -62,9 +64,9 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should show error if no projects exist`() {
+    fun `should show error if no projects exist`() = runTest{
 
-        every { getAllProjectsUseCase() } returns emptyList()
+        coEvery { getAllProjectsUseCase() } returns emptyList()
 
         ui.launchUi()
 
@@ -73,13 +75,13 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should show error if no tasks exist for selected project`() {
+    fun `should show error if no tasks exist for selected project`() = runTest{
 
-        val project = Project("p1", "Project A", listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getTasksByProjectIdUseCase("p1") } returns emptyList()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
 
         ui.launchUi()
 
@@ -88,11 +90,11 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle null input for project`() {
-        val project = Project("p1", "Project A", listOf())
+    fun `should handle null input for project`() = runTest{
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns null
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns null
 
         ui.launchUi()
 
@@ -101,11 +103,11 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle invalid project index`() {
-        val project = Project("p1", "Project A", listOf())
+    fun `should handle invalid project index`() = runTest{
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 5
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 5
 
         ui.launchUi()
 
@@ -114,13 +116,14 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle null input for task`() {
-        val project = Project("p1", "Project A", listOf())
-        val task = createTask(id = "t1", title = "Task A")
+    fun `should handle null input for task`() = runTest{
+        val uuid=UUID.randomUUID()
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
+        val task = createTask(id = uuid, title = "Task A")
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returnsMany listOf(1, null)
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returnsMany listOf(1, null)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
 
         ui.launchUi()
 
@@ -129,14 +132,14 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle invalid task index`() {
+    fun `should handle invalid task index`() = runTest{
+        val uuid=UUID.randomUUID()
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
+        val task = createTask(id = uuid, title = "Task A")
 
-        val project = Project("p1", "Project A", listOf())
-        val task = createTask(id = "t1", title = "Task A")
-
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returnsMany listOf(1, 5)
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returnsMany listOf(1, 5)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
 
         ui.launchUi()
 
@@ -145,46 +148,15 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should show message when no audit logs found`() {
-        val project = Project("p1", "Project A", listOf())
-        val task = createTask(id = "t1", title = "Task A")
+    fun `should show message when no audit logs found`() = runTest{
+        val uuid=UUID.randomUUID()
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
+        val task = createTask(id = uuid, title = "Task A")
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returnsMany listOf(1, 1)
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
-        every { getAuditUseCase("t1") } returns emptyList()
-
-        ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("No audit logs found"))
-    }
-
-    @Test
-    fun `should handle WrongInputException from use case`() {
-        val project = Project("p1", "Project A", listOf())
-        val task = createTask(id = "t1", title = "Task A")
-
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returnsMany listOf(1, 1)
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
-        every { getAuditUseCase("t1") } throws WrongInputException()
-
-        ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("Invalid entity ID"))
-    }
-
-    @Test
-    fun `should handle EmptyList exception from use case`() {
-        val project = Project("p1", "Project A", listOf())
-        val task = createTask(id = "t1", title = "Task A")
-
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returnsMany listOf(1, 1)
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
-        every { getAuditUseCase("t1") } throws EmptyList()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returnsMany listOf(1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getAuditUseCase(any()) } returns emptyList()
 
         ui.launchUi()
 
@@ -193,14 +165,49 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should handle unexpected exception`() {
-        val project = Project("p1", "Project A", listOf())
-        val task = createTask(id = "t1", title = "Task A")
+    fun `should handle WrongInputException from use case`() = runTest{
+        val uuid=UUID.randomUUID()
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
+        val task = createTask(id = uuid, title = "Task A")
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returnsMany listOf(1, 1)
-        every { getTasksByProjectIdUseCase("p1") } returns listOf(task)
-        every { getAuditUseCase("t1") } throws Exception()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returnsMany listOf(1, 1)
+        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getAuditUseCase(any()) } throws WrongInputException()
+
+        ui.launchUi()
+
+        val output = outContent.toString()
+        assertTrue(output.contains("Invalid entity ID input. Please try again."))
+    }
+
+    @Test
+    fun `should handle EmptyList exception from use case`() = runTest{
+        val uuid=UUID.randomUUID()
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
+        val task = createTask(id = uuid, title = "Task A")
+
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returnsMany listOf(1, 1)
+        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")) } returns listOf(task)
+        coEvery { getAuditUseCase("t1") } throws EmptyList()
+
+        ui.launchUi()
+
+        val output = outContent.toString()
+        assertTrue(output.contains("No audit logs found"))
+    }
+
+    @Test
+    fun `should handle unexpected exception`() = runTest{
+        val uuid=UUID.randomUUID()
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
+        val task = createTask(id = uuid, title = "Task A")
+
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returnsMany listOf(1, 1)
+        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")) } returns listOf(task)
+        coEvery { getAuditUseCase(any()) } throws Exception()
 
         ui.launchUi()
 
@@ -209,9 +216,9 @@ class GetAuditForTaskUITest {
     }
 
     @Test
-    fun `should throw exception when get all projects fails`(){
+    fun `should throw exception when get all projects fails`() = runTest{
 
-        every { getAllProjectsUseCase() } throws Exception()
+        coEvery { getAllProjectsUseCase() } throws Exception()
 
         ui.launchUi()
 

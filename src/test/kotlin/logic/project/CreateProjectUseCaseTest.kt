@@ -1,6 +1,7 @@
 package logic.project
 
 import io.mockk.*
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.model.Project
@@ -17,7 +18,7 @@ class CreateProjectUseCaseTest{
     }
 
     @Test
-    fun `given valid project name, should create and save project`() {
+    fun `given valid project name, should create and save project`() = runTest{
         // Given
         val name = "Test Project"
 
@@ -25,7 +26,7 @@ class CreateProjectUseCaseTest{
         createProjectUseCase.invoke(Project(projectName = name, states = listOf()))
 
         // Then
-        verify {
+        coVerify {
             projectRepository.addProject(
                 match { project ->
                     project.projectName == name && project.states.isEmpty()

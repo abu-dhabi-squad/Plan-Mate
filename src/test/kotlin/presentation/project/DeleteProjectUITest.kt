@@ -1,14 +1,18 @@
 package presentation.project
 
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import logic.project.DeleteProjectUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
-import presentation.project.DeleteProjectUI
 
 
 class DeleteProjectUITest{
@@ -30,71 +34,71 @@ class DeleteProjectUITest{
     }
 
     @Test
-    fun `should print error message when project ID is blank`() {
-        every { inputReader.readString() } returns ""
+    fun `should print error message when project ID is blank`() = runTest{
+        coEvery { inputReader.readString() } returns ""
 
         deleteProjectUI.launchUi()
 
-        verify { printer.display("Enter the project ID to delete: ") }
-        verify { printer.displayLn("Project name cannot be empty.") }
-        verify(exactly = 0) { deleteProjectUseCase(any()) }
+        coVerify { printer.display("Enter the project ID to delete: ") }
+        coVerify { printer.displayLn("Project name cannot be empty.") }
+        coVerify(exactly = 0) { deleteProjectUseCase(any()) }
     }
 
     @Test
-    fun `should delete project and print success message when project ID is valid`() {
+    fun `should delete project and print success message when project ID is valid`() = runTest{
         val projectId = "PRJ-123"
-        every { inputReader.readString() } returns projectId
-        every { deleteProjectUseCase(projectId) } just Runs
+        coEvery { inputReader.readString() } returns projectId
+        coEvery { deleteProjectUseCase(projectId) } just Runs
 
         deleteProjectUI.launchUi()
 
-        verify { deleteProjectUseCase(projectId) }
-        verify { printer.displayLn("Project \"$projectId\" has been deleted.") }
+        coVerify { deleteProjectUseCase(projectId) }
+        coVerify { printer.displayLn("Project \"$projectId\" has been deleted.") }
     }
 
     @Test
-    fun `should print error message when use case throws exception`() {
+    fun `should print error message when use case throws exception`() = runTest{
         val projectId = "PRJ-456"
-        every { inputReader.readString() } returns projectId
-        every { deleteProjectUseCase(projectId) } throws RuntimeException("Deletion failed")
+        coEvery { inputReader.readString() } returns projectId
+        coEvery { deleteProjectUseCase(projectId) } throws RuntimeException("Deletion failed")
 
         deleteProjectUI.launchUi()
 
-        verify { printer.displayLn("Error: Deletion failed") }
+        coVerify { printer.displayLn("Error: Deletion failed") }
     }
 
     @Test
-    fun `should print error message when project ID is blank with spaces`() {
-        every { inputReader.readString() } returns "   "
+    fun `should print error message when project ID is blank with spaces`() = runTest{
+        coEvery { inputReader.readString() } returns "   "
 
         deleteProjectUI.launchUi()
 
-        verify { printer.display("Enter the project ID to delete: ") }
-        verify { printer.displayLn("Project name cannot be empty.") }
-        verify(exactly = 0) { deleteProjectUseCase(any()) }
+        coVerify { printer.display("Enter the project ID to delete: ") }
+        coVerify { printer.displayLn("Project name cannot be empty.") }
+        coVerify(exactly = 0) { deleteProjectUseCase(any()) }
     }
 
     @Test
-    fun `should print error message when project ID is null`() {
-        every { inputReader.readString() } returns null
+    fun `should print error message when project ID is null`() = runTest{
+        coEvery { inputReader.readString() } returns null
 
         deleteProjectUI.launchUi()
 
-        verify { printer.display("Enter the project ID to delete: ") }
-        verify { printer.displayLn("Project name cannot be empty.") }
-        verify(exactly = 0) { deleteProjectUseCase(any()) }
+        coVerify { printer.display("Enter the project ID to delete: ") }
+        coVerify { printer.displayLn("Project name cannot be empty.") }
+        coVerify(exactly = 0) { deleteProjectUseCase(any()) }
     }
 
     @Test
-    fun `should throw exception when create audit throw exception`(){
+    fun `should throw exception when create audit throw exception`() = runTest{
 
-        every { inputReader.readString() } returns "projectId"
-        every { deleteProjectUseCase(any()) } just Runs
-        every { createAuditUseCase(any()) } throws Exception()
+        coEvery { inputReader.readString() } returns "projectId"
+        coEvery { deleteProjectUseCase(any()) } just Runs
+        coEvery { createAuditUseCase(any()) } throws Exception()
 
         deleteProjectUI.launchUi()
 
-        verify { printer.displayLn("Error: ${Exception().message}") }
+        coVerify { printer.displayLn("Error: ${Exception().message}") }
 
     }
 }

@@ -1,47 +1,54 @@
 package di
 
-import data.authentication.datasource.CsvUserParser
+import data.authentication.datasource.csv.CsvUserParser
 import logic.validation.DateParser
 import logic.validation.DateParserImpl
 import org.koin.dsl.module
-import data.project.datasource.CsvProjectDataSource
-import data.project.datasource.CsvProjectParser
-import data.project.datasource.ProjectDataSource
-import logic.utils.Md5Hashing
+import data.project.datasource.csv.CsvProject
+import data.project.datasource.csv.CsvProjectParser
+import data.project.repository.LocalProjectDataSource
+import presentation.data.utils.hashing.Md5Hashing
 import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper
 import logic.validation.DateValidator
 import logic.validation.DateValidatorImpl
-import logic.validation.PasswordValidator
-import logic.validation.StandardPasswordValidator
+import logic.authentication.validtion.CreateUserPasswordValidator
+import logic.authentication.validtion.LoginPasswordValidator
 import logic.validation.TaskValidator
 import logic.validation.TaskValidatorImpl
-import presentation.ui_io.ConsolePrinter
-import presentation.ui_io.ConsoleReader
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
-import logic.utils.HashingService
+import presentation.io.ConsolePrinter
+import presentation.io.ConsoleReader
+import presentation.io.InputReader
+import presentation.io.Printer
+import presentation.data.utils.hashing.HashingService
 import logic.validation.DateTimeParser
 import logic.validation.DateTimeParserImpl
 
 val appModule = module {
-    single<DateParser> { DateParserImpl() }
-    single<DateValidator> { DateValidatorImpl(get()) }
-    single<PasswordValidator> { StandardPasswordValidator() }
-    single<TaskValidator> { TaskValidatorImpl() }
-    single<HashingService> { Md5Hashing()  }
-    single<InputReader> { ConsoleReader() }
-    single<Printer> { ConsolePrinter() }
-    single <CsvUserParser>{ CsvUserParser() }
-    single<FileHelper> { CsvFileHelper() }
-    single { CsvProjectParser() }
-    single<ProjectDataSource> {
-        CsvProjectDataSource(
+
+    single<LocalProjectDataSource> {
+        CsvProject(
             fileHelper = get(),
             csvProjectParser = get(),
             fileName = "projects.csv"
         )
     }
 
-    single <DateTimeParser>{DateTimeParserImpl()  }
+    single<HashingService> { Md5Hashing() }
+
+    single<InputReader> { ConsoleReader() }
+    single<Printer> { ConsolePrinter() }
+
+    single<FileHelper> { CsvFileHelper() }
+
+    single<CreateUserPasswordValidator> { CreateUserPasswordValidator() }
+    single<LoginPasswordValidator> { LoginPasswordValidator() }
+
+    single<DateValidator> { DateValidatorImpl(get()) }
+    single<TaskValidator> { TaskValidatorImpl() }
+
+    single<DateParser> { DateParserImpl() }
+    single { CsvProjectParser() }
+    single<CsvUserParser> { CsvUserParser() }
+    single<DateTimeParser> { DateTimeParserImpl() }
 }

@@ -5,7 +5,7 @@ import logic.model.Project
 import logic.repository.ProjectRepository
 
 class GetAllProjectsUseCase(private val projectRepository: ProjectRepository) {
-    operator fun invoke(): List<Project> {
+    suspend operator fun invoke(): List<Project> {
         return projectRepository.getAllProjects()
             .takeIf { it.isNotEmpty() }
             ?: throw NoProjectsFoundException()

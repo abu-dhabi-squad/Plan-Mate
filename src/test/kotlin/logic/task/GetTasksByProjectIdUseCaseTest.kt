@@ -1,9 +1,10 @@
 package logic.task
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
+import helper.createTask
+import io.mockk.coEvery
 import io.mockk.mockk
-import logic.helper.createTask
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,12 +23,12 @@ class GetTasksByProjectIdUseCaseTest {
     }
 
     @Test
-    fun `should get tasks by project id when project is exists`() {
+    fun `should get tasks by project id when project is exists`()= runTest {
         // Given
-        val projectId = UUID.randomUUID().toString()
+        val projectId = UUID.randomUUID()
         val firstRelatedTask = createTask(projectId = projectId)
         val secondRelatedTask = createTask(projectId = projectId)
-        every { taskRepository.getTaskByProjectId(projectId) } returns listOf(
+        coEvery { taskRepository.getTaskByProjectId(projectId) } returns listOf(
             firstRelatedTask,
             secondRelatedTask,
         )
@@ -40,10 +41,10 @@ class GetTasksByProjectIdUseCaseTest {
     }
 
     @Test
-    fun `should throw NoTasksFoundException when there are no tasks for provided project id`() {
+    fun `should throw NoTasksFoundException when there are no tasks for provided project id`()= runTest {
         // Given
-        val projectId = UUID.randomUUID().toString()
-        every { taskRepository.getAllTasks() } returns listOf(
+        val projectId = UUID.randomUUID()
+        coEvery { taskRepository.getAllTasks() } returns listOf(
             createTask(),
             createTask(),
             createTask()

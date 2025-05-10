@@ -6,8 +6,8 @@ import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 
 class GetAuditForTaskUI(
     private val printer: Printer,
@@ -17,7 +17,7 @@ class GetAuditForTaskUI(
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
 ) : UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
 
         val projects = try {
             getAllProjectsUseCase()
@@ -55,7 +55,7 @@ class GetAuditForTaskUI(
         showTaskAudit(selectedProject)
     }
 
-    private fun showTaskAudit(project: Project) {
+    private suspend fun showTaskAudit(project: Project) {
 
         val tasks = try {
             getTasksByProjectIdUseCase(project.id)
@@ -90,10 +90,10 @@ class GetAuditForTaskUI(
             return
         }
 
-        showAuditLogs(selectedTask.id)
+        showAuditLogs(selectedTask.id.toString())
     }
 
-    private fun showAuditLogs(entityId: String) {
+    private suspend fun showAuditLogs(entityId: String) {
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
             if (audits.isEmpty()) {

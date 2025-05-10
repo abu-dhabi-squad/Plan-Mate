@@ -1,7 +1,8 @@
 package presentation.audit
 
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
 import logic.audit.GetAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -11,11 +12,11 @@ import logic.model.Audit
 import logic.model.EntityType
 import logic.model.Project
 import logic.project.GetAllProjectsUseCase
-import presentation.ui_io.ConsolePrinter
-import presentation.ui_io.InputReader
+import presentation.io.ConsolePrinter
+import presentation.io.InputReader
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.util.*
+import java.util.UUID
 import kotlin.test.assertTrue
 
 class GetAuditForProjectUITest{
@@ -39,16 +40,16 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should show audit logs for valid project`() {
+    fun `should show audit logs for valid project`() = runTest{
 
-        val project = Project("p1", "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
         val audits = listOf(
             Audit(UUID.randomUUID(), "admin", "p1", EntityType.PROJECT, "old", "new")
         )
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getAuditUseCase("p1") } returns audits
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getAuditUseCase(any()) } returns audits
 
         ui.launchUi()
 
@@ -58,8 +59,8 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should show error if no projects exist`() {
-        every { getAllProjectsUseCase() } returns emptyList()
+    fun `should show error if no projects exist`() = runTest{
+        coEvery { getAllProjectsUseCase() } returns emptyList()
 
         ui.launchUi()
 
@@ -68,11 +69,11 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle null input selection`() {
-        val project = Project("p1", "Project A", states = listOf())
+    fun `should handle null input selection`() = runTest{
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns null
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns null
 
         ui.launchUi()
 
@@ -81,12 +82,12 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle invalid project index`() {
+    fun `should handle invalid project index`() = runTest{
 
-        val project = Project("p1", "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 5
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 5
 
         ui.launchUi()
 
@@ -95,13 +96,13 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should show message when no audit logs found`() {
+    fun `should show message when no audit logs found`() = runTest{
 
-        val project = Project("p1", "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getAuditUseCase("p1") } returns emptyList()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getAuditUseCase(any()) } returns emptyList()
 
         ui.launchUi()
 
@@ -110,13 +111,13 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle WrongInputException gracefully`() {
+    fun `should handle WrongInputException gracefully`() = runTest{
 
-        val project = Project("p1", "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getAuditUseCase(any()) } throws WrongInputException()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getAuditUseCase(any()) } throws WrongInputException()
 
         ui.launchUi()
 
@@ -125,13 +126,13 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle EmptyList exception gracefully`() {
+    fun `should handle EmptyList exception gracefully`() = runTest{
 
-        val project = Project("p1", "Project A", states = listOf())
-
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getAuditUseCase("p1") } throws EmptyList()
+        //val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
+        val project= Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"", listOf())
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getAuditUseCase(any()) } throws EmptyList()
 
         ui.launchUi()
 
@@ -140,13 +141,13 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `should handle unexpected exception`() {
+    fun `should handle unexpected exception`() = runTest{
 
-        val project = Project("p1", "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
 
-        every { getAllProjectsUseCase() } returns listOf(project)
-        every { reader.readInt() } returns 1
-        every { getAuditUseCase("p1") } throws Exception()
+        coEvery { getAllProjectsUseCase() } returns listOf(project)
+        coEvery { reader.readInt() } returns 1
+        coEvery { getAuditUseCase("p1") } throws Exception()
 
         ui.launchUi()
 

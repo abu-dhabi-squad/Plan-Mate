@@ -3,15 +3,15 @@ package presentation.project
 import logic.model.State
 import logic.project.AddStateToProjectUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 
 class AddStateToProjectUI(
     private val addStateToProjectUseCase: AddStateToProjectUseCase,
     private val inputReader: InputReader,
     private val printer: Printer
 ): UiLauncher {
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.display("Enter the project ID to add a state to: ")
         val projectId = inputReader.readString()
 

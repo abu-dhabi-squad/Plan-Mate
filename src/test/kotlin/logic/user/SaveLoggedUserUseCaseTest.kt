@@ -1,13 +1,12 @@
 package logic.user
 
-import io.mockk.*
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import logic.exceptions.EmptyUsernameException
 import logic.model.User
 import logic.model.UserType
 import logic.repository.AuthenticationRepository
-import logic.user.SaveLoggedUserUseCase
 import kotlin.test.Test
 
 class SaveLoggedUserUseCaseTest{

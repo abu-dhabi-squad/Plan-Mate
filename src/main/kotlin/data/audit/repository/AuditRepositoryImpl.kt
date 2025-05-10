@@ -1,18 +1,19 @@
 package data.audit.repository
 
-import data.audit.datasource.AuditDataSource
+import data.audit.mapper.MongoAuditMapper
 import logic.model.Audit
 import logic.repository.AuditRepository
 
 class AuditRepositoryImpl(
-    private val dataSource: AuditDataSource
+    private val remoteAuditDataSource: RemoteAuditDataSource,
+    private val mongoAuditMapper: MongoAuditMapper
 ) : AuditRepository {
 
-    override fun createAuditLog(auditLog: Audit) {
-        dataSource.createAuditLog(auditLog)
+    override suspend fun createAuditLog(auditLog: Audit) {
+        remoteAuditDataSource.createAuditLog(mongoAuditMapper.auditToDto(auditLog))
     }
 
-    override fun getAuditByEntityId(entityId: String): List<Audit> {
-        return dataSource.getAuditByEntityId(entityId)
+    override suspend fun getAuditByEntityId(entityId: String): List<Audit> {
+        return remoteAuditDataSource.getAuditByEntityId(entityId).map { mongoAuditMapper.dtoToAudit(it) }
     }
 }

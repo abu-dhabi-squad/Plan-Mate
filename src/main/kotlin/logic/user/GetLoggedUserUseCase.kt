@@ -1,6 +1,5 @@
 package logic.user
 
-import data.authentication.datasource.LoggedUserDataSource
 import logic.exceptions.NoLoggedInUserException
 import logic.model.User
 import logic.repository.AuthenticationRepository

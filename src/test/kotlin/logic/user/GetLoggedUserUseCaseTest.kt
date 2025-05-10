@@ -2,19 +2,15 @@ package logic.user
 
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
-import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import data.authentication.datasource.LoggedUserDataSource
 import logic.exceptions.NoLoggedInUserException
 import logic.model.User
 import logic.model.UserType
 import logic.repository.AuthenticationRepository
-import logic.user.GetLoggedUserUseCase
 
 class GetLoggedUserUseCaseTest{
     private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase

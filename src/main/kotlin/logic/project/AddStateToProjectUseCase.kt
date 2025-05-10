@@ -6,11 +6,11 @@ import logic.model.State
 import logic.repository.ProjectRepository
 
 class AddStateToProjectUseCase(private val projectRepository: ProjectRepository) {
-    operator fun invoke(projectId: String, newState: State) {
+    suspend operator fun invoke(projectId: String, newState: State) {
         val project = projectRepository.getProjectById(projectId)
             ?: throw ProjectNotFoundException()
 
-        if(project.states.isNotEmpty()){
+        if (project.states.isNotEmpty()) {
             project.states.find { !it.name.equals(newState.name, ignoreCase = true) }
                 ?: throw DuplicateStateException(newState.name)
         }

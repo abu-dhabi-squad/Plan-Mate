@@ -1,35 +1,42 @@
 package data.task.repository
 
-import data.task.datasource.TaskDataSource
+import data.task.mapper.MongoTaskMapper
 import logic.model.Task
 import logic.repository.TaskRepository
+import java.util.UUID
 
 class TaskRepositoryImpl(
-    private val taskDataSource: TaskDataSource,
-): TaskRepository {
-    override fun getAllTasks(): List<Task> {
-        return taskDataSource.getAllTasks()
+    private val remoteTaskDataSource: RemoteTaskDataSource,
+    private val remoteTaskParser: MongoTaskMapper
+) : TaskRepository {
+
+    override suspend fun getAllTasks(): List<Task> {
+        return remoteTaskDataSource.getAllTasks().map { taskDto -> remoteTaskParser.dtoToTask(taskDto) }
     }
 
-    override fun getTaskById(taskId: String): Task? {
-        return taskDataSource.getTaskById(taskId)
+    override suspend fun getTaskById(taskId: UUID): Task? {
+        return remoteTaskDataSource.getTaskById(taskId.toString())?.let { taskDto ->
+            remoteTaskParser.dtoToTask(taskDto)
+        }
     }
 
-    override fun getTaskByProjectId(projectId: String): List<Task> {
-        return taskDataSource.getTaskByProjectId(projectId)
+    override suspend fun getTaskByProjectId(projectId: UUID): List<Task> {
+        return remoteTaskDataSource.getTaskByProjectId(projectId.toString()).map { taskDto ->
+            remoteTaskParser.dtoToTask(taskDto)
+        }
     }
 
-    override fun createTask(task: Task) {
-        return taskDataSource.createTask(task)
+    override suspend fun createTask(task: Task) {
+        val taskDto = remoteTaskParser.taskToDto(task)
+        remoteTaskDataSource.createTask(taskDto)
     }
 
-    override fun editTask(updatedTask: Task) {
-        return taskDataSource.editTask(updatedTask)
+    override suspend fun editTask(updatedTask: Task) {
+        val taskDto = remoteTaskParser.taskToDto(updatedTask)
+        remoteTaskDataSource.editTask(taskDto)
     }
 
-    override fun deleteTask(taskId: String) {
-        return taskDataSource.deleteTask(taskId)
+    override suspend fun deleteTask(taskId: UUID) {
+        remoteTaskDataSource.deleteTask(taskId.toString())
     }
-
-
 }

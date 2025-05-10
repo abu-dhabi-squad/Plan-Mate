@@ -16,11 +16,15 @@ dependencies {
     implementation("io.insert-koin:koin-core:4.0.2")
     implementation("io.insert-koin:koin-annotations:2.0.0")
 
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation ("com.google.truth:truth:1.4.4")
     testImplementation("io.mockk:mockk:1.14.0")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     implementation("com.soywiz.korlibs.krypto:krypto:3.4.0")
+    implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.10.1")
 
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    implementation("org.slf4j:slf4j-simple:2.0.12")
 }
 
 tasks.test {

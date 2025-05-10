@@ -3,8 +3,9 @@ package logic.task
 import logic.exceptions.TaskNotFoundException
 import logic.model.Task
 import logic.repository.TaskRepository
+import java.util.UUID
 
 class GetTaskByIdUseCase(private val taskRepository: TaskRepository) {
-    operator fun invoke(taskId: String): Task =
+    suspend operator fun invoke(taskId: UUID): Task =
         taskRepository.getTaskById(taskId) ?: throw TaskNotFoundException()
 }

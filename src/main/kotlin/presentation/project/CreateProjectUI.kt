@@ -3,8 +3,8 @@ package presentation.project
 import logic.audit.CreateAuditUseCase
 import logic.project.CreateProjectUseCase
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import logic.model.Audit
 import logic.model.EntityType
 import logic.model.Project
@@ -20,7 +20,7 @@ class CreateProjectUI(
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ): UiLauncher {
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         printer.display("Enter project name: ")
         val projectName = inputReader.readString()?.takeIf { it.isNotBlank() }
         if (projectName == null) {
@@ -53,7 +53,7 @@ class CreateProjectUI(
                 Audit(
                     createdBy = getLoggedUserUseCase().username,
                     entityType = EntityType.PROJECT,
-                    entityId = newProject.id,
+                    entityId = newProject.id.toString(),
                     oldState = "",
                     newState = "Created"
                 )

@@ -1,200 +1,204 @@
 package data.task.repository
 
-import com.google.common.truth.Truth
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
-import logic.helper.createTask
+import com.google.common.truth.Truth.assertThat
+import helper.createTask
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertTrue
-import data.task.datasource.TaskDataSource
+import data.task.mapper.MongoTaskMapper
+import data.task.model.TaskDto
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import logic.repository.TaskRepository
+import java.util.UUID
 
 class TaskRepositoryImplTest {
-    private lateinit var taskDataSource: TaskDataSource
+
+    private lateinit var remoteTaskDataSource: RemoteTaskDataSource
     private lateinit var taskRepository: TaskRepository
+    private lateinit var taskMapper: MongoTaskMapper
 
     @BeforeEach
     fun setup() {
-        taskDataSource = mockk(relaxed = true)
-        taskRepository = TaskRepositoryImpl(taskDataSource)
+        remoteTaskDataSource = mockk(relaxed = true)
+        taskMapper = mockk(relaxed = true)
+        taskRepository = TaskRepositoryImpl(remoteTaskDataSource, taskMapper)
     }
 
     @Test
-    fun `getAllTasks should returns list of tasks when datasource is not empty`() {
-        // Given
-        val tasks = listOf(createTask(), createTask(), createTask(), createTask())
-        every { taskDataSource.getAllTasks() } returns tasks
+    fun `getAllTasks should return list of tasks when datasource is not empty`() = runTest {
+        val taskDto1 = mockk<TaskDto>()
+        val taskDto2 = mockk<TaskDto>()
+        val task1 = createTask()
+        val task2 = createTask()
 
-        // When
+        coEvery { remoteTaskDataSource.getAllTasks() } returns listOf(taskDto1, taskDto2)
+        every { taskMapper.dtoToTask(taskDto1) } returns task1
+        every { taskMapper.dtoToTask(taskDto2) } returns task2
+
         val result = taskRepository.getAllTasks()
 
-        // Then
-        Truth.assertThat(result).containsExactly(*tasks.toTypedArray())
+        assertThat(result).containsExactly(task1, task2)
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto1) }
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto2) }
     }
 
     @Test
-    fun `getAllTasks should returns empty list when datasource is empty`() {
-        // Given
-        every { taskDataSource.getAllTasks() } returns emptyList()
+    fun `getAllTasks should return empty list when datasource is empty`() = runTest {
+        coEvery { remoteTaskDataSource.getAllTasks() } returns emptyList()
 
-        // When && Then
-        assertTrue { taskRepository.getAllTasks().isEmpty() }
+        val result = taskRepository.getAllTasks()
+
+        assertThat(result).isEmpty()
     }
 
     @Test
-    fun `getAllTasks should rethrows Exception when datasource throws Exception`() {
-        // Given
-        every { taskDataSource.getAllTasks() } throws Exception()
+    fun `getAllTasks should rethrow Exception when datasource throws Exception`() = runTest {
+        coEvery { remoteTaskDataSource.getAllTasks() } throws Exception()
 
-        // When && Then
         assertThrows<Exception> { taskRepository.getAllTasks() }
     }
 
     @Test
-    fun `getTaskByProjectId should returns list of tasks when datasource is not empty`() {
-        // Given
-        val tasks = listOf(createTask(), createTask(), createTask(), createTask())
-        every { taskDataSource.getTaskByProjectId(any()) } returns tasks
+    fun `getTaskByProjectId should return list of tasks when datasource is not empty`() = runTest {
+        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val taskDto1 = mockk<TaskDto>()
+        val taskDto2 = mockk<TaskDto>()
+        val task1 = createTask().copy(projectId = projectId)
+        val task2 = createTask().copy(projectId = projectId)
 
-        // When
-        val result = taskRepository.getTaskByProjectId(tasks[0].projectId)
+        coEvery { remoteTaskDataSource.getTaskByProjectId(projectId.toString()) } returns listOf(taskDto1, taskDto2)
+        every { taskMapper.dtoToTask(taskDto1) } returns task1
+        every { taskMapper.dtoToTask(taskDto2) } returns task2
 
-        // Then
-        Truth.assertThat(result).containsExactly(*tasks.toTypedArray())
+        val result = taskRepository.getTaskByProjectId(projectId)
+
+        assertThat(result).containsExactly(task1, task2)
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto1) }
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto2) }
     }
 
     @Test
-    fun `getTaskByProjectId should returns empty list when datasource is empty`() {
-        // Given
-        every { taskDataSource.getTaskByProjectId(any()) } returns emptyList()
+    fun `getTaskByProjectId should return empty list when datasource is empty`() = runTest {
+        coEvery { remoteTaskDataSource.getTaskByProjectId(any()) } returns emptyList()
 
-        // When && Then
-        assertTrue { taskRepository.getTaskByProjectId("1").isEmpty() }
+        val result = taskRepository.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+
+        assertThat(result).isEmpty()
     }
 
     @Test
-    fun `getTaskByProjectId should rethrows Exception when datasource throws Exception`() {
-        // Given
-        every { taskDataSource.getTaskByProjectId(any()) } throws Exception()
+    fun `getTaskByProjectId should rethrow Exception when datasource throws Exception`() = runTest {
+        coEvery { remoteTaskDataSource.getTaskByProjectId(any()) } throws Exception()
 
-        // When && Then
-        assertThrows<Exception> { taskRepository.getTaskByProjectId("1") }
+        assertThrows<Exception> { taskRepository.getTaskByProjectId(UUID.fromString("1")) }
     }
 
     @Test
-    fun `getTaskById should returns task when datasource contains a task with the same id`() {
-        // Given
+    fun `getTaskById should return task when datasource contains matching task`() = runTest {
         val task = createTask()
-        every { taskDataSource.getTaskById(any()) } returns task
+        val taskDto = mockk<TaskDto>()
 
-        // When
+        coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } returns taskDto
+        every { taskMapper.dtoToTask(taskDto) } returns task
+
         val result = taskRepository.getTaskById(task.id)
 
-        // Then
-        Truth.assertThat(result).isEqualTo(task)
+        assertThat(result).isEqualTo(task)
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto) }
     }
 
     @Test
-    fun `getTaskById should returns null when datasource not contains a task with the same id`() {
-        // Given
+    fun `getTaskById should return null when datasource returns null`() = runTest {
         val task = createTask()
-        every { taskDataSource.getTaskById(any()) } returns null
+        coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } returns null
 
-        // When
         val result = taskRepository.getTaskById(task.id)
 
-        // Then
-        Truth.assertThat(result).isNull()
+        assertThat(result).isNull()
     }
 
     @Test
-    fun `getTaskById should rethrows Exception when datasource throws Exception`() {
-        // Given
+    fun `getTaskById should rethrow Exception when datasource throws Exception`() = runTest {
         val task = createTask()
-        every { taskDataSource.getTaskById(any()) } throws Exception()
+        coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } throws Exception()
 
-        // When && Then
         assertThrows<Exception> { taskRepository.getTaskById(task.id) }
     }
 
     @Test
-    fun `createTask should returns when added new task successfully added to the datasource`() {
-        // Given
-        val newTask = createTask()
-
-        // When
-        taskRepository.createTask(newTask)
-
-        // Then
-        verify(exactly = 1) { taskDataSource.createTask(any()) }
-    }
-
-    @Test
-    fun `createTask should returns false when couldn't add new task to the datasource`() {
-        // Given
-        val newTask = createTask()
-
-        // When
-        taskRepository.createTask(newTask)
-
-        // Then
-        verify(exactly = 1) { taskDataSource.createTask(any()) }
-    }
-
-    @Test
-    fun `createTask should rethrows Exception when datasource throws Exception`() {
-        // Given
+    fun `createTask should call datasource with mapped dto`() = runTest {
         val task = createTask()
-        every { taskDataSource.createTask(any()) } throws Exception()
+        val taskDto = mockk<TaskDto>()
 
-        // When && Then
+        every { taskMapper.taskToDto(task) } returns taskDto
+        coEvery { remoteTaskDataSource.createTask(taskDto) } just Runs
+
+        taskRepository.createTask(task)
+
+        verify { taskMapper.taskToDto(task) }
+        coVerify { remoteTaskDataSource.createTask(taskDto) }
+    }
+
+    @Test
+    fun `createTask should rethrow Exception when datasource throws Exception`() = runTest {
+        val task = createTask()
+        val taskDto = mockk<TaskDto>()
+
+        every { taskMapper.taskToDto(task) } returns taskDto
+        coEvery { remoteTaskDataSource.createTask(taskDto) } throws Exception()
+
         assertThrows<Exception> { taskRepository.createTask(task) }
     }
 
     @Test
-    fun `editTask should returns when updating task successfully into the datasource`() {
-        // Given
-        val newTask = createTask()
+    fun `editTask should call datasource with mapped dto`() = runTest {
+        val task = createTask()
+        val taskDto = mockk<TaskDto>()
 
-        // When
-        taskRepository.editTask(newTask)
+        every { taskMapper.taskToDto(task) } returns taskDto
+        coEvery { remoteTaskDataSource.editTask(taskDto) } just Runs
 
-        // Then
-        verify(exactly = 1) { taskDataSource.editTask(any()) }
+        taskRepository.editTask(task)
+
+        verify { taskMapper.taskToDto(task) }
+        coVerify { remoteTaskDataSource.editTask(taskDto) }
     }
 
     @Test
-    fun `editTask should rethrows Exception when datasource throws Exception`() {
-        // Given
-        val newTask = createTask()
-        every { taskDataSource.editTask(any()) } throws Exception()
+    fun `editTask should rethrow Exception when datasource throws Exception`() = runTest {
+        val task = createTask()
+        val taskDto = mockk<TaskDto>()
 
-        // When && Then
-        assertThrows<Exception> { taskRepository.editTask(newTask) }
+        every { taskMapper.taskToDto(task) } returns taskDto
+        coEvery { remoteTaskDataSource.editTask(taskDto) } throws Exception()
+
+        assertThrows<Exception> { taskRepository.editTask(task) }
     }
 
     @Test
-    fun `deleteTask should returns true when deleted task successfully from the datasource`() {
-        // Given
+    fun `deleteTask should call datasource with correct id`() = runTest {
         val task = createTask()
 
-        // When
+        coEvery { remoteTaskDataSource.deleteTask(task.id.toString()) } just Runs
+
         taskRepository.deleteTask(task.id)
 
-        // Then
-        verify(exactly = 1) { taskDataSource.deleteTask(any()) }
+        coVerify { remoteTaskDataSource.deleteTask(task.id.toString()) }
     }
 
     @Test
-    fun `deleteTask should rethrows Exception when datasource throws Exception`() {
-        // Given
+    fun `deleteTask should rethrow Exception when datasource throws Exception`() = runTest {
         val task = createTask()
-        every { taskDataSource.deleteTask(any()) } throws Exception()
 
-        // When && Then
+        coEvery { remoteTaskDataSource.deleteTask(task.id.toString()) } throws Exception()
+
         assertThrows<Exception> { taskRepository.deleteTask(task.id) }
     }
 }

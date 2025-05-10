@@ -3,8 +3,8 @@ package presentation.admin
 import org.koin.core.annotation.Named
 import presentation.UIFeature
 import presentation.UiLauncher
-import presentation.ui_io.InputReader
-import presentation.ui_io.Printer
+import presentation.io.InputReader
+import presentation.io.Printer
 import kotlin.system.exitProcess
 
 class ConsoleAdminMenuView(
@@ -14,7 +14,7 @@ class ConsoleAdminMenuView(
 ) : UiLauncher {
 
 
-    override fun launchUi() {
+    override suspend fun launchUi() {
         sortMenu()
         showWelcome()
         presentFeature()
@@ -24,7 +24,7 @@ class ConsoleAdminMenuView(
         printer.displayLn("Welcome to PlanMate Admin Dashboard ")
     }
 
-    private fun presentFeature() {
+    private suspend fun presentFeature() {
         showOptions()
         print("Enter your choice: ")
         val input = inputReader.readInt()

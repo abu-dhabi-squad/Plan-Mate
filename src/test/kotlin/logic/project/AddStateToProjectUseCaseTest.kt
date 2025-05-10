@@ -1,9 +1,10 @@
 package logic.project
 
 import com.google.common.truth.Truth.assertThat
-import io.mockk.every
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -12,6 +13,7 @@ import logic.exceptions.ProjectNotFoundException
 import logic.model.Project
 import logic.model.State
 import logic.repository.ProjectRepository
+import java.util.UUID
 
 class AddStateToProjectUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
@@ -24,48 +26,48 @@ class AddStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should add new state to existing project`() {
+    fun `should add new state to existing project`() = runTest{
         // Given
-        val existingState = State(id = "s1", name = "TODO")
-        val newState = State(id = "s2", name = "InProgress")
-        val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
+        val existingState = State(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), name = "TODO")
+        val newState = State(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), name = "InProgress")
+        val existingProject = Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Test Project", states = listOf(existingState))
 
-        every { projectRepository.getProjectById("p1") } returns existingProject
+        coEvery { projectRepository.getProjectById("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a") } returns existingProject
 
         // When
-        addStateToProjectUseCase("p1", newState)
+        addStateToProjectUseCase("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", newState)
 
         // Then
-        verify {
+        coVerify {
             projectRepository.editProject(
                 match {
-                    it.id == "p1" && it.states.contains(newState)
+                    it.id == UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a") && it.states.contains(newState)
                 }
             )
         }
     }
 
     @Test
-    fun `should throw DuplicateStateException if state name already exists`() {
+    fun `should throw DuplicateStateException if state name already exists`() = runTest{
         // Given
-        val existingState = State(id = "s1", name = "TODO")
-        val duplicateState = State(id = "s2", name = "TODO")
-        val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
+        val existingState = State(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "TODO")
+        val duplicateState = State(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "TODO")
+        val existingProject = Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), projectName = "Test Project", states = listOf(existingState))
 
-        every { projectRepository.getProjectById(any()) } returns existingProject
+        coEvery { projectRepository.getProjectById(any()) } returns existingProject
 
         // When & Then
         val exception = assertThrows<DuplicateStateException> {
-            addStateToProjectUseCase.invoke("p1", duplicateState)
+            addStateToProjectUseCase.invoke("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", duplicateState)
         }
         assertThat(exception).hasMessageThat().contains("TODO")
     }
 
     @Test
-    fun `should throw Project Not FoundException if project id is invalid`() {
+    fun `should throw Project Not FoundException if project id is invalid`()= runTest {
         // Given
-        every { projectRepository.getProjectById(any()) } returns null
-        val newState = State(id = "s1", name = "Review")
+        coEvery { projectRepository.getProjectById(any()) } returns null
+        val newState = State(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Review")
 
         // When & Then
         assertThrows<ProjectNotFoundException> {
@@ -74,38 +76,38 @@ class AddStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw DuplicateStateException if state name matches existing one ignoring case`() {
+    fun `should throw DuplicateStateException if state name matches existing one ignoring case`() = runTest{
         // Given
-        val existingState = State(id = "s1", name = "ToDo")
-        val duplicateState = State(id = "s2", name = "todo") // same name, different case
-        val existingProject = Project(id = "p1", projectName = "Test Project", states = listOf(existingState))
+        val existingState = State(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "ToDo")
+        val duplicateState = State(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), name = "todo") // same name, different case
+        val existingProject = Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1d"), projectName = "Test Project", states = listOf(existingState))
 
-        every { projectRepository.getProjectById(any()) } returns existingProject
+        coEvery { projectRepository.getProjectById(any()) } returns existingProject
 
         // When & Then
         val exception = assertThrows<DuplicateStateException> {
-            addStateToProjectUseCase.invoke("p1", duplicateState)
+            addStateToProjectUseCase.invoke("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", duplicateState)
         }
 
         assertThat(exception).hasMessageThat().contains("todo")
     }
 
     @Test
-    fun `should handle adding first state to project with empty states list`() {
+    fun `should handle adding first state to project with empty states list`() = runTest{
         // Given
-        val newState = State(id = "s1", name = "TODO")
-        val existingProject = Project(id = "p1", projectName = "Test Project", states = emptyList())
+        val newState = State(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "TODO")
+        val existingProject = Project(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), projectName = "Test Project", states = emptyList())
 
-        every { projectRepository.getProjectById(any()) } returns existingProject
+        coEvery { projectRepository.getProjectById(any()) } returns existingProject
 
         // When
-        addStateToProjectUseCase.invoke("p1", newState)
+        addStateToProjectUseCase.invoke("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b", newState)
 
         // Then
-        verify {
+        coVerify {
             projectRepository.editProject(
                 match {
-                    it.id == "p1" && it.states.size == 1 && it.states[0] == newState
+                    it.id == UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b") && it.states.size == 1 && it.states[0] == newState
                 }
             )
         }

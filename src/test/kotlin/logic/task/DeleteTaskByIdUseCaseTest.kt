@@ -1,9 +1,10 @@
 package logic.task
 
-import io.mockk.every
+import helper.createTask
+import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.verify
-import logic.helper.createTask
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -22,23 +23,23 @@ class DeleteTaskByIdUseCaseTest {
     }
 
     @Test
-    fun `should delete task by its id when task is exists`() {
+    fun `should delete task by its id when task is exists`() = runTest{
         // Given
-        val taskId = UUID.randomUUID().toString()
-        every { taskRepository.getTaskById(any()) } returns createTask(id = taskId)
+        val taskId = UUID.randomUUID()
+        coEvery { taskRepository.getTaskById(any()) } returns createTask(id = taskId)
 
         // When
         deleteTaskByIdUseCase(taskId)
 
         // Then
-        verify { taskRepository.deleteTask(taskId) }
+        coVerify { taskRepository.deleteTask(taskId) }
     }
 
     @Test
-    fun `should throw TaskNotFoundException exception when task is not exists`() {
+    fun `should throw TaskNotFoundException exception when task is not exists`() = runTest{
         // Given
-        val taskId = UUID.randomUUID().toString()
-        every { taskRepository.getTaskById(any()) } returns null
+        val taskId = UUID.randomUUID()
+        coEvery { taskRepository.getTaskById(any()) } returns null
 
         // When && Then
         assertThrows<TaskNotFoundException> {
