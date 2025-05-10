@@ -14,12 +14,12 @@ class MongoTaskMapperTest {
     private val dateFormatter = DateTimeFormatter.ISO_DATE
 
     @Test
-    fun `taskToTaskDto maps correctly`() {
+    fun `taskToDto maps correctly`() {
         // Given
         val task = createTask()
 
         // When
-        val dto = mapper.taskToTaskDto(task)
+        val dto = mapper.taskToDto(task)
 
         // Then
         assertThat(dto.id).isEqualTo(task.id.toString())
@@ -33,7 +33,7 @@ class MongoTaskMapperTest {
     }
 
     @Test
-    fun `taskDtoToTask maps correctly`() {
+    fun `dtoToTask maps correctly`() {
         // Given
         val id = UUID.randomUUID()
         val stateId = UUID.randomUUID()
@@ -53,7 +53,7 @@ class MongoTaskMapperTest {
         )
 
         // When
-        val task = mapper.taskDtoToTask(dto)
+        val task = mapper.dtoToTask(dto)
 
         // Then
         assertThat(task.id.toString()).isEqualTo(dto.id)

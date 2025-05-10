@@ -4,31 +4,31 @@ import data.audit.mapper.MongoAuditMapper
 import data.audit.model.AuditDto
 import data.audit.repository.AuditRepositoryImpl
 import data.authentication.mapper.MongoUserMapper
-import data.authentication.datasource.csv_datasource.CsvUserParser
+import data.authentication.datasource.csv.CsvUserParser
 import data.authentication.repository.AuthenticationRepositoryImpl
-import data.audit.datasource.csvdatasource.csvparser.AuditParser
+import data.audit.datasource.csv.parser.AuditParser
 import org.koin.core.qualifier.named
 
-import data.audit.datasource.csvdatasource.csvparser.CsvAuditParser
+import data.audit.datasource.csv.parser.CsvAuditParser
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
 import com.mongodb.kotlin.client.coroutine.MongoClient
-import data.audit.datasource.mongo_database.MongoAuditDataSource
+import data.audit.datasource.mongo.MongoAudit
 import data.audit.repository.RemoteAuditDataSource
 import data.authentication.repository.RemoteAuthenticationDataSource
 import org.koin.dsl.module
-import data.project.datasource.csv_datasource.CsvProjectParser
+import data.project.datasource.csv.CsvProjectParser
 import data.project.repository.ProjectRepositoryImpl
 import data.task.repository.TaskRepositoryImpl
-import data.authentication.datasource.localdatasource.InMemoryLoggedUserDataSource
+import data.authentication.datasource.inmemory.InMemoryLoggedUser
 import data.authentication.repository.LoggedUserDataSource
-import data.authentication.datasource.mongo_datasource.MongoAuthenticationDataSource
+import data.authentication.datasource.mongo.MongoAuthentication
 import data.authentication.model.UserDto
-import data.project.datasource.mongo_datasource.MongoProjectDataSource
+import data.project.datasource.mongo.MongoProject
 import data.project.repository.RemoteProjectDataSource
 import data.project.mapper.MongoProjectMapper
 import data.project.model.ProjectDto
-import data.task.datasource.csv_datasource.CsvTaskParser
-import data.task.datasource.mongo_datasource.MongoTaskDataSource
+import data.task.datasource.csv.CsvTaskParser
+import data.task.datasource.mongo.MongoTask
 import data.task.repository.RemoteTaskDataSource
 import data.task.mapper.MongoTaskMapper
 import data.task.model.TaskDto
@@ -48,7 +48,7 @@ val repositoryModule = module {
     single<FileHelper> { CsvFileHelper() }
 
     single<ProjectRepository> { ProjectRepositoryImpl(get(),get()) }
-    single<RemoteTaskDataSource> { MongoTaskDataSource(get(named("task"))) }
+    single<RemoteTaskDataSource> { MongoTask(get(named("task"))) }
     single<TaskRepository> { TaskRepositoryImpl(get(),get()) }
     single<AuditRepository> { AuditRepositoryImpl(get(),get()) }
     single<AuthenticationRepository> { AuthenticationRepositoryImpl(get(), get(),get(),get()) }
@@ -58,17 +58,17 @@ val repositoryModule = module {
     single { CsvTaskParser(get()) }
     single<AuditParser> { CsvAuditParser(get()) }
 
-    single<LoggedUserDataSource> { InMemoryLoggedUserDataSource() }
+    single<LoggedUserDataSource> { InMemoryLoggedUser() }
 
-    single<RemoteAuthenticationDataSource> { MongoAuthenticationDataSource(get(named("users"))) }
+    single<RemoteAuthenticationDataSource> { MongoAuthentication(get(named("users"))) }
     single<RemoteProjectDataSource> {
-        MongoProjectDataSource(get(named("projects")))
+        MongoProject(get(named("projects")))
     }
     single<RemoteTaskDataSource> {
-        MongoTaskDataSource(get(named("tasks")))
+        MongoTask(get(named("tasks")))
     }
     single<RemoteAuditDataSource> {
-        MongoAuditDataSource(get(named("audits")))
+        MongoAudit(get(named("audits")))
     }
 
     single {

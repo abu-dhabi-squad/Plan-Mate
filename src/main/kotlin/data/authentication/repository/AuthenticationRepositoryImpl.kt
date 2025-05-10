@@ -4,7 +4,7 @@ import data.authentication.mapper.MongoUserMapper
 import logic.exceptions.InvalidCredentialsException
 import logic.model.User
 import logic.repository.AuthenticationRepository
-import logic.utils.HashingService
+import presentation.data.utils.hashing.HashingService
 
 class AuthenticationRepositoryImpl(
     private val remoteAuthenticationDataSource: RemoteAuthenticationDataSource,

@@ -8,7 +8,7 @@ import java.util.UUID
 
 class MongoTaskMapper {
     private val dateFormatter = DateTimeFormatter.ISO_DATE
-    fun taskToTaskDto(task: Task): TaskDto {
+    fun taskToDto(task: Task): TaskDto {
         return TaskDto(
             id = task.id.toString(),
             userName = task.userName,
@@ -20,7 +20,7 @@ class MongoTaskMapper {
             endDate = task.endDate.format(dateFormatter)
         )
     }
-    fun taskDtoToTask(taskDto: TaskDto): Task {
+    fun dtoToTask(taskDto: TaskDto): Task {
         return Task(
             id = UUID.fromString(taskDto.id),
             userName = taskDto.userName,

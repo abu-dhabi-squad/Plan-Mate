@@ -1,7 +1,7 @@
 package data.authentication.datasource
 
 import com.google.common.truth.Truth.assertThat
-import data.authentication.datasource.csv_datasource.CsvUserParser
+import data.authentication.datasource.csv.CsvUserParser
 import logic.exceptions.CanNotParseUserException
 import logic.model.User
 import logic.model.UserType
