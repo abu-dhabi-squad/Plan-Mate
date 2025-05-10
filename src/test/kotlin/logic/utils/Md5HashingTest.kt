@@ -3,6 +3,7 @@ package logic.utils
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import presentation.data.utils.hashing.Md5Hashing
 
 class Md5HashingTest {
 

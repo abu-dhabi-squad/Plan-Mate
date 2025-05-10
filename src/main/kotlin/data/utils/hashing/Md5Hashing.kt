@@ -1,4 +1,4 @@
-package logic.utils
+package presentation.data.utils.hashing
 import com.soywiz.krypto.md5
 
 class Md5Hashing : HashingService {

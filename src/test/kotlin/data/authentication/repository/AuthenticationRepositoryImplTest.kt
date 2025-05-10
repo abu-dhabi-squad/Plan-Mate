@@ -13,7 +13,7 @@ import kotlinx.coroutines.test.runTest
 import logic.exceptions.InvalidCredentialsException
 import logic.model.User
 import logic.model.UserType
-import logic.utils.HashingService
+import presentation.data.utils.hashing.HashingService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
