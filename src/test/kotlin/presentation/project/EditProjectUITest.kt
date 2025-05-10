@@ -43,7 +43,7 @@ class EditProjectUITest {
         //when
         editProjectUI.launchUi()
         //then
-        coVerify { printer.displayLn("there is no project in list") }
+        coVerify { printer.displayLn("There is no project in list") }
     }
 
     @Test
@@ -54,50 +54,50 @@ class EditProjectUITest {
             Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name2")))
         )
         coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { reader.readString() } returns null
+        coEvery { reader.readInt() } returns null
         //when
         editProjectUI.launchUi()
         //then
         coVerify {
-            projects.forEach{ project ->
+            projects.forEachIndexed { index, project ->
                 printer.displayLn(
-                    "project id: " + project.id +
-                            " - project name: " + project.projectName +
-                            " - states : " + project.states
+                    "${index + 1}- Project Name: ${project.projectName} - States : ${project.states}"
                 )
             }
 
         }
-        coVerify { printer.displayLn("wrong input") }
+        coVerify { printer.displayLn("Wrong input") }
     }
 
     @Test
-    fun `launchUI should display wrong input when enter wrong input or not entering at all for project id`() = runTest{
+    fun `launchUI should display Wrong input when enter Wrong input or not entering at all for project id`() = runTest{
         //given
         coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
+        coEvery { reader.readInt() } returns null
+        //when
+        editProjectUI.launchUi()
+        //then
+        coVerify { printer.displayLn("Wrong input") }
+    }
+
+    @Test
+    fun `launchUI should display Wrong input when enter Wrong input or not entering at all for project name`() = runTest{
+        //given
+        coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
+        coEvery { reader.readInt() } returns 1
         coEvery { reader.readString() } returns null
         //when
         editProjectUI.launchUi()
         //then
-        coVerify { printer.displayLn("wrong input") }
-    }
-
-    @Test
-    fun `launchUI should display wrong input when enter wrong input or not entering at all for project name`() = runTest{
-        //given
-        coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
-        coEvery { reader.readString() } returns "id1" andThen null
-        //when
-        editProjectUI.launchUi()
-        //then
-        coVerify { printer.displayLn("wrong input") }
+        coVerify { printer.displayLn("Wrong input") }
     }
 
     @Test
     fun `launchUI should display Exception message when edit project use case throw Exception`() = runTest{
         // Given
         coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
-        coEvery { reader.readString() } returns "id1" andThen "name1"
+        coEvery { reader.readInt() } returns 1
+        coEvery { reader.readString() } returns "name1"
         coEvery { editProjectUseCase(any(), any()) } throws Exception()
         // When
         editProjectUI.launchUi()

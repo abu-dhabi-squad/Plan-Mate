@@ -15,20 +15,27 @@ class EditProjectUI(
     override suspend fun launchUi() {
         try {
             getAllProjectsUseCase().takeIf { it.isNotEmpty() }
-                ?.forEach { project ->
-                    printer.displayLn("project id: " + project.id + " - project name: " + project.projectName + " - states : " + project.states)
-                }?.let {
-                    printer.display("enter the id of the project you want to edit: ")
-                    reader.readString()?.let { projectId ->
-                        printer.display("\nenter the new name: ")
-                        reader.readString()?.let { projectName ->
-                            editProjectUseCase(projectId, projectName)
-                        } ?: printer.displayLn("wrong input")
-                    } ?: printer.displayLn("wrong input")
-                } ?: printer.displayLn("there is no project in list")
+                .let { projects ->
+                    projects?.forEachIndexed { index, project ->
+                        printer.displayLn("${index + 1}- Project Name: " + project.projectName + " - States : " + project.states)
+                    }?.let {
+                        printer.display("\nChoose project: ")
+                        reader.readInt()?.let { choice ->
+                            val projectIndex = choice - 1
+                            if (projectIndex !in projects.indices) {
+                                printer.displayLn("Wrong input")
+                                return
+                            }
+                            printer.displayLn("\nEnter the new name: ")
+                            reader.readString()?.let { projectName ->
+                                editProjectUseCase(projects[projectIndex].id.toString(), projectName)
+                                printer.displayLn("\nProject updated successfully.")
+                            } ?: printer.displayLn("Wrong input")
+                        } ?: printer.displayLn("Wrong input")
+                    } ?: printer.displayLn("There is no project in list")
+                }
         } catch (e: Exception) {
             printer.displayLn(e.message)
         }
-
     }
 }

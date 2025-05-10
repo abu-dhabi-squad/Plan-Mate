@@ -1,12 +1,10 @@
 package presentation.project
 
-import logic.model.State
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
-import java.util.*
 
 class EditStateOfProjectUI(
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase,
@@ -18,23 +16,44 @@ class EditStateOfProjectUI(
         try {
             val projects = getAllProjectsUseCase()
             if (projects.isEmpty()) {
-                printer.displayLn("There is no project in the list.")
+                printer.displayLn("\nThere are no projects in the list.")
                 return
             }
 
-            projects.forEach { project ->
-                printer.displayLn("project id: ${project.id} - project name: ${project.projectName} - states: ${project.states}")
+            projects.forEachIndexed { index, project ->
+                printer.displayLn("${index + 1}- Project Name: ${project.projectName} - States: ${project.states}")
             }
 
-            val projectId = promptNonEmptyString("Enter project id: ")
-            val stateId = promptNonEmptyString("Enter the id of the state you want to edit: ")
+            val projectIndex = promptNonEmptyInt("\nChoose Project: ") - 1
+            if (projectIndex !in projects.indices) {
+                printer.displayLn("\nProject not found")
+                return
+            }
+
+            projects[projectIndex].states.forEachIndexed { index, state ->
+                printer.displayLn("${index + 1}- State Name: ${state.name}")
+            }
+
+            val stateIndex = promptNonEmptyInt("Choose state you want to edit: ") - 1
+            if (stateIndex !in projects[projectIndex].states.indices) {
+                printer.displayLn("\nState not found")
+                return
+            }
             val stateNewName = promptNonEmptyString("Enter the new name of the state: ")
 
-            editStateOfProjectUseCase(projectId, State(UUID.fromString(stateId), stateNewName))
-            printer.displayLn("State updated successfully.")
+            editStateOfProjectUseCase(projects[projectIndex].id.toString(), projects[projectIndex].states[stateIndex].copy(name = stateNewName))
+            printer.displayLn("\nState updated successfully.")
+        } catch (exception: Exception) {
+            printer.displayLn(exception.message ?: "An error occurred.")
+        }
+    }
 
-        } catch (e: Exception) {
-            printer.displayLn(e.message ?: "An error occurred.")
+    private fun promptNonEmptyInt(prompt: String): Int {
+        while (true) {
+            printer.display(prompt)
+            val input = reader.readInt()
+            if (input != null) return input
+            printer.displayLn("\nInput cannot be empty.")
         }
     }
 
@@ -43,7 +62,7 @@ class EditStateOfProjectUI(
             printer.display(prompt)
             val input = reader.readString()
             if (!input.isNullOrBlank()) return input
-            printer.displayLn("Input cannot be empty.")
+            printer.displayLn("\nInput cannot be empty.")
         }
     }
 }

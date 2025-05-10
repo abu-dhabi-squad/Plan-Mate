@@ -9,7 +9,7 @@ class GetAllProjectsUI(
     private val getAllProjectsUseCase: GetAllProjectsUseCase
 ) : UiLauncher {
     override suspend fun launchUi() {
-        printer.displayLn("All Created Projects:")
+        printer.displayLn("\nAll Created Projects:")
         getAllProjects()
     }
 
@@ -19,7 +19,7 @@ class GetAllProjectsUI(
                 printer.displayLn("${index + 1}) ${project.projectName}")
             }
         } catch (e: Exception) {
-            printer.displayLn("Error retrieving projects: ${e.message}")
+            printer.displayLn("\nError retrieving projects: ${e.message}")
         }
     }
 }

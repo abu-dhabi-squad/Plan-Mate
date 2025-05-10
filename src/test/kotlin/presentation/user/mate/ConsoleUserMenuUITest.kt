@@ -1,4 +1,4 @@
-package presentation.admin
+package presentation.user.mate
 
 import io.mockk.every
 import io.mockk.mockk
@@ -10,13 +10,13 @@ import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.usermanagement.user.ConsoleUserMenuUI
 
-class ConsoleAdminMenuViewTest {
-
+class ConsoleUserMenuUITest {
     private lateinit var printer: Printer
     private lateinit var reader: InputReader
     private lateinit var uiLauncher: UiLauncher
-    private lateinit var view: ConsoleAdminMenuView
+    private lateinit var view: ConsoleUserMenuUI
 
     @BeforeEach
     fun setup() {
@@ -33,7 +33,7 @@ class ConsoleAdminMenuViewTest {
         // Simulate one valid input, then force exit by throwing instead of looping forever
         every { reader.readInt() } returns 1 andThenThrows RuntimeException("stop loop")
 
-        view = ConsoleAdminMenuView(features, printer, reader)
+        view = ConsoleUserMenuUI(features, printer, reader)
     }
 
     @Test
@@ -44,9 +44,9 @@ class ConsoleAdminMenuViewTest {
             // Expected to stop infinite recursion from presentFeature()
         }
 
-        verify { printer.displayLn(match { it.toString().contains("Welcome to PlanMate Admin Dashboard") }) }
+        verify { printer.displayLn(match { it.toString().contains("Welcome to PlanMate App") }) }
 
-         verify { printer.displayLn(match { it.toString().contains("Create Project") }) }
+        verify { printer.displayLn(match { it.toString().contains("Create Project") }) }
         verify { printer.displayLn(match { it.toString().contains("Edit Project") }) }
         verify { printer.displayLn(match { it.toString().contains("Delete Project") }) }
 

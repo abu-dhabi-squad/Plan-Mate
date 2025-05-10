@@ -39,7 +39,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("Project name cannot be empty.") }
+        coVerify { printer.displayLn("\nProject name cannot be empty.") }
         coVerify(exactly = 0) { createProjectUseCase(any()) }
     }
 
@@ -49,7 +49,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("Project name cannot be empty.") }
+        coVerify { printer.displayLn("\nProject name cannot be empty.") }
         coVerify(exactly = 0) { createProjectUseCase(any()) }
     }
 
@@ -60,7 +60,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("Invalid number of states.") }
+        coVerify { printer.displayLn("\nInvalid number of states.") }
         coVerify(exactly = 0) { createProjectUseCase(any()) }
     }
 
@@ -71,7 +71,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("Invalid number of states.") }
+        coVerify { printer.displayLn("\nInvalid number of states.") }
         coVerify(exactly = 0) { createProjectUseCase(any()) }
     }
 
@@ -82,7 +82,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("State name cannot be empty.") }
+        coVerify { printer.displayLn("\nState name cannot be empty.") }
     }
 
     @Test
@@ -95,7 +95,7 @@ class CreateProjectUITest{
         coVerify {
             createProjectUseCase(any())
         }
-        coVerify { printer.displayLn("Project 'My Project' created with 2 state(s).") }
+        coVerify { printer.displayLn("\nProject 'My Project' created with 2 state(s).") }
     }
 
     @Test
@@ -107,7 +107,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("Error: Project Not Found") }
+        coVerify { printer.displayLn("\nError: Project Not Found") }
     }
 
     @Test
@@ -117,7 +117,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("State name cannot be empty.") }
+        coVerify { printer.displayLn("\nState name cannot be empty.") }
     }
 
     @Test
@@ -128,7 +128,7 @@ class CreateProjectUITest{
         createProjectUI.launchUi()
 
         coVerify { createProjectUseCase(any()) }
-        coVerify { printer.displayLn("Project 'Empty Project' created with 0 state(s).") }
+        coVerify { printer.displayLn("\nProject 'Empty Project' created with 0 state(s).") }
     }
 
     @Test
@@ -140,6 +140,6 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("Error: ${Exception().message}") }
+        coVerify { printer.displayLn("\nError: ${Exception().message}") }
     }
 }

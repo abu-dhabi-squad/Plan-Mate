@@ -12,21 +12,21 @@ import logic.authentication.LoginByUserNameUseCase
 import logic.exceptions.UserNotFoundException
 import logic.model.User
 import logic.model.UserType
-import presentation.admin.ConsoleAdminMenuView
+import presentation.presentation.usermanagement.admin.ConsoleAdminMenuUI
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.user.ConsoleUserMenuView
+import presentation.presentation.usermanagement.user.ConsoleUserMenuUI
 import logic.user.SaveLoggedUserUseCase
 import java.util.UUID
 
-class LoginByUserNameUseCaseUITest {
+class LoginByUserNameUITest {
 
     private lateinit var loginUseCase: LoginByUserNameUseCase
     private lateinit var inputReader: InputReader
     private lateinit var printer: Printer
-    private lateinit var consoleMenuViewUser: ConsoleUserMenuView
-    private lateinit var consoleMenuViewAdmin: ConsoleAdminMenuView
-    private lateinit var loginUi: LoginByUserNameUseCaseUI
+    private lateinit var consoleMenuViewUser: ConsoleUserMenuUI
+    private lateinit var consoleMenuViewAdmin: ConsoleAdminMenuUI
+    private lateinit var loginUi: LoginByUserNameUI
     private lateinit var saveLoggedUserUseCase: SaveLoggedUserUseCase
 
     @BeforeEach
@@ -38,7 +38,7 @@ class LoginByUserNameUseCaseUITest {
         consoleMenuViewAdmin = mockk(relaxed = true)
         saveLoggedUserUseCase= mockk(relaxed = true)
 
-        loginUi = LoginByUserNameUseCaseUI(
+        loginUi = LoginByUserNameUI(
             loginUseCase,
             saveLoggedUserUseCase,
             inputReader,
@@ -58,7 +58,7 @@ class LoginByUserNameUseCaseUITest {
         loginUi.launchUi()
 
         // Then
-        verify { printer.displayLn("Input cannot be empty.") }
+        verify { printer.displayLn("\nInput cannot be empty.") }
     }
 
     @Test
@@ -70,7 +70,7 @@ class LoginByUserNameUseCaseUITest {
         loginUi.launchUi()
 
         // Then
-        verify { printer.displayLn("Input cannot be empty.") }
+        verify { printer.displayLn("\nInput cannot be empty.") }
     }
 
     @Test
@@ -84,7 +84,7 @@ class LoginByUserNameUseCaseUITest {
         loginUi.launchUi()
 
         // Then
-        verify { printer.displayLn("Login successful! Welcome adminUser [ADMIN]") }
+        verify { printer.displayLn("\nLogin successful! Welcome adminUser [ADMIN]") }
         coVerify { consoleMenuViewAdmin.launchUi() }
         coVerify(exactly = 0) { consoleMenuViewUser.launchUi() }
     }
@@ -100,7 +100,7 @@ class LoginByUserNameUseCaseUITest {
         loginUi.launchUi()
 
         // Then
-        verify { printer.displayLn("Login successful! Welcome mateUser [MATE]") }
+        verify { printer.displayLn("\nLogin successful! Welcome mateUser [MATE]") }
         coVerify { consoleMenuViewUser.launchUi() }
         coVerify(exactly = 0) { consoleMenuViewAdmin.launchUi() }
     }
@@ -116,7 +116,7 @@ class LoginByUserNameUseCaseUITest {
         loginUi.launchUi()
 
         // Then
-        verify {printer.displayLn(match{it.toString().contains("Login failed:User with username '$username' not found")})}
+        verify {printer.displayLn(match{it.toString().contains("\nLogin failed: User with username '$username' not found")})}
     }
 
     @Test
@@ -128,7 +128,7 @@ class LoginByUserNameUseCaseUITest {
         loginUi.launchUi()
 
         // Then
-        verify { printer.displayLn("Input cannot be empty.") }
+        verify { printer.displayLn("\nInput cannot be empty.") }
     }
 
     @Test
@@ -140,7 +140,7 @@ class LoginByUserNameUseCaseUITest {
         loginUi.launchUi()
 
         // Then
-        verify { printer.displayLn("Input cannot be empty.") }
+        verify { printer.displayLn("\nInput cannot be empty.") }
     }
 
 }

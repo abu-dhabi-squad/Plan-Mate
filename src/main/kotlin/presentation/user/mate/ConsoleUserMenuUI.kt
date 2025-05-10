@@ -1,4 +1,4 @@
-package presentation.user
+package presentation.presentation.usermanagement.user
 
 import org.koin.core.annotation.Named
 import presentation.UIFeature
@@ -7,7 +7,7 @@ import presentation.io.InputReader
 import presentation.io.Printer
 import kotlin.system.exitProcess
 
-class ConsoleUserMenuView(
+class ConsoleUserMenuUI(
     @Named("mate") private val uiFeatures: List<UIFeature>,
     private val printer: Printer,
     private val inputReader: InputReader
