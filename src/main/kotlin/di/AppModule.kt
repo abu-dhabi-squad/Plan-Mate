@@ -1,11 +1,11 @@
 package di
 
-import data.authentication.datasource.csv_datasource.CsvUserParser
+import data.authentication.datasource.csv.CsvUserParser
 import logic.validation.DateParser
 import logic.validation.DateParserImpl
 import org.koin.dsl.module
-import data.project.datasource.csv_datasource.CsvProjectDataSource
-import data.project.datasource.csv_datasource.CsvProjectParser
+import data.project.datasource.csv.CsvProject
+import data.project.datasource.csv.CsvProjectParser
 import data.project.repository.LocalProjectDataSource
 import presentation.data.utils.hashing.Md5Hashing
 import data.utils.filehelper.CsvFileHelper
@@ -27,7 +27,7 @@ import logic.validation.DateTimeParserImpl
 val appModule = module {
 
     single<LocalProjectDataSource> {
-        CsvProjectDataSource(
+        CsvProject(
             fileHelper = get(),
             csvProjectParser = get(),
             fileName = "projects.csv"

@@ -11,28 +11,28 @@ class TaskRepositoryImpl(
 ) : TaskRepository {
 
     override suspend fun getAllTasks(): List<Task> {
-        return remoteTaskDataSource.getAllTasks().map { taskDto -> remoteTaskParser.taskDtoToTask(taskDto) }
+        return remoteTaskDataSource.getAllTasks().map { taskDto -> remoteTaskParser.dtoToTask(taskDto) }
     }
 
     override suspend fun getTaskById(taskId: UUID): Task? {
         return remoteTaskDataSource.getTaskById(taskId.toString())?.let { taskDto ->
-            remoteTaskParser.taskDtoToTask(taskDto)
+            remoteTaskParser.dtoToTask(taskDto)
         }
     }
 
     override suspend fun getTaskByProjectId(projectId: UUID): List<Task> {
         return remoteTaskDataSource.getTaskByProjectId(projectId.toString()).map { taskDto ->
-            remoteTaskParser.taskDtoToTask(taskDto)
+            remoteTaskParser.dtoToTask(taskDto)
         }
     }
 
     override suspend fun createTask(task: Task) {
-        val taskDto = remoteTaskParser.taskToTaskDto(task)
+        val taskDto = remoteTaskParser.taskToDto(task)
         remoteTaskDataSource.createTask(taskDto)
     }
 
     override suspend fun editTask(updatedTask: Task) {
-        val taskDto = remoteTaskParser.taskToTaskDto(updatedTask)
+        val taskDto = remoteTaskParser.taskToDto(updatedTask)
         remoteTaskDataSource.editTask(taskDto)
     }
 

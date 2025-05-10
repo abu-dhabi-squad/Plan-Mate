@@ -1,7 +1,7 @@
 package data.project.datasource
 
 import com.google.common.truth.Truth
-import data.project.datasource.csv_datasource.CsvProjectParser
+import data.project.datasource.csv.CsvProjectParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

@@ -39,14 +39,14 @@ class TaskRepositoryImplTest {
         val task2 = createTask()
 
         coEvery { remoteTaskDataSource.getAllTasks() } returns listOf(taskDto1, taskDto2)
-        every { taskMapper.taskDtoToTask(taskDto1) } returns task1
-        every { taskMapper.taskDtoToTask(taskDto2) } returns task2
+        every { taskMapper.dtoToTask(taskDto1) } returns task1
+        every { taskMapper.dtoToTask(taskDto2) } returns task2
 
         val result = taskRepository.getAllTasks()
 
         assertThat(result).containsExactly(task1, task2)
-        verify(exactly = 1) { taskMapper.taskDtoToTask(taskDto1) }
-        verify(exactly = 1) { taskMapper.taskDtoToTask(taskDto2) }
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto1) }
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto2) }
     }
 
     @Test
@@ -74,14 +74,14 @@ class TaskRepositoryImplTest {
         val task2 = createTask().copy(projectId = projectId)
 
         coEvery { remoteTaskDataSource.getTaskByProjectId(projectId.toString()) } returns listOf(taskDto1, taskDto2)
-        every { taskMapper.taskDtoToTask(taskDto1) } returns task1
-        every { taskMapper.taskDtoToTask(taskDto2) } returns task2
+        every { taskMapper.dtoToTask(taskDto1) } returns task1
+        every { taskMapper.dtoToTask(taskDto2) } returns task2
 
         val result = taskRepository.getTaskByProjectId(projectId)
 
         assertThat(result).containsExactly(task1, task2)
-        verify(exactly = 1) { taskMapper.taskDtoToTask(taskDto1) }
-        verify(exactly = 1) { taskMapper.taskDtoToTask(taskDto2) }
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto1) }
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto2) }
     }
 
     @Test
@@ -106,12 +106,12 @@ class TaskRepositoryImplTest {
         val taskDto = mockk<TaskDto>()
 
         coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } returns taskDto
-        every { taskMapper.taskDtoToTask(taskDto) } returns task
+        every { taskMapper.dtoToTask(taskDto) } returns task
 
         val result = taskRepository.getTaskById(task.id)
 
         assertThat(result).isEqualTo(task)
-        verify(exactly = 1) { taskMapper.taskDtoToTask(taskDto) }
+        verify(exactly = 1) { taskMapper.dtoToTask(taskDto) }
     }
 
     @Test
@@ -137,12 +137,12 @@ class TaskRepositoryImplTest {
         val task = createTask()
         val taskDto = mockk<TaskDto>()
 
-        every { taskMapper.taskToTaskDto(task) } returns taskDto
+        every { taskMapper.taskToDto(task) } returns taskDto
         coEvery { remoteTaskDataSource.createTask(taskDto) } just Runs
 
         taskRepository.createTask(task)
 
-        verify { taskMapper.taskToTaskDto(task) }
+        verify { taskMapper.taskToDto(task) }
         coVerify { remoteTaskDataSource.createTask(taskDto) }
     }
 
@@ -151,7 +151,7 @@ class TaskRepositoryImplTest {
         val task = createTask()
         val taskDto = mockk<TaskDto>()
 
-        every { taskMapper.taskToTaskDto(task) } returns taskDto
+        every { taskMapper.taskToDto(task) } returns taskDto
         coEvery { remoteTaskDataSource.createTask(taskDto) } throws Exception()
 
         assertThrows<Exception> { taskRepository.createTask(task) }
@@ -162,12 +162,12 @@ class TaskRepositoryImplTest {
         val task = createTask()
         val taskDto = mockk<TaskDto>()
 
-        every { taskMapper.taskToTaskDto(task) } returns taskDto
+        every { taskMapper.taskToDto(task) } returns taskDto
         coEvery { remoteTaskDataSource.editTask(taskDto) } just Runs
 
         taskRepository.editTask(task)
 
-        verify { taskMapper.taskToTaskDto(task) }
+        verify { taskMapper.taskToDto(task) }
         coVerify { remoteTaskDataSource.editTask(taskDto) }
     }
 
@@ -176,7 +176,7 @@ class TaskRepositoryImplTest {
         val task = createTask()
         val taskDto = mockk<TaskDto>()
 
-        every { taskMapper.taskToTaskDto(task) } returns taskDto
+        every { taskMapper.taskToDto(task) } returns taskDto
         coEvery { remoteTaskDataSource.editTask(taskDto) } throws Exception()
 
         assertThrows<Exception> { taskRepository.editTask(task) }
