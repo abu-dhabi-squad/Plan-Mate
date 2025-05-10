@@ -1,4 +1,4 @@
-package presentation.usermanagement
+package presentation.user.usermanagement
 
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -13,6 +13,7 @@ import logic.exceptions.UserAlreadyExistsException
 import logic.model.UserType
 import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.user.usermanagement.CreateMateUserUseCaseUI
 import kotlin.test.Test
 
 

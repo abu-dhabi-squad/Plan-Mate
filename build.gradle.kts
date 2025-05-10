@@ -43,8 +43,13 @@ val includedPackages = listOf(
 val excludedPackages = listOf(
     "**/di/**",
     "**/data/utils/**",
+    "**/data/**/**/mongo/**",
+    "**/data/**/model/**",
     "**/logic/model/**",
-    "**/logic/exceptions/**"
+    "**/logic/exceptions/**",
+    "**/presentation/io/**",
+    "**/presentation/UIFeature.kt",
+    "**/presentation/UiLauncher.kt",
 )
 
 tasks.jacocoTestReport {

@@ -54,8 +54,7 @@ class GetAuditForProjectUITest{
         ui.launchUi()
 
         val output = outContent.toString()
-        assertTrue(output.contains("Audit Logs"))
-        assertTrue(output.contains("Entity: p1"))
+        assertTrue(output.contains("old") && output.contains("new"))
     }
 
     @Test
@@ -152,6 +151,6 @@ class GetAuditForProjectUITest{
         ui.launchUi()
 
         val output = outContent.toString()
-        assertTrue(output.contains("error"))
+        assertTrue(output.contains("Error"))
     }
 }

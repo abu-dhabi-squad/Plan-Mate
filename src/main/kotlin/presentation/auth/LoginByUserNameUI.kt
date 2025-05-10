@@ -2,20 +2,20 @@ package presentation.auth
 
 import logic.authentication.LoginByUserNameUseCase
 import presentation.UiLauncher
-import presentation.admin.ConsoleAdminMenuView
+import presentation.presentation.usermanagement.admin.ConsoleAdminMenuUI
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.user.ConsoleUserMenuView
+import presentation.presentation.usermanagement.user.ConsoleUserMenuUI
 import logic.model.UserType
 import logic.user.SaveLoggedUserUseCase
 
-class LoginByUserNameUseCaseUI(
+class LoginByUserNameUI(
     private val loginUseCase: LoginByUserNameUseCase,
     private val saveLoggedUserUseCase: SaveLoggedUserUseCase,
     private val inputReader: InputReader,
     private val printer: Printer,
-    private val consoleMenuViewUser: ConsoleUserMenuView,
-    private val consoleMenuViewAdmin: ConsoleAdminMenuView
+    private val consoleMenuViewUser: ConsoleUserMenuUI,
+    private val consoleMenuViewAdmin: ConsoleAdminMenuUI
 ) : UiLauncher {
     override suspend fun launchUi() {
         printer.displayLn("===== Login =====")
@@ -25,14 +25,15 @@ class LoginByUserNameUseCaseUI(
 
         try {
             val user = loginUseCase(username, password)
-            printer.displayLn("Login successful! Welcome ${user.username} [${user.userType}]")
+            printer.displayLn("\nLogin successful! Welcome ${user.username} [${user.userType}]")
+            printer.displayLn()
             saveLoggedUserUseCase(user)
             when (user.userType) {
                 UserType.ADMIN -> consoleMenuViewAdmin.launchUi()
                 UserType.MATE -> consoleMenuViewUser.launchUi()
             }
         } catch (e: Exception) {
-            printer.displayLn("Login failed:${e.message}")
+            printer.displayLn("\nLogin failed: ${e.message}")
         }
     }
 
@@ -41,7 +42,7 @@ class LoginByUserNameUseCaseUI(
             printer.display(prompt)
             val input = inputReader.readString()
             if (!input.isNullOrBlank()) return input
-            printer.displayLn("Input cannot be empty.")
+            printer.displayLn("\nInput cannot be empty.")
         }
     }
 

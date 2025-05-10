@@ -3,25 +3,22 @@ package di
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import presentation.UIFeature
-import presentation.admin.ConsoleAdminMenuView
+import presentation.presentation.usermanagement.admin.ConsoleAdminMenuUI
 import presentation.audit.GetAuditForProjectUI
 import presentation.audit.GetAuditForTaskUI
-import presentation.auth.LoginByUserNameUseCaseUI
-import presentation.project.EditProjectUI
-import presentation.project.EditStateOfProjectUI
-import presentation.taskmanagement.CreateTaskPresenterUI
-import presentation.taskmanagement.EditTaskPresenterUI
-import presentation.taskmanagement.GetTasksByProjectIdPresenterUI
-import presentation.usermanagement.CreateMateUserUseCaseUI
+import presentation.auth.LoginByUserNameUI
+import presentation.taskmanagement.CreateTaskUI
+import presentation.taskmanagement.EditTaskUI
+import presentation.taskmanagement.GetTasksByProjectIdUI
+import presentation.presentation.user.usermanagement.CreateMateUserUseCaseUI
 import logic.model.User
 import logic.model.UserType
 import presentation.io.ConsolePrinter
 import presentation.io.ConsoleReader
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.user.ConsoleUserMenuView
-import presentation.project.CreateProjectUI
-import presentation.project.DeleteProjectUI
+import presentation.project.*
+import presentation.presentation.usermanagement.user.ConsoleUserMenuUI
 
 val uiModule = module {
 
@@ -35,15 +32,16 @@ val uiModule = module {
     // UI components
     single { CreateProjectUI(get(), get(), get(), get(), get()) }
     single { EditProjectUI(get(), get(), get(), get()) }
-    single { DeleteProjectUI(get(), get(), get(), get(), get()) }
-    single { CreateTaskPresenterUI(get(), get(), get(), get(), get(), get(), get()) }
-    single { EditTaskPresenterUI(get(), get(), get(), get(), get(), get(), get(), get()) }
-    single { GetTasksByProjectIdPresenterUI(get(), get(), get(), get()) }
+    single { DeleteProjectUI(get(), get(), get(), get(), get(), get()) }
+    single { CreateTaskUI(get(), get(), get(), get(), get(), get(), get()) }
+    single { EditTaskUI(get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { GetTasksByProjectIdUI(get(), get(), get(), get()) }
     single { CreateMateUserUseCaseUI(get(), get(), get()) }
     single { GetAuditForTaskUI(get(), get(), get(), get(), get()) }
     single { GetAuditForProjectUI(get(), get(), get(), get()) }
+    single { AddStateToProjectUI(get(), get(), get(), get()) }
     single { EditStateOfProjectUI(get(), get(), get(), get()) }
-    single { LoginByUserNameUseCaseUI(get(), get(), get(), get(), get(), get()) }
+    single { LoginByUserNameUI(get(), get(), get(), get(), get(), get()) }
 
     // Admin UIFeatures
     single<List<UIFeature>>(named("adminFeatures")) {
@@ -51,29 +49,30 @@ val uiModule = module {
             UIFeature("Create Project", 1, get<CreateProjectUI>()),
             UIFeature("Edit Project", 2, get<EditProjectUI>()),
             UIFeature("Delete Project", 3, get<DeleteProjectUI>()),
-            UIFeature("Create Task", 4, get<CreateTaskPresenterUI>()),
-            UIFeature("View Tasks by Project", 5, get<GetTasksByProjectIdPresenterUI>()),
-            UIFeature("Create Mate User", 6, get<CreateMateUserUseCaseUI>()),
-            UIFeature("Get Task Audit", 7, get<GetAuditForTaskUI>()),
-            UIFeature("Get Project Audit", 8, get<GetAuditForProjectUI>()),
-            UIFeature("Edit State of Project", 9, get<EditStateOfProjectUI>())
+            UIFeature("Add a State to Project", 4, get<AddStateToProjectUI>()),
+            UIFeature("Edit State of Project", 5, get<EditStateOfProjectUI>()),
+            UIFeature("Create Task", 6, get<CreateTaskUI>()),
+            UIFeature("View Tasks by Project", 7, get<GetTasksByProjectIdUI>()),
+            UIFeature("Create Mate User", 8, get<CreateMateUserUseCaseUI>()),
+            UIFeature("Get Task Audit", 9, get<GetAuditForTaskUI>()),
+            UIFeature("Get Project Audit", 10, get<GetAuditForProjectUI>()),
         )
     }
 
     // Mate UIFeatures
     single<List<UIFeature>>(named("mateFeatures")) {
         listOf(
-            UIFeature("Create Task", 1, get<CreateTaskPresenterUI>()),
-            UIFeature("Edit Task", 2, get<EditTaskPresenterUI>()),
-            UIFeature("Delete Project", 3, get<DeleteProjectUI>()),
-            UIFeature("View Tasks by Project", 4, get<GetTasksByProjectIdPresenterUI>()),
+            UIFeature("Create Task", 1, get<CreateTaskUI>()),
+            UIFeature("Edit Task", 2, get<EditTaskUI>()),
+            UIFeature("Delete Task", 3, get<DeleteProjectUI>()),
+            UIFeature("View Tasks by Project", 4, get<GetTasksByProjectIdUI>()),
             UIFeature("Get Task Audit", 5, get<GetAuditForTaskUI>())
         )
     }
 
     // Menu views
     single {
-        ConsoleAdminMenuView(
+        ConsoleAdminMenuUI(
             get(named("adminFeatures")), // List<UIFeature>
             get(), // Printer
             get()  // InputReader
@@ -81,7 +80,7 @@ val uiModule = module {
     }
 
     single {
-        ConsoleUserMenuView(
+        ConsoleUserMenuUI(
             get(named("mateFeatures")), // List<UIFeature>
             get(), // Printer
             get()  // InputReader

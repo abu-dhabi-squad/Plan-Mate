@@ -23,14 +23,14 @@ import presentation.io.InputReader
 import presentation.io.Printer
 import java.util.UUID
 
-class DeleteTaskByIdPresenterUITest {
+class DeleteTaskByIdUITest {
 
     private lateinit var printer: Printer
     private lateinit var reader: InputReader
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
     private lateinit var deleteTaskByIdUseCase: DeleteTaskByIdUseCase
-    private lateinit var presenter: DeleteTaskByIdPresenterUI
+    private lateinit var presenter: DeleteTaskByIdUI
     private lateinit var createAuditUseCase: CreateAuditUseCase
     private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
 
@@ -44,7 +44,7 @@ class DeleteTaskByIdPresenterUITest {
         createAuditUseCase = mockk(relaxed = true)
         getLoggedUserUseCase = mockk(relaxed = true)
 
-        presenter = DeleteTaskByIdPresenterUI(
+        presenter = DeleteTaskByIdUI(
             printer,
             getLoggedUserUseCase,
             reader,

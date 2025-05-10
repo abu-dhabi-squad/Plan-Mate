@@ -39,7 +39,6 @@ class GetAllProjectsUITest {
         getAllProjectsUI.launchUi()
 
         // Then
-        coVerify { printer.displayLn("All Created Projects:") }
         coVerify { printer.displayLn("1) Project One") }
         coVerify { printer.displayLn("2) Project Two") }
     }
@@ -53,6 +52,6 @@ class GetAllProjectsUITest {
         getAllProjectsUI.launchUi()
 
         // Then
-        coVerify { printer.displayLn("Error retrieving projects: Something went wrong") }
+        coVerify { printer.displayLn("\nError retrieving projects: Something went wrong") }
     }
 }

@@ -1,4 +1,4 @@
-package presentation.usermanagement
+package presentation.presentation.user.usermanagement
 
 import logic.authentication.CreateMateUserUseCase
 import logic.exceptions.EmptyUsernameException

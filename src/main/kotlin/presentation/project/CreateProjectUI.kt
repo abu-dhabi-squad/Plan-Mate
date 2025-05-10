@@ -21,26 +21,26 @@ class CreateProjectUI(
 ): UiLauncher {
 
     override suspend fun launchUi() {
-        printer.display("Enter project name: ")
+        printer.display("\nEnter project name: ")
         val projectName = inputReader.readString()?.takeIf { it.isNotBlank() }
         if (projectName == null) {
-            printer.displayLn("Project name cannot be empty.")
+            printer.displayLn("\nProject name cannot be empty.")
             return
         }
 
-        printer.display("Enter number of states: ")
+        printer.display("\nEnter number of states: ")
         val stateCount = inputReader.readInt()
         if (stateCount == null || stateCount < 0) {
-            printer.displayLn("Invalid number of states.")
+            printer.displayLn("\nInvalid number of states.")
             return
         }
 
         val states = mutableListOf<State>()
         for (i in 1..stateCount) {
-            printer.display("Enter name for state #$i: ")
+            printer.display("\nEnter name for state #$i: ")
             val stateName = inputReader.readString()?.takeIf { it.isNotBlank() }
             if (stateName == null) {
-                printer.displayLn("State name cannot be empty.")
+                printer.displayLn("\nState name cannot be empty.")
                 return
             }
             states.add(State(name = stateName))
@@ -58,9 +58,9 @@ class CreateProjectUI(
                     newState = "Created"
                 )
             )
-            printer.displayLn("Project '$projectName' created with ${states.size} state(s).")
+            printer.displayLn("\nProject '$projectName' created with ${states.size} state(s).")
         } catch (e: Exception) {
-            printer.displayLn("Error: ${e.message}")
+            printer.displayLn("\nError: ${e.message}")
         }
     }
 }

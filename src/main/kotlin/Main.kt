@@ -7,7 +7,7 @@ import di.useCaseModule
 import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
-import presentation.auth.LoginByUserNameUseCaseUI
+import presentation.auth.LoginByUserNameUI
 import kotlin.system.exitProcess
 
 fun main() {
@@ -15,7 +15,7 @@ fun main() {
         modules(appModule, repositoryModule, useCaseModule, uiModule)
     }
     runBlocking {
-        getKoin().get<LoginByUserNameUseCaseUI>().launchUi()
+        getKoin().get<LoginByUserNameUI>().launchUi()
     }
     exitProcess(0)
 }

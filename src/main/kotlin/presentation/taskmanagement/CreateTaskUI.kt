@@ -15,7 +15,7 @@ import presentation.io.InputReader
 import presentation.io.Printer
 import java.time.LocalDate
 
-class CreateTaskPresenterUI(
+class CreateTaskUI(
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val printer: Printer,
     private val inputReader: InputReader,
@@ -25,31 +25,30 @@ class CreateTaskPresenterUI(
     private val createAuditUseCase: CreateAuditUseCase
 
 ) : UiLauncher {
-
     override suspend fun launchUi() {
-        val title = promptNonEmptyString("Enter task title:")
-        val description = promptNonEmptyString("Enter task description:")
-        val startDate = promptDate("Enter task start date (YYYY-MM-DD):")
-        val endDate = promptDate("Enter task end date (YYYY-MM-DD):")
+        val title = promptNonEmptyString("Enter task title: ")
+        val description = promptNonEmptyString("Enter task description: ")
+        val startDate = promptDate("Enter task start date (YYYY-MM-DD): ")
+        val endDate = promptDate("Enter task end date (YYYY-MM-DD): ")
 
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {
-            printer.displayLn("Error loading projects: ${e.message}")
+            printer.displayLn("\nError loading projects: ${e.message}")
             return
         }
 
         if (projects.isEmpty()) {
-            printer.displayLn("No projects available.")
+            printer.displayLn("\nNo projects available.")
             return
         }
 
         showProjects(projects)
-        val projectIndex = promptSelectionIndex("Enter project number:", projects.size)
+        val projectIndex = promptSelectionIndex("\nEnter project number: ", projects.size)
         val selectedProject = projects[projectIndex]
 
         showStates(selectedProject.states)
-        val stateIndex = promptSelectionIndex("Enter state number:", selectedProject.states.size)
+        val stateIndex = promptSelectionIndex("\nEnter state number: ", selectedProject.states.size)
         val selectedState = selectedProject.states[stateIndex]
 
         val task = Task(
@@ -73,21 +72,21 @@ class CreateTaskPresenterUI(
                     createdBy = getLoggedUserUseCase().username
                 )
             )
-            printer.displayLn("Task created successfully.")
+            printer.displayLn("\nTask created successfully.")
         } catch (e: Exception) {
-            printer.displayLn("Failed to create task: ${e.message}")
+            printer.displayLn("\nFailed to create task: ${e.message}")
         }
     }
 
     private fun showProjects(projects: List<Project>) {
-        printer.displayLn("Available projects:")
+        printer.displayLn("\nAvailable projects:")
         projects.forEachIndexed { index, project ->
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showStates(states: List<State>) {
-        printer.displayLn("Available states:")
+        printer.displayLn("\nAvailable states:")
         states.forEachIndexed { index, state ->
             printer.displayLn("${index + 1}. ${state.name}")
         }
@@ -98,7 +97,7 @@ class CreateTaskPresenterUI(
             printer.display(prompt)
             val input = inputReader.readString()
             if (!input.isNullOrBlank()) return input
-            printer.displayLn("Input cannot be empty.")
+            printer.displayLn("\nInput cannot be empty.")
         }
     }
 
@@ -107,14 +106,14 @@ class CreateTaskPresenterUI(
             printer.display(prompt)
             val input = inputReader.readString()
             if (input.isNullOrBlank()) {
-                printer.displayLn("Date cannot be empty.")
+                printer.displayLn("\nDate cannot be empty.")
                 continue
             }
             try {
                 val date = parserDate.parseDateFromString(input)
                 return date
             } catch (e: Exception) {
-                printer.displayLn("Invalid date format. Please use YYYY-MM-DD.")
+                printer.displayLn("\nInvalid date format. Please use YYYY-MM-DD.")
             }
         }
     }
@@ -124,7 +123,7 @@ class CreateTaskPresenterUI(
             printer.display(prompt)
             val input = inputReader.readInt()
             if (input != null && input in 1..size) return input - 1
-            printer.displayLn("Please enter a number between 1 and $size.")
+            printer.displayLn("\nPlease enter a number between 1 and $size.")
         }
     }
 }

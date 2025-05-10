@@ -21,11 +21,11 @@ import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
 import java.time.LocalDate
 
-class CreateTaskPresenterUITest {
+class CreateTaskUITest {
 
     private lateinit var printer: Printer
     private lateinit var reader: InputReader
-    private lateinit var presenter: CreateTaskPresenterUI
+    private lateinit var presenter: CreateTaskUI
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var createTaskUseCase: CreateTaskUseCase
     private lateinit var parserDate: DateParser
@@ -41,7 +41,7 @@ class CreateTaskPresenterUITest {
         parserDate = mockk(relaxed = true)
         createAuditUseCase = mockk(relaxed = true)
         getLoggedUserUseCase = mockk(relaxed =true)
-        presenter = CreateTaskPresenterUI(
+        presenter = CreateTaskUI(
             getLoggedUserUseCase,
             printer,
             reader,
@@ -90,7 +90,7 @@ class CreateTaskPresenterUITest {
         // When
         presenter.launchUi()
         // Then
-        coVerify { printer.displayLn(match { it == "Input cannot be empty." }) }
+        coVerify { printer.displayLn(match { it == "\nInput cannot be empty." }) }
     }
 
     @ParameterizedTest
@@ -114,7 +114,7 @@ class CreateTaskPresenterUITest {
         presenter.launchUi()
 
         // Then
-        coVerify { printer.displayLn(match { it == "Input cannot be empty." }) }
+        coVerify { printer.displayLn(match { it == "\nInput cannot be empty." }) }
     }
 
 
@@ -128,7 +128,7 @@ class CreateTaskPresenterUITest {
         //When
         presenter.launchUi()
         //Then
-        coVerify { printer.displayLn(match { it == "No projects available." }) }
+        coVerify { printer.displayLn(match { it == "\nNo projects available." }) }
     }
 
     @Test
@@ -182,7 +182,7 @@ class CreateTaskPresenterUITest {
         presenter.launchUi()
 
         // Then
-        coVerify { printer.displayLn(match { it.toString().contains("Date cannot be empty.") }) }
+        coVerify { printer.displayLn(match { it.toString().contains("\nDate cannot be empty.") }) }
     }
 
     @Test
@@ -203,7 +203,7 @@ class CreateTaskPresenterUITest {
         // Then
         coVerify {
             printer.displayLn(match {
-                it.toString().contains("Invalid date format. Please use YYYY-MM-DD.")
+                it.toString().contains("\nInvalid date format. Please use YYYY-MM-DD.")
             })
         }
     }
@@ -230,7 +230,7 @@ class CreateTaskPresenterUITest {
         // Then
         coVerify {
             printer.displayLn(match {
-                it.toString().contains("Please enter a number between 1 and 1")
+                it.toString().contains("\nPlease enter a number between 1 and 1")
             })
         }
     }

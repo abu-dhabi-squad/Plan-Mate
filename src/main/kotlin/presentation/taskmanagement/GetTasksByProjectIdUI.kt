@@ -8,7 +8,7 @@ import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
 
-class GetTasksByProjectIdPresenterUI(
+class GetTasksByProjectIdUI(
     private val printer: Printer,
     private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
@@ -19,28 +19,28 @@ class GetTasksByProjectIdPresenterUI(
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {
-            printer.displayLn("Failed to load projects: ${e.message}")
+            printer.displayLn("\nFailed to load projects: ${e.message}")
             return
         }
 
         if (projects.isEmpty()) {
-            printer.displayLn("No projects available.")
+            printer.displayLn("\nNo projects available.")
             return
         }
 
         showProjects(projects)
-        val projectIndex = promptSelection("Enter project number:", projects.size)
+        val projectIndex = promptSelection("\nEnter project number: ", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
             getTasksByProjectIdUseCase(selectedProject.id)
         } catch (e: Exception) {
-            printer.displayLn("Failed to load tasks: ${e.message}")
+            printer.displayLn("\nFailed to load tasks: ${e.message}")
             return
         }
 
         if (tasks.isEmpty()) {
-            printer.displayLn("No tasks found in '${selectedProject.projectName}'.")
+            printer.displayLn("\nNo tasks found in '${selectedProject.projectName}'.")
             return
         }
 
@@ -48,16 +48,16 @@ class GetTasksByProjectIdPresenterUI(
     }
 
     private fun showProjects(projects: List<Project>) {
-        printer.displayLn("Available Projects:")
+        printer.displayLn("\nAvailable Projects:")
         projects.forEachIndexed { index, project ->
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showTasks(tasks: List<Task>) {
-        printer.displayLn("Tasks in Project:")
+        printer.displayLn("\nTasks in Project:")
         tasks.forEachIndexed { index, task ->
-            printer.display("""
+            printer.displayLn("""
                 ${index + 1}. ${task.title}
                    ↳ Description: ${task.description}
                    ↳ Start: ${task.startDate}, End: ${task.endDate}
@@ -65,6 +65,7 @@ class GetTasksByProjectIdPresenterUI(
                    ↳ State ID: ${task.stateId}
             """.trimIndent())
         }
+        printer.displayLn()
     }
 
     private fun promptSelection(message: String, max: Int): Int {
@@ -72,7 +73,7 @@ class GetTasksByProjectIdPresenterUI(
             printer.display(message)
             val input = inputReader.readInt()
             if (input != null && input in 1..max) return input - 1
-            printer.displayLn("Please enter a valid number between 1 and $max.")
+            printer.displayLn("\nPlease enter a valid number between 1 and $max.")
         }
     }
 }

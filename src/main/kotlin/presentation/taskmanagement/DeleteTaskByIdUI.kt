@@ -13,7 +13,7 @@ import presentation.io.InputReader
 import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
 
-class DeleteTaskByIdPresenterUI(
+class DeleteTaskByIdUI(
     private val printer: Printer,
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val inputReader: InputReader,
