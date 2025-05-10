@@ -2,7 +2,11 @@ package presentation.taskmanagement
 
 import helper.createProject
 import helper.createTask
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.runs
 import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import logic.exceptions.NoProjectsFoundException
@@ -17,7 +21,7 @@ import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.io.InputReader
 import presentation.io.Printer
-import java.util.*
+import java.util.UUID
 
 class DeleteTaskByIdPresenterUITest {
 

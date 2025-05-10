@@ -4,12 +4,16 @@ import com.google.common.truth.Truth.assertThat
 import data.authentication.datasource.csv_datasource.CsvAuthenticationDataSource
 import data.authentication.datasource.csv_datasource.CsvUserParser
 import data.utils.filehelper.FileHelper
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import logic.model.User
 import logic.model.UserType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 
 class CsvAuthenticationDataSourceTest {

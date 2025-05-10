@@ -13,7 +13,6 @@ import logic.exceptions.UserAlreadyExistsException
 import logic.model.UserType
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.usermanagement.*
 import kotlin.test.Test
 
 

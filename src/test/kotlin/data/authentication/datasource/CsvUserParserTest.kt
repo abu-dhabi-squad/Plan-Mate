@@ -1,17 +1,14 @@
 package data.authentication.datasource
 
-
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
-import data.TestData.user1
-import data.TestData.userString1
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
 import data.authentication.datasource.csv_datasource.CsvUserParser
 import logic.exceptions.CanNotParseUserException
 import logic.model.User
 import logic.model.UserType
-import java.util.*
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class CsvUserParserTest {
     private lateinit var csvUserParser: CsvUserParser
@@ -45,12 +42,11 @@ class CsvUserParserTest {
 
     @Test
     fun `parseStringToUser should throw exception if input is invalid`() {
+        // Given
         val invalidLine = "missing,fields"
-        try {
+        // When && Then
+        assertThrows<CanNotParseUserException>() {
             csvUserParser.parseStringToUser(invalidLine)
-            throw AssertionError("Expected CanNotParseUserException to be thrown")
-        } catch (e: CanNotParseUserException) {
-            // success
         }
     }
 

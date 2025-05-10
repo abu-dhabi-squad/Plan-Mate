@@ -1,10 +1,10 @@
 package logic.audit
 
+import com.google.common.truth.Truth.assertThat
 import createAudit
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.exceptions.WrongInputException
@@ -44,7 +44,7 @@ class GetAuditUseCaseTest {
         val result = getAuditUseCase(entityId)
 
         // then
-        assertEquals(expectedAudits, result)
+        assertThat(expectedAudits).isEqualTo(result)
     }
 
     @Test

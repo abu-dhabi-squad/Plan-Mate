@@ -7,14 +7,13 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.utils.filehelper.FileHelper
 import logic.model.Project
 import logic.model.State
-import java.util.*
+import java.util.UUID
 
 class CsvProjectDataSourceTest {
     private lateinit var fileHelper: FileHelper

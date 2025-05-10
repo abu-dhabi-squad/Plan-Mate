@@ -2,15 +2,21 @@ package data.task.repository
 
 import com.google.common.truth.Truth.assertThat
 import helper.createTask
-import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import data.task.mapper.MongoTaskMapper
 import data.task.model.TaskDto
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import logic.repository.TaskRepository
-import java.util.*
+import java.util.UUID
 
 class TaskRepositoryImplTest {
 

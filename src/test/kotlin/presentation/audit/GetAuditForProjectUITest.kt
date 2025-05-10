@@ -16,7 +16,7 @@ import presentation.io.ConsolePrinter
 import presentation.io.InputReader
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.util.*
+import java.util.UUID
 import kotlin.test.assertTrue
 
 class GetAuditForProjectUITest{

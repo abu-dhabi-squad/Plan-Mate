@@ -1,5 +1,6 @@
 package logic.validation
 
+import logic.authentication.validtion.CreateUserPasswordValidator
 import logic.exceptions.NoLowerCaseInPasswordException
 import logic.exceptions.NoNumberInPasswordException
 import logic.exceptions.NoSpecialCharsInPasswordException
@@ -9,13 +10,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
-class StandardPasswordValidatorTest {
+class CreateUserPasswordValidatorTest {
 
-    private lateinit var standardPasswordValidator: StandardPasswordValidator
+    private lateinit var createUserPasswordValidator: CreateUserPasswordValidator
 
     @BeforeEach
     fun setup() {
-        standardPasswordValidator = StandardPasswordValidator()
+        createUserPasswordValidator = CreateUserPasswordValidator()
     }
 
     @Test
@@ -24,7 +25,7 @@ class StandardPasswordValidatorTest {
         val password = "Alaa@Kh1"
 
         // When & Then
-        standardPasswordValidator.validatePassword(password)
+        createUserPasswordValidator.validatePassword(password)
     }
 
     @Test
@@ -34,7 +35,7 @@ class StandardPasswordValidatorTest {
 
         // When & Then
         assertThrows<ShortPasswordException> {
-            standardPasswordValidator.validatePassword(password)
+            createUserPasswordValidator.validatePassword(password)
         }
     }
 
@@ -45,7 +46,7 @@ class StandardPasswordValidatorTest {
 
         // When & Then
         assertThrows<NoUpperCaseInPasswordException> {
-            standardPasswordValidator.validatePassword(password)
+            createUserPasswordValidator.validatePassword(password)
         }
     }
 
@@ -56,7 +57,7 @@ class StandardPasswordValidatorTest {
 
         // When & Then
         assertThrows<NoLowerCaseInPasswordException> {
-            standardPasswordValidator.validatePassword(password)
+            createUserPasswordValidator.validatePassword(password)
         }
     }
 
@@ -67,7 +68,7 @@ class StandardPasswordValidatorTest {
 
         // When & Then
         assertThrows<NoNumberInPasswordException> {
-            standardPasswordValidator.validatePassword(password)
+            createUserPasswordValidator.validatePassword(password)
         }
     }
 
@@ -78,7 +79,7 @@ class StandardPasswordValidatorTest {
 
         // When & Then
         assertThrows<NoSpecialCharsInPasswordException> {
-            standardPasswordValidator.validatePassword(password)
+            createUserPasswordValidator.validatePassword(password)
         }
     }
 }

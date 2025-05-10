@@ -4,6 +4,8 @@ import logic.audit.CreateAuditUseCase
 import logic.audit.GetAuditUseCase
 import logic.authentication.CreateMateUserUseCase
 import logic.authentication.LoginByUserNameUseCase
+import logic.authentication.validtion.CreateUserPasswordValidator
+import logic.authentication.validtion.LoginPasswordValidator
 import logic.project.AddStateToProjectUseCase
 import logic.project.CreateProjectUseCase
 import logic.project.DeleteProjectUseCase
@@ -24,8 +26,8 @@ val useCaseModule = module {
     single { CreateAuditUseCase(get()) }
     single { GetAuditUseCase(get()) }
 
-    single { CreateMateUserUseCase(get(), get(), get()) }
-    single { LoginByUserNameUseCase(get(), get(),get()) }
+    single { CreateMateUserUseCase(get(), get<CreateUserPasswordValidator>()) }
+    single { LoginByUserNameUseCase(get(),get<LoginPasswordValidator>()) }
 
     single { AddStateToProjectUseCase(get()) }
     single { CreateProjectUseCase(get()) }

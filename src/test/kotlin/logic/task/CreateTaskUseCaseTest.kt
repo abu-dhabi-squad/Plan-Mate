@@ -13,7 +13,7 @@ import logic.model.Task
 import logic.repository.TaskRepository
 import logic.validation.TaskValidator
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 class CreateTaskUseCaseTest {
     private lateinit var taskRepository: TaskRepository

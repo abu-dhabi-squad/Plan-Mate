@@ -1,12 +1,16 @@
 package presentation.project
 
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.exceptions.DuplicateStateException
 import logic.exceptions.ProjectNotFoundException
-import logic.model.State
 import logic.project.AddStateToProjectUseCase
 import presentation.io.InputReader
 import presentation.io.Printer
@@ -53,7 +57,6 @@ class AddStateToProjectUITest{
     fun `should call use case and print success when inputs are valid`() = runTest{
         every { inputReader.readString() } returns "project123" andThen "In Progress"
 
-        val state = State(name = "In Progress")
         coEvery { addStateToProjectUseCase("project123", match { it.name == "In Progress" }) } just Runs
 
         addStateToProjectUI.launchUi()

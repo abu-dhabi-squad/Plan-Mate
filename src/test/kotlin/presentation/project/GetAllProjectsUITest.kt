@@ -1,13 +1,15 @@
 package presentation.project
 
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import presentation.io.InputReader
 import presentation.io.Printer
-import java.util.*
+import java.util.UUID
 import kotlin.test.Test
 
 class GetAllProjectsUITest {
