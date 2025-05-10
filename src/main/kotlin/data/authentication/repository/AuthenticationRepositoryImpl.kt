@@ -4,16 +4,19 @@ import data.authentication.mapper.MongoUserMapper
 import logic.exceptions.InvalidCredentialsException
 import logic.model.User
 import logic.repository.AuthenticationRepository
+import logic.utils.HashingService
 
 class AuthenticationRepositoryImpl(
     private val remoteAuthenticationDataSource: RemoteAuthenticationDataSource,
     private val loggedUserDataSource: LoggedUserDataSource,
+    private val hashingService : HashingService,
     private val mongoUserMapper : MongoUserMapper
 ) : AuthenticationRepository {
 
     override suspend fun loginUser(username: String, password: String): User {
+        val hashedPassword = hashingService.hash(password)
         return mongoUserMapper.dtoToUser(remoteAuthenticationDataSource.getUserByUserName(username)
-            ?.takeIf { it.password == password }
+            ?.takeIf { it.password == hashedPassword }
             ?: throw InvalidCredentialsException())
     }
 
@@ -23,11 +26,13 @@ class AuthenticationRepositoryImpl(
     }
 
     override suspend fun createUser(user: User) {
-        remoteAuthenticationDataSource.createUser(mongoUserMapper.userToDto(user))
+        val userWithHashedPassword = user.copy(password = hashingService.hash(user.password))
+        remoteAuthenticationDataSource.createUser(mongoUserMapper.userToDto(userWithHashedPassword))
     }
 
     override fun saveLoggedUser(user: User) {
-        loggedUserDataSource.saveLoggedUser(user)
+        val userWithHashedPassword = user.copy(password = hashingService.hash(user.password))
+        loggedUserDataSource.saveLoggedUser(userWithHashedPassword)
     }
 
     override fun getLoggedUser(): User? {
