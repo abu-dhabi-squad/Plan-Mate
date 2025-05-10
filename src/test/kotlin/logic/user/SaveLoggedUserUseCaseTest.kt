@@ -1,6 +1,6 @@
 package logic.user
 
-import io.mockk.*
+import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import logic.exceptions.EmptyUsernameException

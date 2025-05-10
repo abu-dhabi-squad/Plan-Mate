@@ -1,6 +1,8 @@
 package presentation.taskmanagement
 
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -11,7 +13,7 @@ import logic.task.GetTaskByIdUseCase
 import presentation.io.InputReader
 import presentation.io.Printer
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 import kotlin.NoSuchElementException
 
 class GetTaskByIdPresenterUITest {

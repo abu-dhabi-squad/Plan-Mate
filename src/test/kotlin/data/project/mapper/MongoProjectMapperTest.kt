@@ -1,7 +1,6 @@
 package data.project.mapper
 
 import com.google.common.truth.Truth.assertThat
-import data.project.mapper.MongoProjectMapper
 import data.project.model.ProjectDto
 import data.project.model.StateDto
 import logic.model.Project

@@ -2,7 +2,6 @@ package logic.task
 
 import helper.createTask
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
@@ -15,7 +14,7 @@ import logic.model.Task
 import logic.repository.TaskRepository
 import logic.validation.TaskValidator
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 class EditTaskUseCaseTest {
     private lateinit var taskRepository: TaskRepository

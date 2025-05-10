@@ -1,8 +1,7 @@
-package data.audit.datasource
+package data.audit.datasource.csvdatasource
 
 import com.google.common.truth.Truth
 import createAudit
-import data.audit.datasource.csvdatasource.CsvAuditDataSource
 import data.audit.repository.LocalAuditDataSource
 import data.audit.datasource.csvdatasource.csvparser.CsvAuditParser
 import io.mockk.every

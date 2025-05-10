@@ -1,6 +1,10 @@
 package presentation.auth
 
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,7 +17,7 @@ import presentation.io.InputReader
 import presentation.io.Printer
 import presentation.user.ConsoleUserMenuView
 import logic.user.SaveLoggedUserUseCase
-import java.util.*
+import java.util.UUID
 
 class LoginByUserNameUseCaseUITest {
 

@@ -18,7 +18,7 @@ import presentation.io.ConsolePrinter
 import presentation.io.InputReader
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
-import java.util.*
+import java.util.UUID
 import kotlin.test.assertTrue
 
 class GetAuditForTaskUITest {
@@ -45,7 +45,7 @@ class GetAuditForTaskUITest {
 
     @Test
     fun `should show audit logs for selected task`() = runTest{
-        val uuid=UUID.randomUUID()
+        val uuid= UUID.randomUUID()
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", listOf())
         val task = createTask(id = uuid, title = "Task A")
         val audits = listOf(

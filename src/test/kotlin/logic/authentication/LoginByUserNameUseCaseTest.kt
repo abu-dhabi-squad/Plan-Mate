@@ -18,7 +18,7 @@ import logic.exceptions.UserNotFoundException
 import logic.model.User
 import logic.model.UserType
 import logic.repository.AuthenticationRepository
-import java.util.*
+import java.util.UUID
 import kotlin.test.Test
 
 class LoginByUserNameUseCaseTest {

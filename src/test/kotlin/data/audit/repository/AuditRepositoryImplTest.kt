@@ -6,7 +6,13 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import data.audit.mapper.MongoAuditMapper
 import data.audit.model.AuditDto
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.repository.AuditRepository
 import kotlin.test.assertFails
@@ -57,7 +63,7 @@ class AuditRepositoryImplTest {
         val auditDto = mockk<AuditDto>()
 
         every { auditMapper.auditToDto(audit) } returns auditDto
-        coEvery { dataSource.createAuditLog(auditDto) } just Runs
+        coEvery { dataSource.createAuditLog(auditDto) }just Runs
 
         // when
         auditRepository.createAuditLog(audit)
