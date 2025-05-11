@@ -26,8 +26,8 @@ val useCaseModule = module {
     single { CreateAuditUseCase(get()) }
     single { GetAuditUseCase(get()) }
 
-    single { CreateMateUserUseCase(get(), get<CreateUserPasswordValidator>()) }
-    single { LoginByUserNameUseCase(get(),get<LoginPasswordValidator>()) }
+    single { CreateMateUserUseCase(get(), get<CreateUserPasswordValidator>(),get()) }
+    single { LoginByUserNameUseCase(get(),get<LoginPasswordValidator>(),get()) }
 
     single { AddStateToProjectUseCase(get()) }
     single { CreateProjectUseCase(get()) }

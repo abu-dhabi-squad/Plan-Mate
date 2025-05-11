@@ -13,7 +13,7 @@ import kotlinx.coroutines.test.runTest
 import logic.exceptions.InvalidCredentialsException
 import logic.model.User
 import logic.model.UserType
-import presentation.data.utils.hashing.HashingService
+import presentation.logic.utils.hashing.HashingService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -48,7 +48,7 @@ class AuthenticationRepositoryImplTest {
             every { password } returns hashedPassword
         }
         every { hashingService.hash("password123") } returns hashedPassword
-        coEvery { remoteDataSource.getUserByUserName("noor") } returns dto
+        coEvery { remoteDataSource.getUserByUsername("noor") } returns dto
         every { mongoUserMapper.dtoToUser(dto) } returns testUser
         // When
         val result = repository.loginUser("noor", "password123")
@@ -68,7 +68,7 @@ class AuthenticationRepositoryImplTest {
             }
 
             every { hashingService.hash("password123") } returns hashedPassword
-            coEvery { remoteDataSource.getUserByUserName("john") } returns dto
+            coEvery { remoteDataSource.getUserByUsername("john") } returns dto
             // When && Then
             assertThrows<InvalidCredentialsException> {
                 repository.loginUser("john", "password123")
@@ -79,7 +79,7 @@ class AuthenticationRepositoryImplTest {
     fun `getUserByName should return user when user is exists`() = runTest {
         // Given
         val dto = mockk<UserDto>()
-        coEvery { remoteDataSource.getUserByUserName("noor") } returns dto
+        coEvery { remoteDataSource.getUserByUsername("noor") } returns dto
         every { mongoUserMapper.dtoToUser(dto) } returns testUser
         // When
         val result = repository.getUserByName("noor")
@@ -90,7 +90,7 @@ class AuthenticationRepositoryImplTest {
     @Test
     fun `getUserByName should return null when user is not exists`() = runTest {
         // Given
-        coEvery { remoteDataSource.getUserByUserName("noor") } returns null
+        coEvery { remoteDataSource.getUserByUsername("noor") } returns null
         // When
         val result = repository.getUserByName("noor")
         // Then

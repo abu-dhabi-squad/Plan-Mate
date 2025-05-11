@@ -11,7 +11,7 @@ import org.junit.jupiter.api.assertThrows
 import logic.exceptions.InvalidTaskDateException
 import logic.model.Task
 import logic.repository.TaskRepository
-import logic.validation.TaskValidator
+import presentation.logic.task.validation.TaskValidator
 import java.time.LocalDate
 import java.util.UUID
 

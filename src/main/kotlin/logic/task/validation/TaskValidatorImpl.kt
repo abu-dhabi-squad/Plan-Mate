@@ -1,4 +1,4 @@
-package logic.validation
+package presentation.logic.task.validation
 
 import logic.exceptions.InvalidTaskDateException
 import logic.model.Task

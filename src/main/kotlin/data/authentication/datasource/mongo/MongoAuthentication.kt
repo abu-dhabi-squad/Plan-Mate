@@ -11,8 +11,8 @@ class MongoAuthentication(
     private val userCollection: MongoCollection<UserDto>,
 ) : RemoteAuthenticationDataSource {
 
-    override suspend fun getUserByUserName(userName: String): UserDto? {
-        return userCollection.find(Filters.eq(USERNAME_FIELD, userName)).firstOrNull()
+    override suspend fun getUserByUsername(username: String): UserDto? {
+        return userCollection.find(Filters.eq(USERNAME_FIELD, username)).firstOrNull()
     }
 
     override suspend fun getAllUsers(): List<UserDto> {

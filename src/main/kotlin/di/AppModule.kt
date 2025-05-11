@@ -14,13 +14,13 @@ import logic.validation.DateValidator
 import logic.validation.DateValidatorImpl
 import logic.authentication.validtion.CreateUserPasswordValidator
 import logic.authentication.validtion.LoginPasswordValidator
-import logic.validation.TaskValidator
-import logic.validation.TaskValidatorImpl
+import presentation.logic.task.validation.TaskValidator
+import presentation.logic.task.validation.TaskValidatorImpl
 import presentation.io.ConsolePrinter
 import presentation.io.ConsoleReader
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.data.utils.hashing.HashingService
+import presentation.logic.utils.hashing.HashingService
 import logic.validation.DateTimeParser
 import logic.validation.DateTimeParserImpl
 

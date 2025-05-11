@@ -1,4 +1,4 @@
-package presentation.data.utils.hashing
+package presentation.logic.utils.hashing
 
 interface HashingService {
     fun hash(input: String): String
