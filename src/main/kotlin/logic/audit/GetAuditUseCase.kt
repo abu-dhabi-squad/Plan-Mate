@@ -1,15 +1,14 @@
 package logic.audit
 
 import logic.exceptions.EmptyList
-import logic.exceptions.WrongInputException
 import logic.model.Audit
 import logic.repository.AuditRepository
+import java.util.*
 
 class GetAuditUseCase(
     private val auditRepository: AuditRepository
-){
-    suspend operator fun invoke(entityId: String): List<Audit> {
-        if (entityId.trim().isEmpty()) throw WrongInputException()
+) {
+    suspend operator fun invoke(entityId: UUID): List<Audit> {
         return auditRepository.getAuditByEntityId(entityId).takeIf { it.isNotEmpty() } ?: throw EmptyList()
     }
 }

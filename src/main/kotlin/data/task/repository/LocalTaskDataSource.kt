@@ -1,7 +1,7 @@
 package data.task.repository
 
 import logic.model.Task
-import java.util.UUID
+import java.util.*
 
 interface LocalTaskDataSource {
     fun getAllTasks(): List<Task>

@@ -14,7 +14,7 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.EditTaskUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
-import logic.validation.DateParser
+import presentation.logic.utils.DateParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.InputReader
@@ -61,12 +61,12 @@ class EditTaskUITest {
         val project = createProject(
             id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             name = "Project A",
-            states = listOf(state1, state2)
+            taskStates = listOf(state1, state2)
         )
         val task = createTask(
             id = uuid,
-            projectId = project.id,
-            stateId = state1.id,
+            projectId = project.projectId,
+            stateId = state1.stateId,
             title = "Old",
             description = "OldDesc",
             startDate = LocalDate.of(2025, 1, 1),
@@ -79,7 +79,7 @@ class EditTaskUITest {
             1,
             1,
         )
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         // Strings: newTitle, newDesc, newStart, newEnd
         coEvery { inputReader.readString() } returnsMany listOf(
             "NewTitle", "NewDesc", "2025-05-05", "2025-05-10"
@@ -96,7 +96,7 @@ class EditTaskUITest {
             description = "NewDesc",
             startDate = LocalDate.of(2025, 5, 5),
             endDate = LocalDate.of(2025, 5, 10),
-            stateId = state1.id // first state selected
+            taskStateId = state1.stateId // first state selected
         )
         coVerify { editTaskUseCase(expected) }
         coVerify { printer.displayLn("\nTask updated successfully.") }
@@ -160,7 +160,7 @@ class EditTaskUITest {
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Test Project")
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id) } throws NoTasksFoundException()
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } throws NoTasksFoundException()
 
         presenter.launchUi()
 
@@ -172,20 +172,20 @@ class EditTaskUITest {
         val uuid = UUID.randomUUID()
         val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
+            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
         val task =
-            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.id)
+            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.stateId)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { inputReader.readString() } returnsMany listOf("New Title", "New Desc", "", "")
 
         presenter.launchUi()
 
         coVerify {
             editTaskUseCase(
-                task.copy(title = "New Title", description = "New Desc", stateId = state.id)
+                task.copy(title = "New Title", description = "New Desc", taskStateId = state.stateId)
             )
         }
         coVerify { printer.displayLn("\nTask updated successfully.") }
@@ -197,13 +197,13 @@ class EditTaskUITest {
         val uuid = UUID.randomUUID()
         val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
+            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
         val task =
-            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.id)
+            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.stateId)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { inputReader.readString() } returnsMany listOf("New Title", "New Desc", "", "")
         coEvery { editTaskUseCase(any()) } throws RuntimeException("Failed to update task")
 
@@ -217,13 +217,13 @@ class EditTaskUITest {
         val uuid = UUID.randomUUID()
         val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
+            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
         val task =
-            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.id)
+            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.stateId)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returnsMany listOf(1, 0, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { inputReader.readString() } returnsMany listOf(
             "Updated Title",
             "Updated Desc",
@@ -240,18 +240,18 @@ class EditTaskUITest {
         val uuid = UUID.randomUUID()
         val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
+            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
         val task = createTask(
             id = uuid,
             title = "Old Title",
             description = "Old Desc",
             projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            stateId = state.id
+            stateId = state.stateId
         )
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { inputReader.readString() } returnsMany listOf("", "", "", "")
 
         presenter.launchUi()
@@ -264,18 +264,18 @@ class EditTaskUITest {
         val uuid = UUID.randomUUID()
         val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
+            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
         val task = createTask(
             id = uuid,
             title = "Old Title",
             description = "Old Desc",
             projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            stateId = state.id
+            stateId = state.stateId
         )
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { inputReader.readString() } returnsMany listOf(null, null, "", "")
 
         presenter.launchUi()
@@ -288,13 +288,13 @@ class EditTaskUITest {
         val uuid = UUID.randomUUID()
         val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
         val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf(state))
+            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
         val task =
-            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.id)
+            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.stateId)
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returnsMany listOf(null, 1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { inputReader.readString() } returnsMany listOf("New", "Updated", "", "")
 
         presenter.launchUi()
@@ -312,12 +312,12 @@ class EditTaskUITest {
         val project = createProject(
             id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             name = "Project A",
-            states = listOf(state1, state2)
+            taskStates = listOf(state1, state2)
         )
         val task = createTask(
             id = uuid,
             projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            stateId = state1.id,
+            stateId = state1.stateId,
             title = "Old",
             description = "OldDesc",
             startDate = LocalDate.of(2025, 1, 1),
@@ -330,7 +330,7 @@ class EditTaskUITest {
             1,
             1,
         )
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { inputReader.readString() } returnsMany listOf(
             "NewTitle", "NewDesc", "Invalid date", "2025-05-10"
         )

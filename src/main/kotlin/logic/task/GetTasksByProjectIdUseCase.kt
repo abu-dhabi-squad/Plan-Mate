@@ -3,7 +3,7 @@ package logic.task
 import logic.exceptions.NoTasksFoundException
 import logic.model.Task
 import logic.repository.TaskRepository
-import java.util.UUID
+import java.util.*
 
 class GetTasksByProjectIdUseCase(private val taskRepository: TaskRepository) {
 

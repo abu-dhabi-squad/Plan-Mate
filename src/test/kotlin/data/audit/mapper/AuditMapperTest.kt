@@ -10,9 +10,9 @@ import java.time.ZoneId
 import java.util.Date
 import java.util.UUID
 
-class MongoAuditMapperTest {
+class AuditMapperTest {
 
-    private val mapper = MongoAuditMapper()
+    private val mapper = AuditMapper()
 
     @Test
     fun `should return valid AuditDto when mapping from Audit`() {
@@ -20,13 +20,13 @@ class MongoAuditMapperTest {
         val uuid = UUID.randomUUID()
         val now = LocalDateTime.now()
         val audit = Audit(
-            id = uuid,
+            auditId = uuid,
             createdBy = "user123",
             entityId = "entity123",
             entityType = EntityType.TASK,
             oldState = "old",
             newState = "new",
-            date = now
+            createdAt = now
         )
 
         // When
@@ -62,7 +62,7 @@ class MongoAuditMapperTest {
         val audit = mapper.dtoToAudit(dto)
 
         // Then
-        assertEquals(uuid, audit.id)
+        assertEquals(uuid, audit.auditId)
         assertEquals("user456", audit.createdBy)
         assertEquals("entity456", audit.entityId)
         assertEquals(EntityType.PROJECT, audit.entityType)

@@ -6,7 +6,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.model.Project
-import logic.model.State
+import logic.model.TaskState
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import org.junit.jupiter.api.Test
@@ -17,7 +17,7 @@ import presentation.io.Printer
 import java.util.*
 import kotlin.test.BeforeTest
 
-class EditStateOfProjectUITest {
+class EditTaskStateOfProjectUITest {
 
     private val printer: Printer = mockk(relaxed = true)
     private val reader: ConsoleReader = mockk(relaxed = true)
@@ -55,7 +55,7 @@ class EditStateOfProjectUITest {
             Project(
                 UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
                 "name1",
-                listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "state1"))
+                listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "state1"))
             )
         )
         coEvery { getAllProjectsUseCase() } returns projects
@@ -65,12 +65,12 @@ class EditStateOfProjectUITest {
         ui.launchUi()
 
         coVerify {
-            printer.displayLn("${1}- Project Name: name1 - States: [State(id=d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b, name=state1)]")
+            printer.displayLn("${1}- Project Name: name1 - States: [TaskState(id=d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b, name=state1)]")
             editStateOfProjectUseCase(
                 UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(),
-                State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "newName")
+                TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "newName")
             )
-            printer.displayLn("\nState updated successfully.")
+            printer.displayLn("\nTaskState updated successfully.")
         }
     }
 
@@ -99,8 +99,8 @@ class EditStateOfProjectUITest {
         coVerify(exactly = 5) { printer.displayLn("\nInput cannot be empty.") }
         coVerify {
             editStateOfProjectUseCase(
-                projects[0].id.toString(),
-                projects[0].states[0].copy(name = "newStateName")
+                projects[0].projectId.toString(),
+                projects[0].taskStates[0].copy(stateName = "newStateName")
             )
         }
     }
@@ -115,6 +115,6 @@ class EditStateOfProjectUITest {
             coEvery { reader.readString() } returns "newName"
 
             ui.launchUi()
-            coVerify { printer.displayLn("\nState not found") }
+            coVerify { printer.displayLn("\nTaskState not found") }
         }
 }

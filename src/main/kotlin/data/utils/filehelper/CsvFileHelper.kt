@@ -3,12 +3,12 @@ package data.utils.filehelper
 import java.io.File
 
 class CsvFileHelper : FileHelper {
-    override fun readFile(fileName: String) : List<String> {
+    override fun readFile(fileName: String): List<String> {
         val file = File(fileName)
         if (!file.exists()) {
             file.createNewFile()
         }
-       return File(fileName).readLines()
+        return File(fileName).readLines()
 
     }
 
@@ -16,15 +16,15 @@ class CsvFileHelper : FileHelper {
     override fun writeFile(fileName: String, data: List<String>) {
         val file = File(fileName)
         if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
-        file.writeText(data.joinToString("\n")+"\n")
+        file.writeText(data.joinToString("\n") + "\n")
     }
 
     override fun appendFile(fileName: String, data: List<String>) {
         val file = File(fileName)
-        if(!file.exists())
+        if (!file.exists())
             file.createNewFile()
         if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
-        file.appendText(data.joinToString("\n")+ "\n")
+        file.appendText(data.joinToString("\n") + "\n")
     }
 
 }

@@ -1,4 +1,4 @@
-package presentation.presentation.usermanagement.user
+package presentation.presentation.user.mate
 
 import org.koin.core.annotation.Named
 import presentation.UIFeature
@@ -26,12 +26,12 @@ class ConsoleUserMenuUI(
         showOptions()
         print("Enter your choice: ")
         val input = inputReader.readInt()
-        if (input != null && input in 1 .. uiFeatures.size) {
+        if (input != null && input in 1..uiFeatures.size) {
             uiFeatures.find { it.id == input }?.uiLauncher?.launchUi()
-        } else if(input == 0) {
+        } else if (input == 0) {
             exitProcess(0)
         } else {
-            printer.displayLn("Invalid input")
+            printer.displayLn("\nInvalid input")
         }
         presentFeature()
     }

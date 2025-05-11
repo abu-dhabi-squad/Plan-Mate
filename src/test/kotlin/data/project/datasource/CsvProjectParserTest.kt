@@ -10,7 +10,7 @@ import org.junit.jupiter.params.provider.ValueSource
 import logic.exceptions.CanNotParseProjectException
 import logic.exceptions.CanNotParseStateException
 import logic.model.Project
-import logic.model.State
+import logic.model.TaskState
 import java.util.UUID
 
 class CsvProjectParserTest {
@@ -69,23 +69,23 @@ class CsvProjectParserTest {
     @Test
     fun `parseStringToProject should return Project when the string could be splited`() {
         //given
-        val resState = listOf(
-            State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"),
-            State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state2"),
-            State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state3")
+        val resTaskStates = listOf(
+            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"),
+            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state2"),
+            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state3")
         )
         val line = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state2|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state3"
         //when & then
-        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resState))
+        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resTaskStates))
     }
 
     @Test
     fun `parseStringToProject should return Project when the string could be splited with one state`() {
         //given
-        val resState = listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"))
+        val resTaskState = listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"))
         val line = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1"
         //when & then
-        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resState))
+        Truth.assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resTaskState))
     }
 
     @Test
@@ -107,7 +107,7 @@ class CsvProjectParserTest {
     @Test
     fun`parseProjectToString should return a string when get a project with state`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1")))
         //when & then
         Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name1")
     }
@@ -115,7 +115,7 @@ class CsvProjectParserTest {
     @Test
     fun`parseProjectToString should return a string when get a project with states`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1"),State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name2")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1"),TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name2")))
         //when & then
         Truth.assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name2")
     }

@@ -17,7 +17,7 @@ class EditProjectUI(
             getAllProjectsUseCase().takeIf { it.isNotEmpty() }
                 .let { projects ->
                     projects?.forEachIndexed { index, project ->
-                        printer.displayLn("${index + 1}- Project Name: " + project.projectName + " - States : " + project.states)
+                        printer.displayLn("${index + 1}- Project Name: " + project.projectName + " - States : " + project.taskStates)
                     }?.let {
                         printer.display("\nChoose project: ")
                         reader.readInt()?.let { choice ->
@@ -28,7 +28,7 @@ class EditProjectUI(
                             }
                             printer.displayLn("\nEnter the new name: ")
                             reader.readString()?.let { projectName ->
-                                editProjectUseCase(projects[projectIndex].id.toString(), projectName)
+                                editProjectUseCase(projects[projectIndex].projectId, projectName)
                                 printer.displayLn("\nProject updated successfully.")
                             } ?: printer.displayLn("Wrong input")
                         } ?: printer.displayLn("Wrong input")

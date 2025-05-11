@@ -13,19 +13,18 @@ class CreateMateUserUseCaseUI(
     private val createUserUseCase: CreateMateUserUseCase,
     private val inputReader: InputReader,
     private val printer: Printer
-): UiLauncher {
-
+) : UiLauncher {
     override suspend fun launchUi() {
         printer.displayLn("===== Create User =====")
 
-        val username = promptNonEmptyString("Enter username: ")
-        val password = promptNonEmptyString("Enter password: ")
+        val username = promptNonEmptyString("\nEnter username: ")
+        val password = promptNonEmptyString("\nEnter password: ")
 
         val user = User(username = username, password = password, userType = UserType.MATE)
 
         try {
             createUserUseCase(user)
-            printer.displayLn("User created successfully!")
+            printer.displayLn("\nUser created successfully!")
         } catch (e: EmptyUsernameException) {
             printer.displayLn("${e.message}")
         } catch (e: UserAlreadyExistsException) {
@@ -38,7 +37,7 @@ class CreateMateUserUseCaseUI(
             printer.display(prompt)
             val input = inputReader.readString()
             if (!input.isNullOrBlank()) return input
-            printer.displayLn("Input cannot be empty.")
+            printer.displayLn("\nInput cannot be empty.")
         }
     }
 

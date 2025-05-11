@@ -1,6 +1,6 @@
 package presentation.project
 
-import logic.model.State
+import logic.model.TaskState
 import logic.project.AddStateToProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
@@ -22,7 +22,7 @@ class AddStateToProjectUI(
             }
 
             projects.forEachIndexed { index, project ->
-                printer.displayLn("${index + 1}- Project Name: ${project.projectName} - States: ${project.states}")
+                printer.displayLn("${index + 1}- Project Name: ${project.projectName} - States: ${project.taskStates}")
             }
 
             val projectIndex = promptNonEmptyInt("\nChoose Project: ") - 1
@@ -34,8 +34,8 @@ class AddStateToProjectUI(
             val stateName = promptNonEmptyString("Enter the new state name: ")
 
             try {
-                addStateToProjectUseCase(projects[projectIndex].id.toString(), State(name = stateName))
-                printer.displayLn("State \"$stateName\" added to project \"${projects[projectIndex].projectName}\" successfully.")
+                addStateToProjectUseCase(projects[projectIndex].projectId, TaskState(stateName = stateName))
+                printer.displayLn("TaskState \"$stateName\" added to project \"${projects[projectIndex].projectName}\" successfully.")
             } catch (e: Exception) {
                 printer.displayLn("Error: ${e.message}")
             }

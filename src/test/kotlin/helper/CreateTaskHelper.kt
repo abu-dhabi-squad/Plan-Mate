@@ -15,10 +15,10 @@ fun createTask(
     endDate :LocalDate = LocalDate.now()
 ): Task {
     return Task(
-        id=id,
-        userName = userName,
+        taskId=id,
+        username = userName,
         projectId = projectId,
-        stateId = stateId,
+        taskStateId = stateId,
         title = title,
         description = description,
         startDate = startDate,

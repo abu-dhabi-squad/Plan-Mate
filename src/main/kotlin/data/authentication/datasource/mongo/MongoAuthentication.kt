@@ -1,11 +1,11 @@
 package data.authentication.datasource.mongo
 
-import kotlinx.coroutines.flow.toList
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.authentication.model.UserDto
 import data.authentication.repository.RemoteAuthenticationDataSource
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.toList
 
 class MongoAuthentication(
     private val userCollection: MongoCollection<UserDto>,
@@ -22,6 +22,7 @@ class MongoAuthentication(
     override suspend fun createUser(userDto: UserDto) {
         userCollection.insertOne(userDto)
     }
+
     companion object {
         const val USERNAME_FIELD = "username"
     }

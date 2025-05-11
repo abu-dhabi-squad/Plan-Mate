@@ -1,6 +1,6 @@
 package data.project.repository
 
-import data.project.mapper.MongoProjectMapper
+import data.project.mapper.ProjectMapper
 import data.project.model.ProjectDto
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -18,7 +18,7 @@ import java.util.UUID
 class ProjectRepositoryImplTest {
 
     private lateinit var projectDataSource: RemoteProjectDataSource
-    private lateinit var mapper: MongoProjectMapper
+    private lateinit var mapper: ProjectMapper
     private lateinit var repository: ProjectRepository
 
     private val project = Project(UUID.randomUUID(), "Test", emptyList())

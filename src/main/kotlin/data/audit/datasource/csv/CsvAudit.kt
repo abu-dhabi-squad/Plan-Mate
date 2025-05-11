@@ -17,7 +17,7 @@ class CsvAudit(
 
     override fun getAuditByEntityId(entityId: String): List<Audit> {
         return csvFileHelper.readFile(csvFileName).map { csvAuditParser.getAuditFromLine(it) }.filter { audit ->
-            audit.entityId == entityId
+            audit.entityId.toString() == entityId
         }
     }
 }

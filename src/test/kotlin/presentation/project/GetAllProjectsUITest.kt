@@ -30,8 +30,8 @@ class GetAllProjectsUITest {
     fun `should print all projects`() = runTest{
         // Given
         val projects = listOf(
-            Project(id =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project One", states = emptyList()),
-            Project(id =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project Two", states = emptyList())
+            Project(projectId =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project One", taskStates = emptyList()),
+            Project(projectId =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project Two", taskStates = emptyList())
         )
         coEvery { getAllProjectsUseCase.invoke() } returns projects
 

@@ -62,7 +62,7 @@ class GetTasksByProjectIdUITest {
         val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), name = "Project A")
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id) } throws RuntimeException("Network issue")
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } throws RuntimeException("Network issue")
         // When
         presenter.launchUi()
         // Then
@@ -76,11 +76,11 @@ class GetTasksByProjectIdUITest {
             createProject(
                 UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
                 name = "Project A",
-                states = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b")))
+                taskStates = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b")))
             )
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns emptyList()
         // When
         presenter.launchUi()
         // Then
@@ -94,7 +94,7 @@ class GetTasksByProjectIdUITest {
         val project = createProject(
             UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             name = "Project A",
-            states = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b")))
+            taskStates = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b")))
         )
         val task = createTask(
             id = uuid,
@@ -108,7 +108,7 @@ class GetTasksByProjectIdUITest {
         )
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
 
         // When
         presenter.launchUi()
@@ -122,7 +122,7 @@ class GetTasksByProjectIdUITest {
                ↳ Description: Resolve login issue
                ↳ Start: 2025-05-01, End: 2025-05-02
                ↳ Assigned to: Alice
-               ↳ State ID: d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b
+               ↳ TaskState ID: d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b
         """.trimIndent()
             )
         }
@@ -139,11 +139,11 @@ class GetTasksByProjectIdUITest {
             createProject(
                 UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
                 name = "Project A",
-                states = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b")))
+                taskStates = listOf(createState(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b")))
             )
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { inputReader.readInt() } returnsMany listOf(firstAttemptEnterNumber, secondAttemptEnterIndex)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns emptyList()
         // When
         presenter.launchUi()
         // Then

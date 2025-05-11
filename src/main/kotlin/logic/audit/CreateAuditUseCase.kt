@@ -9,18 +9,16 @@ class CreateAuditUseCase(
 ) {
     suspend operator fun invoke(
         auditLog: Audit
-    ){
+    ) {
 
         if (auditLog.isValid() && !isSameStates(newState = auditLog.newState, oldState = auditLog.oldState))
-        auditRepository.createAuditLog(auditLog)
+            auditRepository.createAuditLog(auditLog)
         else throw InvalidAudit()
     }
 
     private fun Audit.isValid(): Boolean {
-        return newState.isNotEmpty() &&
-               entityId.isNotEmpty() &&
-               createdBy.isNotEmpty()
+        return newState.isNotEmpty() && createdBy.isNotEmpty()
     }
 
-    private fun isSameStates (newState: String, oldState: String) = newState == oldState
+    private fun isSameStates(newState: String, oldState: String) = newState == oldState
 }

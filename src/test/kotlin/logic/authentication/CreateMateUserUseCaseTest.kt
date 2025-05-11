@@ -8,7 +8,7 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import logic.validation.PasswordValidator
+import presentation.logic.authentication.validtion.PasswordValidator
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

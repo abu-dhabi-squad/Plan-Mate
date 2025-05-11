@@ -1,11 +1,7 @@
 package logic.authentication.validtion
 
-import logic.exceptions.NoLowerCaseInPasswordException
-import logic.exceptions.NoNumberInPasswordException
-import logic.exceptions.NoSpecialCharsInPasswordException
-import logic.exceptions.NoUpperCaseInPasswordException
-import logic.exceptions.ShortPasswordException
-import logic.validation.PasswordValidator
+import logic.exceptions.*
+import presentation.logic.authentication.validtion.PasswordValidator
 
 class CreateUserPasswordValidator : PasswordValidator {
 
@@ -28,5 +24,7 @@ class CreateUserPasswordValidator : PasswordValidator {
 
     }
 
-    companion object { private const val SYMBOLS = "@$&*#_-.()"}
+    companion object {
+        private const val SYMBOLS = "@$&*#_-.()"
+    }
 }

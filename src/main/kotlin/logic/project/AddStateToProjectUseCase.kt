@@ -2,20 +2,21 @@ package logic.project
 
 import logic.exceptions.DuplicateStateException
 import logic.exceptions.ProjectNotFoundException
-import logic.model.State
+import logic.model.TaskState
 import logic.repository.ProjectRepository
+import java.util.*
 
 class AddStateToProjectUseCase(private val projectRepository: ProjectRepository) {
-    suspend operator fun invoke(projectId: String, newState: State) {
+    suspend operator fun invoke(projectId: UUID, newTaskState: TaskState) {
         val project = projectRepository.getProjectById(projectId)
             ?: throw ProjectNotFoundException()
 
-        if (project.states.isNotEmpty()) {
-            project.states.find { !it.name.equals(newState.name, ignoreCase = true) }
-                ?: throw DuplicateStateException(newState.name)
+        if (project.taskStates.isNotEmpty()) {
+            project.taskStates.find { !it.stateName.equals(newTaskState.stateName, ignoreCase = true) }
+                ?: throw DuplicateStateException(newTaskState.stateName)
         }
 
-        val updatedProject = project.copy(states = project.states + newState)
+        val updatedProject = project.copy(taskStates = project.taskStates + newTaskState)
         projectRepository.editProject(updatedProject)
     }
 }

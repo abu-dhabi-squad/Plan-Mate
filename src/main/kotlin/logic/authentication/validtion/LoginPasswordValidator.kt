@@ -1,7 +1,7 @@
 package logic.authentication.validtion
 
 import logic.exceptions.ShortPasswordException
-import logic.validation.PasswordValidator
+import presentation.logic.authentication.validtion.PasswordValidator
 
 class LoginPasswordValidator : PasswordValidator {
     override fun validatePassword(password: String) {

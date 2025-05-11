@@ -23,7 +23,7 @@ class AuthenticationRepositoryImplTest {
     private val remoteDataSource: RemoteAuthenticationDataSource = mockk()
     private val loggedUserDataSource: LoggedUserDataSource = mockk()
     private val hashingService: HashingService = mockk()
-    private val mongoUserMapper: data.authentication.mapper.MongoUserMapper = mockk()
+    private val userMapper: data.authentication.mapper.UserMapper = mockk()
 
     private lateinit var repository: AuthenticationRepositoryImpl
 
@@ -36,7 +36,7 @@ class AuthenticationRepositoryImplTest {
             remoteDataSource,
             loggedUserDataSource,
             hashingService,
-            mongoUserMapper
+            userMapper
         )
     }
 
@@ -49,7 +49,7 @@ class AuthenticationRepositoryImplTest {
         }
         every { hashingService.hash("password123") } returns hashedPassword
         coEvery { remoteDataSource.getUserByUsername("noor") } returns dto
-        every { mongoUserMapper.dtoToUser(dto) } returns testUser
+        every { userMapper.dtoToUser(dto) } returns testUser
         // When
         val result = repository.loginUser("noor", "password123")
         // Then
@@ -80,7 +80,7 @@ class AuthenticationRepositoryImplTest {
         // Given
         val dto = mockk<UserDto>()
         coEvery { remoteDataSource.getUserByUsername("noor") } returns dto
-        every { mongoUserMapper.dtoToUser(dto) } returns testUser
+        every { userMapper.dtoToUser(dto) } returns testUser
         // When
         val result = repository.getUserByName("noor")
         // Then
@@ -104,7 +104,7 @@ class AuthenticationRepositoryImplTest {
         val userDto = mockk<UserDto>()
         val userWithHashedPassword = testUser.copy(password = hashedPassword)
         every { hashingService.hash("password123") } returns hashedPassword
-        every { mongoUserMapper.userToDto(userWithHashedPassword) } returns userDto
+        every { userMapper.userToDto(userWithHashedPassword) } returns userDto
         coEvery { remoteDataSource.createUser(userDto) } just Runs
         // When
         repository.createUser(testUser)

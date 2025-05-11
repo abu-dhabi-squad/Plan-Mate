@@ -4,13 +4,13 @@ import com.google.common.truth.Truth.assertThat
 import data.project.model.ProjectDto
 import data.project.model.StateDto
 import logic.model.Project
-import logic.model.State
+import logic.model.TaskState
 import org.junit.jupiter.api.Test
 import java.util.*
 
-class MongoProjectMapperTest {
+class ProjectMapperTest {
 
-    private val mapper = MongoProjectMapper()
+    private val mapper = ProjectMapper()
 
     @Test
     fun `dtoToProject should map ProjectDto to Project correctly`() {
@@ -22,20 +22,20 @@ class MongoProjectMapperTest {
             id = projectId.toString(),
             projectName = "Test Project",
             states = listOf(
-                StateDto(id = state1Id.toString(), name = "State 1"),
-                StateDto(id = state2Id.toString(), name = "State 2")
+                StateDto(id = state1Id.toString(), name = "TaskState 1"),
+                StateDto(id = state2Id.toString(), name = "TaskState 2")
             )
         )
 
         val result = mapper.dtoToProject(projectDto)
 
-        assertThat(result.id).isEqualTo(projectId)
+        assertThat(result.projectId).isEqualTo(projectId)
         assertThat(result.projectName).isEqualTo("Test Project")
-        assertThat(result.states).hasSize(2)
-        assertThat(result.states[0].id).isEqualTo(state1Id)
-        assertThat(result.states[0].name).isEqualTo("State 1")
-        assertThat(result.states[1].id).isEqualTo(state2Id)
-        assertThat(result.states[1].name).isEqualTo("State 2")
+        assertThat(result.taskStates).hasSize(2)
+        assertThat(result.taskStates[0].stateId).isEqualTo(state1Id)
+        assertThat(result.taskStates[0].stateName).isEqualTo("TaskState 1")
+        assertThat(result.taskStates[1].stateId).isEqualTo(state2Id)
+        assertThat(result.taskStates[1].stateName).isEqualTo("TaskState 2")
     }
 
     @Test
@@ -44,9 +44,9 @@ class MongoProjectMapperTest {
         val state1Id = UUID.randomUUID()
 
         val project = Project(
-            id = projectId,
+            projectId = projectId,
             projectName = "Sample Project",
-            states = listOf(State(id = state1Id, name = "Done"))
+            taskStates = listOf(TaskState(stateId = state1Id, stateName = "Done"))
         )
 
         val result = mapper.projectToDto(project)
@@ -65,16 +65,16 @@ class MongoProjectMapperTest {
 
         val result = mapper.dtoToState(stateDto)
 
-        assertThat(result.id).isEqualTo(uuid)
-        assertThat(result.name).isEqualTo("Pending")
+        assertThat(result.stateId).isEqualTo(uuid)
+        assertThat(result.stateName).isEqualTo("Pending")
     }
 
     @Test
     fun `stateToDto should map State to StateDto correctly`() {
         val uuid = UUID.randomUUID()
-        val state = State(id = uuid, name = "In Progress")
+        val taskState = TaskState(stateId = uuid, stateName = "In Progress")
 
-        val result = mapper.stateToDto(state)
+        val result = mapper.stateToDto(taskState)
 
         assertThat(result.id).isEqualTo(uuid.toString())
         assertThat(result.name).isEqualTo("In Progress")

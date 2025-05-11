@@ -1,19 +1,15 @@
 package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
-import logic.validation.DateParser
-import logic.model.Audit
-import logic.model.EntityType
-import logic.model.Project
-import logic.model.State
-import logic.model.Task
+import logic.model.*
 import logic.project.GetAllProjectsUseCase
 import logic.task.EditTaskUseCase
 import logic.task.GetTasksByProjectIdUseCase
+import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
-import logic.user.GetLoggedUserUseCase
+import presentation.logic.utils.DateParser
 import java.time.LocalDate
 
 class EditTaskUI(
@@ -44,7 +40,7 @@ class EditTaskUI(
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
-            getTasksByProjectIdUseCase(selectedProject.id)
+            getTasksByProjectIdUseCase(selectedProject.projectId)
         } catch (e: Exception) {
             printer.displayLn("\nFailed to load tasks: ${e.message}")
             return
@@ -71,28 +67,28 @@ class EditTaskUI(
         val newEndDate =
             promptDate("\nEnter new end date (YYYY-MM-DD) or leave blank: ", selectedTask.endDate)
 
-        showStates(selectedProject.states)
-        val stateIndex = promptSelection("\nSelect new state: ", selectedProject.states.size)
-        val newState = selectedProject.states[stateIndex]
+        showStates(selectedProject.taskStates)
+        val stateIndex = promptSelection("\nSelect new state: ", selectedProject.taskStates.size)
+        val newState = selectedProject.taskStates[stateIndex]
 
         val updatedTask = selectedTask.copy(
             title = newTitle,
             description = newDescription,
             startDate = newStartDate,
             endDate = newEndDate,
-            stateId = newState.id
+            taskStateId = newState.stateId
         )
 
         try {
             editTaskUseCase(updatedTask)
-            val oldState = selectedProject.states.first { it.id == selectedTask.stateId }
+            val oldState = selectedProject.taskStates.first { it.stateId == selectedTask.taskStateId }
 
             createAuditUseCase(
                 Audit(
-                    entityId = updatedTask.id.toString(),
+                    entityId = updatedTask.taskId,
                     entityType = EntityType.TASK,
-                    oldState = oldState.id.toString(),
-                    newState = newState.id.toString(),
+                    oldState = oldState.stateName,
+                    newState = newState.stateName,
                     createdBy = getLoggedUserUseCase().username
                 )
             )
@@ -116,10 +112,10 @@ class EditTaskUI(
         }
     }
 
-    private fun showStates(states: List<State>) {
+    private fun showStates(taskStates: List<TaskState>) {
         printer.displayLn("\nAvailable States:")
-        states.forEachIndexed { index, state ->
-            printer.displayLn("${index + 1}. ${state.name}")
+        taskStates.forEachIndexed { index, state ->
+            printer.displayLn("${index + 1}. ${state.stateName}")
         }
     }
 

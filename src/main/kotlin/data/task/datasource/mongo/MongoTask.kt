@@ -47,4 +47,8 @@ class MongoTask(
     override suspend fun deleteTask(taskId: String) {
         taskCollection.deleteOne(Filters.eq("id", taskId))
     }
+
+    override suspend fun deleteTasksByProjectById(projectId: String) {
+        taskCollection.deleteMany(Filters.eq("projectId", projectId))
+    }
 }

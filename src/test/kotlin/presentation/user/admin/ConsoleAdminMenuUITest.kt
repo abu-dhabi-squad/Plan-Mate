@@ -10,7 +10,7 @@ import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.presentation.usermanagement.admin.ConsoleAdminMenuUI
+import presentation.presentation.user.admin.ConsoleAdminMenuUI
 
 class ConsoleAdminMenuUITest {
 

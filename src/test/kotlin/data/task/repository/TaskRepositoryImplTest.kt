@@ -6,7 +6,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import data.task.mapper.MongoTaskMapper
+import data.task.mapper.TaskMapper
 import data.task.model.TaskDto
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -22,7 +22,7 @@ class TaskRepositoryImplTest {
 
     private lateinit var remoteTaskDataSource: RemoteTaskDataSource
     private lateinit var taskRepository: TaskRepository
-    private lateinit var taskMapper: MongoTaskMapper
+    private lateinit var taskMapper: TaskMapper
 
     @BeforeEach
     fun setup() {
@@ -105,10 +105,10 @@ class TaskRepositoryImplTest {
         val task = createTask()
         val taskDto = mockk<TaskDto>()
 
-        coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } returns taskDto
+        coEvery { remoteTaskDataSource.getTaskById(task.taskId.toString()) } returns taskDto
         every { taskMapper.dtoToTask(taskDto) } returns task
 
-        val result = taskRepository.getTaskById(task.id)
+        val result = taskRepository.getTaskById(task.taskId)
 
         assertThat(result).isEqualTo(task)
         verify(exactly = 1) { taskMapper.dtoToTask(taskDto) }
@@ -117,9 +117,9 @@ class TaskRepositoryImplTest {
     @Test
     fun `getTaskById should return null when datasource returns null`() = runTest {
         val task = createTask()
-        coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } returns null
+        coEvery { remoteTaskDataSource.getTaskById(task.taskId.toString()) } returns null
 
-        val result = taskRepository.getTaskById(task.id)
+        val result = taskRepository.getTaskById(task.taskId)
 
         assertThat(result).isNull()
     }
@@ -127,9 +127,9 @@ class TaskRepositoryImplTest {
     @Test
     fun `getTaskById should rethrow Exception when datasource throws Exception`() = runTest {
         val task = createTask()
-        coEvery { remoteTaskDataSource.getTaskById(task.id.toString()) } throws Exception()
+        coEvery { remoteTaskDataSource.getTaskById(task.taskId.toString()) } throws Exception()
 
-        assertThrows<Exception> { taskRepository.getTaskById(task.id) }
+        assertThrows<Exception> { taskRepository.getTaskById(task.taskId) }
     }
 
     @Test
@@ -186,19 +186,19 @@ class TaskRepositoryImplTest {
     fun `deleteTask should call datasource with correct id`() = runTest {
         val task = createTask()
 
-        coEvery { remoteTaskDataSource.deleteTask(task.id.toString()) } just Runs
+        coEvery { remoteTaskDataSource.deleteTask(task.taskId.toString()) } just Runs
 
-        taskRepository.deleteTask(task.id)
+        taskRepository.deleteTask(task.taskId)
 
-        coVerify { remoteTaskDataSource.deleteTask(task.id.toString()) }
+        coVerify { remoteTaskDataSource.deleteTask(task.taskId.toString()) }
     }
 
     @Test
     fun `deleteTask should rethrow Exception when datasource throws Exception`() = runTest {
         val task = createTask()
 
-        coEvery { remoteTaskDataSource.deleteTask(task.id.toString()) } throws Exception()
+        coEvery { remoteTaskDataSource.deleteTask(task.taskId.toString()) } throws Exception()
 
-        assertThrows<Exception> { taskRepository.deleteTask(task.id) }
+        assertThrows<Exception> { taskRepository.deleteTask(task.taskId) }
     }
 }

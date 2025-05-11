@@ -2,7 +2,7 @@ package data.audit.datasource.csv.parser
 
 import io.mockk.every
 import io.mockk.mockk
-import logic.validation.DateTimeParser
+import presentation.logic.utils.DateTimeParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.model.Audit
@@ -31,15 +31,15 @@ class CsvAuditParserTest {
         val id = UUID.randomUUID()
         val customDateTime = LocalDate.of(2025, 5, 24).atTime(20, 0)
         val audit =   Audit(
-            id = id,
+            auditId = id,
             createdBy = "user123",
             entityId = "42",
             entityType = EntityType.PROJECT,
             oldState = "old",
             newState = "new",
-            date =customDateTime
+            createdAt =customDateTime
         )
-        every { dateParser.getStringFromDate(audit.date) } returns "2025-05-24 08:00 PM"
+        every { dateParser.getStringFromDate(audit.createdAt) } returns "2025-05-24 08:00 PM"
 
         // when
         val result = csvAuditParser.getLineFromAudit(audit)
@@ -64,13 +64,13 @@ class CsvAuditParserTest {
 
         // then
         val expectedAudit = Audit(
-            id = id,
+            auditId = id,
             createdBy = "user123",
             entityId = "42",
             entityType = EntityType.PROJECT,
             oldState = "old",
             newState = "new",
-            date = customDateTime
+            createdAt = customDateTime
         )
 
         assertEquals(expectedAudit, result)

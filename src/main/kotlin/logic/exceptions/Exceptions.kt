@@ -8,23 +8,19 @@ class InvalidAudit : AppException("Audit Is Invalid.")
 
 class WrongInputException : AppException("Invalid entity ID input. Please try again.")
 
-class EmptyList: AppException("No audit logs found for this entity ID.")
+class EmptyList : AppException("No audit logs found for this entity ID.")
 
 class NoTasksFoundException : AppException("No tasks found")
 
-class InvalidDateFormatException : AppException("Invalid date format")
-
-class InvalidYearException : AppException("Invalid year")
-
 class InvalidTaskDateException : AppException("Invalid task date")
 
-class DuplicateStateException(state: String) : AppException("State '$state' already exists in project")
+class DuplicateStateException(state: String) : AppException("TaskState '$state' already exists in project")
 
 class NoProjectsFoundException : AppException("No projects Found")
 
 class ProjectNotFoundException : AppException("Project Not Found")
 
-class ProjectStateNotFoundException : AppException("State Not Found")
+class ProjectStateNotFoundException : AppException("TaskState Not Found")
 
 class UserAlreadyExistsException(username: String) : AppException("Username '$username' already exists")
 
@@ -34,7 +30,7 @@ class UserNotFoundException(username: String) : AppException("User with username
 
 class CanNotParseProjectException : AppException("can't parse string to project")
 
-class CanNotParseStateException : AppException("can't parse string to State")
+class CanNotParseStateException : AppException("can't parse string to TaskState")
 
 class ShortPasswordException : AppException("Password must be at least 8 characters long")
 

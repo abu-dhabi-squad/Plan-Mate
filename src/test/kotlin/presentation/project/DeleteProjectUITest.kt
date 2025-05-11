@@ -88,7 +88,7 @@ class DeleteProjectUITest {
     @Test
     fun `should prompt again when input is null or blank`() = runTest {
         val projects = listOf(
-            createProject(name = "project", states = emptyList())
+            createProject(name = "project", taskStates = emptyList())
         )
         coEvery { getAllProjectsUseCase() } returns projects
         coEvery { reader.readInt() } returnsMany listOf(
@@ -99,14 +99,14 @@ class DeleteProjectUITest {
 
         coVerify(exactly = 3) { printer.displayLn("\nInput cannot be empty.") }
         coVerify {
-            deleteProjectUseCase(projects[0].id.toString())
+            deleteProjectUseCase(projects[0].projectId.toString())
         }
     }
 
     @Test
     fun `should not find project when input is out of projects range`() = runTest {
         val projects = listOf(
-            createProject(name = "project", states = emptyList())
+            createProject(name = "project", taskStates = emptyList())
         )
         coEvery { getAllProjectsUseCase() } returns projects
         coEvery { reader.readInt() } returns 5

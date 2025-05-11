@@ -8,7 +8,7 @@ class SaveLoggedUserUseCase(
     private val repository: AuthenticationRepository,
 ) {
     operator fun invoke(user: User) {
-        if(user.username.isBlank() || user.password.isBlank())  throw EmptyUsernameException()
+        if (user.username.isBlank() || user.password.isBlank()) throw EmptyUsernameException()
         repository.saveLoggedUser(user)
     }
 

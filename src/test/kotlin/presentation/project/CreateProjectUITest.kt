@@ -82,7 +82,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("\nState name cannot be empty.") }
+        coVerify { printer.displayLn("\nTaskState name cannot be empty.") }
     }
 
     @Test
@@ -117,7 +117,7 @@ class CreateProjectUITest{
 
         createProjectUI.launchUi()
 
-        coVerify { printer.displayLn("\nState name cannot be empty.") }
+        coVerify { printer.displayLn("\nTaskState name cannot be empty.") }
     }
 
     @Test

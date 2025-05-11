@@ -33,7 +33,7 @@ class GetTasksByProjectIdUI(
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
-            getTasksByProjectIdUseCase(selectedProject.id)
+            getTasksByProjectIdUseCase(selectedProject.projectId)
         } catch (e: Exception) {
             printer.displayLn("\nFailed to load tasks: ${e.message}")
             return
@@ -57,13 +57,15 @@ class GetTasksByProjectIdUI(
     private fun showTasks(tasks: List<Task>) {
         printer.displayLn("\nTasks in Project:")
         tasks.forEachIndexed { index, task ->
-            printer.displayLn("""
+            printer.displayLn(
+                """
                 ${index + 1}. ${task.title}
                    ↳ Description: ${task.description}
                    ↳ Start: ${task.startDate}, End: ${task.endDate}
-                   ↳ Assigned to: ${task.userName}
-                   ↳ State ID: ${task.stateId}
-            """.trimIndent())
+                   ↳ Assigned to: ${task.username}
+                   ↳ TaskState ID: ${task.taskStateId}
+            """.trimIndent()
+            )
         }
         printer.displayLn()
     }

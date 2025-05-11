@@ -8,10 +8,10 @@ import logic.model.Task
 import logic.project.GetAllProjectsUseCase
 import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
+import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
-import logic.user.GetLoggedUserUseCase
 
 class DeleteTaskByIdUI(
     private val printer: Printer,
@@ -27,63 +27,63 @@ class DeleteTaskByIdUI(
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {
-            printer.displayLn("Error loading projects: ${e.message}")
+            printer.displayLn("\nError loading projects: ${e.message}")
             return
         }
 
         if (projects.isEmpty()) {
-            printer.displayLn("No projects available.")
+            printer.displayLn("\nNo projects available.")
             return
         }
 
         showProjects(projects)
-        val projectIndex = promptSelection("Select a project:", projects.size)
+        val projectIndex = promptSelection("\nSelect a project: ", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
-            getTasksByProjectIdUseCase(selectedProject.id)
+            getTasksByProjectIdUseCase(selectedProject.projectId)
         } catch (e: Exception) {
-            printer.displayLn("Error loading tasks: ${e.message}")
+            printer.displayLn("\nError loading tasks: ${e.message}")
             return
         }
 
         if (tasks.isEmpty()) {
-            printer.displayLn("No tasks found in this project.")
+            printer.displayLn("\nNo tasks found in this project.")
             return
         }
 
         showTasks(tasks)
-        val taskIndex = promptSelection("Select a task to delete:", tasks.size)
+        val taskIndex = promptSelection("\nSelect a task to delete: ", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         try {
-            deleteTaskByIdUseCase(selectedTask.id)
+            deleteTaskByIdUseCase(selectedTask.taskId)
             createAuditUseCase(
                 Audit(
-                    entityId = selectedTask.id.toString(),
+                    entityId = selectedTask.taskId,
                     entityType = EntityType.TASK,
                     oldState = "",
                     newState = "Deleted",
                     createdBy = getLoggedUserUseCase().username
                 )
             )
-            printer.displayLn("Task '${selectedTask.title}' deleted successfully.")
+            printer.displayLn("\nTask '${selectedTask.title}' deleted successfully.")
         } catch (e: Exception) {
-            printer.displayLn("Failed to delete task: ${e.message}")
+            printer.displayLn("\nFailed to delete task: ${e.message}")
         }
     }
 
     private fun showProjects(projects: List<Project>) {
-        printer.displayLn("Available projects:")
+        printer.displayLn("\nAvailable projects:")
         projects.forEachIndexed { index, project ->
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
     }
 
     private fun showTasks(tasks: List<Task>) {
-        printer.displayLn("Tasks in selected project:")
+        printer.displayLn("\nTasks in selected project:")
         tasks.forEachIndexed { index, task ->
-            printer.displayLn("${index + 1}. ${task.title} (ID: ${task.id})")
+            printer.displayLn("${index + 1}. ${task.title}")
         }
     }
 
@@ -92,7 +92,7 @@ class DeleteTaskByIdUI(
             printer.display(prompt)
             val input = inputReader.readInt()
             if (input != null && input in 1..max) return input - 1
-            printer.displayLn("Please enter a number between 1 and $max.")
+            printer.displayLn("\nPlease enter a number between 1 and $max.")
         }
     }
 }

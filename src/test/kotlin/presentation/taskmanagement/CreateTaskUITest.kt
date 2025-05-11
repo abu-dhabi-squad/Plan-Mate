@@ -7,7 +7,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
-import logic.validation.DateParser
+import presentation.logic.utils.DateParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -56,7 +56,7 @@ class CreateTaskUITest {
     @Test
     fun `should create a task when user input is valid`() = runTest{
         // Given
-        val fakeProject = createProject(states = listOf(createState()))
+        val fakeProject = createProject(taskStates = listOf(createState()))
 
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
@@ -78,7 +78,7 @@ class CreateTaskUITest {
         secondEnterTitle: String
     ) = runTest{
         // Given
-        val fakeProject = createProject(states = listOf(createState()))
+        val fakeProject = createProject(taskStates = listOf(createState()))
 
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
@@ -100,7 +100,7 @@ class CreateTaskUITest {
         secondEnterDescription: String
     ) = runTest{
         // Given
-        val fakeProject = createProject(states = listOf(createState()))
+        val fakeProject = createProject(taskStates = listOf(createState()))
 
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
@@ -121,7 +121,7 @@ class CreateTaskUITest {
     @Test
     fun `should display message when no projects are available`() = runTest{
         // Given
-        val fakeProject = createProject(states = listOf(createState()))
+        val fakeProject = createProject(taskStates = listOf(createState()))
         coEvery { getAllProjectsUseCase() } returns emptyList() andThen listOf(fakeProject)
         coEvery { reader.readString() } returns "title" andThen "" andThen "Description" andThen "2025-10-10" andThen "2025-10-30"
 
@@ -146,7 +146,7 @@ class CreateTaskUITest {
     @Test
     fun `should display error message when failed to create task`() = runTest{
         // Given
-        val fakeProject = createProject(states = listOf(createState()))
+        val fakeProject = createProject(taskStates = listOf(createState()))
 
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
@@ -169,7 +169,7 @@ class CreateTaskUITest {
         secondEnterDate: String
     ) = runTest{
         // Given
-        val fakeProject = createProject(states = listOf(createState()))
+        val fakeProject = createProject(taskStates = listOf(createState()))
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
         coEvery { reader.readString() } returns "Title" andThen "Description" andThen firstEnterDate andThen secondEnterDate andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
@@ -188,7 +188,7 @@ class CreateTaskUITest {
     @Test
     fun `should display error when user enter date in invalid formatter`() = runTest{
         // Given
-        val fakeProject = createProject(states = listOf(createState()))
+        val fakeProject = createProject(taskStates = listOf(createState()))
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
         coEvery { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"
@@ -215,7 +215,7 @@ class CreateTaskUITest {
         secondEnterIndex: Int
     ) = runTest{
         // Given
-        val fakeProject = createProject(states = listOf(createState()))
+        val fakeProject = createProject(taskStates = listOf(createState()))
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
         coEvery { reader.readString() } returns "Title" andThen "Description" andThen "2025-10-10" andThen "2025-10-30" andThen "2025-10-30"

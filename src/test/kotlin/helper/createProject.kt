@@ -1,17 +1,17 @@
 package helper
 
 import logic.model.Project
-import logic.model.State
+import logic.model.TaskState
 import java.util.UUID
 
 fun createProject(
     id: UUID = UUID.randomUUID(),
     name: String = "",
-    states : List<State> = listOf()
+    taskStates : List<TaskState> = listOf()
 ):Project{
     return Project(
         id,
         name,
-        states
+        taskStates
     )
 }

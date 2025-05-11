@@ -6,6 +6,7 @@ import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
+import java.util.*
 
 class GetAuditForProjectUI(
     private val printer: Printer,
@@ -49,10 +50,10 @@ class GetAuditForProjectUI(
             return
         }
 
-        showAuditLogs(selected.id.toString())
+        showAuditLogs(selected.projectId)
     }
 
-    private suspend fun showAuditLogs(entityId: String) {
+    private suspend fun showAuditLogs(entityId: UUID) {
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
             if (audits.isEmpty()) {
@@ -62,7 +63,7 @@ class GetAuditForProjectUI(
 
             printer.displayLn("\n=== Audit Logs for Project ===")
             audits.forEachIndexed { index, audit ->
-                printer.displayLn("${index + 1}. Date: ${audit.date}, Created By: ${audit.createdBy}")
+                printer.displayLn("${index + 1}. Date: ${audit.createdAt}, Created By: ${audit.createdBy}")
                 if (audit.oldState.isEmpty()) printer.displayLn("\t=> New state set as ${audit.newState}")
                 else printer.displayLn("\t=> Changed from ${audit.oldState} to ${audit.newState}")
             }

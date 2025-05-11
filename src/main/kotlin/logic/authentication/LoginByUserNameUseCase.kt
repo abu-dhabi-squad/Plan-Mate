@@ -1,11 +1,11 @@
 package logic.authentication
 
-import logic.exceptions.UserNotFoundException
-import logic.model.User
-import logic.validation.PasswordValidator
 import logic.exceptions.EmptyUsernameException
 import logic.exceptions.InvalidCredentialsException
+import logic.exceptions.UserNotFoundException
+import logic.model.User
 import logic.repository.AuthenticationRepository
+import presentation.logic.authentication.validtion.PasswordValidator
 import presentation.logic.utils.hashing.HashingService
 
 class LoginByUserNameUseCase(

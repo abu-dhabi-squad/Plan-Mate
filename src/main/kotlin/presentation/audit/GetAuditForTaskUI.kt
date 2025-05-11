@@ -8,6 +8,7 @@ import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
+import java.util.*
 
 class GetAuditForTaskUI(
     private val printer: Printer,
@@ -47,7 +48,7 @@ class GetAuditForTaskUI(
 
     private suspend fun showTaskAudit(project: Project) {
         val tasks = try {
-            getTasksByProjectIdUseCase(project.id)
+            getTasksByProjectIdUseCase(project.projectId)
         } catch (e: Exception) {
             printer.displayLn("\nFailed to fetch tasks: ${e.message}")
             return
@@ -65,10 +66,10 @@ class GetAuditForTaskUI(
             printer.displayLn("\nInput cannot be out tasks range.")
             return
         }
-        showAuditLogs(tasks[taskIndex].id.toString())
+        showAuditLogs(tasks[taskIndex].taskId)
     }
 
-    private suspend fun showAuditLogs(entityId: String) {
+    private suspend fun showAuditLogs(entityId: UUID) {
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
             if (audits.isEmpty()) {
@@ -78,7 +79,7 @@ class GetAuditForTaskUI(
 
             printer.displayLn("\n=== Audit Logs for Task ===")
             audits.forEachIndexed { index, audit ->
-                printer.displayLn("${index + 1}. Date: ${audit.date}, Created By: ${audit.createdBy}")
+                printer.displayLn("${index + 1}. Date: ${audit.createdAt}, Created By: ${audit.createdBy}")
                 if (audit.oldState.isEmpty()) printer.displayLn("\t=> New state set as ${audit.newState}")
                 else printer.displayLn("\t=> Changed from ${audit.oldState} to ${audit.newState}")
             }

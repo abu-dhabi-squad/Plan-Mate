@@ -42,7 +42,7 @@ class GetAuditForProjectUITest{
     @Test
     fun `should show audit logs for valid project`() = runTest{
 
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
         val audits = listOf(
             Audit(UUID.randomUUID(), "admin", "p1", EntityType.PROJECT, "old", "new")
         )
@@ -69,7 +69,7 @@ class GetAuditForProjectUITest{
 
     @Test
     fun `should handle null input selection`() = runTest{
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns null
@@ -83,7 +83,7 @@ class GetAuditForProjectUITest{
     @Test
     fun `should handle invalid project index`() = runTest{
 
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 5
@@ -97,7 +97,7 @@ class GetAuditForProjectUITest{
     @Test
     fun `should show message when no audit logs found`() = runTest{
 
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
@@ -112,7 +112,7 @@ class GetAuditForProjectUITest{
     @Test
     fun `should handle WrongInputException gracefully`() = runTest{
 
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
@@ -142,7 +142,7 @@ class GetAuditForProjectUITest{
     @Test
     fun `should handle unexpected exception`() = runTest{
 
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1

@@ -3,7 +3,7 @@ package data.task.model
 import org.bson.codecs.pojo.annotations.BsonProperty
 
 data class TaskDto(
-    val id: String ,
+    val id: String,
     @BsonProperty("userName")
     val userName: String,
 

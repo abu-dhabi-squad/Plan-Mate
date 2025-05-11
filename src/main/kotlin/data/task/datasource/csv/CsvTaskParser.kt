@@ -1,30 +1,30 @@
 package data.task.datasource.csv
 
-import logic.validation.DateParser
 import logic.model.Task
-import java.util.UUID
+import presentation.logic.utils.DateParser
+import java.util.*
 
 
 class CsvTaskParser(
     private val dateParser: DateParser
-)  {
+) {
 
-     fun getCsvLineFromTask(task: Task): String {
-        return "${task.id},${task.userName},${task.projectId},${task.stateId},${task.title},${task.description},${
+    fun getCsvLineFromTask(task: Task): String {
+        return "${task.taskId},${task.username},${task.projectId},${task.taskStateId},${task.title},${task.description},${
             dateParser.getStringFromDate(
                 task.startDate
             )
         },${dateParser.getStringFromDate(task.startDate)}"
     }
 
-     fun getTaskFromCsvLine(taskLine: String): Task {
+    fun getTaskFromCsvLine(taskLine: String): Task {
         return taskLine.split(",")
             .let {
                 Task(
-                    id = UUID.fromString(it[ID]),
-                    userName = it[USERNAME],
+                    taskId = UUID.fromString(it[ID]),
+                    username = it[USERNAME],
                     projectId = UUID.fromString(it[PROJECT_ID]),
-                    stateId = UUID.fromString(it[STATE_ID]),
+                    taskStateId = UUID.fromString(it[STATE_ID]),
                     title = it[TITLE],
                     description = it[DESCRIPTION],
                     startDate = dateParser.parseDateFromString(it[START_DATE]),

@@ -10,7 +10,7 @@ import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.presentation.usermanagement.user.ConsoleUserMenuUI
+import presentation.presentation.user.mate.ConsoleUserMenuUI
 
 class ConsoleUserMenuUITest {
     private lateinit var printer: Printer

@@ -12,10 +12,10 @@ import logic.authentication.LoginByUserNameUseCase
 import logic.exceptions.UserNotFoundException
 import logic.model.User
 import logic.model.UserType
-import presentation.presentation.usermanagement.admin.ConsoleAdminMenuUI
+import presentation.presentation.user.admin.ConsoleAdminMenuUI
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.presentation.usermanagement.user.ConsoleUserMenuUI
+import presentation.presentation.user.mate.ConsoleUserMenuUI
 import logic.user.SaveLoggedUserUseCase
 import java.util.UUID
 

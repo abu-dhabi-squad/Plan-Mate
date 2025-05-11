@@ -1,18 +1,14 @@
 package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
-import logic.validation.DateParser
-import logic.model.Audit
-import logic.model.EntityType
-import logic.model.Project
-import logic.model.State
-import logic.model.Task
-import logic.user.GetLoggedUserUseCase
+import logic.model.*
 import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
+import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.logic.utils.DateParser
 import java.time.LocalDate
 
 class CreateTaskUI(
@@ -47,14 +43,14 @@ class CreateTaskUI(
         val projectIndex = promptSelectionIndex("\nEnter project number: ", projects.size)
         val selectedProject = projects[projectIndex]
 
-        showStates(selectedProject.states)
-        val stateIndex = promptSelectionIndex("\nEnter state number: ", selectedProject.states.size)
-        val selectedState = selectedProject.states[stateIndex]
+        showStates(selectedProject.taskStates)
+        val stateIndex = promptSelectionIndex("\nEnter state number: ", selectedProject.taskStates.size)
+        val selectedState = selectedProject.taskStates[stateIndex]
 
         val task = Task(
-            userName = getLoggedUserUseCase().username,
-            projectId = selectedProject.id,
-            stateId = selectedState.id,
+            username = getLoggedUserUseCase().username,
+            projectId = selectedProject.projectId,
+            taskStateId = selectedState.stateId,
             title = title,
             description = description,
             startDate = startDate,
@@ -65,10 +61,10 @@ class CreateTaskUI(
             createTaskUseCase(task)
             createAuditUseCase(
                 Audit(
-                    entityId = task.id.toString(),
+                    entityId = task.taskId,
                     entityType = EntityType.TASK,
                     oldState = "",
-                    newState = "Created",
+                    newState = selectedState.stateName,
                     createdBy = getLoggedUserUseCase().username
                 )
             )
@@ -85,10 +81,10 @@ class CreateTaskUI(
         }
     }
 
-    private fun showStates(states: List<State>) {
-        printer.displayLn("\nAvailable states:")
-        states.forEachIndexed { index, state ->
-            printer.displayLn("${index + 1}. ${state.name}")
+    private fun showStates(taskStates: List<TaskState>) {
+        printer.displayLn("\nAvailable taskStates:")
+        taskStates.forEachIndexed { index, state ->
+            printer.displayLn("${index + 1}. ${state.stateName}")
         }
     }
 

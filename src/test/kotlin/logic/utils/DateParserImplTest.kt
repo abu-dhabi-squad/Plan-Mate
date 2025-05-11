@@ -1,4 +1,4 @@
-package logic.validation
+package logic.utils
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
+import presentation.logic.utils.DateParserImpl
 import java.time.LocalDate
 import java.time.format.DateTimeParseException
 import kotlin.test.assertFailsWith

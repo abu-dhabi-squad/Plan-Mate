@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import data.utils.filehelper.FileHelper
 import logic.model.Project
-import logic.model.State
+import logic.model.TaskState
 import java.util.UUID
 
 class CsvProjectTest {
@@ -61,14 +61,14 @@ class CsvProjectTest {
     @Test
     fun `getAllProjects should return list of projects when read file returns list`(){
         //given
-        val resState = listOf(
-            State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"),
-            State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state2"),
-            State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state3")
+        val resTaskStates = listOf(
+            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"),
+            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state2"),
+            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state3")
         )
-        val res = listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resState))
+        val res = listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resTaskStates))
         every { fileHelper.readFile(any()) } returns listOf("1,name1,1-state1|2-state2|3-state3")
-        every { csvProjectParser.parseStringToProject(any()) } returns Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resState)
+        every { csvProjectParser.parseStringToProject(any()) } returns Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resTaskStates)
         // when
         val result = csvProject.getAllProjects()
         // then
@@ -78,7 +78,7 @@ class CsvProjectTest {
     @Test
     fun `createProject should be success when there is no error occur`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         every { csvProjectParser.parseProjectToString(any()) } returns "id1,name1,id1-name1"
         //when
         csvProject.createProject(project)
@@ -89,7 +89,7 @@ class CsvProjectTest {
     @Test
     fun `createProject should throw Exception when parser throw Exception`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         every { csvProjectParser.parseProjectToString(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -111,7 +111,7 @@ class CsvProjectTest {
     @Test
     fun `editProject should throw Exception when readProjects throw Exception`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         coEvery { csvProject.getAllProjects() } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -122,7 +122,7 @@ class CsvProjectTest {
     @Test
     fun `editProject should throw Exception when readFile throw Exception`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         every { fileHelper.readFile(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
@@ -133,7 +133,7 @@ class CsvProjectTest {
     @Test
     fun `editProject should throw Exception when parser throw Exception`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name2", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name2", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } throws Exception()
         //when & then
@@ -145,7 +145,7 @@ class CsvProjectTest {
     @Test
     fun `editProject should write nothing when read projects returns empty list`(){
         //given
-        val editProject = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val editProject = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         every { fileHelper.readFile(any()) } returns listOf()
         //when
         csvProject.editProject(editProject)
@@ -156,7 +156,7 @@ class CsvProjectTest {
     @Test
     fun `editProject should throw Exception when write file throw Exception`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         coEvery { csvProject.getAllProjects() } returns listOf(project)
         every { fileHelper.writeFile(any(), any()) } throws Exception()
         //when & then
@@ -168,8 +168,8 @@ class CsvProjectTest {
     @Test
     fun `editProject should edit when project in list`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
-        val project2 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project2 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         val editProject = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name2", listOf())
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1", "id2,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project andThen project2
@@ -228,7 +228,7 @@ class CsvProjectTest {
     @Test
     fun `deleteProject should throw Exception when write file throw Exception`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         val projectId = "id1"
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
@@ -242,8 +242,8 @@ class CsvProjectTest {
    @Test
     fun `deleteProject should delete when id in list`(){
         //given
-        val project1=Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
-       val project2=Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project1=Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+       val project2=Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         every { fileHelper.readFile(any()) } returns listOf("","")
        every { csvProjectParser.parseStringToProject(any()) } returns project1 andThen project2
        every{ csvProjectParser.parseProjectToString(project2)} returns "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b,name1"
@@ -296,7 +296,7 @@ class CsvProjectTest {
     @Test
     fun `getProjectById should return null when the id not in the data`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project
         //when & then
@@ -306,11 +306,11 @@ class CsvProjectTest {
     @Test
     fun `getProjectById should return the prject when the id in the data`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
-        val project2 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(State(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
+        val project2 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1")))
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project andThen project2
         //when & then
-        Truth.assertThat(csvProject.getProjectById(project.id.toString())).isEqualTo(project)
+        Truth.assertThat(csvProject.getProjectById(project.projectId.toString())).isEqualTo(project)
     }
 }

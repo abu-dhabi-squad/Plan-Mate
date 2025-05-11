@@ -37,13 +37,13 @@ class CreateAuditUseCaseTest {
 
         coVerify(exactly = 1) {
             auditRepository.createAuditLog(match {
-                it.id == audit.id &&
+                it.auditId == audit.auditId &&
                         it.createdBy == audit.createdBy &&
                         it.entityId == audit.entityId &&
                         it.entityType == audit.entityType &&
                         it.oldState == audit.oldState &&
                         it.newState == audit.newState &&
-                        it.date == audit.date
+                        it.createdAt == audit.createdAt
             })
         }
     }

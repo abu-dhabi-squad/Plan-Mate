@@ -8,9 +8,9 @@ import java.time.format.DateTimeFormatter
 import java.util.UUID
 import kotlin.test.Test
 
-class MongoTaskMapperTest {
+class TaskMapperTest {
 
-    private val mapper = MongoTaskMapper()
+    private val mapper = TaskMapper()
     private val dateFormatter = DateTimeFormatter.ISO_DATE
 
     @Test
@@ -22,10 +22,10 @@ class MongoTaskMapperTest {
         val dto = mapper.taskToDto(task)
 
         // Then
-        assertThat(dto.id).isEqualTo(task.id.toString())
-        assertThat(dto.userName).isEqualTo(task.userName)
+        assertThat(dto.id).isEqualTo(task.taskId.toString())
+        assertThat(dto.userName).isEqualTo(task.username)
         assertThat(dto.projectId).isEqualTo(task.projectId.toString())
-        assertThat(dto.stateId).isEqualTo(task.stateId.toString())
+        assertThat(dto.stateId).isEqualTo(task.taskStateId.toString())
         assertThat(dto.title).isEqualTo(task.title)
         assertThat(dto.description).isEqualTo(task.description)
         assertThat(dto.startDate).isEqualTo(task.startDate.format(dateFormatter))
@@ -56,10 +56,10 @@ class MongoTaskMapperTest {
         val task = mapper.dtoToTask(dto)
 
         // Then
-        assertThat(task.id.toString()).isEqualTo(dto.id)
-        assertThat(task.userName).isEqualTo(dto.userName)
+        assertThat(task.taskId.toString()).isEqualTo(dto.id)
+        assertThat(task.username).isEqualTo(dto.userName)
         assertThat(task.projectId.toString()).isEqualTo(dto.projectId)
-        assertThat(task.stateId.toString()).isEqualTo(dto.stateId)
+        assertThat(task.taskStateId.toString()).isEqualTo(dto.stateId)
         assertThat(task.title).isEqualTo(dto.title)
         assertThat(task.description).isEqualTo(dto.description)
         assertThat(task.startDate).isEqualTo(startDate)

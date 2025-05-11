@@ -11,13 +11,15 @@ class MongoAudit(
 ) : RemoteAuditDataSource {
 
     override suspend fun createAuditLog(audit: AuditDto) {
-            auditCollection.insertOne(audit)
+        auditCollection.insertOne(audit)
     }
+
     override suspend fun getAuditByEntityId(entityId: String): List<AuditDto> {
-        val filter = Filters.eq(ENTITY_ID_FIELD,entityId)
-          return auditCollection.find(filter).toList()
+        val filter = Filters.eq(ENTITY_ID_FIELD, entityId)
+        return auditCollection.find(filter).toList()
     }
-    private companion object{
+
+    private companion object {
         const val ENTITY_ID_FIELD = "entityId"
     }
 }

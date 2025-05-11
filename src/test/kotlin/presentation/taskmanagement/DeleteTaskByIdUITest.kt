@@ -64,13 +64,13 @@ class DeleteTaskByIdUITest {
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { reader.readInt() } returns 1
         coEvery { deleteTaskByIdUseCase(uuid) } just runs
         // When
         presenter.launchUi()
         // Then
-        coVerify { deleteTaskByIdUseCase(task.id) }
+        coVerify { deleteTaskByIdUseCase(task.taskId) }
         coVerify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
@@ -113,7 +113,7 @@ class DeleteTaskByIdUITest {
         val project = createProject()
         coEvery { getAllProjectsUseCase() } returns listOf(project)
         coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns emptyList()
         // When
         presenter.launchUi()
         // Then
@@ -151,7 +151,7 @@ class DeleteTaskByIdUITest {
         val task = createTask()
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
+        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
         coEvery { reader.readInt() } returns firstAttemptIndexEnter andThen secondAttemptIndexEnter andThen 1
         // When
         presenter.launchUi()

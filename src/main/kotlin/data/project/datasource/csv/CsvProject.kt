@@ -26,11 +26,11 @@ class CsvProject(
 
     override fun deleteProject(projectId: String) {
         val projects = getAllProjects()
-        writeProjects(projects.filter { it.id.toString() != projectId })
+        writeProjects(projects.filter { it.projectId.toString() != projectId })
     }
 
     override fun getProjectById(projectId: String): Project? {
-        return getAllProjects().find { it.id.toString() == projectId }
+        return getAllProjects().find { it.projectId.toString() == projectId }
     }
 
     private fun writeProjects(projects: List<Project>) {
@@ -43,6 +43,6 @@ class CsvProject(
     }
 
     private fun Project.isEqualProject(project: Project): Project {
-        return if (this.id == project.id) project else this
+        return if (this.projectId == project.projectId) project else this
     }
 }

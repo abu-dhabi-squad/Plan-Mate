@@ -1,13 +1,13 @@
 package presentation.auth
 
 import logic.authentication.LoginByUserNameUseCase
-import presentation.UiLauncher
-import presentation.presentation.usermanagement.admin.ConsoleAdminMenuUI
-import presentation.io.InputReader
-import presentation.io.Printer
-import presentation.presentation.usermanagement.user.ConsoleUserMenuUI
 import logic.model.UserType
 import logic.user.SaveLoggedUserUseCase
+import presentation.UiLauncher
+import presentation.io.InputReader
+import presentation.io.Printer
+import presentation.presentation.user.admin.ConsoleAdminMenuUI
+import presentation.presentation.user.mate.ConsoleUserMenuUI
 
 class LoginByUserNameUI(
     private val loginUseCase: LoginByUserNameUseCase,

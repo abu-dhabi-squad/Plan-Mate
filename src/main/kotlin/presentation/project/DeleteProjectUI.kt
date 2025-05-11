@@ -1,14 +1,14 @@
 package presentation.project
 
 import logic.audit.CreateAuditUseCase
+import logic.model.Audit
+import logic.model.EntityType
 import logic.project.DeleteProjectUseCase
+import logic.project.GetAllProjectsUseCase
+import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.InputReader
 import presentation.io.Printer
-import logic.model.Audit
-import logic.model.EntityType
-import logic.project.GetAllProjectsUseCase
-import logic.user.GetLoggedUserUseCase
 
 
 class DeleteProjectUI(
@@ -18,7 +18,7 @@ class DeleteProjectUI(
     private val printer: Printer,
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
-): UiLauncher {
+) : UiLauncher {
     override suspend fun launchUi() {
         try {
             val projects = getAllProjectsUseCase()
@@ -28,7 +28,12 @@ class DeleteProjectUI(
             }
 
             projects.forEachIndexed { index, project ->
-                printer.displayLn("${index + 1}- Project Name: ${project.projectName} - States: ${project.states}")
+                printer.display("${index + 1}- Project Name: ${project.projectName} - States: [ ")
+                project.taskStates.forEachIndexed { stateIndex, state ->
+                    printer.display("${stateIndex + 1}- TaskState Name: ${state.stateName}")
+                    if (stateIndex != project.taskStates.size - 1) printer.display(", ")
+                }
+                printer.displayLn(" ]")
             }
 
             val projectIndex = promptNonEmptyInt("\nChoose Project: ") - 1
@@ -36,10 +41,10 @@ class DeleteProjectUI(
                 printer.displayLn("\nProject not found")
                 return
             }
-            deleteProjectUseCase(projects[projectIndex].id.toString())
+            deleteProjectUseCase(projects[projectIndex].projectId)
             createAuditUseCase(
                 Audit(
-                    entityId = projects[projectIndex].id.toString(),
+                    entityId = projects[projectIndex].projectId,
                     entityType = EntityType.PROJECT,
                     oldState = "",
                     newState = "Deleted",

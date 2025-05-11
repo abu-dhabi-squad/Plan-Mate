@@ -2,7 +2,7 @@ package logic.task
 
 import logic.exceptions.TaskNotFoundException
 import logic.repository.TaskRepository
-import java.util.UUID
+import java.util.*
 
 class DeleteTaskByIdUseCase(private val taskRepository: TaskRepository) {
     suspend operator fun invoke(taskId: UUID) {

@@ -4,7 +4,7 @@ import com.google.common.truth.Truth
 import createAudit
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import data.audit.mapper.MongoAuditMapper
+import data.audit.mapper.AuditMapper
 import data.audit.model.AuditDto
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -21,7 +21,7 @@ import kotlin.test.assertTrue
 class AuditRepositoryImplTest {
 
     lateinit var dataSource: RemoteAuditDataSource
-    lateinit var auditMapper: MongoAuditMapper
+    lateinit var auditMapper: AuditMapper
     lateinit var auditRepository: AuditRepository
 
 

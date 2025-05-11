@@ -3,7 +3,7 @@ package data.task.datasource.csv
 import data.task.repository.LocalTaskDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.Task
-import java.util.UUID
+import java.util.*
 
 class CsvTask(
     private val csvFileHelper: FileHelper,
@@ -16,7 +16,7 @@ class CsvTask(
     }
 
     override fun getTaskById(taskId: UUID): Task? {
-        return getAllTasks().find { it.id == taskId }
+        return getAllTasks().find { it.taskId == taskId }
     }
 
     override fun getTaskByProjectId(projectId: UUID): List<Task> {
@@ -43,7 +43,7 @@ class CsvTask(
 
     private fun getTasksWithReplacedTask(task: Task): List<Task> {
         return getAllTasks().let { tasks ->
-            tasks.indexOfFirst { it.id == task.id }.let { taskIndex ->
+            tasks.indexOfFirst { it.taskId == task.taskId }.let { taskIndex ->
                 (tasks.subList(0, taskIndex) + task + tasks.subList(taskIndex + 1, tasks.size))
             }
         }
@@ -51,7 +51,7 @@ class CsvTask(
 
     private fun getTasksWithDeletedTask(taskId: String): List<Task> {
         return getAllTasks().let { tasks ->
-            tasks.indexOfFirst { it.id.toString() == taskId }.let { taskIndex ->
+            tasks.indexOfFirst { it.taskId.toString() == taskId }.let { taskIndex ->
                 (tasks.subList(0, taskIndex) + tasks.subList(taskIndex + 1, tasks.size))
             }
         }

@@ -23,13 +23,13 @@ class CreateProjectUseCaseTest{
         val name = "Test Project"
 
         // When
-        createProjectUseCase.invoke(Project(projectName = name, states = listOf()))
+        createProjectUseCase.invoke(Project(projectName = name, taskStates = listOf()))
 
         // Then
         coVerify {
             projectRepository.addProject(
                 match { project ->
-                    project.projectName == name && project.states.isEmpty()
+                    project.projectName == name && project.taskStates.isEmpty()
                 }
             )
         }

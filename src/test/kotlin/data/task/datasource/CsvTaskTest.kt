@@ -86,7 +86,7 @@ class CsvTaskTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        val result = csvTask.getTaskById(task.id)
+        val result = csvTask.getTaskById(task.taskId)
 
         // Then
         Truth.assertThat(result).isEqualTo(task)
@@ -101,7 +101,7 @@ class CsvTaskTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        val result = csvTask.getTaskById(task.id)
+        val result = csvTask.getTaskById(task.taskId)
 
         // Then
         Truth.assertThat(result).isNull()
@@ -114,7 +114,7 @@ class CsvTaskTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTask.getTaskById(task.id) }
+        assertThrows<Exception> { csvTask.getTaskById(task.taskId) }
     }
 
     @Test
@@ -173,7 +173,7 @@ class CsvTaskTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        csvTask.deleteTask(task.id.toString())
+        csvTask.deleteTask(task.taskId.toString())
 
         // Then
         verify(exactly = 1) { csvFileHelper.writeFile(any(), any()) }
@@ -186,7 +186,7 @@ class CsvTaskTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTask.deleteTask(task.id.toString()) }
+        assertThrows<Exception> { csvTask.deleteTask(task.taskId.toString()) }
     }
 
     companion object {

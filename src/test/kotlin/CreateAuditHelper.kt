@@ -7,7 +7,7 @@ import java.util.UUID
 
 fun createAudit(
     id: UUID = UUID.randomUUID(),
-    entityId : String = "UG7299",
+    entityId: UUID = UUID.randomUUID(),
     newState: String = "InProgress",
     oldState : String = "TODO",
     createdBy: String = "UG",
@@ -15,12 +15,12 @@ fun createAudit(
     entityType: EntityType = EntityType.PROJECT,
 ): Audit {
     return Audit(
-        id = id,
+        auditId = id,
         createdBy = createdBy,
         entityId = entityId,
         entityType = entityType,
         oldState = oldState,
         newState = newState,
-        date = date
+        createdAt = date
     )
 }
