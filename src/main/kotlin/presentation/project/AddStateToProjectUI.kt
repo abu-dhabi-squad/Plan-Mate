@@ -31,8 +31,8 @@ class AddStateToProjectUI(
                     TaskState(stateName = stateName)
                 )
                 printer.displayLn("TaskState \"$stateName\" added to project \"${projects[projectIndex].projectName}\" successfully.")
-            } catch (e: Exception) {
-                printer.displayLn("Error: ${e.message}")
+            } catch (exception: Exception) {
+                printer.displayLn("Error: ${exception.message}")
             }
         } catch (exception: Exception) {
             printer.displayLn(exception.message ?: "An error occurred.")

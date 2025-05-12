@@ -18,8 +18,8 @@ class GetAuditForProjectUI(
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to fetch projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to fetch projects: ${exception.message}")
             return
         }
 
@@ -33,13 +33,9 @@ class GetAuditForProjectUI(
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
 
-        val choice = promptService.promptNonEmptyInt("\nEnter project number: ")
-
-        if (choice !in 1..projects.size) {
-            printer.displayLn("\nInput cannot be out projects range.")
-            return
-        }
-        val selected = projects.getOrNull(choice - 1)
+        val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
+        
+        val selected = projects.getOrNull(projectIndex - 1)
         if (selected == null) {
             printer.displayLn("\nInvalid project selection.")
             return
@@ -52,8 +48,8 @@ class GetAuditForProjectUI(
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
             audits.showAuditLogs(printer)
-        } catch (e: Exception) {
-            printer.displayLn("\nError: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError: ${exception.message}")
         }
     }
 }

@@ -29,7 +29,7 @@ class EditProjectUI(
                     editProjectUseCase(projects[projectIndex].projectId, projectName)
                     printer.displayLn("\nProject updated successfully.")
                 } ?: printer.displayLn("There is no project in list")
-        } catch (e: Exception) {
+        } catch (exception: Exception) {
             printer.displayLn(e.message)
         }
     }

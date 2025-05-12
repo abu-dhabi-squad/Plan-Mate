@@ -25,10 +25,12 @@ class CreateMateUserUseCaseUI(
         try {
             createUserUseCase(user)
             printer.displayLn("\nUser created successfully!")
-        } catch (e: EmptyUsernameException) {
-            printer.displayLn("${e.message}")
-        } catch (e: UserAlreadyExistsException) {
-            printer.displayLn("${e.message}")
+        } catch (exception: EmptyUsernameException) {
+            printer.displayLn("\n${exception.message}")
+        } catch (exception: UserAlreadyExistsException) {
+            printer.displayLn("\n${exception.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\n${exception.message}")
         }
     }
 }

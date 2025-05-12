@@ -30,8 +30,8 @@ class LoginByUserNameUI(
                 UserType.ADMIN -> consoleMenuViewAdmin.launchUi()
                 UserType.MATE -> consoleMenuViewUser.launchUi()
             }
-        } catch (e: Exception) {
-            printer.displayLn("\nLogin failed: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nLogin failed: ${exception.message}")
         }
     }
 

@@ -5,8 +5,8 @@ import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.displaySwimlanesByState
 import presentation.presentation.utils.extensions.printWithStates
-import presentation.presentation.utils.extensions.showAll
 
 class GetTasksByProjectIdUI(
     private val printer: Printer,
@@ -14,12 +14,11 @@ class GetTasksByProjectIdUI(
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
 ) : UiLauncher {
-
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to load projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to load projects: ${exception.message}")
             return
         }
 
@@ -29,14 +28,13 @@ class GetTasksByProjectIdUI(
         }
         printer.displayLn("\n=== Available Projects ===")
         projects.printWithStates(printer)
-        val projectIndex =
-            promptService.promptSelectionIndex("\nEnter project number: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
             getTasksByProjectIdUseCase(selectedProject.projectId)
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to load tasks: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to load tasks: ${exception.message}")
             return
         }
 
@@ -44,8 +42,7 @@ class GetTasksByProjectIdUI(
             printer.displayLn("\nNo tasks found in '${selectedProject.projectName}'.")
             return
         }
-        tasks.showAll(printer)
+        tasks.displaySwimlanesByState(selectedProject.projectName, selectedProject.taskStates, printer)
     }
-
 }
 

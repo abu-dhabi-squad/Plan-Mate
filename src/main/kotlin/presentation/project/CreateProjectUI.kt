@@ -50,8 +50,8 @@ class CreateProjectUI(
                 )
             )
             printer.displayLn("\nProject '$projectName' created with ${taskStates.size} state(s).")
-        } catch (e: Exception) {
-            printer.displayLn("\nError: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError: ${exception.message}")
         }
     }
 }

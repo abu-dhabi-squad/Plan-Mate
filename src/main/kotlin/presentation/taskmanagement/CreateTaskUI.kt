@@ -1,7 +1,11 @@
 package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
-import logic.model.*
+import logic.model.Audit
+import logic.model.EntityType
+import logic.model.Project
+import logic.model.Task
+import logic.model.TaskState
 import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import logic.user.GetLoggedUserUseCase
@@ -26,8 +30,8 @@ class CreateTaskUI(
         val endDate = promptService.promptDate("Enter task end date (YYYY-MM-DD): ")
         val projects = try {
             getAllProjectsUseCase()
-        } catch (e: Exception) {
-            printer.displayLn("\nError loading projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError loading projects: ${exception.message}")
             return
         }
 
@@ -37,11 +41,11 @@ class CreateTaskUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptService.promptSelectionIndex("\nEnter project number: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
         val selectedProject = projects[projectIndex]
 
         showStates(selectedProject.taskStates)
-        val stateIndex = promptService.promptSelectionIndex("\nEnter state number: ", selectedProject.taskStates.size)
+        val stateIndex = promptService.promptSelectionIndex("\nEnter state number", selectedProject.taskStates.size)
         val selectedState = selectedProject.taskStates[stateIndex]
 
         val task = Task(
@@ -66,8 +70,8 @@ class CreateTaskUI(
                 )
             )
             printer.displayLn("\nTask created successfully.")
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to create task: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to create task: ${exception.message}")
         }
     }
 

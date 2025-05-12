@@ -26,8 +26,8 @@ class DeleteTaskByIdUI(
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
-        } catch (e: Exception) {
-            printer.displayLn("\nError loading projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError loading projects: ${exception.message}")
             return
         }
 
@@ -37,13 +37,13 @@ class DeleteTaskByIdUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptService.promptSelectionIndex("\nSelect a project: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nSelect a project", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
             getTasksByProjectIdUseCase(selectedProject.projectId)
-        } catch (e: Exception) {
-            printer.displayLn("\nError loading tasks: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError loading tasks: ${exception.message}")
             return
         }
 
@@ -54,7 +54,7 @@ class DeleteTaskByIdUI(
 
         showTasks(tasks)
         val taskIndex =
-            promptService.promptSelectionIndex("\nSelect a task to delete: ", tasks.size)
+            promptService.promptSelectionIndex("\nSelect a task to delete", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         try {
@@ -69,8 +69,8 @@ class DeleteTaskByIdUI(
                 )
             )
             printer.displayLn("\nTask '${selectedTask.title}' deleted successfully.")
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to delete task: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to delete task: ${exception.message}")
         }
     }
 
