@@ -1,5 +1,9 @@
 import logic.authentication.validation.CreateUserPasswordValidator
-import logic.exceptions.*
+import logic.exceptions.ShortPasswordException
+import logic.exceptions.NoUpperCaseInPasswordException
+import logic.exceptions.NoLowerCaseInPasswordException
+import logic.exceptions.NoNumberInPasswordException
+import logic.exceptions.NoSpecialCharsInPasswordException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -9,66 +13,66 @@ class CreateUserPasswordValidatorTest {
     private val validator = CreateUserPasswordValidator()
 
     @Test
-    fun `should pass validation when password is valid`() {
-        // given
+    fun `validatePassword should pass validation when password is valid`() {
+        // Given
         val password = "Abc123@#"
 
-        // when & then
+        // When & Then
         assertDoesNotThrow {
             validator.validatePassword(password)
         }
     }
 
     @Test
-    fun `should throw ShortPasswordException when password is shorter than 8 characters`() {
-        // given
+    fun `validatePassword should throw ShortPasswordException when password is shorter than 8 characters`() {
+        // Given
         val password = "A1@bc"
 
-        // when & then
+        // When & Then
         assertThrows<ShortPasswordException> {
             validator.validatePassword(password)
         }
     }
 
     @Test
-    fun `should throw NoUpperCaseInPasswordException when password contains no uppercase letter`() {
-        // given
+    fun `validatePassword should throw NoUpperCaseInPasswordException when password contains no uppercase letter`() {
+        // Given
         val password = "abc123@#"
 
-        // when & then
+        // When & Then
         assertThrows<NoUpperCaseInPasswordException> {
             validator.validatePassword(password)
         }
     }
 
     @Test
-    fun `should throw NoLowerCaseInPasswordException when password contains no lowercase letter`() {
-        // given
+    fun `validatePassword should throw NoLowerCaseInPasswordException when password contains no lowercase letter`() {
+        // Given
         val password = "ABC123@#"
 
-        // when & then
+        // When & Then
         assertThrows<NoLowerCaseInPasswordException> {
             validator.validatePassword(password)
         }
     }
 
     @Test
-    fun `should throw NoNumberInPasswordException when password contains no digit`() {
-        // given
+    fun `validatePassword should throw NoNumberInPasswordException when password contains no digit`() {
+        // Given
         val password = "Abcdef@#"
 
-        // when & then
+        // When & Then
         assertThrows<NoNumberInPasswordException> {
             validator.validatePassword(password)
         }
     }
 
     @Test
-    fun `should throw NoSpecialCharsInPasswordException when password contains no special character`() {
-        // given
+    fun `validatePassword should throw NoSpecialCharsInPasswordException when password contains no special character`() {
+        // Given
         val password = "Abcd1234"
 
-        // when & then
+        // When & Then
         assertThrows<NoSpecialCharsInPasswordException> {
             validator.validatePassword(password)
         }

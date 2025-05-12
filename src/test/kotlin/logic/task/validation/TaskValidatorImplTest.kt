@@ -5,7 +5,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import presentation.logic.task.validation.TaskValidatorImpl
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 class TaskValidatorImplTest {
 
@@ -13,7 +13,7 @@ class TaskValidatorImplTest {
 
     @Test
     fun `should throw InvalidTaskDateException when endDate is before startDate`() {
-        // given
+        // Given
         val task = Task(
             username = "user1",
             projectId = UUID.randomUUID(),
@@ -24,7 +24,7 @@ class TaskValidatorImplTest {
             endDate = LocalDate.of(2025, 5, 9)
         )
 
-        // when & then
+        // When & Then
         assertThrows<InvalidTaskDateException> {
             validator.validateOrThrow(task)
         }
@@ -32,7 +32,7 @@ class TaskValidatorImplTest {
 
     @Test
     fun `should pass validation when endDate is after startDate`() {
-        // given
+        // Given
         val task = Task(
             username = "user1",
             projectId = UUID.randomUUID(),
@@ -43,7 +43,7 @@ class TaskValidatorImplTest {
             endDate = LocalDate.of(2025, 5, 11)
         )
 
-        // when & then
+        // When & Then
         assertDoesNotThrow {
             validator.validateOrThrow(task)
         }
@@ -51,7 +51,7 @@ class TaskValidatorImplTest {
 
     @Test
     fun `should pass validation when endDate is equal to startDate`() {
-        // given
+        // Given
         val date = LocalDate.of(2025, 5, 10)
         val task = Task(
             username = "user1",
@@ -63,7 +63,7 @@ class TaskValidatorImplTest {
             endDate = date
         )
 
-        // when & then
+        // When & Then
         assertDoesNotThrow {
             validator.validateOrThrow(task)
         }

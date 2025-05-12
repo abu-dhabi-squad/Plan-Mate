@@ -26,7 +26,7 @@ class AddStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should add new state to existing project`() = runTest{
+    fun `invoke should add new state to existing project`() = runTest{
         // Given
         val existingTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), stateName = "TODO")
         val newTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), stateName = "InProgress")
@@ -48,7 +48,7 @@ class AddStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw DuplicateStateException if state name already exists`() = runTest{
+    fun `should throw DuplicateStateException when state name already exists`() = runTest{
         // Given
         val existingTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateName = "TODO")
         val duplicateTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateName = "TODO")
@@ -64,7 +64,7 @@ class AddStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw Project Not FoundException if project id is invalid`()= runTest {
+    fun `should throw Project Not FoundException when project id is invalid`()= runTest {
         // Given
         coEvery { projectRepository.getProjectById(any()) } returns null
         val newTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateName = "Review")
@@ -76,7 +76,7 @@ class AddStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw DuplicateStateException if state name matches existing one ignoring case`() = runTest{
+    fun `should throw DuplicateStateException when state name matches existing one ignoring case`() = runTest{
         // Given
         val existingTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateName = "ToDo")
         val duplicateTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), stateName = "todo") // same name, different case

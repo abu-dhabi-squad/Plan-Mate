@@ -35,14 +35,19 @@ class CreateMateUserUseCaseTest {
     }
 
     @Test
-    fun `createUser should successfully create user with valid input`() = runTest {
+    fun `createUser should successfully create user when the input is valid`() = runTest {
+        // Given
         val username = "shahd"
         val hashingPassword = hashingPassword.hash("pass123")
         val userType = UserType.MATE
         val inputUser = User(username = username, password = hashingPassword, userType = userType)
         every { passwordValidator.validatePassword(hashingPassword) } just Runs
         coEvery { authRepository.getUserByName(username) } returns null
+
+        // When
         createMateUserUseCase(inputUser)
+
+        // Then
         coVerify {
             authRepository.createUser(
                 match { savedUser ->
@@ -56,28 +61,33 @@ class CreateMateUserUseCaseTest {
 
     @Test
     fun `createUser should hash the password before saving the user`() = runTest {
+        // Given
         val plainPassword = "MyPlainPassword123"
         val user = User(
             username = "hashTestUser",
             password = plainPassword,
             userType = UserType.MATE
         )
-
         coEvery { authRepository.getUserByName(user.username) } returns null
         every { passwordValidator.validatePassword(plainPassword) } just runs
 
+        // When
         createMateUserUseCase(user)
 
+        // Then
         verify { hashingPassword.hash(plainPassword) }
     }
 
     @Test
     fun `createUser should throw EmptyUsernameException when username is blank`() = runTest {
+        // Given
         val user = User(
             username = "",
             password = "ValidPass123!",
             userType = UserType.MATE
         )
+
+        // When & Then
         assertThrows<EmptyUsernameException> {
             createMateUserUseCase(user)
         }
@@ -85,6 +95,7 @@ class CreateMateUserUseCaseTest {
 
     @Test
     fun `createUser should throw UserAlreadyExistsException when user exists`() = runTest {
+        // Given
         val user = User(
             username = "existingUser",
             password = "ValidPass123!",
@@ -92,6 +103,8 @@ class CreateMateUserUseCaseTest {
         )
         coEvery { authRepository.getUserByName(user.username) } returns user
         every { passwordValidator.validatePassword(any()) } returns Unit
+
+        // When & Then
         assertThrows<UserAlreadyExistsException> {
             createMateUserUseCase(user)
         }
@@ -99,6 +112,7 @@ class CreateMateUserUseCaseTest {
 
     @Test
     fun `createUser should call password validator`() = runTest {
+        // Given
         val user = User(
             username = "newUser",
             password = "ValidPass123!",
@@ -106,7 +120,11 @@ class CreateMateUserUseCaseTest {
         )
         coEvery { authRepository.getUserByName(any()) } returns null
         every { passwordValidator.validatePassword(any()) } just runs
+
+        // When
         createMateUserUseCase(user)
+
+        // Then
         verify { passwordValidator.validatePassword(user.password) }
     }
 }

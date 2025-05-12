@@ -1,6 +1,7 @@
 package logic.project
 
-import io.mockk.*
+import io.mockk.coVerify
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -18,7 +19,7 @@ class CreateProjectUseCaseTest{
     }
 
     @Test
-    fun `given valid project name, should create and save project`() = runTest{
+    fun `createProjectUseCase should create and save project when project name is valid`() = runTest{
         // Given
         val name = "Test Project"
 

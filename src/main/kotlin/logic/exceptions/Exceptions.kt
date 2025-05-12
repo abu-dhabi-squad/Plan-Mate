@@ -8,7 +8,7 @@ class InvalidAudit : AppException("Audit Is Invalid.")
 
 class WrongInputException : AppException("Invalid entity ID input. Please try again.")
 
-class EmptyList : AppException("No audit logs found for this entity ID.")
+class NoAuditsFoundException : AppException("No audit logs found for this entity ID.")
 
 class NoTasksFoundException : AppException("No tasks found")
 

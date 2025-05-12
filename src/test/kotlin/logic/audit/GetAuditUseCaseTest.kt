@@ -5,13 +5,13 @@ import helper.createAudit
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import logic.exceptions.NoAuditsFoundException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.model.EntityType
 import logic.repository.AuditRepository
 import org.junit.jupiter.api.assertThrows
-import java.util.*
-import kotlin.test.assertFails
+import java.util.UUID
 
 class GetAuditUseCaseTest {
 
@@ -25,9 +25,9 @@ class GetAuditUseCaseTest {
     }
 
     @Test
-    fun `should returns audit list when entityId is valid`() = runTest{
+    fun `getAuditByEntityId should returns audit list when entityId is valid`() = runTest {
 
-        // given
+        // Given
         val entityId = UUID.randomUUID()
         val expectedAudits = listOf(
             createAudit(
@@ -41,34 +41,33 @@ class GetAuditUseCaseTest {
 
         coEvery { auditRepository.getAuditByEntityId(entityId) } returns expectedAudits
 
-        // when
+        // When
         val result = getAuditUseCase(entityId)
 
-        // then
+        // Then
         assertThat(expectedAudits).isEqualTo(result)
     }
 
     @Test
-    fun `should throws exception when repository fail`()= runTest {
+    fun `getAuditByEntityId should throws exception when repository fail`() = runTest {
 
-        // given
+        // Given
         val entityId = UUID.randomUUID()
         coEvery { auditRepository.getAuditByEntityId(entityId) } throws Exception()
 
-        // then
+        // When & Then
         assertThrows<Exception>() { getAuditUseCase(entityId) }
     }
 
     @Test
-    fun `should throws empty list exception when there is no audit history`()= runTest {
+    fun `getAuditByEntityId should throws NoAuditsFoundException when there is no audit history`() = runTest {
 
-        // given
+        // Given
         val entityId = UUID.randomUUID()
-
         coEvery { auditRepository.getAuditByEntityId(entityId) } returns emptyList()
 
-        // then
-        assertFails { getAuditUseCase(entityId) }
+        // When & Then
+        assertThrows<NoAuditsFoundException>() { getAuditUseCase(entityId) }
     }
 
 }
