@@ -8,13 +8,8 @@ import presentation.logic.utils.hashing.HashingService
 class AuthenticationRepositoryImpl(
     private val remoteAuthenticationDataSource: RemoteAuthenticationDataSource,
     private val loggedUserDataSource: LoggedUserDataSource,
-    private val hashingService: HashingService,
     private val userMapper: UserMapper
 ) : AuthenticationRepository {
-
-    override suspend fun loginUser(username: String, password: String): User? {
-        return remoteAuthenticationDataSource.getUserByUsername(username)?.let { userMapper.dtoToUser(it) }
-    }
 
     override suspend fun getUserByName(username: String): User? {
         val userDto = remoteAuthenticationDataSource.getUserByUsername(username)
@@ -26,8 +21,7 @@ class AuthenticationRepositoryImpl(
     }
 
     override fun saveLoggedUser(user: User) {
-        val userWithHashedPassword = user.copy(password = hashingService.hash(user.password))
-        loggedUserDataSource.saveLoggedUser(userWithHashedPassword)
+        loggedUserDataSource.saveLoggedUser(user)
     }
 
     override fun getLoggedUser(): User? {

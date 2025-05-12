@@ -18,7 +18,7 @@ class InMemoryLoggedUserTest{
     @Test
     fun `saveLoggedUser should save user correctly`(){
         val user = User(
-            username = "",
+            username = "shahd",
             password = "ValidPass123!",
             userType = UserType.MATE
         )

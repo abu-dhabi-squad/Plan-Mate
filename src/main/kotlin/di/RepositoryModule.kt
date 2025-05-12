@@ -50,7 +50,7 @@ val repositoryModule = module {
     single<RemoteTaskDataSource> { MongoTask(get(named("task"))) }
     single<TaskRepository> { TaskRepositoryImpl(get(), get()) }
     single<AuditRepository> { AuditRepositoryImpl(get(), get()) }
-    single<AuthenticationRepository> { AuthenticationRepositoryImpl(get(), get(), get(), get()) }
+    single<AuthenticationRepository> { AuthenticationRepositoryImpl(get(), get(), get()) }
     single<CsvUserParser> { CsvUserParser() }
     single<AuditParser> { CsvAuditParser(get()) }
     single<LoggedUserDataSource> { InMemoryLoggedUser() }
