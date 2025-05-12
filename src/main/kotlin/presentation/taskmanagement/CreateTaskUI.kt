@@ -1,7 +1,11 @@
 package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
-import logic.model.*
+import logic.model.Audit
+import logic.model.EntityType
+import logic.model.Project
+import logic.model.Task
+import logic.model.TaskState
 import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import logic.user.GetLoggedUserUseCase
@@ -84,10 +88,4 @@ class CreateTaskUI(
             printer.displayLn("${index + 1}. ${state.stateName}")
         }
     }
-
-
-
-
-
-
 }
