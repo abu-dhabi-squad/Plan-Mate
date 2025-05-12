@@ -6,7 +6,7 @@ import data.project.model.StateDto
 import logic.model.Project
 import logic.model.TaskState
 import org.junit.jupiter.api.Test
-import java.util.*
+import java.util.UUID
 
 class ProjectMapperTest {
 

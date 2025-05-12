@@ -35,8 +35,8 @@ class CsvAuthenticationTest {
     fun `getAllUsers should return list of users from file`() {
         val rawLines = listOf("line1", "line2")
         val parsedUsers = listOf(
-            User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE),
-            User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
+            User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "shahd", "password123", UserType.MATE),
+            User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "shahdd", "password123", UserType.MATE)
         )
 
         every { fileHelper.readFile(filePath) } returns rawLines
@@ -53,23 +53,23 @@ class CsvAuthenticationTest {
     @Test
     fun `getUserByUserName should return user if found`() {
         val rawLines = listOf("line1", "line2")
-        val existingUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
+        val existingUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "shahd", "password123", UserType.MATE)
 
-        val otherUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
+        val otherUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "shahdd", "password123", UserType.MATE)
 
 
         every { fileHelper.readFile(filePath) } returns rawLines
         every { csvUserParser.parseStringToUser("line1") } returns otherUser
         every { csvUserParser.parseStringToUser("line2") } returns existingUser
 
-        val result = dataSource.getUserByUserName("john_doe")
+        val result = dataSource.getUserByUserName("shahd")
         assertThat(result).isEqualTo(existingUser)
     }
 
     @Test
     fun `getUserByUserName should return null if user not found`() {
         val rawLines = listOf("line1")
-        val user = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
+        val user = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "shahd", "password123", UserType.MATE)
 
         every { fileHelper.readFile(filePath) } returns rawLines
         every { csvUserParser.parseStringToUser("line1") } returns user
@@ -81,9 +81,9 @@ class CsvAuthenticationTest {
     @Test
     fun `createUser should save user to file`() {
         val existingUsers = listOf("line1")
-        val existingUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "john_doe", "password123", UserType.MATE)
+        val existingUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "shahd", "password123", UserType.MATE)
 
-        val newUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "john_doee", "password123", UserType.MATE)
+        val newUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "shahd", "password123", UserType.MATE)
 
 
         every { fileHelper.readFile(filePath) } returns existingUsers

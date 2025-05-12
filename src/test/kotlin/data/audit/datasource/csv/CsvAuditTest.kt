@@ -1,17 +1,17 @@
 package data.audit.datasource.csv
 
-import com.google.common.truth.Truth
-import helper.createAudit
-import data.audit.repository.LocalAuditDataSource
+import com.google.common.truth.Truth.assertThat
+import createAudit
 import data.audit.datasource.csv.parser.CsvAuditParser
+import data.audit.repository.LocalAuditDataSource
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import data.utils.filehelper.CsvFileHelper
-import kotlin.test.assertFails
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class CsvAuditTest {
 
@@ -23,64 +23,75 @@ class CsvAuditTest {
     fun setup() {
         csvFileHelper = mockk(relaxed = true)
         csvAuditParser = mockk(relaxed = true)
-        csvAuditDataSource = CsvAudit(csvFileHelper, FILE_NAME, csvAuditParser)
+        csvAuditDataSource = CsvAudit(csvFileHelper, "", csvAuditParser)
     }
 
     @Test
     fun `addAudit should call appendFile once when new audit is added successfully`() {
         // given
         val audit = createAudit()
+
         // when
         csvAuditDataSource.createAuditLog(audit)
+
         // then
         verify(exactly = 1) { csvFileHelper.appendFile(any(), any()) }
     }
 
     @Test
-    fun `addAudit should rethrow exception when file throw exception`() {
+    fun `addAudit should rethrow exception when file throws exception`() {
         // given
         val audit = createAudit()
         every { csvFileHelper.appendFile(any(), any()) } throws Exception()
-        // when & then
-        assertFails { csvAuditDataSource.createAuditLog(audit) }
-    }
 
+        // when & then
+        assertThrows<Exception> {
+            csvAuditDataSource.createAuditLog(audit)
+        }
+    }
 
     @Test
     fun `getAuditByEntityId should return list of audits that match entity id`() {
         // given
         val audits = listOf(
-            createAudit(),
-            createAudit()
+            createAudit(entityId = ENTITY_ID),
+            createAudit(entityId = ENTITY_ID)
         )
         every { csvFileHelper.readFile(any()) } returns audits.map { csvAuditParser.getLineFromAudit(it) }
         every { csvAuditParser.getAuditFromLine(any()) } returnsMany audits
-        // when
-        val result = csvAuditDataSource.getAuditByEntityId(ENTITY_ID)
-        // then
-        Truth.assertThat(result).containsExactly(*audits.toTypedArray())
-    }
 
+        // when
+        val result = csvAuditDataSource.getAuditByEntityId(ENTITY_ID.toString())
+
+        // then
+        assertThat(result).isEqualTo(audits)
+
+    }
 
     @Test
     fun `getAuditByEntityId should return empty list when file is empty`() {
         // given
         every { csvFileHelper.readFile(any()) } returns emptyList()
-        // when & then
-        assertTrue { csvAuditDataSource.getAuditByEntityId(ENTITY_ID).isEmpty() }
+
+        // when
+        val result = csvAuditDataSource.getAuditByEntityId(ENTITY_ID.toString())
+
+        // then
+        assertThat(result).isEmpty()
     }
 
     @Test
-    fun `getAuditByEntityId should rethrow exception when file throws Exception`() {
+    fun `getAuditByEntityId should rethrow exception when file throws exception`() {
         // given
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // when & then
-        assertFails { csvAuditDataSource.getAuditByEntityId(ENTITY_ID) }
+        assertThrows<Exception> {
+            csvAuditDataSource.getAuditByEntityId(ENTITY_ID.toString())
+        }
     }
 
     companion object {
-        private const val FILE_NAME = "build/audit_system_test.csv"
-        private const val ENTITY_ID = "UG7299"
+        private val ENTITY_ID = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
     }
 }

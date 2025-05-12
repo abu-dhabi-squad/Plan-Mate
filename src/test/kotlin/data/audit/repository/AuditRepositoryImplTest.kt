@@ -1,6 +1,6 @@
 package data.audit.repository
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import createAudit
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -15,15 +15,14 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.repository.AuditRepository
-import kotlin.test.assertFails
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class AuditRepositoryImplTest {
 
     lateinit var dataSource: RemoteAuditDataSource
     lateinit var auditMapper: AuditMapper
     lateinit var auditRepository: AuditRepository
-
 
     @BeforeEach
     fun setup() {
@@ -44,16 +43,16 @@ class AuditRepositoryImplTest {
         every { auditMapper.auditToDto(audit1) } returns auditDto1
         every { auditMapper.auditToDto(audit2) } returns auditDto2
 
-        coEvery { dataSource.getAuditByEntityId(ENTITY_ID) } returns listOf(auditDto1, auditDto2)
+        coEvery { dataSource.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString()) } returns listOf(auditDto1, auditDto2)
 
         every { auditMapper.dtoToAudit(auditDto1) } returns audit1
         every { auditMapper.dtoToAudit(auditDto2) } returns audit2
 
         // when
-        val result = auditRepository.getAuditByEntityId(ENTITY_ID)
+        val result = auditRepository.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
 
         // then
-        Truth.assertThat(result).containsExactly(audit1, audit2)
+        assertThat(result).containsExactly(audit1, audit2)
     }
 
     @Test
@@ -81,17 +80,22 @@ class AuditRepositoryImplTest {
         coEvery { dataSource.createAuditLog(any()) } throws Exception()
 
         // when & then
-        assertFails { auditRepository.createAuditLog(audit) }
+        assertThrows<Exception> {
+            auditRepository.createAuditLog(audit)
+        }
     }
-
     @Test
     fun `getAuditByEntityId should return empty list when data source is empty`() = runTest {
         // given
         coEvery { dataSource.getAuditByEntityId(any()) } returns emptyList()
 
-        // when & then
-        assertTrue { auditRepository.getAuditByEntityId(ENTITY_ID).isEmpty() }
+        // when
+        val result = auditRepository.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+
+        // then
+        assertThat(result).isEmpty()
     }
+
 
     @Test
     fun `getAuditByEntityId should rethrow exception when dataSource throw Exception`() = runTest {
@@ -99,7 +103,9 @@ class AuditRepositoryImplTest {
         coEvery { dataSource.getAuditByEntityId(any()) } throws Exception()
 
         // when & then
-        assertFails { auditRepository.getAuditByEntityId(ENTITY_ID) }
+        assertThrows<Exception> {
+            auditRepository.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        }
     }
 
     @Test
@@ -121,9 +127,5 @@ class AuditRepositoryImplTest {
         // then
         coVerify { dataSource.createAuditLog(auditDto) }
         verify { auditMapper.auditToDto(audit) }
-    }
-
-    companion object {
-        private const val ENTITY_ID = "UG7299"
     }
 }

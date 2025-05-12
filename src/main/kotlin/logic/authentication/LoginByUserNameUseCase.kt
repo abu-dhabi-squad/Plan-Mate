@@ -16,7 +16,7 @@ class LoginByUserNameUseCase(
     suspend operator fun invoke(username: String, password: String): User {
         validateInputs(username, password)
         val hashedPassword = hashingPassword.hash(password)
-        return authRepository.loginUser(username, hashedPassword)
+        return authRepository.getUserByName(username)
             ?.let { it.takeIf { it.password == hashedPassword } ?: throw InvalidCredentialsException() }
             ?: throw UserNotFoundException(username)
     }
