@@ -17,7 +17,6 @@ import logic.user.SaveLoggedUserUseCase
 import presentation.presentation.utils.PromptService
 
 class LoginByUserNameUITest {
-
     private val loginUseCase: LoginByUserNameUseCase = mockk(relaxed = true)
     private val saveLoggedUserUseCase: SaveLoggedUserUseCase = mockk(relaxed = true)
     private val promptService: PromptService = mockk(relaxed = true)

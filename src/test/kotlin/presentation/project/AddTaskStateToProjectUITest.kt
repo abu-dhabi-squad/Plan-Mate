@@ -1,138 +1,104 @@
 package presentation.project
 
 import helper.createProject
-import helper.createState
-import io.mockk.Runs
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.just
-import io.mockk.mockk
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.exceptions.DuplicateStateException
-import logic.exceptions.NoProjectsFoundException
 import logic.project.AddStateToProjectUseCase
 import logic.project.GetAllProjectsUseCase
-import presentation.io.InputReader
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
 
-class AddTaskStateToProjectUITest{
-    private lateinit var addStateToProjectUI: AddStateToProjectUI
-    private lateinit var reader: InputReader
-    private lateinit var printer: Printer
-    private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
-    private lateinit var addStateToProjectUseCase: AddStateToProjectUseCase
+class AddTaskStateToProjectUITest {
+    private val addStateToProjectUseCase: AddStateToProjectUseCase = mockk(relaxed = true)
+    private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
+    private val promptService: PromptService = mockk(relaxed = true)
+    private val printer: Printer = mockk(relaxed = true)
+    private lateinit var ui: AddStateToProjectUI
 
     @BeforeEach
     fun setUp() {
-        addStateToProjectUseCase = mockk()
-        reader = mockk()
-        printer = mockk(relaxed = true)
-        getAllProjectsUseCase = mockk(relaxed = true)
-        addStateToProjectUI = AddStateToProjectUI(addStateToProjectUseCase, getAllProjectsUseCase, reader, printer)
-    }
-
-    @Test
-    fun `should print exception message if getAllProjectsUseCase throws`() = runTest {
-        val exception = NoProjectsFoundException()
-        coEvery { getAllProjectsUseCase() } throws exception
-
-        addStateToProjectUI.launchUi()
-
-        coVerify { printer.displayLn(exception.message) }
-    }
-
-    @Test
-    fun `should print message when no projects exist`() = runTest {
-        coEvery { getAllProjectsUseCase() } returns emptyList()
-
-        addStateToProjectUI.launchUi()
-
-        coVerify { printer.displayLn("\nThere are no projects in the list.") }
-    }
-
-    @Test
-    fun `should call use case and print success when inputs are valid`() = runTest{
-        val projects = listOf(
-            createProject(name = "name1", taskStates = listOf(createState(name = "TODO"))),
+        ui = AddStateToProjectUI(
+            addStateToProjectUseCase = addStateToProjectUseCase,
+            getAllProjectsUseCase = getAllProjectsUseCase,
+            promptService = promptService,
+            printer = printer
         )
+    }
+
+    @Test
+    fun `launchUi should add state successfully when there is nothing went wrong`() = runTest {
+        //Given
+        val project = createProject(name = "Project A")
+        val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { reader.readInt() } returns 1
-        coEvery { reader.readString() } returns "In Progress"
-
-        coEvery { addStateToProjectUseCase(projects[0].projectId.toString(), match { it.stateName == "In Progress" }) } just Runs
-
-        addStateToProjectUI.launchUi()
-
-        coVerify { addStateToProjectUseCase(projects[0].projectId.toString(), match { it.stateName == "In Progress" }) }
-        coVerify { printer.displayLn("TaskState \"In Progress\" added to project \"name1\" successfully.") }
-    }
-
-    @Test
-    fun `should print error when duplicate state exception is thrown`() = runTest{
-        val projects = listOf(
-            createProject(name = "name1", taskStates = listOf(createState(name = "In Progress"))),
-        )
-        coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { reader.readInt() } returns 1
-        coEvery { reader.readString() } returns "In Progress"
-        coEvery { addStateToProjectUseCase(any(), any()) } throws DuplicateStateException("In Progress")
-
-        addStateToProjectUI.launchUi()
-
-        coVerify { printer.displayLn("Error: TaskState 'In Progress' already exists in project") }
-    }
-
-    @Test
-    fun `should print error when unexpected exception is thrown`() = runTest{
-        val projects = listOf(
-            createProject(name = "name1", taskStates = listOf(createState(name = "In Progress"))),
-        )
-        coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { reader.readInt() } returns 1
-        coEvery { reader.readString() } returns "In Progress"
-        coEvery { addStateToProjectUseCase(any(), any()) } throws RuntimeException("Unexpected error")
-
-        addStateToProjectUI.launchUi()
-
-        coVerify { printer.displayLn("Error: Unexpected error") }
-    }
-
-    @Test
-    fun `should prompt again when input is null or blank`() = runTest {
-        val projects = listOf(
-            createProject(name = "project", taskStates = emptyList())
-        )
-        coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { reader.readInt() } returnsMany listOf(
-            null, null, null, 1, // read project #
-        )
-        coEvery { reader.readString() } returnsMany listOf(
-            null, "newStateName", // new name input retries
-        )
-
-        addStateToProjectUI.launchUi()
-
-        coVerify(exactly = 4) { printer.displayLn("\nInput cannot be empty.") }
-        coVerify {
-            addStateToProjectUseCase(
-                projects[0].projectId.toString(),
-                any()
-            )
+        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        //When
+        ui.launchUi()
+        //Then
+        verify {
+            projects.forEachIndexed { index, project ->
+                printer.display(match { it.toString().contains(project.projectName) })
+                project.taskStates.forEachIndexed { stateIndex, state ->
+                    printer.display(match { it.toString().contains(state.stateName) })
+                }
+            }
         }
+        coVerify { addStateToProjectUseCase(project.projectId, any()) }
+        verify { printer.displayLn(match { it.toString().contains("\"newName\" added to project") }) }
     }
 
     @Test
-    fun `should not find project when input is out of projects range`() = runTest {
-        val projects = listOf(
-            createProject(name = "project", taskStates = emptyList())
-        )
+    fun `launchUi should show no projects available when no projects exist`() = runTest {
+        //Given
+        coEvery { getAllProjectsUseCase() } returns emptyList()
+        //When
+        ui.launchUi()
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("no projects") }) }
+    }
+
+    @Test
+    fun `launchUi should show error message when getAllProjectsUseCase throw exception`() = runTest {
+        //Given
+        coEvery { getAllProjectsUseCase() } throws Exception()
+        //When
+        ui.launchUi()
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = [0, 100])
+    fun `launchUi should show out of projects range message when user enter wrong project number`(projectNum: Int) =
+        runTest {
+            //Given
+            val project = createProject()
+            val projects = listOf(project)
+            coEvery { getAllProjectsUseCase() } returns projects
+            every { promptService.promptNonEmptyInt(any()) } returns projectNum
+            //When
+            ui.launchUi()
+            //Then
+            verify { printer.displayLn(match { it.toString().contains("Project not found") }) }
+        }
+
+    @Test
+    fun `launchUi should show error message when  throw exception`() = runTest {
+        //Given
+        val project = createProject()
+        val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { reader.readInt() } returns 5
-
-        addStateToProjectUI.launchUi()
-
-        coVerify { printer.displayLn("\nProject not found") }
+        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        coEvery { addStateToProjectUseCase(project.projectId, any()) } throws Exception()
+        //When
+        ui.launchUi()
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 }

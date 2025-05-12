@@ -18,7 +18,6 @@ import presentation.presentation.utils.PromptService
 import presentation.presentation.utils.extensions.showAuditLogs
 
 class GetAuditForProjectUITest {
-
     private val promptService: PromptService = mockk(relaxed = true)
     private val getAuditUseCase: GetAuditUseCase = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)

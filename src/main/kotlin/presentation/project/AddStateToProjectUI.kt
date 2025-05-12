@@ -34,8 +34,8 @@ class AddStateToProjectUI(
             } catch (e: Exception) {
                 printer.displayLn("Error: ${e.message}")
             }
-        } catch (exception: Exception) {
-            printer.displayLn(exception.message ?: "An error occurred.")
+        } catch (e: Exception) {
+            printer.displayLn("Error: ${e.message}")
         }
     }
 
