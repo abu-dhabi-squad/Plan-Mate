@@ -4,8 +4,8 @@ import logic.audit.CreateAuditUseCase
 import logic.audit.GetAuditUseCase
 import logic.authentication.CreateMateUserUseCase
 import logic.authentication.LoginByUserNameUseCase
-import logic.authentication.validtion.CreateUserPasswordValidator
-import logic.authentication.validtion.LoginPasswordValidator
+import logic.authentication.validation.CreateUserPasswordValidator
+import logic.authentication.validation.LoginPasswordValidator
 import logic.project.*
 import logic.task.*
 import logic.user.GetLoggedUserUseCase
