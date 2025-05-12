@@ -1,7 +1,7 @@
 package data.audit.repository
 
 import com.google.common.truth.Truth.assertThat
-import createAudit
+import helper.createAudit
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import data.audit.mapper.AuditMapper

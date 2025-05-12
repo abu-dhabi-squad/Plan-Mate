@@ -1,7 +1,6 @@
 package data.audit.datasource.csv
 
 import com.google.common.truth.Truth.assertThat
-import createAudit
 import data.audit.datasource.csv.parser.CsvAuditParser
 import data.audit.repository.LocalAuditDataSource
 import io.mockk.every
@@ -10,6 +9,7 @@ import io.mockk.verify
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import data.utils.filehelper.CsvFileHelper
+import helper.createAudit
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
