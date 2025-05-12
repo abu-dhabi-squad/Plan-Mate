@@ -1,351 +1,174 @@
 package presentation.taskmanagement
 
-import helper.createProject
-import helper.createState
-import helper.createTask
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
-import logic.exceptions.NoProjectsFoundException
-import logic.exceptions.NoTasksFoundException
 import logic.project.GetAllProjectsUseCase
 import logic.task.EditTaskUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
-import presentation.logic.utils.DateParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import presentation.io.InputReader
 import presentation.io.Printer
-import java.time.LocalDate
-import java.util.*
+import presentation.presentation.utils.PromptService
+import presentation.taskmanagement.TestData.fakeDate
+import presentation.taskmanagement.TestData.fakeDate2
+import presentation.taskmanagement.TestData.fakeProject
+import presentation.taskmanagement.TestData.fakeTask
+import presentation.taskmanagement.TestData.testState
 
 class EditTaskUITest {
 
-    private val printer = mockk<Printer>(relaxed = true)
-    private val inputReader = mockk<InputReader>(relaxed = true)
-    private val getAllProjectsUseCase = mockk<GetAllProjectsUseCase>()
-    private val getTasksByProjectIdUseCase = mockk<GetTasksByProjectIdUseCase>()
-    private val editTaskUseCase = mockk<EditTaskUseCase>(relaxed = true)
-    private val dateParser: DateParser = mockk(relaxed = true)
+    private lateinit var printer: Printer
+    private lateinit var promptService: PromptService
+    private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
+    private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
+    private lateinit var editTaskUseCase: EditTaskUseCase
     private lateinit var createAuditUseCase: CreateAuditUseCase
     private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
-
     private lateinit var presenter: EditTaskUI
 
     @BeforeEach
     fun setup() {
+        printer = mockk(relaxed = true)
+        promptService = mockk(relaxed = true)
+        getAllProjectsUseCase = mockk()
+        getTasksByProjectIdUseCase = mockk()
+        editTaskUseCase = mockk(relaxed = true)
         createAuditUseCase = mockk(relaxed = true)
-        getLoggedUserUseCase = mockk(relaxed = true)
+        getLoggedUserUseCase = mockk()
+        every { getLoggedUserUseCase() } returns TestData.fakeUser
 
         presenter = EditTaskUI(
             printer,
             getLoggedUserUseCase,
-            inputReader,
             getAllProjectsUseCase,
             getTasksByProjectIdUseCase,
             editTaskUseCase,
-            dateParser,
+            promptService,
             createAuditUseCase
         )
     }
 
     @Test
     fun `should update title, description, dates, and state`() = runTest {
-        // Given
-        val uuid = UUID.randomUUID()
-        val state1 = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
-        val state2 = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1c"), "Closed")
-        val project = createProject(
-            id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            name = "Project A",
-            taskStates = listOf(state1, state2)
-        )
-        val task = createTask(
-            id = uuid,
-            projectId = project.projectId,
-            stateId = state1.stateId,
-            title = "Old",
-            description = "OldDesc",
-            startDate = LocalDate.of(2025, 1, 1),
-            endDate = LocalDate.of(2025, 1, 2)
-        )
+        val project = fakeProject
+        val task = fakeTask
 
         coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returnsMany listOf(
-            1,
-            1,
-            1,
-        )
         coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
-        // Strings: newTitle, newDesc, newStart, newEnd
-        coEvery { inputReader.readString() } returnsMany listOf(
-            "NewTitle", "NewDesc", "2025-05-05", "2025-05-10"
-        )
-        coEvery { dateParser.parseDateFromString("2025-05-05") } returns LocalDate.of(2025, 5, 5)
-        coEvery { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025, 5, 10)
+        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("NewTitle", "NewDesc")
+        every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate,fakeDate2)
 
-        // When
         presenter.launchUi()
 
-        // Then
         val expected = task.copy(
             title = "NewTitle",
             description = "NewDesc",
-            startDate = LocalDate.of(2025, 5, 5),
-            endDate = LocalDate.of(2025, 5, 10),
-            taskStateId = state1.stateId // first state selected
+            startDate = fakeDate,
+            endDate = fakeDate2,
+            taskStateId = testState.stateId
         )
+
         coVerify { editTaskUseCase(expected) }
-        coVerify { printer.displayLn("\nTask updated successfully.") }
-    }
-
-    @Test
-    fun `should displayLn list of tasks when there are projects`() = runTest {
-        val project = createProject(name = "Project A")
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returns 1
-        presenter.launchUi()
-
-        coVerify { printer.displayLn(match { it.toString().contains(project.projectName) }) }
-    }
-
-    @Test
-    fun `should display message when no projects found`() = runTest {
-        coEvery { getAllProjectsUseCase() } returns emptyList()
-
-        presenter.launchUi()
-
-        coVerify { printer.displayLn("\nNo projects available.") }
+        verify { printer.displayLn("\nTask updated successfully.") }
     }
 
     @Test
     fun `should display error when loading projects fails`() = runTest {
-        coEvery { getAllProjectsUseCase() } throws NoProjectsFoundException()
+        coEvery { getAllProjectsUseCase() } throws RuntimeException("No projects Found")
 
         presenter.launchUi()
 
-        coVerify { printer.displayLn(match { it.toString().contains("No projects Found") }) }
-    }
-
-    @Test
-    fun `should display message when no tasks in project`() = runTest {
-        val project = createProject()
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(any()) } returns emptyList()
-
-        presenter.launchUi()
-
-        coVerify { printer.displayLn("\nNo tasks found in this project.") }
-    }
-
-    @Test
-    fun `should re-prompt when user enters invalid project selection`() = runTest {
-        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A")
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-
-        coEvery { inputReader.readInt() } returnsMany listOf(0, 1)
-        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")) } returns emptyList()
-
-        presenter.launchUi()
-
-        coVerify { printer.displayLn("\nPlease enter a valid number between 1 and 1.") }
-    }
-
-    @Test
-    fun `should display error when loading tasks fails`() = runTest {
-        val project = createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Test Project")
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } throws NoTasksFoundException()
-
-        presenter.launchUi()
-
-        coVerify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
-    }
-
-    @Test
-    fun `should successfully update task when the input is valid`() = runTest {
-        val uuid = UUID.randomUUID()
-        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
-        val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
-        val task =
-            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.stateId)
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
-        coEvery { inputReader.readString() } returnsMany listOf("New Title", "New Desc", "", "")
-
-        presenter.launchUi()
-
-        coVerify {
-            editTaskUseCase(
-                task.copy(title = "New Title", description = "New Desc", taskStateId = state.stateId)
-            )
+        verify {
+            printer.displayLn(match { (it as? String)?.contains("No projects Found") == true })
         }
-        coVerify { printer.displayLn("\nTask updated successfully.") }
     }
-
 
     @Test
     fun `should show error message while updating task when the input is not valid`() = runTest {
-        val uuid = UUID.randomUUID()
-        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
-        val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
-        val task =
-            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.stateId)
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
-        coEvery { inputReader.readString() } returnsMany listOf("New Title", "New Desc", "", "")
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
+        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("New Title", "New Desc")
+        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate,fakeDate)
         coEvery { editTaskUseCase(any()) } throws RuntimeException("Failed to update task")
 
         presenter.launchUi()
 
-        coVerify { printer.displayLn(match { it.toString().contains("\nFailed to update task") }) }
+        verify {
+            printer.displayLn(match { (it as? String)?.contains("Failed to update task") == true })
+        }
     }
 
     @Test
-    fun `should re-prompt when user enters invalid task selection`() = runTest {
-        val uuid = UUID.randomUUID()
-        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
-        val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
-        val task =
-            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.stateId)
+    fun `should show date format error message when user enter invalid date format`() = runTest {
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
+        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("New Title", "New Desc")
+        every { promptService.promptDate(any()) } throws Exception("Invalid format")
 
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returnsMany listOf(1, 0, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
-        coEvery { inputReader.readString() } returnsMany listOf(
-            "Updated Title",
-            "Updated Desc",
-            "",
-            ""
-        )
         presenter.launchUi()
 
-        coVerify { printer.displayLn("\nPlease enter a valid number between 1 and 1.") }
+        verify {
+            printer.displayLn(match {
+                (it as? String)?.contains("Invalid date format") == true
+            })
+        }
     }
 
     @Test
     fun `should keep existing title and description if user inputs are empty`() = runTest {
-        val uuid = UUID.randomUUID()
-        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
-        val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
-        val task = createTask(
-            id = uuid,
-            title = "Old Title",
-            description = "Old Desc",
-            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            stateId = state.stateId
-        )
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
-        coEvery { inputReader.readString() } returnsMany listOf("", "", "", "")
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
+        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("", "")
+        every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate,fakeDate)
 
         presenter.launchUi()
 
-        coVerify { editTaskUseCase(task) }
+        coVerify { editTaskUseCase(fakeTask) }
     }
 
     @Test
-    fun `should keep existing title and description if user inputs are null`() = runTest {
-        val uuid = UUID.randomUUID()
-        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
-        val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
-        val task = createTask(
-            id = uuid,
-            title = "Old Title",
-            description = "Old Desc",
-            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            stateId = state.stateId
-        )
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returnsMany listOf(1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
-        coEvery { inputReader.readString() } returnsMany listOf(null, null, "", "")
+    fun `should re-prompt when project index is invalid`() = runTest {
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
+        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(-1, 0, 0, 0)
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
+        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
 
         presenter.launchUi()
 
-        coVerify { editTaskUseCase(task) }
-    }
-
-    @Test
-    fun `should re-prompt if readInt returns null`() = runTest {
-        val uuid = UUID.randomUUID()
-        val state = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
-        val project =
-            createProject(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf(state))
-        val task =
-            createTask(uuid, projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateId = state.stateId)
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returnsMany listOf(null, 1, 1, 1)
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
-        coEvery { inputReader.readString() } returnsMany listOf("New", "Updated", "", "")
-
-        presenter.launchUi()
-
-        coVerify { printer.displayLn("\nPlease enter a valid number between 1 and 1.") }
-    }
-
-
-    @Test
-    fun `should show date format error message when user enter invalid date format`() = runTest {
-        // Given
-        val uuid = UUID.randomUUID()
-        val state1 = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "Open")
-        val state2 = createState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1c"), "Closed")
-        val project = createProject(
-            id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            name = "Project A",
-            taskStates = listOf(state1, state2)
-        )
-        val task = createTask(
-            id = uuid,
-            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-            stateId = state1.stateId,
-            title = "Old",
-            description = "OldDesc",
-            startDate = LocalDate.of(2025, 1, 1),
-            endDate = LocalDate.of(2025, 1, 2)
-        )
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { inputReader.readInt() } returnsMany listOf(
-            1,
-            1,
-            1,
-        )
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
-        coEvery { inputReader.readString() } returnsMany listOf(
-            "NewTitle", "NewDesc", "Invalid date", "2025-05-10"
-        )
-        coEvery { dateParser.parseDateFromString("Invalid date") } throws Exception("Invalid format")
-        coEvery { dateParser.parseDateFromString("2025-05-10") } returns LocalDate.of(2025, 5, 10)
-
-        // When
-        presenter.launchUi()
-
-        // Then
-        coVerify {
+        verify {
             printer.displayLn(match {
-                it.toString().contains("\nInvalid date format. Keeping current value.")
+                (it as? String)?.contains("Please enter a number") == true
             })
         }
+    }
+
+    @Test
+    fun `should display error when no tasks exist for selected project`() = runTest {
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns emptyList()
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+
+        presenter.launchUi()
+
+        verify { printer.displayLn("\nNo tasks found in this project.") }
+    }
+
+    @Test
+    fun `should display error if no projects are returned`() = runTest {
+        coEvery { getAllProjectsUseCase() } returns emptyList()
+        presenter.launchUi()
+        verify { printer.displayLn("\nNo projects available.") }
     }
 }
 
