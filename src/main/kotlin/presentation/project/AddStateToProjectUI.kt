@@ -18,11 +18,7 @@ class AddStateToProjectUI(
         try {
             val projects = getAllProjectsUseCase()
             projects.printWithStates(printer)
-            val projectIndex = promptService.promptNonEmptyInt("\nChoose Project: ") - 1
-            if (projectIndex !in projects.indices) {
-                printer.displayLn("\nProject not found")
-                return
-            }
+            val projectIndex = promptService.promptSelectionIndex("\nChoose Project: ",projects.size)
             val stateName =
                 promptService.promptNonEmptyString("Enter the new state name: ")
             try {
@@ -34,10 +30,8 @@ class AddStateToProjectUI(
             } catch (e: Exception) {
                 printer.displayLn("Error: ${e.message}")
             }
-        } catch (exception: Exception) {
-            printer.displayLn(exception.message ?: "An error occurred.")
+        } catch (e: Exception) {
+            printer.displayLn("Error: ${e.message}")
         }
     }
-
-
 }
