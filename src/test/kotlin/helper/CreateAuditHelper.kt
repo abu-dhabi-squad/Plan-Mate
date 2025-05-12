@@ -1,3 +1,5 @@
+package helper
+
 import logic.model.Audit
 import logic.model.EntityType
 import java.time.LocalDate
@@ -8,9 +10,9 @@ import java.util.UUID
 fun createAudit(
     id: UUID = UUID.randomUUID(),
     entityId: UUID = UUID.randomUUID(),
-    newState: String = "InProgress",
-    oldState : String = "TODO",
-    createdBy: String = "UG",
+    newState: String = "",
+    oldState : String = "",
+    createdBy: String = "",
     date: LocalDateTime = LocalDate.now().atTime(LocalTime.now()),
     entityType: EntityType = EntityType.PROJECT,
 ): Audit {
