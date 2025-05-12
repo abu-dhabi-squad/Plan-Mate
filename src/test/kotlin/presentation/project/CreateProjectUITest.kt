@@ -14,14 +14,13 @@ import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
 import presentation.presentation.utils.PromptService
 
-class CreateProjectUITest{
+class CreateProjectUITest {
     private val createProjectUseCase: CreateProjectUseCase = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
     private val promptService: PromptService = mockk(relaxed = true)
     private val createAuditUseCase: CreateAuditUseCase = mockk(relaxed = true)
     private val getLoggedUserUseCase: GetLoggedUserUseCase = mockk(relaxed = true)
     private lateinit var ui: CreateProjectUI
-
 
     @BeforeEach
     fun setup() {
@@ -30,7 +29,8 @@ class CreateProjectUITest{
             printer = printer,
             promptService = promptService,
             createAuditUseCase = createAuditUseCase,
-            getLoggedUserUseCase = getLoggedUserUseCase)
+            getLoggedUserUseCase = getLoggedUserUseCase
+        )
     }
 
     @Test
@@ -41,7 +41,7 @@ class CreateProjectUITest{
         //When
         ui.launchUi()
         //Then
-        coVerify {createProjectUseCase(any())}
+        coVerify { createProjectUseCase(any()) }
         coVerify { createAuditUseCase(any()) }
         verify { printer.displayLn(match { it.toString().contains("created") }) }
     }
@@ -54,7 +54,7 @@ class CreateProjectUITest{
         //When
         ui.launchUi()
         //Then
-        coVerify {createProjectUseCase(any())}
+        coVerify { createProjectUseCase(any()) }
         coVerify { createAuditUseCase(any()) }
         verify { printer.displayLn(match { it.toString().contains("created") }) }
     }
@@ -67,7 +67,7 @@ class CreateProjectUITest{
         //When
         ui.launchUi()
         //Then
-        verify { printer.displayLn(match { it.toString().contains("Invalid number") })}
+        verify { printer.displayLn(match { it.toString().contains("Invalid number") }) }
     }
 
     @Test

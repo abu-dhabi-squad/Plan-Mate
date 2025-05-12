@@ -19,7 +19,6 @@ class CreateProjectUI(
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ) : UiLauncher {
-
     override suspend fun launchUi() {
         val projectName =
             promptService.promptNonEmptyString("\nEnter project name: ")
@@ -36,7 +35,6 @@ class CreateProjectUI(
             val stateName = promptService.promptNonEmptyString("\nEnter name for state #$i: ")
             taskStates.add(TaskState(stateName = stateName))
         }
-
         try {
             val newProject = Project(projectName = projectName, taskStates = taskStates)
             createProjectUseCase(newProject)

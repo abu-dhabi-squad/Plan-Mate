@@ -46,7 +46,7 @@ class GetAuditForTaskUITest {
         val tasks = listOf(task)
         val audits = listOf(createAudit(entityId = task.taskId))
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns tasks
         coEvery { getAuditUseCase(any()) } returns audits
         //When
@@ -93,7 +93,7 @@ class GetAuditForTaskUITest {
         val project = createProject(name = "Project A")
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } throws Exception()
         //When
         ui.launchUi()
@@ -108,7 +108,7 @@ class GetAuditForTaskUITest {
             val project = createProject(name = "Project A")
             val projects = listOf(project)
             coEvery { getAllProjectsUseCase() } returns projects
-            every { promptService.promptSelectionIndex(any(),any()) } returns 0
+            every { promptService.promptSelectionIndex(any(), any()) } returns 0
             coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns emptyList()
             //When
             ui.launchUi()
@@ -124,7 +124,7 @@ class GetAuditForTaskUITest {
         val task = createTask(projectId = project.projectId)
         val tasks = listOf(task)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns tasks
         coEvery { getAuditUseCase(any()) } throws Exception()
         //When

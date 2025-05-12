@@ -37,7 +37,7 @@ class AddTaskStateToProjectUITest {
         val project = createProject(name = "Project A")
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
         //When
         ui.launchUi()
@@ -80,7 +80,7 @@ class AddTaskStateToProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
         coEvery { addStateToProjectUseCase(project.projectId, any()) } throws Exception()
         //When
