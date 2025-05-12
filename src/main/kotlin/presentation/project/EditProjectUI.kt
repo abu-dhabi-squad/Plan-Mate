@@ -25,7 +25,7 @@ class EditProjectUI(
                     printer.displayLn("\nProject updated successfully.")
                 } ?: printer.displayLn("There is no project in list")
         } catch (exception: Exception) {
-            printer.displayLn(exception.message)
+            printer.displayLn("\nError: ${exception.message}")
         }
     }
 }
