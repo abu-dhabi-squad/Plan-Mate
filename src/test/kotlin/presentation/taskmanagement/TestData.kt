@@ -17,14 +17,18 @@ object TestData {
         UserType.MATE)
 
     val fakeDate = LocalDate.of(2025, 5, 12)
+    val fakeDate2 = LocalDate.of(2025, 5, 13)
+
+    val testState = TaskState(
+        stateId = UUID.fromString("55555555-5555-5555-5555-555555555555"),
+        stateName = "To Do"
+    )
 
     val fakeProject = Project(
         projectId = UUID.fromString("22222222-2222-2222-2222-222222222222"),
         projectName = "Project A",
-        taskStates = listOf(
-            TaskState(
-                UUID.fromString("33333333-3333-3333-3333-333333333333"),
-                "To Do"))
+        taskStates = listOf(testState)
+
     )
 
     val fakeTask = Task(
@@ -32,9 +36,9 @@ object TestData {
         username = "noor",
         title = "Test Task",
         description = "desc",
-        startDate = LocalDate.of(2025, 5, 12),
-        endDate = LocalDate.of(2025, 5, 12),
+        startDate = fakeDate,
+        endDate = fakeDate,
         projectId = fakeProject.projectId,
-        taskStateId = UUID.randomUUID()
+        taskStateId = testState.stateId
     )
 }
