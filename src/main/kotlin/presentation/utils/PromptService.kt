@@ -39,7 +39,7 @@ class PromptService(
             }
             try {
                 return dateParser.parseDateFromString(input)
-            } catch (e: Exception) {
+            } catch (exception: Exception) {
                 printer.displayLn("\nInvalid date format. Please use YYYY-MM-DD.")
             }
         }
@@ -70,10 +70,21 @@ class PromptService(
         } else {
             try {
                 dateParser.parseDateFromString(input)
-            } catch (e: Exception) {
+            } catch (exception: Exception) {
                 printer.displayLn("\nInvalid date format. Keeping current value.")
                 currentValue
             }
+        }
+    }
+
+    fun promptSelectionIndex(prompt: String, size: Int, currentValue: Int): Int {
+        while (true) {
+            printer.display("$prompt (1–$size): ")
+            val input = reader.readInt() ?: return currentValue
+            if (input in 1..size) {
+                return input - 1
+            }
+            printer.displayLn("\nPlease enter a number between 1 and $size.")
         }
     }
 }

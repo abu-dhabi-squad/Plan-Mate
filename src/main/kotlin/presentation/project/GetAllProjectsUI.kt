@@ -17,8 +17,8 @@ class GetAllProjectsUI(
     private suspend fun showAllProjects() {
         try {
             getAllProjectsUseCase().printWithStates(printer)
-        } catch (e: Exception) {
-            printer.displayLn("\nError retrieving projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError retrieving projects: ${exception.message}")
         }
     }
 }

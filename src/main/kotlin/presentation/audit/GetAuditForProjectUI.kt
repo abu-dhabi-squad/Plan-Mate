@@ -18,34 +18,29 @@ class GetAuditForProjectUI(
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to fetch projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to fetch projects: ${exception.message}")
             return
         }
-
         if (projects.isEmpty()) {
             printer.displayLn("\nNo projects available.")
             return
         }
-
         printer.displayLn("\n=== Available Projects ===")
         projects.forEachIndexed { index, project ->
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
-
-        val choice = promptService.promptSelectionIndex("\nEnter project number: ",projects.size)
-
-        val selected = projects.get(choice)
-
-        showAuditLogs(selected.projectId)
+        val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
+        val selectedProject = projects[projectIndex]
+        showAuditLogs(selectedProject.projectId)
     }
 
     private suspend fun showAuditLogs(entityId: UUID) {
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
             audits.showAuditLogs(printer)
-        } catch (e: Exception) {
-            printer.displayLn("\nError: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError: ${exception.message}")
         }
     }
 }

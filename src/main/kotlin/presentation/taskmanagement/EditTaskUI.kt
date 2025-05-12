@@ -26,8 +26,8 @@ class EditTaskUI(
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to load projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to load projects: ${exception.message}")
             return
         }
 
@@ -37,13 +37,13 @@ class EditTaskUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptService.promptSelectionIndex("\nSelect a project: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nSelect a project", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
             getTasksByProjectIdUseCase(selectedProject.projectId)
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to load tasks: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to load tasks: ${exception.message}")
             return
         }
 
@@ -53,7 +53,7 @@ class EditTaskUI(
         }
 
         showTasks(tasks)
-        val taskIndex = promptService.promptSelectionIndex("\nSelect a task to edit: ", tasks.size)
+        val taskIndex = promptService.promptSelectionIndex("\nSelect a task to edit", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         printer.displayLn("\nEditing Task: ${selectedTask.title}")
@@ -72,7 +72,11 @@ class EditTaskUI(
             promptService.promptDate("\nEnter new end date (YYYY-MM-DD) or leave blank: ", selectedTask.endDate)
 
         showStates(selectedProject.taskStates)
-        val stateIndex = promptService.promptSelectionIndex("\nSelect new state: ", selectedProject.taskStates.size)
+        val stateIndex = promptService.promptSelectionIndex(
+            "\nSelect new state",
+            selectedProject.taskStates.size,
+            selectedProject.taskStates.indexOfFirst { it.stateId == selectedTask.taskStateId }
+        )
         val newState = selectedProject.taskStates[stateIndex]
 
         val updatedTask = selectedTask.copy(
@@ -85,21 +89,23 @@ class EditTaskUI(
 
         try {
             editTaskUseCase(updatedTask)
-            val oldState =
-                selectedProject.taskStates.first { it.stateId == selectedTask.taskStateId }
-
-            createAuditUseCase(
-                Audit(
-                    entityId = updatedTask.taskId,
-                    entityType = EntityType.TASK,
-                    oldState = oldState.stateName,
-                    newState = newState.stateName,
-                    createdBy = getLoggedUserUseCase().username
+            try {
+                val oldState = selectedProject.taskStates.first { it.stateId == selectedTask.taskStateId }
+                createAuditUseCase(
+                    Audit(
+                        entityId = updatedTask.taskId,
+                        entityType = EntityType.TASK,
+                        oldState = oldState.stateName,
+                        newState = newState.stateName,
+                        createdBy = getLoggedUserUseCase().username
+                    )
                 )
-            )
+            } catch (exception: Exception) {
+                printer.displayLn("\nFailed to create audit: ${exception.message}")
+            }
             printer.displayLn("\nTask updated successfully.")
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to update task: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to update task: ${exception.message}")
         }
     }
 
