@@ -1,7 +1,5 @@
 package di
 
-import logic.model.User
-import logic.model.UserType
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import presentation.UIFeature
@@ -27,9 +25,6 @@ val uiModule = module {
     // I/O dependencies
     single<Printer> { ConsolePrinter() }
     single<InputReader> { ConsoleReader() }
-
-    // Shared resources
-    single { User(username = "admin", password = "admin", userType = UserType.ADMIN) }
 
     // UI components
     single { CreateProjectUI(get(), get(), get(), get(), get()) }
@@ -78,6 +73,6 @@ val uiModule = module {
     single { ConsoleUserMenuUI(get(named("mateFeatures")), get(), get()) }
 
     //PromptService
-    single {PromptService(get(),get(),get())}
+    single { PromptService(get(), get(), get()) }
 }
 
