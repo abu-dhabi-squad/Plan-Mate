@@ -22,26 +22,17 @@ class GetAuditForProjectUI(
             printer.displayLn("\nFailed to fetch projects: ${exception.message}")
             return
         }
-
         if (projects.isEmpty()) {
             printer.displayLn("\nNo projects available.")
             return
         }
-
         printer.displayLn("\n=== Available Projects ===")
         projects.forEachIndexed { index, project ->
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
-
         val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
-        
-        val selected = projects.getOrNull(projectIndex - 1)
-        if (selected == null) {
-            printer.displayLn("\nInvalid project selection.")
-            return
-        }
-
-        showAuditLogs(selected.projectId)
+        val selectedProject = projects[projectIndex]
+        showAuditLogs(selectedProject.projectId)
     }
 
     private suspend fun showAuditLogs(entityId: UUID) {

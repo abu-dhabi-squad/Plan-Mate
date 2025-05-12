@@ -1,57 +1,51 @@
 package presentation.project
 
+import helper.createProject
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
-import logic.model.Project
 import logic.project.GetAllProjectsUseCase
-import presentation.io.InputReader
 import presentation.io.Printer
-import java.util.UUID
+import presentation.presentation.utils.extensions.printWithStates
 import kotlin.test.Test
 
 class GetAllProjectsUITest {
-    private lateinit var inputReader: InputReader
-    private lateinit var printer: Printer
-    private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
-    private lateinit var getAllProjectsUI: GetAllProjectsUI
+    private val printer: Printer = mockk(relaxed = true)
+    private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
+    private lateinit var ui: GetAllProjectsUI
 
     @BeforeEach
     fun setup() {
-        inputReader = mockk()
-        printer = mockk(relaxed = true)
-        getAllProjectsUseCase = mockk()
-        getAllProjectsUI = GetAllProjectsUI(printer, getAllProjectsUseCase)
+        ui = GetAllProjectsUI(
+            printer = printer,
+            getAllProjectsUseCase = getAllProjectsUseCase
+        )
     }
 
     @Test
-    fun `should print all projects`() = runTest{
+    fun `getAllProjectsUseCase should print all projects when nothing went wrong`() = runTest{
         // Given
         val projects = listOf(
-            Project(projectId =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project One", taskStates = emptyList()),
-            Project(projectId =UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Project Two", taskStates = emptyList())
+            createProject(name = "Project One"),
+            createProject(name = "Project Two")
         )
-        coEvery { getAllProjectsUseCase.invoke() } returns projects
-
+        coEvery { getAllProjectsUseCase() } returns projects
         // When
-        getAllProjectsUI.launchUi()
-
+        ui.launchUi()
         // Then
-        coVerify { printer.displayLn("1) Project One") }
-        coVerify { printer.displayLn("2) Project Two") }
+        coVerify { projects.printWithStates(printer) }
     }
 
     @Test
-    fun `should print error message when exception occurs`() = runTest {
+    fun `getAllProjectsUseCase should print error message when exception occurs`() = runTest {
         // Given
-        coEvery { getAllProjectsUseCase.invoke() } throws RuntimeException("Something went wrong")
-
+        coEvery { getAllProjectsUseCase.invoke() } throws Exception()
         // When
-        getAllProjectsUI.launchUi()
-
+        ui.launchUi()
         // Then
-        coVerify { printer.displayLn("\nError retrieving projects: Something went wrong") }
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 }

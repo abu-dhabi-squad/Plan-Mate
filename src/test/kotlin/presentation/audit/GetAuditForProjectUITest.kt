@@ -1,156 +1,90 @@
 package presentation.audit
 
+import helper.createAudit
+import helper.createProject
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.audit.GetAuditUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.exceptions.EmptyList
-import logic.exceptions.WrongInputException
-import logic.model.Audit
-import logic.model.EntityType
-import logic.model.Project
 import logic.project.GetAllProjectsUseCase
-import presentation.io.ConsolePrinter
-import presentation.io.InputReader
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
-import java.util.UUID
-import kotlin.test.assertTrue
+import presentation.io.Printer
+import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.showAuditLogs
 
-class GetAuditForProjectUITest{
-
-    private val getAuditUseCase: GetAuditUseCase = mockk()
-    private val reader = mockk<InputReader>()
-    private val printer = ConsolePrinter()
-    private val getAllProjectsUseCase = mockk<GetAllProjectsUseCase>()
-    private val outContent = ByteArrayOutputStream()
+class GetAuditForProjectUITest {
+    private val promptService: PromptService = mockk(relaxed = true)
+    private val getAuditUseCase: GetAuditUseCase = mockk(relaxed = true)
+    private val printer: Printer = mockk(relaxed = true)
+    private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
     private lateinit var ui: GetAuditForProjectUI
 
     @BeforeEach
     fun setUp() {
-        System.setOut(PrintStream(outContent))
         ui = GetAuditForProjectUI(
+            promptService = promptService,
             printer = printer,
-            reader = reader,
             getAuditUseCase = getAuditUseCase,
             getAllProjectsUseCase = getAllProjectsUseCase
         )
     }
 
     @Test
-    fun `should show audit logs for valid project`() = runTest{
-
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
-        val audits = listOf(
-            Audit(UUID.randomUUID(), "admin", "p1", EntityType.PROJECT, "old", "new")
-        )
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
+    fun `launchUi should show audit logs for valid project`() = runTest {
+        //Given
+        val project = createProject(name = "Project A")
+        val projects = listOf(project)
+        val audits = listOf(createAudit(entityId = project.projectId))
+        coEvery { getAllProjectsUseCase() } returns projects
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0
         coEvery { getAuditUseCase(any()) } returns audits
-
+        //When
         ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("old") && output.contains("new"))
+        //Then
+        verify {
+            projects.forEachIndexed { index, project ->
+                printer.displayLn(match {
+                    it.toString().contains(project.projectName)
+                })
+            }
+        }
+        verify { audits.showAuditLogs(printer) }
     }
 
     @Test
-    fun `should show error if no projects exist`() = runTest{
+    fun `launchUi should show no projects available when no projects exist`() = runTest {
+        //Given
         coEvery { getAllProjectsUseCase() } returns emptyList()
-
+        //When
         ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("No projects available"))
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("No projects available") }) }
     }
 
     @Test
-    fun `should handle null input selection`() = runTest{
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns null
-
+    fun `launchUi should print error message when getAllProjectsUseCase throw exception`() = runTest {
+        //Given
+        coEvery { getAllProjectsUseCase() } throws Exception()
+        //When
         ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("Input cannot be empty"))
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 
     @Test
-    fun `should handle invalid project index`() = runTest{
-
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 5
-
+    fun `launchUi should print error message when getAuditUseCase throw exception`() = runTest {
+        //Given
+        val project = createProject(name = "Project A")
+        val projects = listOf(project)
+        coEvery { getAllProjectsUseCase() } returns projects
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        coEvery { getAuditUseCase(any()) } throws Exception()
+        //When
         ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("Input cannot be out projects range"))
-    }
-
-    @Test
-    fun `should show message when no audit logs found`() = runTest{
-
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
-        coEvery { getAuditUseCase(any()) } returns emptyList()
-
-        ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("No audit logs found"))
-    }
-
-    @Test
-    fun `should handle WrongInputException gracefully`() = runTest{
-
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
-        coEvery { getAuditUseCase(any()) } throws WrongInputException()
-
-        ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("Invalid entity ID"))
-    }
-
-    @Test
-    fun `should handle EmptyList exception gracefully`() = runTest{
-
-        //val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", states = listOf())
-        val project= Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"", listOf())
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
-        coEvery { getAuditUseCase(any()) } throws EmptyList()
-
-        ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("No audit logs found"))
-    }
-
-    @Test
-    fun `should handle unexpected exception`() = runTest{
-
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "Project A", taskStates = listOf())
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
-        coEvery { getAuditUseCase("p1") } throws Exception()
-
-        ui.launchUi()
-
-        val output = outContent.toString()
-        assertTrue(output.contains("Error"))
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 }

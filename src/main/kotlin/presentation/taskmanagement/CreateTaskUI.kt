@@ -88,10 +88,4 @@ class CreateTaskUI(
             printer.displayLn("${index + 1}. ${state.stateName}")
         }
     }
-
-
-
-
-
-
 }

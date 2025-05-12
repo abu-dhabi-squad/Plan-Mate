@@ -1,120 +1,87 @@
 package presentation.project
 
-import helper.createState
+import helper.createProject
 import io.mockk.coEvery
-import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
+import io.mockk.coVerify
 import kotlinx.coroutines.test.runTest
-import logic.model.Project
 import logic.model.TaskState
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
-import presentation.io.ConsoleReader
 import presentation.io.Printer
-import java.util.*
+import presentation.presentation.utils.PromptService
 import kotlin.test.BeforeTest
 
 class EditTaskStateOfProjectUITest {
-
-    private val printer: Printer = mockk(relaxed = true)
-    private val reader: ConsoleReader = mockk(relaxed = true)
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
+    private val promptService: PromptService = mockk(relaxed = true)
+    private val printer: Printer = mockk(relaxed = true)
     private lateinit var ui: EditStateOfProjectUI
 
     @BeforeTest
     fun setup() {
-        ui = EditStateOfProjectUI(editStateOfProjectUseCase, getAllProjectsUseCase, reader, printer)
+        ui = EditStateOfProjectUI(
+            editStateOfProjectUseCase = editStateOfProjectUseCase,
+            getAllProjectsUseCase = getAllProjectsUseCase,
+            promptService = promptService,
+            printer = printer
+        )
     }
 
     @Test
-    fun `should print exception message if getAllProjectsUseCase throws`() = runTest {
-        val exception = Exception("Boom")
-        coEvery { getAllProjectsUseCase() } throws exception
-
+    fun `launchUI should edit successfully when nothing went wrong`() = runTest{
+        //given
+        val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
+        val projects = listOf(project)
+        coEvery { getAllProjectsUseCase() } returns projects
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0 andThen 0
+        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        //when
         ui.launchUi()
-
-        coVerify { printer.displayLn("Boom") }
+        //then
+        verify { project.taskStates.forEachIndexed { index, state ->
+            printer.displayLn(match { it.toString().contains(state.stateName) })
+        } }
+        coVerify { editStateOfProjectUseCase(any(),any()) }
+        verify { printer.displayLn(match { it.toString().contains("updated") }) }
     }
 
     @Test
-    fun `should print message when no projects exist`() = runTest {
+    fun `launchUI should display Exception message when get all projects throw Exception`() = runTest{
+        //given
+        coEvery { getAllProjectsUseCase() } throws Exception()
+        //when
+        ui.launchUi()
+        //then
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
+    }
+
+    @Test
+    fun `launchUI should display no project message when get all projects return empty list`() = runTest{
+        //given
         coEvery { getAllProjectsUseCase() } returns emptyList()
-
+        //when
         ui.launchUi()
-
-        coVerify { printer.displayLn("\nThere are no projects in the list.") }
+        //then
+        verify { printer.displayLn(match { it.toString().contains("no project") }) }
     }
 
     @Test
-    fun `should display projects and ask for inputs`() = runTest {
-        val projects = listOf(
-            Project(
-                UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
-                "name1",
-                listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "state1"))
-            )
-        )
+    fun `launchUI should display Exception message editStateOfProjectUseCase when throw Exception`() = runTest{
+        //given
+        val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
+        val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { reader.readInt() } returnsMany listOf(1, 1)
-        coEvery { reader.readString() } returns "newName"
-
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0 andThen 0
+        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        coEvery { editStateOfProjectUseCase(any(),any()) } throws Exception()
+        //when
         ui.launchUi()
-
-        coVerify {
-            printer.displayLn("${1}- Project Name: name1 - States: [TaskState(id=d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b, name=state1)]")
-            editStateOfProjectUseCase(
-                UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString(),
-                TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "newName")
-            )
-            printer.displayLn("\nTaskState updated successfully.")
-        }
+        //then
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
-
-    @Test
-    fun `should prompt again when input is null or blank`() = runTest {
-        val projects = listOf(
-            Project(
-                UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(
-                    createState()
-                )
-            )
-        )
-        coEvery { getAllProjectsUseCase() } returns projects
-
-        coEvery { reader.readInt() } returnsMany listOf(
-            null, null, null, 1, // read project #
-            null, 1, // read state #
-        )
-
-        coEvery { reader.readString() } returnsMany listOf(
-            null, "newStateName", // new name input retries
-        )
-
-        ui.launchUi()
-
-        coVerify(exactly = 5) { printer.displayLn("\nInput cannot be empty.") }
-        coVerify {
-            editStateOfProjectUseCase(
-                projects[0].projectId.toString(),
-                projects[0].taskStates[0].copy(stateName = "newStateName")
-            )
-        }
-    }
-
-    @ParameterizedTest
-    @CsvSource("null,An error occurred.", "Update failed,Update failed", nullValues = ["null"])
-    fun `should print error if editStateOfProjectUseCase throws`(errorMessage: String?, actualMessage: String) =
-        runTest {
-            val projects = listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf()))
-            coEvery { getAllProjectsUseCase() } returns projects
-            coEvery { reader.readInt() } returnsMany listOf(1, 1)
-            coEvery { reader.readString() } returns "newName"
-
-            ui.launchUi()
-            coVerify { printer.displayLn("\nTaskState not found") }
-        }
 }

@@ -9,11 +9,11 @@ import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
 import presentation.presentation.utils.extensions.showAuditLogs
-import java.util.UUID
+import java.util.*
 
 class GetAuditForTaskUI(
     private val printer: Printer,
-    private val promptService : PromptService,
+    private val promptService: PromptService,
     private val getAuditUseCase: GetAuditUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
@@ -53,11 +53,7 @@ class GetAuditForTaskUI(
         tasks.forEachIndexed { index, task ->
             printer.displayLn("${index + 1}. ${task.title}")
         }
-        val taskIndex = promptService.promptNonEmptyInt("\nEnter task number: ") - 1
-        if (taskIndex !in tasks.indices) {
-            printer.displayLn("\nInput cannot be out tasks range.")
-            return
-        }
+        val taskIndex = promptService.promptSelectionIndex("\nEnter task number", tasks.size)
         showAuditLogs(tasks[taskIndex].taskId)
     }
 

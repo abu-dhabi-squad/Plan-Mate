@@ -1,10 +1,11 @@
 package data.audit.mapper
 
+import com.google.common.truth.Truth.assertThat
 import data.audit.model.AuditDto
 import logic.model.Audit
 import logic.model.EntityType
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.Date
@@ -21,8 +22,8 @@ class AuditMapperTest {
         val now = LocalDateTime.now()
         val audit = Audit(
             auditId = uuid,
-            createdBy = "user123",
-            entityId = "entity123",
+            createdBy = "shahd",
+            entityId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             entityType = EntityType.TASK,
             oldState = "old",
             newState = "new",
@@ -33,13 +34,13 @@ class AuditMapperTest {
         val dto = mapper.auditToDto(audit)
 
         // Then
-        assertEquals(uuid.toString(), dto.id)
-        assertEquals("user123", dto.createdBy)
-        assertEquals("entity123", dto.entityId)
-        assertEquals("TASK", dto.entityType)
-        assertEquals("old", dto.oldState)
-        assertEquals("new", dto.newState)
-        assertEquals(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()), dto.date)
+        assertThat(dto.id).isEqualTo(uuid.toString())
+        assertThat(dto.createdBy).isEqualTo("shahd")
+        assertThat(dto.entityId).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        assertThat(dto.entityType).isEqualTo("TASK")
+        assertThat(dto.oldState).isEqualTo("old")
+        assertThat(dto.newState).isEqualTo("new")
+        assertThat(dto.date).isEqualTo(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
     }
 
     @Test
@@ -50,11 +51,11 @@ class AuditMapperTest {
         val date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant())
         val dto = AuditDto(
             id = uuid.toString(),
-            createdBy = "user456",
-            entityId = "entity456",
+            createdBy = "shahd",
+            entityId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
             entityType = "PROJECT",
-            oldState = "v1",
-            newState = "v2",
+            oldState = "s1",
+            newState = "s2",
             date = date
         )
 
@@ -62,11 +63,30 @@ class AuditMapperTest {
         val audit = mapper.dtoToAudit(dto)
 
         // Then
-        assertEquals(uuid, audit.auditId)
-        assertEquals("user456", audit.createdBy)
-        assertEquals("entity456", audit.entityId)
-        assertEquals(EntityType.PROJECT, audit.entityType)
-        assertEquals("v1", audit.oldState)
-        assertEquals("v2", audit.newState)
+        assertThat(audit.auditId).isEqualTo(uuid)
+        assertThat(audit.createdBy).isEqualTo("shahd")
+        assertThat(audit.entityId).isEqualTo(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        assertThat(audit.entityType).isEqualTo(EntityType.PROJECT)
+        assertThat(audit.oldState).isEqualTo("s1")
+        assertThat(audit.newState).isEqualTo("s2")
+    }
+
+    @Test
+    fun `should throw exception when invalid AuditDto is passed`() {
+        // Given
+        val invalidDto = AuditDto(
+            id = "invalid-uuid",
+            createdBy = "shahd",
+            entityId = "not-a-valid-uuid",
+            entityType = "INVALID_TYPE",
+            oldState = "s1",
+            newState = "s2",
+            date = Date()
+        )
+
+        // When & Then
+        assertThrows<Exception> {
+            mapper.dtoToAudit(invalidDto)
+        }
     }
 }

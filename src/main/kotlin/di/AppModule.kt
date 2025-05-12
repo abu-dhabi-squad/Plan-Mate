@@ -16,8 +16,8 @@ import presentation.io.InputReader
 import presentation.io.Printer
 import presentation.logic.task.validation.TaskValidator
 import presentation.logic.task.validation.TaskValidatorImpl
-import presentation.logic.utils.DateParser
-import presentation.logic.utils.DateParserImpl
+import logic.utils.DateParser
+import logic.utils.DateParserImpl
 import presentation.logic.utils.DateTimeParser
 import presentation.logic.utils.DateTimeParserImpl
 import presentation.logic.utils.hashing.HashingService

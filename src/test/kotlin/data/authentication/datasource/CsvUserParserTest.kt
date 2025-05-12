@@ -22,20 +22,20 @@ class CsvUserParserTest {
     fun `parseUserToString should return comma separated string`() {
         val user = User(
             UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
-            "john",
+            "shahd",
             "password123",
             UserType.MATE
         )
         val result = csvUserParser.parseUserToString(user)
-        assertThat(result).isEqualTo("123e4567-e89b-12d3-a456-426614174000,john,password123,MATE")
+        assertThat(result).isEqualTo("123e4567-e89b-12d3-a456-426614174000,shahd,password123,MATE")
     }
 
     @Test
     fun `parseStringToUser should return User from valid string`() {
-        val line = "123e4567-e89b-12d3-a456-426614174000,john,password123,MATE"
+        val line = "123e4567-e89b-12d3-a456-426614174000,shahd,password123,MATE"
         val user = csvUserParser.parseStringToUser(line)
         assertThat(user.userId).isEqualTo(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
-        assertThat(user.username).isEqualTo("john")
+        assertThat(user.username).isEqualTo("shahd")
         assertThat(user.password).isEqualTo("password123")
         assertThat(user.userType).isEqualTo(UserType.MATE)
     }
@@ -49,5 +49,4 @@ class CsvUserParserTest {
             csvUserParser.parseStringToUser(invalidLine)
         }
     }
-
 }

@@ -1,6 +1,6 @@
 package data.task.datasource
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import data.task.datasource.csv.CsvTask
 import helper.createTask
 import io.mockk.every
@@ -9,7 +9,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertTrue
 import data.task.datasource.csv.CsvTaskParser
 import data.utils.filehelper.CsvFileHelper
 import java.util.UUID
@@ -37,17 +36,18 @@ class CsvTaskTest {
         val result = csvTask.getAllTasks()
 
         // Then
-        Truth.assertThat(result).containsExactly(*tasks.toTypedArray())
+        assertThat(result).containsExactly(*tasks.toTypedArray())
     }
 
     @Test
-    fun `getAllTasks should returns empty list when csv file is empty`(){
+    fun `getAllTasks should returns empty list when csv file is empty`() {
         // Given
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
         // When && Then
-        assertTrue { csvTask.getAllTasks().isEmpty() }
+        assertThat(csvTask.getAllTasks()).isEmpty()
     }
+
 
     @Test
     fun `getAllTasks should rethrows Exception when file throws Exception`(){
@@ -58,15 +58,16 @@ class CsvTaskTest {
         assertThrows<Exception> { csvTask.getAllTasks() }
     }
 
-
     @Test
-    fun `getTaskByProjectId should returns empty list when csv file is empty`(){
+    fun `getTaskByProjectId should returns empty list when csv file is empty`() {
         // Given
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
         // When && Then
-        assertTrue { csvTask.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")).isEmpty() }
+        val result = csvTask.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        assertThat(result).isEmpty()
     }
+
 
     @Test
     fun `getTaskByProjectId should rethrows Exception when file throws Exception`(){
@@ -89,7 +90,7 @@ class CsvTaskTest {
         val result = csvTask.getTaskById(task.taskId)
 
         // Then
-        Truth.assertThat(result).isEqualTo(task)
+        assertThat(result).isEqualTo(task)
     }
 
     @Test
@@ -104,7 +105,7 @@ class CsvTaskTest {
         val result = csvTask.getTaskById(task.taskId)
 
         // Then
-        Truth.assertThat(result).isNull()
+        assertThat(result).isNull()
     }
 
     @Test
