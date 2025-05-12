@@ -1,6 +1,6 @@
 package data.task.datasource
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import data.task.datasource.csv.CsvTaskParser
 import helper.createTask
 import io.mockk.every
@@ -44,7 +44,7 @@ class CsvTaskParserTest {
         val result = csvTaskParser.getTaskFromCsvLine(csvLine)
 
         // Then
-        Truth.assertThat(result).isEqualTo(task)
+        assertThat(result).isEqualTo(task)
     }
     @Test
     fun `getTaskFromCsvLine should throws DateTimeParseException when date in csv line is not valid`() {
@@ -77,6 +77,6 @@ class CsvTaskParserTest {
         val result = csvTaskParser.getCsvLineFromTask(task)
 
         // Then
-        Truth.assertThat(result).isEqualTo(csvLine)
+        assertThat(result).isEqualTo(csvLine)
     }
 }

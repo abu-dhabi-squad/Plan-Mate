@@ -7,8 +7,8 @@ import logic.model.User
 import logic.model.UserType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import java.util.UUID
-import kotlin.test.assertFailsWith
 
 class UserMapperTest {
 
@@ -24,7 +24,7 @@ class UserMapperTest {
         // Given
         val user = User(
             userId = UUID.fromString("550e8400-e29b-41d4-a716-446655440000"),
-            username = "user1",
+            username = "shahd",
             password = "pass1",
             userType = UserType.ADMIN
         )
@@ -44,7 +44,7 @@ class UserMapperTest {
         // Given
         val dto = UserDto(
             id = "550e8400-e29b-41d4-a716-446655440000",
-            username = "user1",
+            username = "shahd",
             password = "pass1",
             userType = "ADMIN"
         )
@@ -64,13 +64,13 @@ class UserMapperTest {
         // Given
         val dto = UserDto(
             id = "550e8400-e29b-41d4-a716-446655440000",
-            username = "user1",
+            username = "shahd",
             password = "pass1",
             userType = "INVALID_TYPE"
         )
 
         // Then
-        assertFailsWith<UserTypeNotFoundException> {
+        assertThrows<UserTypeNotFoundException> {
             mapper.dtoToUser(dto)
         }
     }

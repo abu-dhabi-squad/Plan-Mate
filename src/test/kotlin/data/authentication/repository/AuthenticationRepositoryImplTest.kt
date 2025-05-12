@@ -1,29 +1,26 @@
 package data.authentication.repository
 
 import com.google.common.truth.Truth.assertThat
+import data.authentication.mapper.UserMapper
 import data.authentication.model.UserDto
-import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.just
+import io.mockk.Runs
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import logic.exceptions.InvalidCredentialsException
 import logic.model.User
 import logic.model.UserType
-import presentation.logic.utils.hashing.HashingService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class AuthenticationRepositoryImplTest {
 
     private val remoteDataSource: RemoteAuthenticationDataSource = mockk()
     private val loggedUserDataSource: LoggedUserDataSource = mockk()
-    private val hashingService: HashingService = mockk()
-    private val userMapper: data.authentication.mapper.UserMapper = mockk()
+    private val userMapper: UserMapper = mockk()
 
     private lateinit var repository: AuthenticationRepositoryImpl
 
@@ -35,107 +32,105 @@ class AuthenticationRepositoryImplTest {
         repository = AuthenticationRepositoryImpl(
             remoteDataSource,
             loggedUserDataSource,
-            hashingService,
             userMapper
         )
     }
 
     @Test
     fun `loginUser should return user when credentials are valid`() = runTest {
-        //Given
-        val hashedPassword = "hashedPassword"
-        val dto = mockk<UserDto> {
-            every { password } returns hashedPassword
-        }
-        every { hashingService.hash("password123") } returns hashedPassword
-        coEvery { remoteDataSource.getUserByUsername("noor") } returns dto
-        every { userMapper.dtoToUser(dto) } returns testUser
-        // When
-        val result = repository.loginUser("noor", "password123")
-        // Then
-        assertThat(testUser).isEqualTo(result)
-    }
-
-    @Test
-    fun `loginUser should throw InvalidCredentialsException when password is incorrect`() =
-        runTest {
-            // Given
-            val hashedPassword = "hashedPassword"
-            val wrongPassword = "wrongHashed"
-
-            val dto = mockk<UserDto> {
-                every { password } returns wrongPassword
-            }
-
-            every { hashingService.hash("password123") } returns hashedPassword
-            coEvery { remoteDataSource.getUserByUsername("john") } returns dto
-            // When && Then
-            assertThrows<InvalidCredentialsException> {
-                repository.loginUser("john", "password123")
-            }
-        }
-
-    @Test
-    fun `getUserByName should return user when user is exists`() = runTest {
         // Given
         val dto = mockk<UserDto>()
         coEvery { remoteDataSource.getUserByUsername("noor") } returns dto
         every { userMapper.dtoToUser(dto) } returns testUser
+
         // When
         val result = repository.getUserByName("noor")
+
         // Then
-        assertThat(testUser).isEqualTo(result)
+        assertThat(result).isEqualTo(testUser)
     }
 
     @Test
-    fun `getUserByName should return null when user is not exists`() = runTest {
+    fun `loginUser should return null when user does not exist`() = runTest {
         // Given
         coEvery { remoteDataSource.getUserByUsername("noor") } returns null
+
         // When
         val result = repository.getUserByName("noor")
+
         // Then
         assertThat(result).isNull()
     }
 
     @Test
-    fun `createUser should hash password and call data source`() = runTest {
-        //Given
-        val hashedPassword = "hashedPassword"
-        val userDto = mockk<UserDto>()
-        val userWithHashedPassword = testUser.copy(password = hashedPassword)
-        every { hashingService.hash("password123") } returns hashedPassword
-        every { userMapper.userToDto(userWithHashedPassword) } returns userDto
-        coEvery { remoteDataSource.createUser(userDto) } just Runs
+    fun `getUserByName should return user when user exists`() = runTest {
+        // Given
+        val dto = mockk<UserDto>()
+        coEvery { remoteDataSource.getUserByUsername("noor") } returns dto
+        every { userMapper.dtoToUser(dto) } returns testUser
+
         // When
-        repository.createUser(testUser)
+        val result = repository.getUserByName("noor")
+
         // Then
-        coVerify { remoteDataSource.createUser(userDto) }
+        assertThat(result).isEqualTo(testUser)
     }
 
     @Test
-    fun `saveLoggedUser should hash password and save user`() {
+    fun `getUserByName should return null when user does not exist`() = runTest {
         // Given
-        val hashedPassword = "hashedPassword"
+        coEvery { remoteDataSource.getUserByUsername("noor") } returns null
 
-        every { hashingService.hash("password123") } returns hashedPassword
-        every { loggedUserDataSource.saveLoggedUser(any()) } just Runs
         // When
-        repository.saveLoggedUser(testUser)
+        val result = repository.getUserByName("noor")
+
         // Then
+        assertThat(result).isNull()
+    }
+
+    @Test
+    fun `saveLoggedUser should save user as-is without hashing`() {
+        //Given
+        every { loggedUserDataSource.saveLoggedUser(any()) } just Runs
+        //when
+        repository.saveLoggedUser(testUser)
+        //Then
         verify {
             loggedUserDataSource.saveLoggedUser(
-                match { it.username == testUser.username && it.password == hashedPassword }
+                match {
+                    it.username == testUser.username &&
+                            it.password == testUser.password &&
+                            it.userType == testUser.userType
+                }
             )
         }
     }
+
 
     @Test
     fun `getLoggedUser should return stored user`() {
         // Given
         every { loggedUserDataSource.getLoggedUser() } returns testUser
+
         // When
         val result = repository.getLoggedUser()
+
         // Then
-        assertThat(testUser).isEqualTo(result)
+        assertThat(result).isEqualTo(testUser)
     }
+
+    @Test
+    fun `createUser should map user to dto and call remote data source`() = runTest {
+        // Given
+        val userDto = mockk<UserDto>()
+        every { userMapper.userToDto(testUser) } returns userDto
+        coEvery { remoteDataSource.createUser(userDto) } just Runs
+
+        // When
+        repository.createUser(testUser)
+
+        // Then
+        coVerify { remoteDataSource.createUser(userDto) }
+    }
+
 }
