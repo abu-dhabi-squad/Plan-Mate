@@ -2,7 +2,6 @@ package presentation.user.mate
 
 import io.mockk.Runs
 import io.mockk.coEvery
-import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
@@ -11,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.UIFeature
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
 import presentation.presentation.user.mate.ConsoleUserMenuUI
 import presentation.presentation.utils.PromptService
