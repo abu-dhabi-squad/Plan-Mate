@@ -13,7 +13,6 @@ class ConsoleAdminMenuUI(
     private val promptService: PromptService,
 ) : UiLauncher {
 
-
     override suspend fun launchUi() {
         sortMenu()
         showWelcome()
@@ -56,6 +55,5 @@ class ConsoleAdminMenuUI(
     private fun sortMenu() {
         uiFeatures.sortedBy { it.id }
     }
-
 
 }

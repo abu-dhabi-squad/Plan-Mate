@@ -16,10 +16,6 @@ class EditStateOfProjectUI(
     override suspend fun launchUi() {
         try {
             val projects = getAllProjectsUseCase()
-            if (projects.isEmpty()) {
-                printer.displayLn("\nThere are no projects in the list.")
-                return
-            }
             projects.printWithStates(printer)
             val projectIndex =
                 promptService.promptNonEmptyInt("\nChoose Project: ") - 1

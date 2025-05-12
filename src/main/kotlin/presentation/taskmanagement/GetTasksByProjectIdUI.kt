@@ -1,11 +1,11 @@
 package presentation.taskmanagement
 
-import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.printWithStates
 import presentation.presentation.utils.extensions.showAll
 
 class GetTasksByProjectIdUI(
@@ -27,9 +27,10 @@ class GetTasksByProjectIdUI(
             printer.displayLn("\nNo projects available.")
             return
         }
-
-        showProjects(projects)
-        val projectIndex = promptService.promptSelectionIndex("\nEnter project number: ", projects.size)
+        printer.displayLn("\n=== Available Projects ===")
+        projects.printWithStates(printer)
+        val projectIndex =
+            promptService.promptSelectionIndex("\nEnter project number: ", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
@@ -43,15 +44,8 @@ class GetTasksByProjectIdUI(
             printer.displayLn("\nNo tasks found in '${selectedProject.projectName}'.")
             return
         }
-
         tasks.showAll(printer)
     }
 
-    private fun showProjects(projects: List<Project>) {
-        printer.displayLn("\nAvailable Projects:")
-        projects.forEachIndexed { index, project ->
-            printer.displayLn("${index + 1}. ${project.projectName}")
-        }
-    }
 }
 

@@ -12,17 +12,15 @@ import presentation.presentation.utils.PromptService
 class LoginByUserNameUI(
     private val loginUseCase: LoginByUserNameUseCase,
     private val saveLoggedUserUseCase: SaveLoggedUserUseCase,
-    private val promptService : PromptService,
+    private val promptService: PromptService,
     private val printer: Printer,
     private val consoleMenuViewUser: ConsoleUserMenuUI,
     private val consoleMenuViewAdmin: ConsoleAdminMenuUI
 ) : UiLauncher {
     override suspend fun launchUi() {
         printer.displayLn("===== Login =====")
-
         val username = promptService.promptNonEmptyString("Enter username: ")
         val password = promptService.promptNonEmptyString(("Enter password: "))
-
         try {
             val user = loginUseCase(username, password)
             printer.displayLn("\nLogin successful! Welcome ${user.username} [${user.userType}]")

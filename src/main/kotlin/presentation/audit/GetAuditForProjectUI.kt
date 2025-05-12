@@ -10,12 +10,11 @@ import presentation.presentation.utils.extensions.showAuditLogs
 import java.util.UUID
 
 class GetAuditForProjectUI(
-    private val promptService : PromptService,
+    private val promptService: PromptService,
     private val printer: Printer,
     private val getAuditUseCase: GetAuditUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase
 ) : UiLauncher {
-
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()

@@ -8,6 +8,7 @@ import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.showAuditLogs
 import java.util.UUID
 
 class GetAuditForTaskUI(
@@ -73,18 +74,7 @@ class GetAuditForTaskUI(
     private suspend fun showAuditLogs(entityId: UUID) {
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
-            if (audits.isEmpty()) {
-                printer.displayLn("\nNo audit logs found for this task.")
-                return
-            }
-
-            printer.displayLn("\n=== Audit Logs for Task ===")
-            audits.forEachIndexed { index, audit ->
-                printer.displayLn("${index + 1}. Date: ${audit.createdAt}, Created By: ${audit.createdBy}")
-                if (audit.oldState.isEmpty()) printer.displayLn("\t=> New state set as ${audit.newState}")
-                else printer.displayLn("\t=> Changed from ${audit.oldState} to ${audit.newState}")
-            }
-            printer.displayLn()
+            audits.showAuditLogs(printer)
         } catch (e: Exception) {
             printer.displayLn("\nError: ${e.message}")
         }

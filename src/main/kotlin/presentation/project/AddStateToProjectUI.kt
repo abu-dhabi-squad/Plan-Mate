@@ -11,17 +11,13 @@ import presentation.presentation.utils.extensions.printWithStates
 class AddStateToProjectUI(
     private val addStateToProjectUseCase: AddStateToProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
-    private val promptService : PromptService,
+    private val promptService: PromptService,
     private val printer: Printer
 ) : UiLauncher {
     override suspend fun launchUi() {
         try {
             val projects = getAllProjectsUseCase()
-            if (projects.isEmpty()) {
-                printer.displayLn("\nThere are no projects in the list.")
-                return
-            }
-             projects.printWithStates(printer)
+            projects.printWithStates(printer)
             val projectIndex = promptService.promptNonEmptyInt("\nChoose Project: ") - 1
             if (projectIndex !in projects.indices) {
                 printer.displayLn("\nProject not found")

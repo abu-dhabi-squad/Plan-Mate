@@ -15,7 +15,7 @@ import presentation.presentation.utils.PromptService
 class CreateProjectUI(
     private val createProjectUseCase: CreateProjectUseCase,
     private val printer: Printer,
-    private val promptService : PromptService,
+    private val promptService: PromptService,
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ) : UiLauncher {
