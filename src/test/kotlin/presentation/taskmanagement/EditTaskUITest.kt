@@ -56,18 +56,15 @@ class EditTaskUITest {
 
     @Test
     fun `should update title, description, dates, and state`() = runTest {
-        val project = fakeProject
-        val task = fakeTask
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { getTasksByProjectIdUseCase(project.projectId) } returns listOf(task)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
         every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
         every { promptService.promptNonEmptyString(any()) } returnsMany listOf("NewTitle", "NewDesc")
         every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate,fakeDate2)
 
         presenter.launchUi()
 
-        val expected = task.copy(
+        val expected = fakeTask.copy(
             title = "NewTitle",
             description = "NewDesc",
             startDate = fakeDate,
