@@ -1,4 +1,4 @@
-package logic.authentication.validtion
+package logic.authentication.validation
 
 import logic.exceptions.ShortPasswordException
 import org.junit.jupiter.api.Test
