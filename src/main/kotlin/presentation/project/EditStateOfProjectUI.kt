@@ -40,8 +40,8 @@ class EditStateOfProjectUI(
                 projects[projectIndex].taskStates[stateIndex].copy(stateName = stateNewName)
             )
             printer.displayLn("\nTaskState updated successfully.")
-        } catch (exception: Exception) {
-            printer.displayLn(exception.message ?: "An error occurred.")
+        } catch (e: Exception) {
+            printer.displayLn("\nError: ${e.message}")
         }
     }
 

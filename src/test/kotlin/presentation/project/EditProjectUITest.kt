@@ -79,7 +79,7 @@ class EditProjectUITest {
     }
 
     @Test
-    fun `launchUI should display Exception message when throw Exception`() = runTest{
+    fun `launchUI should display Exception message editProjectUseCase when throw Exception`() = runTest{
         //given
         val project = createProject()
         val projects = listOf(project)
