@@ -39,7 +39,7 @@ class GetAuditForProjectUITest {
         val projects = listOf(project)
         val audits = listOf(createAudit(entityId = project.projectId))
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getAuditUseCase(any()) } returns audits
         //When
         ui.launchUi()
@@ -80,7 +80,7 @@ class GetAuditForProjectUITest {
         val project = createProject(name = "Project A")
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getAuditUseCase(any()) } throws Exception()
         //When
         ui.launchUi()

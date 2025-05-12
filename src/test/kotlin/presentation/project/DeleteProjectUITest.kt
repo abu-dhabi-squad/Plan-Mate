@@ -44,7 +44,7 @@ class DeleteProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         //When
         ui.launchUi()
         //Then
@@ -69,7 +69,7 @@ class DeleteProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         coEvery { deleteProjectUseCase(any()) } throws Exception()
         //When
         ui.launchUi()
@@ -83,7 +83,7 @@ class DeleteProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
         coEvery { createAuditUseCase(any()) } throws Exception()
         //When
         ui.launchUi()

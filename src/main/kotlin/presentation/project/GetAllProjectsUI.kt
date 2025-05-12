@@ -13,7 +13,6 @@ class GetAllProjectsUI(
         printer.displayLn("\nAll Created Projects:")
         showAllProjects()
     }
-
     private suspend fun showAllProjects() {
         try {
             getAllProjectsUseCase().printWithStates(printer)

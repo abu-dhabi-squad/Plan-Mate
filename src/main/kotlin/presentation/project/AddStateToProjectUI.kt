@@ -18,7 +18,7 @@ class AddStateToProjectUI(
         try {
             val projects = getAllProjectsUseCase()
             projects.printWithStates(printer)
-            val projectIndex = promptService.promptSelectionIndex("\nChoose Project: ",projects.size)
+            val projectIndex = promptService.promptSelectionIndex("\nChoose Project: ", projects.size)
             val stateName =
                 promptService.promptNonEmptyString("Enter the new state name: ")
             try {
