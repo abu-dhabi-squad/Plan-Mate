@@ -34,6 +34,4 @@ class LoginByUserNameUI(
             printer.displayLn("\nLogin failed: ${e.message}")
         }
     }
-
-
 }

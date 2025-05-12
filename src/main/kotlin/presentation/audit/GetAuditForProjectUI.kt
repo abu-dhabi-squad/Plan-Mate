@@ -39,11 +39,7 @@ class GetAuditForProjectUI(
             printer.displayLn("\nInput cannot be out of projects range.")
             return
         }
-        val selected = projects.getOrNull(choice - 1)
-        if (selected == null) {
-            printer.displayLn("\nInvalid project selection.")
-            return
-        }
+        val selected = projects.get(choice - 1)
 
         showAuditLogs(selected.projectId)
     }

@@ -17,7 +17,7 @@ import presentation.io.Printer
 import presentation.presentation.utils.PromptService
 import presentation.presentation.utils.extensions.showAuditLogs
 
-class GetAuditForProjectUITest{
+class GetAuditForProjectUITest {
 
     private val promptService: PromptService = mockk(relaxed = true)
     private val getAuditUseCase: GetAuditUseCase = mockk(relaxed = true)
@@ -36,7 +36,7 @@ class GetAuditForProjectUITest{
     }
 
     @Test
-    fun `launchUi should show audit logs for valid project`() = runTest{
+    fun `launchUi should show audit logs for valid project`() = runTest {
         //Given
         val project = createProject(name = "Project A")
         val projects = listOf(project)
@@ -47,33 +47,39 @@ class GetAuditForProjectUITest{
         //When
         ui.launchUi()
         //Then
-        verify { projects.forEachIndexed { index, project ->  printer.displayLn(match { it.toString().contains(project.projectName) })} }
+        verify {
+            projects.forEachIndexed { index, project ->
+                printer.displayLn(match {
+                    it.toString().contains(project.projectName)
+                })
+            }
+        }
         verify { audits.showAuditLogs(printer) }
     }
 
     @Test
-    fun `launchUi should show no projects available when no projects exist`() = runTest{
+    fun `launchUi should show no projects available when no projects exist`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } returns emptyList()
         //When
         ui.launchUi()
         //Then
-        verify { printer.displayLn( match{ it.toString().contains("No projects available")}) }
+        verify { printer.displayLn(match { it.toString().contains("No projects available") }) }
     }
 
     @Test
-    fun `launchUi should print error message when getAllProjectsUseCase throw exception`() = runTest{
+    fun `launchUi should print error message when getAllProjectsUseCase throw exception`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } throws Exception()
         //When
         ui.launchUi()
         //Then
-        verify { printer.displayLn( match{ it.toString().contains("${Exception().message}")}) }
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 
     @ParameterizedTest
-    @ValueSource(ints = [0,100])
-    fun `launchUi should show audit logs when user enter wrong project number`(projectNum: Int) = runTest{
+    @ValueSource(ints = [0, 100])
+    fun `launchUi should show out of projects range message when user enter wrong project number`(projectNum: Int) = runTest {
         //Given
         val project = createProject(name = "Project A")
         val projects = listOf(project)
@@ -82,11 +88,11 @@ class GetAuditForProjectUITest{
         //When
         ui.launchUi()
         //Then
-        verify { projects.forEachIndexed { index, project ->  printer.displayLn(match { it.toString().contains("out of projects range") })} }
+        verify {printer.displayLn(match { it.toString().contains("out of projects range") }) }
     }
 
     @Test
-    fun `launchUi should print error message when getAuditUseCase throw exception`() = runTest{
+    fun `launchUi should print error message when getAuditUseCase throw exception`() = runTest {
         //Given
         val project = createProject(name = "Project A")
         val projects = listOf(project)
@@ -96,6 +102,6 @@ class GetAuditForProjectUITest{
         //When
         ui.launchUi()
         //Then
-        verify { printer.displayLn( match{ it.toString().contains("${Exception().message}")}) }
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 }
