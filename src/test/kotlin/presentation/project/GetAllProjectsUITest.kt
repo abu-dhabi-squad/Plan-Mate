@@ -26,7 +26,7 @@ class GetAllProjectsUITest {
     }
 
     @Test
-    fun `should print all projects`() = runTest{
+    fun `getAllProjectsUseCase should print all projects when nothing went wrong`() = runTest{
         // Given
         val projects = listOf(
             createProject(name = "Project One"),
@@ -40,7 +40,7 @@ class GetAllProjectsUITest {
     }
 
     @Test
-    fun `should print error message when exception occurs`() = runTest {
+    fun `getAllProjectsUseCase should print error message when exception occurs`() = runTest {
         // Given
         coEvery { getAllProjectsUseCase.invoke() } throws Exception()
         // When

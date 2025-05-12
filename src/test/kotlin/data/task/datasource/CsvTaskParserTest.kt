@@ -5,7 +5,7 @@ import data.task.datasource.csv.CsvTaskParser
 import helper.createTask
 import io.mockk.every
 import io.mockk.mockk
-import presentation.logic.utils.DateParserImpl
+import logic.utils.DateParserImpl
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
