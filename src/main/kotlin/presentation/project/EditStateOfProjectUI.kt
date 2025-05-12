@@ -5,11 +5,12 @@ import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.printWithStates
 
 class EditStateOfProjectUI(
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
-    private val promptService : PromptService,
+    private val promptService: PromptService,
     private val printer: Printer
 ) : UiLauncher {
     override suspend fun launchUi() {
@@ -19,11 +20,7 @@ class EditStateOfProjectUI(
                 printer.displayLn("\nThere are no projects in the list.")
                 return
             }
-
-            projects.forEachIndexed { index, project ->
-                printer.displayLn("${index + 1}- Project Name: ${project.projectName} - States: ${project.taskStates}")
-            }
-
+            projects.printWithStates(printer)
             val projectIndex =
                 promptService.promptNonEmptyInt("\nChoose Project: ") - 1
             if (projectIndex !in projects.indices) {
@@ -35,12 +32,13 @@ class EditStateOfProjectUI(
                 printer.displayLn("${index + 1}- TaskState Name: ${state.stateName}")
             }
 
-            val stateIndex = promptService.promptNonEmptyInt("Choose state you want to edit: ",) - 1
+            val stateIndex = promptService.promptNonEmptyInt("Choose state you want to edit: ") - 1
             if (stateIndex !in projects[projectIndex].taskStates.indices) {
                 printer.displayLn("\nTaskState not found")
                 return
             }
-            val stateNewName = promptService.promptNonEmptyString("Enter the new name of the state: ")
+            val stateNewName =
+                promptService.promptNonEmptyString("Enter the new name of the state: ")
             editStateOfProjectUseCase(
                 projects[projectIndex].projectId,
                 projects[projectIndex].taskStates[stateIndex].copy(stateName = stateNewName)

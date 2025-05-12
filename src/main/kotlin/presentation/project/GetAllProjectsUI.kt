@@ -6,14 +6,12 @@ import presentation.io.Printer
 
 class GetAllProjectsUI(
     private val printer: Printer,
-    private val getAllProjectsUseCase: GetAllProjectsUseCase,
-
+    private val getAllProjectsUseCase: GetAllProjectsUseCase
 ) : UiLauncher {
     override suspend fun launchUi() {
         printer.displayLn("\nAll Created Projects:")
         getAllProjects()
     }
-
     private suspend fun getAllProjects() {
         try {
             getAllProjectsUseCase().forEachIndexed { index, project ->

@@ -20,9 +20,8 @@ class DeleteTaskByIdUI(
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
     private val deleteTaskByIdUseCase: DeleteTaskByIdUseCase,
     private val createAuditUseCase: CreateAuditUseCase,
-    private val promptService : PromptService,
-
-    ) : UiLauncher {
+    private val promptService: PromptService
+) : UiLauncher {
 
     override suspend fun launchUi() {
         val projects = try {
@@ -54,7 +53,8 @@ class DeleteTaskByIdUI(
         }
 
         showTasks(tasks)
-        val taskIndex = promptService.promptSelectionIndex("\nSelect a task to delete: ", tasks.size)
+        val taskIndex =
+            promptService.promptSelectionIndex("\nSelect a task to delete: ", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         try {

@@ -6,6 +6,7 @@ import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.printWithStates
 
 class AddStateToProjectUI(
     private val addStateToProjectUseCase: AddStateToProjectUseCase,
@@ -20,20 +21,14 @@ class AddStateToProjectUI(
                 printer.displayLn("\nThere are no projects in the list.")
                 return
             }
-
-            projects.forEachIndexed { index, project ->
-                printer.displayLn("${index + 1}- Project Name: ${project.projectName} - States: ${project.taskStates}")
-            }
-
+             projects.printWithStates(printer)
             val projectIndex = promptService.promptNonEmptyInt("\nChoose Project: ") - 1
             if (projectIndex !in projects.indices) {
                 printer.displayLn("\nProject not found")
                 return
             }
-
             val stateName =
                 promptService.promptNonEmptyString("Enter the new state name: ")
-
             try {
                 addStateToProjectUseCase(
                     projects[projectIndex].projectId,
