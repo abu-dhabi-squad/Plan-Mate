@@ -30,7 +30,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `launchUi should create project successfully entering number more than 0 as number of states`() = runTest {
+    fun `launchUi should create project successfully when entering number more than 0 as number of states`() = runTest {
         //Given
         every { promptService.promptNonEmptyString(any()) } returns "projectName" andThen "stateName"
         every { promptService.promptNonEmptyInt(any()) } returns 1
@@ -43,7 +43,7 @@ class CreateProjectUITest{
     }
 
     @Test
-    fun `launchUi should create project successfully entering 0 as number of states`() = runTest {
+    fun `launchUi should create project successfully when entering 0 as number of states`() = runTest {
         //Given
         every { promptService.promptNonEmptyString(any()) } returns "projectName"
         every { promptService.promptNonEmptyInt(any()) } returns 0

@@ -41,8 +41,8 @@ class DeleteProjectUI(
                 )
             )
             printer.displayLn("\nProject \"${projects[projectIndex].projectName}\" has been deleted.")
-        } catch (exception: Exception) {
-            printer.displayLn(exception.message ?: "An error occurred.")
+        } catch (e: Exception) {
+            printer.displayLn("\nError: ${e.message}")
         }
     }
 
