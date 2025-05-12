@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
-class EditTaskStateOfProjectUIOfProjectUseCaseTest {
+class EditStateOfProjectUseCaseTest {
     private lateinit var editStateToProjectUseCase: EditStateOfProjectUseCase
     private val projectRepository: ProjectRepository = mockk(relaxed = true)
 
@@ -33,7 +33,7 @@ class EditTaskStateOfProjectUIOfProjectUseCaseTest {
         coEvery { projectRepository.getProjectById(any()) } returns null
         //when & then
         assertThrows<ProjectNotFoundException> {
-            editStateToProjectUseCase(project.projectId.toString(), newTaskState)
+            editStateToProjectUseCase(project.projectId, newTaskState)
         }
     }
 
@@ -46,7 +46,7 @@ class EditTaskStateOfProjectUIOfProjectUseCaseTest {
         coEvery { projectRepository.getProjectById(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editStateToProjectUseCase(project.projectId.toString(), newTaskState)
+            editStateToProjectUseCase(project.projectId, newTaskState)
         }
     }
 
@@ -59,7 +59,7 @@ class EditTaskStateOfProjectUIOfProjectUseCaseTest {
         coEvery { projectRepository.getProjectById(any()) } returns project
         //when & then
         assertThrows<ProjectStateNotFoundException> {
-            editStateToProjectUseCase(project.projectId.toString(), newTaskState)
+            editStateToProjectUseCase(project.projectId, newTaskState)
         }
     }
 
@@ -73,7 +73,7 @@ class EditTaskStateOfProjectUIOfProjectUseCaseTest {
         coEvery { projectRepository.editProject(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editStateToProjectUseCase(project.projectId.toString(), newTaskState)
+            editStateToProjectUseCase(project.projectId, newTaskState)
         }
     }
 
@@ -85,7 +85,7 @@ class EditTaskStateOfProjectUIOfProjectUseCaseTest {
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1c"), "name1", taskStates)
         coEvery { projectRepository.getProjectById(any()) } returns project
         //when
-        editStateToProjectUseCase(project.projectId.toString(), newTaskState)
+        editStateToProjectUseCase(project.projectId, newTaskState)
         //then
         coVerify(exactly = 1) { projectRepository.editProject(any()) }
     }

@@ -13,12 +13,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
-class EditProjectUIUseCaseTest {
+class EditProjectUseCaseTest {
     private lateinit var editProjectUseCase: EditProjectUseCase
-    private val projectRepository: ProjectRepository = mockk(relaxed = true)
+    private lateinit var projectRepository: ProjectRepository
 
     @BeforeEach
     fun setup() {
+        projectRepository = mockk(relaxed = true)
         editProjectUseCase = EditProjectUseCase(projectRepository)
     }
 
@@ -31,7 +32,7 @@ class EditProjectUIUseCaseTest {
         coEvery { projectRepository.getProjectById(any()) } returns null
         //when & then
         assertThrows<ProjectNotFoundException> {
-            editProjectUseCase(project.projectId.toString(),newName)
+            editProjectUseCase(project.projectId,newName)
         }
     }
 
@@ -44,7 +45,7 @@ class EditProjectUIUseCaseTest {
         coEvery { projectRepository.getProjectById(any()) } throws Exception()
         //when & then
         assertThrows<Exception> {
-            editProjectUseCase(project.projectId.toString(),newName)
+            editProjectUseCase(project.projectId,newName)
         }
     }
 
@@ -58,7 +59,7 @@ class EditProjectUIUseCaseTest {
         coEvery { projectRepository.getProjectById(any()) } returns project
         //when & then
         assertThrows<Exception> {
-            editProjectUseCase(project.projectId.toString(),newName)
+            editProjectUseCase(project.projectId,newName)
         }
     }
 
@@ -70,7 +71,7 @@ class EditProjectUIUseCaseTest {
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } returns project
         //when
-        editProjectUseCase(project.projectId.toString(),newName)
+        editProjectUseCase(project.projectId,newName)
         //then
         coVerify (exactly = 1){ projectRepository.editProject(any()) }
     }
