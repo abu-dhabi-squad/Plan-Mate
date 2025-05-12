@@ -19,11 +19,7 @@ class EditProjectUI(
                 ?.let { projects ->
                     projects.printWithStates(printer)
                     val projectIndex =
-                        promptService.promptNonEmptyInt("\nChoose project: ") - 1
-                    if (projectIndex !in projects.indices) {
-                        printer.displayLn("Wrong input")
-                        return
-                    }
+                        promptService.promptSelectionIndex("\nChoose project: ", projects.size)
                     val projectName =
                         promptService.promptNonEmptyString("\nEnter the new name: ")
                     editProjectUseCase(projects[projectIndex].projectId, projectName)

@@ -18,21 +18,13 @@ class EditStateOfProjectUI(
             val projects = getAllProjectsUseCase()
             projects.printWithStates(printer)
             val projectIndex =
-                promptService.promptNonEmptyInt("\nChoose Project: ") - 1
-            if (projectIndex !in projects.indices) {
-                printer.displayLn("\nProject not found")
-                return
-            }
+                promptService.promptSelectionIndex("\nChoose Project: ",projects.size)
 
             projects[projectIndex].taskStates.forEachIndexed { index, state ->
                 printer.displayLn("${index + 1}- TaskState Name: ${state.stateName}")
             }
 
-            val stateIndex = promptService.promptNonEmptyInt("Choose state you want to edit: ") - 1
-            if (stateIndex !in projects[projectIndex].taskStates.indices) {
-                printer.displayLn("\nTaskState not found")
-                return
-            }
+            val stateIndex = promptService.promptSelectionIndex("Choose state you want to edit: ",projects[projectIndex].taskStates.size)
             val stateNewName =
                 promptService.promptNonEmptyString("Enter the new name of the state: ")
             editStateOfProjectUseCase(

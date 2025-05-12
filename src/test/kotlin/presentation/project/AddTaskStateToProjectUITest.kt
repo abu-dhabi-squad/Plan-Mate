@@ -11,8 +11,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.project.AddStateToProjectUseCase
 import logic.project.GetAllProjectsUseCase
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
 
@@ -39,7 +37,7 @@ class AddTaskStateToProjectUITest {
         val project = createProject(name = "Project A")
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
         //When
         ui.launchUi()
@@ -76,27 +74,13 @@ class AddTaskStateToProjectUITest {
         verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = [0, 100])
-    fun `launchUi should show out of projects range message when user enter wrong project number`(projectNum: Int) = runTest {
-            //Given
-            val project = createProject()
-            val projects = listOf(project)
-            coEvery { getAllProjectsUseCase() } returns projects
-            every { promptService.promptNonEmptyInt(any()) } returns projectNum
-            //When
-            ui.launchUi()
-            //Then
-            verify { printer.displayLn(match { it.toString().contains("Project not found") }) }
-        }
-
     @Test
     fun `launchUi should show error message when  throw exception`() = runTest {
         //Given
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
         coEvery { addStateToProjectUseCase(project.projectId, any()) } throws Exception()
         //When

@@ -38,11 +38,7 @@ class GetAuditForTaskUI(
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
 
-        val projectIndex = promptService.promptNonEmptyInt("\nEnter project number: ") - 1
-        if (projectIndex !in projects.indices) {
-            printer.displayLn("\nInput cannot be out of projects range.")
-            return
-        }
+        val projectIndex = promptService.promptSelectionIndex("\nEnter project number: ",projects.size)
 
         showTaskAudit(projects[projectIndex])
     }
@@ -62,12 +58,8 @@ class GetAuditForTaskUI(
         tasks.forEachIndexed { index, task ->
             printer.displayLn("${index + 1}. ${task.title}")
         }
-        val taskIndex =
-            promptService.promptNonEmptyInt("\nEnter task number: ") - 1
-        if (taskIndex !in tasks.indices) {
-            printer.displayLn("\nInput cannot be out of tasks range.")
-            return
-        }
+        val taskIndex = promptService.promptSelectionIndex("\nEnter task number: ",tasks.size)
+
         showAuditLogs(tasks[taskIndex].taskId)
     }
 

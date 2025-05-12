@@ -10,8 +10,6 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
 import kotlin.test.BeforeTest
@@ -39,7 +37,7 @@ class EditProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
         //when
         ui.launchUi()
@@ -68,27 +66,13 @@ class EditProjectUITest {
         verify { printer.displayLn(match { it.toString().contains("no project") }) }
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = [0, 100])
-    fun `launchUi should show Wrong input message when entering wrong project number`(projectNum: Int) = runTest {
-        //Given
-        val project = createProject()
-        val projects = listOf(project)
-        coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptNonEmptyInt(any()) } returns projectNum
-        //When
-        ui.launchUi()
-        //Then
-        verify { printer.displayLn(match { it.toString().contains("Wrong input") }) }
-    }
-
     @Test
     fun `launchUI should display Exception message editProjectUseCase when throw Exception`() = runTest{
         //given
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptSelectionIndex(any(),any())} returns 0
         coEvery { editProjectUseCase(any(),any()) } throws Exception()
         //when
         ui.launchUi()

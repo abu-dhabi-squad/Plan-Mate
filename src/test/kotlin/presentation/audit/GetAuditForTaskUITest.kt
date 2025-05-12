@@ -13,8 +13,6 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.ValueSource
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
 import presentation.presentation.utils.extensions.showAuditLogs
@@ -48,7 +46,7 @@ class GetAuditForTaskUITest {
         val tasks = listOf(task)
         val audits = listOf(createAudit(entityId = task.taskId))
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns tasks
         coEvery { getAuditUseCase(any()) } returns audits
         //When
@@ -89,28 +87,13 @@ class GetAuditForTaskUITest {
         verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = [0, 100])
-    fun `launchUi should show out of projects range message when user enter wrong project number`(projectNum: Int) =
-        runTest {
-            //Given
-            val project = createProject(name = "Project A")
-            val projects = listOf(project)
-            coEvery { getAllProjectsUseCase() } returns projects
-            every { promptService.promptNonEmptyInt(any()) } returns projectNum
-            //When
-            ui.launchUi()
-            //Then
-            verify { printer.displayLn(match { it.toString().contains("out of projects range") }) }
-        }
-
     @Test
     fun `launchUi should print error message when getTasksByProjectIdUseCase throw exception`() = runTest {
         //Given
         val project = createProject(name = "Project A")
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } throws Exception()
         //When
         ui.launchUi()
@@ -125,30 +108,13 @@ class GetAuditForTaskUITest {
             val project = createProject(name = "Project A")
             val projects = listOf(project)
             coEvery { getAllProjectsUseCase() } returns projects
-            every { promptService.promptNonEmptyInt(any()) } returns 1
+            every { promptService.promptSelectionIndex(any(),any()) } returns 0
             coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns emptyList()
             //When
             ui.launchUi()
             //Then
             verify { printer.displayLn(match { it.toString().contains("No tasks available") }) }
         }
-
-    @ParameterizedTest
-    @ValueSource(ints = [0, 100])
-    fun `launchUi should show out of tasks range message when user enter wrong task number`(taskNum: Int) = runTest {
-        //Given
-        val project = createProject(name = "Project A")
-        val projects = listOf(project)
-        val task = createTask(projectId = project.projectId)
-        val tasks = listOf(task)
-        coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns tasks
-        every { promptService.promptNonEmptyInt(any()) } returns 1 andThen taskNum
-        //When
-        ui.launchUi()
-        //Then
-        verify { printer.displayLn(match { it.toString().contains("out of tasks range") }) }
-    }
 
     @Test
     fun `launchUi should print error message when getAuditUseCase throw exception`() = runTest {
@@ -158,7 +124,7 @@ class GetAuditForTaskUITest {
         val task = createTask(projectId = project.projectId)
         val tasks = listOf(task)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptSelectionIndex(any(),any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns tasks
         coEvery { getAuditUseCase(any()) } throws Exception()
         //When

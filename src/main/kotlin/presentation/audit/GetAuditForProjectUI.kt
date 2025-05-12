@@ -33,13 +33,9 @@ class GetAuditForProjectUI(
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
 
-        val choice = promptService.promptNonEmptyInt("\nEnter project number: ")
+        val choice = promptService.promptSelectionIndex("\nEnter project number: ",projects.size)
 
-        if (choice !in 1..projects.size) {
-            printer.displayLn("\nInput cannot be out of projects range.")
-            return
-        }
-        val selected = projects.get(choice - 1)
+        val selected = projects.get(choice)
 
         showAuditLogs(selected.projectId)
     }

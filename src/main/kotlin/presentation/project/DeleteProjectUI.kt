@@ -25,11 +25,8 @@ class DeleteProjectUI(
             val projects = getAllProjectsUseCase()
             projects.printWithStates(printer)
             val projectIndex =
-                promptService.promptNonEmptyInt("\nChoose Project: ") - 1
-            if (projectIndex !in projects.indices) {
-                printer.displayLn("\nProject not found")
-                return
-            }
+                promptService.promptSelectionIndex("\nChoose Project: ", projects.size)
+
             deleteProjectUseCase(projects[projectIndex].projectId)
             createAuditUseCase(
                 Audit(
