@@ -3,16 +3,15 @@ package presentation.presentation.user.admin
 import org.koin.core.annotation.Named
 import presentation.UIFeature
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
 import kotlin.system.exitProcess
 
 class ConsoleAdminMenuUI(
     @Named("mate") private val uiFeatures: List<UIFeature>,
     private val printer: Printer,
-    private val inputReader: InputReader,
+    private val promptService: PromptService,
 ) : UiLauncher {
-
 
     override suspend fun launchUi() {
         sortMenu()
@@ -26,14 +25,16 @@ class ConsoleAdminMenuUI(
 
     private suspend fun presentFeature() {
         showOptions()
-        printer.displayLn("\nEnter your choice: ")
-        val input = inputReader.readInt()
-        if (input != null && input in 1..uiFeatures.size) {
-            uiFeatures.find { it.id == input }?.uiLauncher?.launchUi()
-        } else if (input == 0) {
-            exitProcess(0)
-        } else {
-            printer.displayLn("Invalid input")
+        when (val input = promptService.promptNonEmptyInt("\nEnter your choice: ")) {
+            in 1..uiFeatures.size -> {
+                uiFeatures.find { it.id == input }?.uiLauncher?.launchUi()
+            }
+            0 -> {
+                exitProcess(0)
+            }
+            else -> {
+                printer.displayLn("Invalid input")
+            }
         }
         presentFeature()
     }
@@ -54,6 +55,5 @@ class ConsoleAdminMenuUI(
     private fun sortMenu() {
         uiFeatures.sortedBy { it.id }
     }
-
 
 }

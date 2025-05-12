@@ -6,19 +6,19 @@ import logic.exceptions.UserAlreadyExistsException
 import logic.model.User
 import logic.model.UserType
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
 
 class CreateMateUserUseCaseUI(
     private val createUserUseCase: CreateMateUserUseCase,
-    private val inputReader: InputReader,
-    private val printer: Printer
-) : UiLauncher {
+    private val printer: Printer,
+    private val promptService: PromptService
+    ) : UiLauncher {
     override suspend fun launchUi() {
         printer.displayLn("===== Create User =====")
 
-        val username = promptNonEmptyString("\nEnter username: ")
-        val password = promptNonEmptyString("\nEnter password: ")
+        val username = promptService.promptNonEmptyString("\nEnter username: ")
+        val password = promptService.promptNonEmptyString("\nEnter password: ")
 
         val user = User(username = username, password = password, userType = UserType.MATE)
 
@@ -31,14 +31,4 @@ class CreateMateUserUseCaseUI(
             printer.displayLn("${e.message}")
         }
     }
-
-    private fun promptNonEmptyString(prompt: String): String {
-        while (true) {
-            printer.display(prompt)
-            val input = inputReader.readString()
-            if (!input.isNullOrBlank()) return input
-            printer.displayLn("\nInput cannot be empty.")
-        }
-    }
-
 }

@@ -7,36 +7,25 @@ import logic.project.DeleteProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.printWithStates
 
 
 class DeleteProjectUI(
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
-    private val reader: InputReader,
     private val printer: Printer,
+    private val promptService: PromptService,
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ) : UiLauncher {
     override suspend fun launchUi() {
         try {
             val projects = getAllProjectsUseCase()
-            if (projects.isEmpty()) {
-                printer.displayLn("\nThere are no projects in the list.")
-                return
-            }
-
-            projects.forEachIndexed { index, project ->
-                printer.display("${index + 1}- Project Name: ${project.projectName} - States: [ ")
-                project.taskStates.forEachIndexed { stateIndex, state ->
-                    printer.display("${stateIndex + 1}- TaskState Name: ${state.stateName}")
-                    if (stateIndex != project.taskStates.size - 1) printer.display(", ")
-                }
-                printer.displayLn(" ]")
-            }
-
-            val projectIndex = promptNonEmptyInt("\nChoose Project: ") - 1
+            projects.printWithStates(printer)
+            val projectIndex =
+                promptService.promptNonEmptyInt("\nChoose Project: ") - 1
             if (projectIndex !in projects.indices) {
                 printer.displayLn("\nProject not found")
                 return
@@ -57,12 +46,4 @@ class DeleteProjectUI(
         }
     }
 
-    private fun promptNonEmptyInt(prompt: String): Int {
-        while (true) {
-            printer.display(prompt)
-            val input = reader.readInt()
-            if (input != null) return input
-            printer.displayLn("\nInput cannot be empty.")
-        }
-    }
 }

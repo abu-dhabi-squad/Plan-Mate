@@ -8,41 +8,32 @@ import logic.model.TaskState
 import logic.project.CreateProjectUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
 
 
 class CreateProjectUI(
     private val createProjectUseCase: CreateProjectUseCase,
-    private val inputReader: InputReader,
     private val printer: Printer,
+    private val promptService: PromptService,
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ) : UiLauncher {
 
     override suspend fun launchUi() {
-        printer.display("\nEnter project name: ")
-        val projectName = inputReader.readString()?.takeIf { it.isNotBlank() }
-        if (projectName == null) {
-            printer.displayLn("\nProject name cannot be empty.")
-            return
-        }
+        val projectName =
+            promptService.promptNonEmptyString("\nEnter project name: ")
 
-        printer.display("\nEnter number of states: ")
-        val stateCount = inputReader.readInt()
-        if (stateCount == null || stateCount < 0) {
+        val stateCount =
+            promptService.promptNonEmptyInt("\nEnter number of states: ")
+        if (stateCount < 0) {
             printer.displayLn("\nInvalid number of states.")
             return
         }
 
         val taskStates = mutableListOf<TaskState>()
         for (i in 1..stateCount) {
-            printer.display("\nEnter name for state #$i: ")
-            val stateName = inputReader.readString()?.takeIf { it.isNotBlank() }
-            if (stateName == null) {
-                printer.displayLn("\nTaskState name cannot be empty.")
-                return
-            }
+            val stateName = promptService.promptNonEmptyString("\nEnter name for state #$i: ")
             taskStates.add(TaskState(stateName = stateName))
         }
 

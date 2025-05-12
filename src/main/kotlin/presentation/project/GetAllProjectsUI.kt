@@ -3,6 +3,7 @@ package presentation.project
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
+import presentation.presentation.utils.extensions.printWithStates
 
 class GetAllProjectsUI(
     private val printer: Printer,
@@ -10,14 +11,12 @@ class GetAllProjectsUI(
 ) : UiLauncher {
     override suspend fun launchUi() {
         printer.displayLn("\nAll Created Projects:")
-        getAllProjects()
+        showAllProjects()
     }
 
-    private suspend fun getAllProjects() {
+    private suspend fun showAllProjects() {
         try {
-            getAllProjectsUseCase().forEachIndexed { index, project ->
-                printer.displayLn("${index + 1}) ${project.projectName}")
-            }
+            getAllProjectsUseCase().printWithStates(printer)
         } catch (e: Exception) {
             printer.displayLn("\nError retrieving projects: ${e.message}")
         }

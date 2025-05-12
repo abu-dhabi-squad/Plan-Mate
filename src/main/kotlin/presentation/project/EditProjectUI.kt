@@ -3,37 +3,32 @@ package presentation.project
 import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.printWithStates
 
 class EditProjectUI(
     private val editProjectUseCase: EditProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
-    private val reader: InputReader,
+    private val promptService: PromptService,
     private val printer: Printer
 ) : UiLauncher {
     override suspend fun launchUi() {
         try {
             getAllProjectsUseCase().takeIf { it.isNotEmpty() }
-                .let { projects ->
-                    projects?.forEachIndexed { index, project ->
-                        printer.displayLn("${index + 1}- Project Name: " + project.projectName + " - States : " + project.taskStates)
-                    }?.let {
-                        printer.display("\nChoose project: ")
-                        reader.readInt()?.let { choice ->
-                            val projectIndex = choice - 1
-                            if (projectIndex !in projects.indices) {
-                                printer.displayLn("Wrong input")
-                                return
-                            }
-                            printer.displayLn("\nEnter the new name: ")
-                            reader.readString()?.let { projectName ->
-                                editProjectUseCase(projects[projectIndex].projectId, projectName)
-                                printer.displayLn("\nProject updated successfully.")
-                            } ?: printer.displayLn("Wrong input")
-                        } ?: printer.displayLn("Wrong input")
-                    } ?: printer.displayLn("There is no project in list")
-                }
+                ?.let { projects ->
+                    projects.printWithStates(printer)
+                    val projectIndex =
+                        promptService.promptNonEmptyInt("\nChoose project: ")
+                    if (projectIndex !in projects.indices) {
+                        printer.displayLn("Wrong input")
+                        return
+                    }
+                    val projectName =
+                        promptService.promptNonEmptyString("\nEnter the new name: ")
+                    editProjectUseCase(projects[projectIndex].projectId, projectName)
+                    printer.displayLn("\nProject updated successfully.")
+                } ?: printer.displayLn("There is no project in list")
         } catch (e: Exception) {
             printer.displayLn(e.message)
         }

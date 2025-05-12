@@ -10,17 +10,17 @@ import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
 
 class DeleteTaskByIdUI(
     private val printer: Printer,
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
-    private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
     private val deleteTaskByIdUseCase: DeleteTaskByIdUseCase,
-    private val createAuditUseCase: CreateAuditUseCase
+    private val createAuditUseCase: CreateAuditUseCase,
+    private val promptService: PromptService
 ) : UiLauncher {
 
     override suspend fun launchUi() {
@@ -37,7 +37,7 @@ class DeleteTaskByIdUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptSelection("\nSelect a project: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nSelect a project: ", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
@@ -53,7 +53,8 @@ class DeleteTaskByIdUI(
         }
 
         showTasks(tasks)
-        val taskIndex = promptSelection("\nSelect a task to delete: ", tasks.size)
+        val taskIndex =
+            promptService.promptSelectionIndex("\nSelect a task to delete: ", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         try {
@@ -87,12 +88,4 @@ class DeleteTaskByIdUI(
         }
     }
 
-    private fun promptSelection(prompt: String, max: Int): Int {
-        while (true) {
-            printer.display(prompt)
-            val input = inputReader.readInt()
-            if (input != null && input in 1..max) return input - 1
-            printer.displayLn("\nPlease enter a number between 1 and $max.")
-        }
-    }
 }
