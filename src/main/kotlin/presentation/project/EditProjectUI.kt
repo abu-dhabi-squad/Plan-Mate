@@ -5,20 +5,19 @@ import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.printWithStates
 
 class EditProjectUI(
     private val editProjectUseCase: EditProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
-    private val promptService : PromptService,
+    private val promptService: PromptService,
     private val printer: Printer
 ) : UiLauncher {
     override suspend fun launchUi() {
         try {
             getAllProjectsUseCase().takeIf { it.isNotEmpty() }
                 ?.let { projects ->
-                    projects.forEachIndexed { index, project ->
-                        printer.displayLn("${index + 1}- Project Name: " + project.projectName + " - States : " + project.taskStates)
-                    }
+                    projects.printWithStates(printer)
                     val projectIndex =
                         promptService.promptNonEmptyInt("\nChoose project: ")
                     if (projectIndex !in projects.indices) {
