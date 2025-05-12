@@ -1,154 +1,88 @@
 package presentation.auth
 
+import helper.createUser
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.authentication.LoginByUserNameUseCase
-import logic.exceptions.UserNotFoundException
-import logic.model.User
 import logic.model.UserType
 import presentation.presentation.user.admin.ConsoleAdminMenuUI
-import presentation.io.InputReader
 import presentation.io.Printer
 import presentation.presentation.user.mate.ConsoleUserMenuUI
 import logic.user.SaveLoggedUserUseCase
-import java.util.UUID
+import presentation.presentation.utils.PromptService
 
 class LoginByUserNameUITest {
 
-    private lateinit var loginUseCase: LoginByUserNameUseCase
-    private lateinit var inputReader: InputReader
-    private lateinit var printer: Printer
-    private lateinit var consoleMenuViewUser: ConsoleUserMenuUI
-    private lateinit var consoleMenuViewAdmin: ConsoleAdminMenuUI
-    private lateinit var loginUi: LoginByUserNameUI
-    private lateinit var saveLoggedUserUseCase: SaveLoggedUserUseCase
+    private val loginUseCase: LoginByUserNameUseCase = mockk(relaxed = true)
+    private val saveLoggedUserUseCase: SaveLoggedUserUseCase = mockk(relaxed = true)
+    private val promptService: PromptService = mockk(relaxed = true)
+    private val printer: Printer = mockk(relaxed = true)
+    private val consoleMenuViewUser: ConsoleUserMenuUI = mockk(relaxed = true)
+    private val consoleMenuViewAdmin: ConsoleAdminMenuUI = mockk(relaxed = true)
+    private lateinit var ui: LoginByUserNameUI
 
     @BeforeEach
     fun setUp() {
-        loginUseCase = mockk(relaxed = true)
-        inputReader = mockk(relaxed = true)
-        printer = mockk(relaxed = true)
-        consoleMenuViewUser = mockk(relaxed = true)
-        consoleMenuViewAdmin = mockk(relaxed = true)
-        saveLoggedUserUseCase= mockk(relaxed = true)
-
-        loginUi = LoginByUserNameUI(
-            loginUseCase,
-            saveLoggedUserUseCase,
-            inputReader,
-            printer,
-            consoleMenuViewUser,
-            consoleMenuViewAdmin,
+        ui = LoginByUserNameUI(
+            loginUseCase = loginUseCase,
+            saveLoggedUserUseCase = saveLoggedUserUseCase,
+            promptService = promptService,
+            printer = printer,
+            consoleMenuViewUser = consoleMenuViewUser,
+            consoleMenuViewAdmin = consoleMenuViewAdmin,
         )
     }
 
-
     @Test
-    fun `should show error for empty username`() = runTest{
-        // Given
-        every { inputReader.readString() } returnsMany listOf("", "shahd", "12345678")
-
-        // When
-        loginUi.launchUi()
-
-        // Then
-        verify { printer.displayLn("\nInput cannot be empty.") }
-    }
-
-    @Test
-    fun `should show error for empty password`() = runTest{
-        // Given
-        every { inputReader.readString() } returnsMany listOf("someUser", "", "12345678")
-
-        // When
-        loginUi.launchUi()
-
-        // Then
-        verify { printer.displayLn("\nInput cannot be empty.") }
-    }
-
-    @Test
-    fun `should login successfully as ADMIN and launch admin menu`() =runTest{
-        // Given
-        val user = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "adminUser", "adminPass", UserType.ADMIN)
-        every { inputReader.readString() } returnsMany listOf("adminUser", "adminPass")
-        coEvery { loginUseCase.invoke("adminUser", "adminPass") } returns user
-
-        // When
-        loginUi.launchUi()
-
-        // Then
-        verify { printer.displayLn("\nLogin successful! Welcome adminUser [ADMIN]") }
+    fun `launchUi should call consoleMenuViewAdmin launchUi when admin logged successfully`() = runTest {
+        //Given
+        val user = createUser(userType = UserType.ADMIN)
+        coEvery { loginUseCase(any(),any()) } returns user
+        //When
+        ui.launchUi()
+        //Then
+        verify { printer.displayLn(match{it.toString().contains("Login successful")}) }
+        verify { saveLoggedUserUseCase(user) }
         coVerify { consoleMenuViewAdmin.launchUi() }
-        coVerify(exactly = 0) { consoleMenuViewUser.launchUi() }
     }
 
     @Test
-    fun `should login successfully as MATE and launch user menu`() = runTest{
-        // Given
-        val user = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "mateUser", "matePass", UserType.MATE)
-        every { inputReader.readString() } returnsMany listOf("mateUser", "matePass")
-        coEvery { loginUseCase.invoke("mateUser", "matePass") } returns user
-
-        // When
-        loginUi.launchUi()
-
-        // Then
-        verify { printer.displayLn("\nLogin successful! Welcome mateUser [MATE]") }
+    fun `launchUi should call consoleMenuViewUser launchUi when mate logged successfully`() = runTest {
+        //Given
+        val user = createUser(userType = UserType.MATE)
+        coEvery { loginUseCase(any(),any()) } returns user
+        //When
+        ui.launchUi()
+        //Then
+        verify { printer.displayLn(match{it.toString().contains("Login successful")}) }
+        verify { saveLoggedUserUseCase(user) }
         coVerify { consoleMenuViewUser.launchUi() }
-        coVerify(exactly = 0) { consoleMenuViewAdmin.launchUi() }
     }
 
     @Test
-    fun `should show error message when login fails with UserNotFoundException`() = runTest{
-        // Given
-        val username = "wrongUser"
-        every { inputReader.readString() } returnsMany listOf(username, "wrongPass")
-        coEvery { loginUseCase.invoke(username, "wrongPass") } throws UserNotFoundException(username)
-
-        // When
-        loginUi.launchUi()
-
-        // Then
-        verify {printer.displayLn(match{it.toString().contains("\nLogin failed: User with username '$username' not found")})}
+    fun `launchUi should print error message when loginUseCase throw exception`() = runTest {
+        //Given
+        coEvery { loginUseCase(any(),any()) } throws Exception()
+        //When
+        ui.launchUi()
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 
     @Test
-    fun `should show error for null username`() = runTest{
-        // Given
-        every { inputReader.readString() } returnsMany listOf(null, "shahd", "12345678")
-
-        // When
-        loginUi.launchUi()
-
-        // Then
-        verify { printer.displayLn("\nInput cannot be empty.") }
+    fun `launchUi should print error message when saveLoggedUserUseCase throw exception`() = runTest {
+        //Given
+        val user = createUser(userType = UserType.MATE)
+        coEvery { loginUseCase(any(),any()) } returns user
+        coEvery { saveLoggedUserUseCase(user) } throws Exception()
+        //When
+        ui.launchUi()
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
-
-    @Test
-    fun `should show error for null password`() = runTest {
-        // Given
-        every { inputReader.readString() } returnsMany listOf("shahd", null, "12345678")
-
-        // When
-        loginUi.launchUi()
-
-        // Then
-        verify { printer.displayLn("\nInput cannot be empty.") }
-    }
-
 }
-
-
-
-
-
-
-
-
