@@ -74,8 +74,7 @@ class AddTaskStateToProjectUITest {
 
     @ParameterizedTest
     @ValueSource(ints = [0, 100])
-    fun `launchUi should show out of projects range message when user enter wrong project number`(projectNum: Int) =
-        runTest {
+    fun `launchUi should show out of projects range message when user enter wrong project number`(projectNum: Int) = runTest {
             //Given
             val project = createProject()
             val projects = listOf(project)
