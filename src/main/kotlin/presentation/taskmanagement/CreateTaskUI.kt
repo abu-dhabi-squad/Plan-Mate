@@ -6,27 +6,24 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.logic.utils.DateParser
-import java.time.LocalDate
+import presentation.presentation.utils.PromptService
 
 class CreateTaskUI(
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val printer: Printer,
-    private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val createTaskUseCase: CreateTaskUseCase,
-    private val parserDate: DateParser,
+    private val promptService : PromptService,
     private val createAuditUseCase: CreateAuditUseCase
 
 ) : UiLauncher {
     override suspend fun launchUi() {
-        val title = promptNonEmptyString("Enter task title: ")
-        val description = promptNonEmptyString("Enter task description: ")
-        val startDate = promptDate("Enter task start date (YYYY-MM-DD): ")
-        val endDate = promptDate("Enter task end date (YYYY-MM-DD): ")
-
+        val title = promptService.promptNonEmptyString("Enter task title: ")
+        val description =
+            promptService.promptNonEmptyString("Enter task description: ")
+        val startDate = promptService.promptDate("Enter task start date (YYYY-MM-DD): ")
+        val endDate = promptService.promptDate("Enter task end date (YYYY-MM-DD): ")
         val projects = try {
             getAllProjectsUseCase()
         } catch (e: Exception) {
@@ -40,11 +37,11 @@ class CreateTaskUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptSelectionIndex("\nEnter project number: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nEnter project number: ", projects.size)
         val selectedProject = projects[projectIndex]
 
         showStates(selectedProject.taskStates)
-        val stateIndex = promptSelectionIndex("\nEnter state number: ", selectedProject.taskStates.size)
+        val stateIndex = promptService.promptSelectionIndex("\nEnter state number: ", selectedProject.taskStates.size)
         val selectedState = selectedProject.taskStates[stateIndex]
 
         val task = Task(
@@ -88,38 +85,9 @@ class CreateTaskUI(
         }
     }
 
-    private fun promptNonEmptyString(prompt: String): String {
-        while (true) {
-            printer.display(prompt)
-            val input = inputReader.readString()
-            if (!input.isNullOrBlank()) return input
-            printer.displayLn("\nInput cannot be empty.")
-        }
-    }
 
-    private fun promptDate(prompt: String): LocalDate {
-        while (true) {
-            printer.display(prompt)
-            val input = inputReader.readString()
-            if (input.isNullOrBlank()) {
-                printer.displayLn("\nDate cannot be empty.")
-                continue
-            }
-            try {
-                val date = parserDate.parseDateFromString(input)
-                return date
-            } catch (e: Exception) {
-                printer.displayLn("\nInvalid date format. Please use YYYY-MM-DD.")
-            }
-        }
-    }
 
-    private fun promptSelectionIndex(prompt: String, size: Int): Int {
-        while (true) {
-            printer.display(prompt)
-            val input = inputReader.readInt()
-            if (input != null && input in 1..size) return input - 1
-            printer.displayLn("\nPlease enter a number between 1 and $size.")
-        }
-    }
+
+
+
 }

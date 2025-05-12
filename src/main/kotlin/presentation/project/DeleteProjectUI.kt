@@ -7,15 +7,15 @@ import logic.project.DeleteProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
 
 
 class DeleteProjectUI(
     private val deleteProjectUseCase: DeleteProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
-    private val reader: InputReader,
     private val printer: Printer,
+    private val promptService : PromptService,
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
 ) : UiLauncher {
@@ -36,7 +36,8 @@ class DeleteProjectUI(
                 printer.displayLn(" ]")
             }
 
-            val projectIndex = promptNonEmptyInt("\nChoose Project: ") - 1
+            val projectIndex =
+                promptService.promptNonEmptyInt("\nChoose Project: ") - 1
             if (projectIndex !in projects.indices) {
                 printer.displayLn("\nProject not found")
                 return
@@ -57,12 +58,4 @@ class DeleteProjectUI(
         }
     }
 
-    private fun promptNonEmptyInt(prompt: String): Int {
-        while (true) {
-            printer.display(prompt)
-            val input = reader.readInt()
-            if (input != null) return input
-            printer.displayLn("\nInput cannot be empty.")
-        }
-    }
 }

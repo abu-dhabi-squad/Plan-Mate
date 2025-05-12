@@ -4,13 +4,13 @@ import logic.model.TaskState
 import logic.project.AddStateToProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
+import presentation.presentation.utils.PromptService
 
 class AddStateToProjectUI(
     private val addStateToProjectUseCase: AddStateToProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
-    private val reader: InputReader,
+    private val promptService : PromptService,
     private val printer: Printer
 ) : UiLauncher {
     override suspend fun launchUi() {
@@ -25,16 +25,20 @@ class AddStateToProjectUI(
                 printer.displayLn("${index + 1}- Project Name: ${project.projectName} - States: ${project.taskStates}")
             }
 
-            val projectIndex = promptNonEmptyInt("\nChoose Project: ") - 1
+            val projectIndex = promptService.promptNonEmptyInt("\nChoose Project: ") - 1
             if (projectIndex !in projects.indices) {
                 printer.displayLn("\nProject not found")
                 return
             }
 
-            val stateName = promptNonEmptyString("Enter the new state name: ")
+            val stateName =
+                promptService.promptNonEmptyString("Enter the new state name: ")
 
             try {
-                addStateToProjectUseCase(projects[projectIndex].projectId, TaskState(stateName = stateName))
+                addStateToProjectUseCase(
+                    projects[projectIndex].projectId,
+                    TaskState(stateName = stateName)
+                )
                 printer.displayLn("TaskState \"$stateName\" added to project \"${projects[projectIndex].projectName}\" successfully.")
             } catch (e: Exception) {
                 printer.displayLn("Error: ${e.message}")
@@ -44,21 +48,5 @@ class AddStateToProjectUI(
         }
     }
 
-    private fun promptNonEmptyInt(prompt: String): Int {
-        while (true) {
-            printer.display(prompt)
-            val input = reader.readInt()
-            if (input != null) return input
-            printer.displayLn("\nInput cannot be empty.")
-        }
-    }
 
-    private fun promptNonEmptyString(prompt: String): String {
-        while (true) {
-            printer.display(prompt)
-            val input = reader.readString()
-            if (!input.isNullOrBlank()) return input
-            printer.displayLn("\nInput cannot be empty.")
-        }
-    }
 }

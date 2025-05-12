@@ -15,6 +15,7 @@ import presentation.io.Printer
 import presentation.presentation.user.admin.ConsoleAdminMenuUI
 import presentation.presentation.user.mate.ConsoleUserMenuUI
 import presentation.presentation.user.usermanagement.CreateMateUserUseCaseUI
+import presentation.presentation.utils.PromptService
 import presentation.project.*
 import presentation.taskmanagement.CreateTaskUI
 import presentation.taskmanagement.DeleteTaskByIdUI
@@ -34,8 +35,8 @@ val uiModule = module {
     single { CreateProjectUI(get(), get(), get(), get(), get()) }
     single { EditProjectUI(get(), get(), get(), get()) }
     single { DeleteProjectUI(get(), get(), get(), get(), get(), get()) }
-    single { CreateTaskUI(get(), get(), get(), get(), get(), get(), get()) }
-    single { EditTaskUI(get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { CreateTaskUI(get(), get(), get(), get(), get(), get()) }
+    single { EditTaskUI(get(), get(), get(), get(), get(), get(), get()) }
     single { DeleteTaskByIdUI(get(), get(), get(), get(), get(), get(), get()) }
     single { GetTasksByProjectIdUI(get(), get(), get(), get()) }
     single { CreateMateUserUseCaseUI(get(), get(), get()) }
@@ -75,5 +76,8 @@ val uiModule = module {
     // Menu views
     single { ConsoleAdminMenuUI(get(named("adminFeatures")), get(), get()) }
     single { ConsoleUserMenuUI(get(named("mateFeatures")), get(), get()) }
+
+    //PromptService
+    single {PromptService(get(),get(),get())}
 }
 

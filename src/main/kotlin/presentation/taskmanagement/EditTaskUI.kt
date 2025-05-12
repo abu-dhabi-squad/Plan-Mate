@@ -1,25 +1,26 @@
 package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
-import logic.model.*
+import logic.model.Audit
+import logic.model.EntityType
+import logic.model.Project
+import logic.model.Task
+import logic.model.TaskState
 import logic.project.GetAllProjectsUseCase
 import logic.task.EditTaskUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.logic.utils.DateParser
-import java.time.LocalDate
+import presentation.presentation.utils.PromptService
 
 class EditTaskUI(
     private val printer: Printer,
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
-    private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
     private val editTaskUseCase: EditTaskUseCase,
-    private val dateParser: DateParser,
+    private val promptService: PromptService,
     private val createAuditUseCase: CreateAuditUseCase
 ) : UiLauncher {
     override suspend fun launchUi() {
@@ -36,7 +37,7 @@ class EditTaskUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptSelection("\nSelect a project: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nSelect a project: ", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
@@ -52,23 +53,26 @@ class EditTaskUI(
         }
 
         showTasks(tasks)
-        val taskIndex = promptSelection("\nSelect a task to edit: ", tasks.size)
+        val taskIndex = promptService.promptSelectionIndex("\nSelect a task to edit: ", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         printer.displayLn("\nEditing Task: ${selectedTask.title}")
         val newTitle =
-            promptString("\nEnter new title or leave blank: ", selectedTask.title)
-        val newDescription = promptString(
+            promptService.promptString("\nEnter new title or leave blank: ", selectedTask.title)
+        val newDescription = promptService.promptString(
             "\nEnter new description or leave blank: ",
             selectedTask.description
         )
         val newStartDate =
-            promptDate("\nEnter new start date (YYYY-MM-DD) or leave blank: ", selectedTask.startDate)
+            promptService.promptDate(
+                "\nEnter new start date (YYYY-MM-DD) or leave blank: ",
+                selectedTask.startDate
+            )
         val newEndDate =
-            promptDate("\nEnter new end date (YYYY-MM-DD) or leave blank: ", selectedTask.endDate)
+            promptService.promptDate("\nEnter new end date (YYYY-MM-DD) or leave blank: ", selectedTask.endDate)
 
         showStates(selectedProject.taskStates)
-        val stateIndex = promptSelection("\nSelect new state: ", selectedProject.taskStates.size)
+        val stateIndex = promptService.promptSelectionIndex("\nSelect new state: ", selectedProject.taskStates.size)
         val newState = selectedProject.taskStates[stateIndex]
 
         val updatedTask = selectedTask.copy(
@@ -81,7 +85,8 @@ class EditTaskUI(
 
         try {
             editTaskUseCase(updatedTask)
-            val oldState = selectedProject.taskStates.first { it.stateId == selectedTask.taskStateId }
+            val oldState =
+                selectedProject.taskStates.first { it.stateId == selectedTask.taskStateId }
 
             createAuditUseCase(
                 Audit(
@@ -116,36 +121,6 @@ class EditTaskUI(
         printer.displayLn("\nAvailable States:")
         taskStates.forEachIndexed { index, state ->
             printer.displayLn("${index + 1}. ${state.stateName}")
-        }
-    }
-
-    private fun promptSelection(message: String, max: Int): Int {
-        while (true) {
-            printer.display(message)
-            val input = inputReader.readInt()
-            if (input != null && input in 1..max) return input - 1
-            printer.displayLn("\nPlease enter a valid number between 1 and $max.")
-        }
-    }
-
-    private fun promptString(message: String, currentValue: String): String {
-        printer.display(message)
-        val input = inputReader.readString()
-        return if (input.isNullOrBlank()) currentValue else input
-    }
-
-    private fun promptDate(message: String, currentValue: LocalDate): LocalDate {
-        printer.display(message)
-        val input = inputReader.readString()
-        return if (input.isNullOrBlank()) {
-            currentValue
-        } else {
-            try {
-                dateParser.parseDateFromString(input)
-            } catch (e: Exception) {
-                printer.displayLn("\nInvalid date format. Keeping current value.")
-                currentValue
-            }
         }
     }
 }

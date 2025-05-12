@@ -6,13 +6,13 @@ import logic.model.Project
 import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
-import java.util.*
+import presentation.presentation.utils.PromptService
+import java.util.UUID
 
 class GetAuditForTaskUI(
     private val printer: Printer,
-    private val reader: InputReader,
+    private val promptService : PromptService,
     private val getAuditUseCase: GetAuditUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
@@ -37,7 +37,7 @@ class GetAuditForTaskUI(
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
 
-        val projectIndex = promptNonEmptyInt("\nEnter project number: ") - 1
+        val projectIndex = promptService.promptNonEmptyInt("\nEnter project number: ") - 1
         if (projectIndex !in projects.indices) {
             printer.displayLn("\nInput cannot be out projects range.")
             return
@@ -61,7 +61,8 @@ class GetAuditForTaskUI(
         tasks.forEachIndexed { index, task ->
             printer.displayLn("${index + 1}. ${task.title}")
         }
-        val taskIndex = promptNonEmptyInt("\nEnter task number: ") - 1
+        val taskIndex =
+            promptService.promptNonEmptyInt("\nEnter task number: ") - 1
         if (taskIndex !in tasks.indices) {
             printer.displayLn("\nInput cannot be out tasks range.")
             return
@@ -89,12 +90,5 @@ class GetAuditForTaskUI(
         }
     }
 
-    private fun promptNonEmptyInt(prompt: String): Int {
-        while (true) {
-            printer.display(prompt)
-            val input = reader.readInt()
-            if (input != null) return input
-            printer.displayLn("\nInput cannot be empty.")
-        }
-    }
+
 }
