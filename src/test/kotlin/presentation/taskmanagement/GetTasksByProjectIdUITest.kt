@@ -47,8 +47,8 @@ class GetTasksByProjectIdUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn(match { (it as? String)?.contains("=== Available Projects") == true }) }
-        verify { printer.displayLn(match { (it as? String)?.contains(fakeTask.title) == true }) }
+        verify { printer.displayLn(match { it.toString().contains("=== Available Projects") }) }
+        verify { printer.displayLn(match { it.toString().contains(fakeTask.title) }) }
     }
 
     @Test
