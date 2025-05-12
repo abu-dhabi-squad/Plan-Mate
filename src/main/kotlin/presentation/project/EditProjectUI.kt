@@ -19,7 +19,7 @@ class EditProjectUI(
                 ?.let { projects ->
                     projects.printWithStates(printer)
                     val projectIndex =
-                        promptService.promptNonEmptyInt("\nChoose project: ")
+                        promptService.promptNonEmptyInt("\nChoose project: ") - 1
                     if (projectIndex !in projects.indices) {
                         printer.displayLn("Wrong input")
                         return
@@ -30,7 +30,7 @@ class EditProjectUI(
                     printer.displayLn("\nProject updated successfully.")
                 } ?: printer.displayLn("There is no project in list")
         } catch (e: Exception) {
-            printer.displayLn(e.message)
+            printer.displayLn("\nError: ${e.message}")
         }
     }
 }

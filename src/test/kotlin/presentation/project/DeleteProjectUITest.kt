@@ -46,7 +46,7 @@ class DeleteProjectUITest {
         //When
         ui.launchUi()
         //Then
-        coVerify {deleteProjectUseCase(any())}
+        coVerify { deleteProjectUseCase(any()) }
         coVerify { createAuditUseCase(any()) }
         verify { printer.displayLn(match { it.toString().contains("deleted") }) }
     }

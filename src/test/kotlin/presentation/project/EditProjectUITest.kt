@@ -1,29 +1,47 @@
 package presentation.project
 
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.mockk
+import helper.createProject
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import logic.model.Project
-import logic.model.TaskState
 import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
-import presentation.io.ConsoleReader
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import presentation.io.Printer
-import java.util.UUID
+import presentation.presentation.utils.PromptService
 import kotlin.test.BeforeTest
 
 class EditProjectUITest {
-    private val printer: Printer = mockk(relaxed = true)
-    private val reader: ConsoleReader = mockk(relaxed = true)
     private val editProjectUseCase: EditProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
-    private lateinit var editProjectUI: EditProjectUI
+    private val promptService: PromptService = mockk(relaxed = true)
+    private val printer: Printer = mockk(relaxed = true)
+    private lateinit var ui: EditProjectUI
 
     @BeforeTest
     fun setup() {
-        editProjectUI = EditProjectUI(editProjectUseCase, getAllProjectsUseCase, reader, printer)
+        ui = EditProjectUI(
+            editProjectUseCase = editProjectUseCase,
+            getAllProjectsUseCase = getAllProjectsUseCase,
+            promptService = promptService,
+            printer = printer
+        )
+    }
+
+    @Test
+    fun `launchUI should edit successfully when nothing went wrong`() = runTest{
+        //given
+        val project = createProject()
+        val projects = listOf(project)
+        coEvery { getAllProjectsUseCase() } returns projects
+        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        //when
+        ui.launchUi()
+        //then
+        coVerify { editProjectUseCase(any(),any()) }
+        verify { printer.displayLn(match { it.toString().contains("updated") }) }
     }
 
     @Test
@@ -31,78 +49,46 @@ class EditProjectUITest {
         //given
         coEvery { getAllProjectsUseCase() } throws Exception()
         //when
-        editProjectUI.launchUi()
+        ui.launchUi()
         //then
-        coVerify { printer.displayLn(Exception().message) }
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 
     @Test
-    fun `launchUI should display there is no project in list when get all projects return empty list`() = runTest{
+    fun `launchUI should display no project message when get all projects return empty list`() = runTest{
         //given
-        coEvery { getAllProjectsUseCase() } returns listOf()
+        coEvery { getAllProjectsUseCase() } returns emptyList()
         //when
-        editProjectUI.launchUi()
+        ui.launchUi()
         //then
-        coVerify { printer.displayLn("There is no project in list") }
+        verify { printer.displayLn(match { it.toString().contains("no project") }) }
     }
 
-    @Test
-    fun `launchUI should display list details when get all projects return list`() = runTest{
-        //given
-        val projects = listOf(
-            Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name2"))),
-            Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name2")))
-        )
+    @ParameterizedTest
+    @ValueSource(ints = [0, 100])
+    fun `launchUi should show Wrong input message when entering wrong project number`(projectNum: Int) = runTest {
+        //Given
+        val project = createProject()
+        val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        coEvery { reader.readInt() } returns null
-        //when
-        editProjectUI.launchUi()
-        //then
-        coVerify {
-            projects.forEachIndexed { index, project ->
-                printer.displayLn(
-                    "${index + 1}- Project Name: ${project.projectName} - States : ${project.taskStates}"
-                )
-            }
-
-        }
-        coVerify { printer.displayLn("Wrong input") }
+        every { promptService.promptNonEmptyInt(any()) } returns projectNum
+        //When
+        ui.launchUi()
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("Wrong input") }) }
     }
 
     @Test
-    fun `launchUI should display Wrong input when enter Wrong input or not entering at all for project id`() = runTest{
+    fun `launchUI should display Exception message when throw Exception`() = runTest{
         //given
-        coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
-        coEvery { reader.readInt() } returns null
+        val project = createProject()
+        val projects = listOf(project)
+        coEvery { getAllProjectsUseCase() } returns projects
+        every { promptService.promptNonEmptyInt(any()) } returns 1
+        coEvery { editProjectUseCase(any(),any()) } throws Exception()
         //when
-        editProjectUI.launchUi()
+        ui.launchUi()
         //then
-        coVerify { printer.displayLn("Wrong input") }
-    }
-
-    @Test
-    fun `launchUI should display Wrong input when enter Wrong input or not entering at all for project name`() = runTest{
-        //given
-        coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
-        coEvery { reader.readInt() } returns 1
-        coEvery { reader.readString() } returns null
-        //when
-        editProjectUI.launchUi()
-        //then
-        coVerify { printer.displayLn("Wrong input") }
-    }
-
-    @Test
-    fun `launchUI should display Exception message when edit project use case throw Exception`() = runTest{
-        // Given
-        coEvery { getAllProjectsUseCase() } returns listOf(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf()))
-        coEvery { reader.readInt() } returns 1
-        coEvery { reader.readString() } returns "name1"
-        coEvery { editProjectUseCase(any(), any()) } throws Exception()
-        // When
-        editProjectUI.launchUi()
-        //then
-        coVerify(exactly = 1) { editProjectUseCase(any(), any()) }
-        coVerify { printer.displayLn(Exception().message) }
+        verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 }
