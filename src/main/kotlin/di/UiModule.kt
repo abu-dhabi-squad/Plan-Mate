@@ -44,29 +44,29 @@ val uiModule = module {
     // Admin UIFeatures
     single<List<UIFeature>>(named("adminFeatures")) {
         listOf(
-            UIFeature("Create Project", 1, get<CreateProjectUI>()),
-            UIFeature("Edit Project", 2, get<EditProjectUI>()),
-            UIFeature("Delete Project", 3, get<DeleteProjectUI>()),
-            UIFeature("Add a TaskState to Project", 4, get<AddStateToProjectUI>()),
-            UIFeature("Edit TaskState of Project", 5, get<EditStateOfProjectUI>()),
-            UIFeature("Create Task", 6, get<CreateTaskUI>()),
-            UIFeature("View Tasks by Project", 7, get<GetTasksByProjectIdUI>()),
-            UIFeature("Create Mate User", 8, get<CreateMateUserUseCaseUI>()),
-            UIFeature("Get Task Audit", 9, get<GetAuditForTaskUI>()),
-            UIFeature("Get Project Audit", 10, get<GetAuditForProjectUI>()),
-            UIFeature("View All Project", 11, get<GetAllProjectsUI>()),
+            UIFeature("View All Project", 1, get<GetAllProjectsUI>()),
+            UIFeature("Create Project", 2, get<CreateProjectUI>()),
+            UIFeature("Edit Project", 3, get<EditProjectUI>()),
+            UIFeature("Delete Project", 4, get<DeleteProjectUI>()),
+            UIFeature("Add a TaskState to Project", 5, get<AddStateToProjectUI>()),
+            UIFeature("Edit TaskState of Project", 6, get<EditStateOfProjectUI>()),
+            UIFeature("Create Task", 7, get<CreateTaskUI>()),
+            UIFeature("View Tasks by Project", 8, get<GetTasksByProjectIdUI>()),
+            UIFeature("Create Mate User", 9, get<CreateMateUserUseCaseUI>()),
+            UIFeature("Get Task Audit", 10, get<GetAuditForTaskUI>()),
+            UIFeature("Get Project Audit", 11, get<GetAuditForProjectUI>()),
         )
     }
 
     // Mate UIFeatures
     single<List<UIFeature>>(named("mateFeatures")) {
         listOf(
-            UIFeature("Create Task", 1, get<CreateTaskUI>()),
-            UIFeature("Edit Task", 2, get<EditTaskUI>()),
-            UIFeature("Delete Task", 3, get<DeleteTaskByIdUI>()),
-            UIFeature("View Tasks by Project", 4, get<GetTasksByProjectIdUI>()),
-            UIFeature("Get Task Audit", 5, get<GetAuditForTaskUI>()),
-            UIFeature("View All Project", 6, get<GetAllProjectsUI>())
+            UIFeature("View All Project", 1, get<GetAllProjectsUI>()),
+            UIFeature("View Tasks by Project", 2, get<GetTasksByProjectIdUI>()),
+            UIFeature("Create Task", 3, get<CreateTaskUI>()),
+            UIFeature("Edit Task", 4, get<EditTaskUI>()),
+            UIFeature("Delete Task", 5, get<DeleteTaskByIdUI>()),
+            UIFeature("Get Task Audit", 6, get<GetAuditForTaskUI>()),
         )
     }
 
