@@ -17,6 +17,8 @@ import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
+import presentation.taskmanagement.TestData.fakeProject
+import presentation.taskmanagement.TestData.fakeTask
 
 class DeleteTaskByIdUITest {
 
@@ -55,15 +57,15 @@ class DeleteTaskByIdUITest {
     @Test
     fun `should delete task successfully when user input is valid`() = runTest {
         //Given
-        coEvery { getAllProjectsUseCase() } returns listOf(TestData.fakeProject)
-        coEvery { getTasksByProjectIdUseCase(TestData.fakeProject.projectId) } returns listOf(TestData.fakeTask)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
         every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
 
         //When
         deleteTaskByIdUI.launchUi()
 
         //Then
-        coVerify { deleteTaskByIdUseCase(TestData.fakeTask.taskId) }
+        coVerify { deleteTaskByIdUseCase(fakeTask.taskId) }
         verify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
@@ -95,9 +97,9 @@ class DeleteTaskByIdUITest {
     @Test
     fun `should display error when loading tasks fails`() = runTest {
         //Given
-        coEvery { getAllProjectsUseCase() } returns listOf(TestData.fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         every { promptService.promptSelectionIndex(any(), any()) } returns 0
-        coEvery { getTasksByProjectIdUseCase(TestData.fakeProject.projectId) } throws NoTasksFoundException()
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } throws NoTasksFoundException()
 
         //When
         deleteTaskByIdUI.launchUi()
@@ -109,9 +111,9 @@ class DeleteTaskByIdUITest {
     @Test
     fun `should display warning when no tasks are found in project`() = runTest {
         //Given
-        coEvery { getAllProjectsUseCase() } returns listOf(TestData.fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         every { promptService.promptSelectionIndex(any(), any()) } returns 0
-        coEvery { getTasksByProjectIdUseCase(TestData.fakeProject.projectId) } returns emptyList()
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns emptyList()
 
         //When
         deleteTaskByIdUI.launchUi()
@@ -123,8 +125,8 @@ class DeleteTaskByIdUITest {
     @Test
     fun `should display error when deletion fails`() = runTest {
         //Given
-        coEvery { getAllProjectsUseCase() } returns listOf(TestData.fakeProject)
-        coEvery { getTasksByProjectIdUseCase(TestData.fakeProject.projectId) } returns listOf(TestData.fakeTask)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
         every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
         coEvery { deleteTaskByIdUseCase(any()) } throws Exception("There are error when deleting")
 
@@ -138,9 +140,9 @@ class DeleteTaskByIdUITest {
     @Test
     fun `should show error message when get tasks by project id failed`() = runTest {
         //Given
-        coEvery { getAllProjectsUseCase() } returns listOf(TestData.fakeProject)
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         every { promptService.promptSelectionIndex(any(), any()) } returns 0
-        coEvery { getTasksByProjectIdUseCase(TestData.fakeProject.projectId) } throws NoTasksFoundException()
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } throws NoTasksFoundException()
 
         //When
         deleteTaskByIdUI.launchUi()
