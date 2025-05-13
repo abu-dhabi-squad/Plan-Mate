@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test
 import logic.model.Project
 import logic.repository.ProjectRepository
 
-class CreateProjectUseCaseTest{
+class CreateProjectUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
     private lateinit var createProjectUseCase: CreateProjectUseCase
 
@@ -19,7 +19,7 @@ class CreateProjectUseCaseTest{
     }
 
     @Test
-    fun `createProjectUseCase should create and save project when project name is valid`() = runTest{
+    fun `should create and save project when project name is valid`() = runTest {
         // Given
         val name = "Test Project"
 
@@ -35,5 +35,4 @@ class CreateProjectUseCaseTest{
             )
         }
     }
-
 }

@@ -3,7 +3,7 @@ package logic.project
 import logic.exceptions.ProjectNotFoundException
 import logic.repository.ProjectRepository
 import logic.repository.TaskRepository
-import java.util.*
+import java.util.UUID
 
 class DeleteProjectUseCase(
     private val projectRepository: ProjectRepository,

@@ -37,7 +37,7 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `getUserByName should return user when credentials are valid`() = runTest {
+    fun `should return user when credentials are valid`() = runTest {
         // Given
         val username = "testUser"
         val password = "correctPassword"
@@ -57,7 +57,7 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `getUserByName should throw UserNotFoundException when user not found`() = runTest {
+    fun `should throw UserNotFoundException when user not found`() = runTest {
         // Given
         val username = "nonExistingUser"
         val password = "anyPassword"
@@ -75,7 +75,7 @@ class LoginByUserNameUseCaseTest {
     }
 
     @Test
-    fun `invoke should hash password before calling repository`() = runTest {
+    fun `should hash password before calling repository`() = runTest {
         // Given
         val username = "testUser"
         val password = "password123"

@@ -3,7 +3,7 @@ package logic.audit
 import logic.exceptions.NoAuditsFoundException
 import logic.model.Audit
 import logic.repository.AuditRepository
-import java.util.*
+import java.util.UUID
 
 class GetAuditUseCase(
     private val auditRepository: AuditRepository

@@ -1,7 +1,7 @@
 package logic.model
 
 import java.time.LocalDate
-import java.util.*
+import java.util.UUID
 
 data class Task(
     val taskId: UUID = UUID.randomUUID(),

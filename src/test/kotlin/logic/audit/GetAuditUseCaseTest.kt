@@ -25,7 +25,7 @@ class GetAuditUseCaseTest {
     }
 
     @Test
-    fun `getAuditByEntityId should returns audit list when entityId is valid`() = runTest {
+    fun `should returns audit list when entityId is valid`() = runTest {
 
         // Given
         val entityId = UUID.randomUUID()
@@ -49,7 +49,7 @@ class GetAuditUseCaseTest {
     }
 
     @Test
-    fun `getAuditByEntityId should throws exception when repository fail`() = runTest {
+    fun `should throws exception when repository fail`() = runTest {
 
         // Given
         val entityId = UUID.randomUUID()
@@ -60,7 +60,7 @@ class GetAuditUseCaseTest {
     }
 
     @Test
-    fun `getAuditByEntityId should throws NoAuditsFoundException when there is no audit history`() = runTest {
+    fun `should throws NoAuditsFoundException when there is no audit history`() = runTest {
 
         // Given
         val entityId = UUID.randomUUID()

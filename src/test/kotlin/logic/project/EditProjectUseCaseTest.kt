@@ -24,12 +24,13 @@ class EditProjectUseCaseTest {
     }
 
     @Test
-    fun `getProjectById should throw ProjectNotFoundException when it returns null`() = runTest{
+    fun `should throw ProjectNotFoundException when it returns null`() = runTest{
         //Given
         val taskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } returns null
+
         //When & Then
         assertThrows<ProjectNotFoundException> {
             editProjectUseCase(project.projectId,newName)
@@ -37,12 +38,13 @@ class EditProjectUseCaseTest {
     }
 
     @Test
-    fun `editStateOfProjectUseCase should throw Exception when it failed`() = runTest{
+    fun `should throw Exception when it failed`() = runTest{
         //Given
         val taskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } throws Exception()
+
         //When & Then
         assertThrows<Exception> {
             editProjectUseCase(project.projectId,newName)
@@ -50,13 +52,14 @@ class EditProjectUseCaseTest {
     }
 
     @Test
-    fun `editProject should throw Exception when the projectRepository editProject throw Exception`() = runTest{
+    fun `should throw Exception when the projectRepository editProject throw Exception`() = runTest{
         //Given
         val taskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
         val newName = "name2"
         coEvery { projectRepository.editProject(any()) } throws Exception()
         coEvery { projectRepository.getProjectById(any()) } returns project
+
         //When & Then
         assertThrows<Exception> {
             editProjectUseCase(project.projectId,newName)
@@ -64,14 +67,16 @@ class EditProjectUseCaseTest {
     }
 
     @Test
-    fun `editProject should call projectRepository editProject function when the id is found`() = runTest{
+    fun `should call projectRepository editProject function when the id is found`() = runTest{
         //Given
         val taskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } returns project
+
         //When
         editProjectUseCase(project.projectId,newName)
+
         //Then
         coVerify (exactly = 1){ projectRepository.editProject(any()) }
     }
