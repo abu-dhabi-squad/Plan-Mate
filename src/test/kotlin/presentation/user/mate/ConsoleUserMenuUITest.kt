@@ -10,7 +10,6 @@ import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.user.mate.ConsoleUserMenuUI
 import presentation.presentation.utils.PromptService
-import kotlin.system.exitProcess
 
 class ConsoleUserMenuUITest {
 

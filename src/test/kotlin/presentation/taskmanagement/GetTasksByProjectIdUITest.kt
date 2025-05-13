@@ -98,6 +98,4 @@ class GetTasksByProjectIdUITest {
         // Then
         verify { printer.displayLn("\nNo tasks found in '${fakeProject.projectName}'.") }
     }
-
-
 }

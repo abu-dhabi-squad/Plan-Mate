@@ -92,9 +92,4 @@ class ConsoleAdminMenuUITest {
         verify { printer.displayLn(match { it.toString().contains("Invalid input") }) }
         coVerify { uiLauncher.launchUi() }
     }
-
-
-
-
-
 }
