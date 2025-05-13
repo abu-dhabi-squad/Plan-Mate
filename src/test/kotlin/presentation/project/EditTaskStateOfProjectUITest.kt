@@ -7,6 +7,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import io.mockk.coVerify
 import kotlinx.coroutines.test.runTest
+import logic.audit.CreateAuditUseCase
 import logic.model.TaskState
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
@@ -21,6 +22,7 @@ class EditTaskStateOfProjectUITest {
     private val promptService: PromptService = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
     private lateinit var ui: EditStateOfProjectUI
+    private val createAuditUseCase: CreateAuditUseCase = mockk(relaxed = true)
 
     @BeforeTest
     fun setup() {
@@ -28,7 +30,9 @@ class EditTaskStateOfProjectUITest {
             editStateOfProjectUseCase = editStateOfProjectUseCase,
             getAllProjectsUseCase = getAllProjectsUseCase,
             promptService = promptService,
-            printer = printer
+            printer = printer,
+            getLoggedUserUseCase = mockk(relaxed = true),
+            createAuditUseCase = createAuditUseCase
         )
     }
 
@@ -83,5 +87,34 @@ class EditTaskStateOfProjectUITest {
         ui.launchUi()
         //then
         verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
+    }
+
+    @Test
+    fun `should call add audit use case when update project state successfully`() = runTest {
+        //given
+        val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
+        val projects = listOf(project)
+        coEvery { getAllProjectsUseCase() } returns projects
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0 andThen 0
+        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        //when
+        ui.launchUi()
+        //then
+        coVerify { createAuditUseCase(any()) }
+    }
+
+    @Test
+    fun `should not call add audit use case when update project state fails`() = runTest {
+        //given
+        val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
+        val projects = listOf(project)
+        coEvery { getAllProjectsUseCase() } returns projects
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0 andThen 0
+        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        coEvery { editStateOfProjectUseCase(any(), any()) } throws Exception()
+        //when
+        ui.launchUi()
+        //then
+        coVerify(exactly = 0) { createAuditUseCase(any()) }
     }
 }
