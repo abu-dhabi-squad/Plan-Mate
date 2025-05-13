@@ -1,6 +1,11 @@
 package presentation.user.admin
 
-import io.mockk.*
+import io.mockk.coVerify
+import io.mockk.Runs
+import io.mockk.just
+import io.mockk.coEvery
+import io.mockk.verify
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -40,16 +45,13 @@ class ConsoleAdminMenuUITest {
 
     @Test
     fun `launchUi should print welcome message and feature labels`() = runTest {
-        // Arrange
         coEvery { promptService.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
         coEvery { uiLauncher.launchUi() } just Runs
 
-        // Act
         assertThrows<RuntimeException> {
             view.launchUi()
         }
 
-        // Assert
         verify { printer.displayLn(match { it.toString().contains("Welcome to PlanMate Admin Dashboard") }) }
         verify { printer.displayLn(match { it.toString().contains("Create Project") }) }
         verify { printer.displayLn(match { it.toString().contains("Edit Project") }) }
@@ -58,15 +60,12 @@ class ConsoleAdminMenuUITest {
 
     @Test
     fun `launchUi should print Invalid input when input is out of range`() = runTest {
-        // Arrange
         coEvery { promptService.promptNonEmptyInt(any()) } returns 999 andThenThrows RuntimeException()
 
-        // Act
         assertThrows<RuntimeException> {
             view.launchUi()
         }
 
-        // Assert
         verify { printer.displayLn(match { it.toString().contains("Invalid input") }) }
     }
 
