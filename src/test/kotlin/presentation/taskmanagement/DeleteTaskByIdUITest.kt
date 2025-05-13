@@ -19,6 +19,7 @@ import presentation.io.Printer
 import presentation.presentation.utils.PromptService
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
+import presentation.taskmanagement.TestData.fakeUser
 
 class DeleteTaskByIdUITest {
 
@@ -41,7 +42,7 @@ class DeleteTaskByIdUITest {
         createAuditUseCase = mockk(relaxed = true)
         getLoggedUserUseCase = mockk(relaxed = true)
 
-        every { getLoggedUserUseCase() } returns TestData.fakeUser
+        every { getLoggedUserUseCase() } returns fakeUser
 
         deleteTaskByIdUI = DeleteTaskByIdUI(
             printer,

@@ -19,6 +19,7 @@ import presentation.taskmanagement.TestData.fakeDate
 import presentation.taskmanagement.TestData.fakeDate2
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
+import presentation.taskmanagement.TestData.fakeUser
 import presentation.taskmanagement.TestData.testState
 
 class EditTaskUITest {
@@ -41,7 +42,7 @@ class EditTaskUITest {
         editTaskUseCase = mockk(relaxed = true)
         createAuditUseCase = mockk(relaxed = true)
         getLoggedUserUseCase = mockk()
-        every { getLoggedUserUseCase() } returns TestData.fakeUser
+        every { getLoggedUserUseCase() } returns fakeUser
 
         presenter = EditTaskUI(
             printer,
