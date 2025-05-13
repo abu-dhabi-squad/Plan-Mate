@@ -3,13 +3,13 @@ package data.audit.datasource.csv.parser
 import logic.model.Audit
 import logic.model.EntityType
 import presentation.logic.utils.DateTimeParser
-import java.util.*
+import java.util.UUID
 
 class CsvAuditParser(
     private val dateParser: DateTimeParser
-) : AuditParser {
+) {
 
-    override fun getLineFromAudit(audit: Audit): String {
+    fun getLineFromAudit(audit: Audit): String {
         return "${audit.auditId}," +
                 "${audit.createdBy}," +
                 "${audit.entityId}," +
@@ -19,7 +19,7 @@ class CsvAuditParser(
                 dateParser.getStringFromDate(audit.createdAt)
     }
 
-    override fun getAuditFromLine(auditLine: String): Audit {
+    fun getAuditFromLine(auditLine: String): Audit {
         val parts = auditLine.split(",")
 
         if (parts.size < 7) {

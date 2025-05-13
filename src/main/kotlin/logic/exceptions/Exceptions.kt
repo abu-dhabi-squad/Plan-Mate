@@ -6,8 +6,6 @@ class TaskNotFoundException : AppException("Task not found")
 
 class InvalidAudit : AppException("Audit Is Invalid.")
 
-class WrongInputException : AppException("Invalid entity ID input. Please try again.")
-
 class NoAuditsFoundException : AppException("No audit logs found for this entity ID.")
 
 class NoTasksFoundException : AppException("No tasks found")
@@ -49,3 +47,5 @@ class EmptyUsernameException : IllegalArgumentException("Username cannot be empt
 class NoLoggedInUserException : IllegalStateException("No user is currently logged in")
 
 class UserTypeNotFoundException : AppException("User type is not found in data")
+
+class DateFormatException (dateString:String, expectedFormat:String) : AppException("Invalid date format: $dateString. Expected format: $expectedFormat")

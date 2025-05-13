@@ -1,6 +1,5 @@
 package di
 
-import data.audit.datasource.csv.parser.AuditParser
 import data.audit.datasource.csv.parser.CsvAuditParser
 import data.audit.mapper.AuditMapper
 import data.authentication.datasource.csv.CsvUserParser
@@ -47,7 +46,7 @@ val appModule = module {
     single<DateParser> { DateParserImpl() }
     single<CsvUserParser> { CsvUserParser() }
     single<DateTimeParser> { DateTimeParserImpl() }
-    single<AuditParser> { CsvAuditParser(get()) }
+    single { CsvAuditParser(get()) }
     single { CsvProjectParser() }
     single { CsvTaskParser(get()) }
     // Mappers

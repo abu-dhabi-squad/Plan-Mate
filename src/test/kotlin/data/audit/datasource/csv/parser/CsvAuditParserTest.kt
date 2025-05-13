@@ -15,7 +15,7 @@ import java.util.UUID
 class CsvAuditParserTest {
 
     lateinit var dateParser: DateTimeParser
-    lateinit var csvAuditParser: AuditParser
+    lateinit var csvAuditParser: CsvAuditParser
 
 
     @BeforeEach

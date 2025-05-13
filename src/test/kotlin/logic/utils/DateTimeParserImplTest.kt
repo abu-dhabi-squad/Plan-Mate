@@ -1,6 +1,7 @@
 package logic.utils
 
 import com.google.common.truth.Truth.assertThat
+import logic.exceptions.DateFormatException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -69,12 +70,12 @@ class DateTimeParserImplTest {
     }
 
     @Test
-    fun `parseDateFromString should throw IllegalArgumentException for incorrect format`() {
+    fun `parseDateFromString should throw DateFormatException for incorrect format`() {
         // Given
         val invalid = "2025-05-03 15:30" // wrong separator
 
         // When
-        val exception = assertFailsWith<IllegalArgumentException> {
+        val exception = assertFailsWith<DateFormatException> {
             parser.parseDateFromString(invalid)
         }
 
@@ -88,7 +89,7 @@ class DateTimeParserImplTest {
         val invalidDate = "2025/02/32 13:00"
 
         // When & Then
-        assertThrows<IllegalArgumentException> {
+        assertThrows<DateFormatException> {
             parser.parseDateFromString(invalidDate)
         }
     }
@@ -124,7 +125,7 @@ class DateTimeParserImplTest {
         val input = "2025/05/03 24:01"
 
         // When & Then
-        assertThrows<IllegalArgumentException> {
+        assertThrows<DateFormatException> {
             parser.parseDateFromString(input)
         }
     }
@@ -135,7 +136,7 @@ class DateTimeParserImplTest {
         val input = "2025/05/03 15:60"
 
         // When & Then
-        assertThrows<IllegalArgumentException> {
+        assertThrows<DateFormatException> {
             parser.parseDateFromString(input)
         }
     }

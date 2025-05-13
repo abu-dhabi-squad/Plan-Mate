@@ -1,5 +1,6 @@
 package presentation.logic.utils
 
+import logic.exceptions.DateFormatException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
@@ -16,7 +17,7 @@ class DateTimeParserImpl : DateTimeParser {
         return try {
             LocalDateTime.parse(dateString, formatter)
         } catch (e: DateTimeParseException) {
-            throw IllegalArgumentException("Invalid date format: $dateString. Expected format: yyyy/MM/dd HH:mm")
+            throw DateFormatException(dateString, "yyyy/MM/dd HH:mm")
         }
     }
 }
