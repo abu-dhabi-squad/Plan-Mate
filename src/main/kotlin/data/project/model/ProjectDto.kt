@@ -4,10 +4,9 @@ import org.bson.codecs.pojo.annotations.BsonProperty
 import java.util.*
 
 data class ProjectDto(
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,
     @BsonProperty("projectName")
     val projectName: String,
     @BsonProperty("states")
     val states: List<StateDto>
 )
-

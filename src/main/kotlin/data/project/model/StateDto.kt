@@ -4,7 +4,7 @@ import org.bson.codecs.pojo.annotations.BsonProperty
 import java.util.*
 
 data class StateDto(
-    val id: String = UUID.randomUUID().toString(),
+    val id: String,
     @BsonProperty("name")
     val name: String
 )
