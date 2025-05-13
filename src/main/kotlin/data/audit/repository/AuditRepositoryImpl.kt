@@ -15,7 +15,6 @@ class AuditRepositoryImpl(
         remoteAuditDataSource.createAuditLog(auditMapper.auditToDto(auditLog))
     }
 
-
     override suspend fun getAuditByEntityId(entityId: UUID): List<Audit> = wrapResponse {
         remoteAuditDataSource.getAuditByEntityId(entityId.toString())
             .map { auditMapper.dtoToAudit(it) }
