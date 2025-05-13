@@ -3,7 +3,7 @@ package presentation.project
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.utils.extensions.printWithStates
+import presentation.utils.extensions.printWithStates
 
 class GetAllProjectsUI(
     private val printer: Printer,

@@ -1,10 +1,10 @@
-package presentation.presentation.user.admin
+package presentation.user.admin
 
 import org.koin.core.annotation.Named
 import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 import kotlin.system.exitProcess
 
 class ConsoleAdminMenuUI(

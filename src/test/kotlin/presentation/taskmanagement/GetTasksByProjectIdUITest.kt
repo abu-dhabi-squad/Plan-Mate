@@ -10,8 +10,8 @@ import logic.task.GetTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
-import presentation.presentation.utils.extensions.displaySwimlanesByState
+import presentation.utils.PromptService
+import presentation.utils.extensions.displaySwimlanesByState
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
 

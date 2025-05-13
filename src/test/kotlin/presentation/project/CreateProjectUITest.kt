@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 
 class CreateProjectUITest {
     private val createProjectUseCase: CreateProjectUseCase = mockk(relaxed = true)

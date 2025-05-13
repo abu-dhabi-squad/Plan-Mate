@@ -9,8 +9,8 @@ import logic.model.UserType
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 import presentation.io.Printer
-import presentation.presentation.user.usermanagement.CreateMateUserUseCaseUI
-import presentation.presentation.utils.PromptService
+import presentation.user.usermanagement.CreateMateUserUseCaseUI
+import presentation.utils.PromptService
 
 class CreateMateUserUseCaseUITest {
 

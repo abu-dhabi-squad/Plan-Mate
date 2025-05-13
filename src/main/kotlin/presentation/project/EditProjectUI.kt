@@ -4,8 +4,8 @@ import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
-import presentation.presentation.utils.extensions.printWithStates
+import presentation.utils.PromptService
+import presentation.utils.extensions.printWithStates
 
 class EditProjectUI(
     private val editProjectUseCase: EditProjectUseCase,

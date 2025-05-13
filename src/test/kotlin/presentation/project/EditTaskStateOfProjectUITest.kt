@@ -13,7 +13,7 @@ import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 import kotlin.test.BeforeTest
 
 class EditTaskStateOfProjectUITest {

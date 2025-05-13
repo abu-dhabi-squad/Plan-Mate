@@ -11,5 +11,4 @@ class SaveLoggedUserUseCase(
         if (user.username.isBlank() || user.password.isBlank()) throw EmptyUsernameException()
         repository.saveLoggedUser(user)
     }
-
 }

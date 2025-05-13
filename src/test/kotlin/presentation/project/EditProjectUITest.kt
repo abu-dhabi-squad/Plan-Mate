@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 import kotlin.test.BeforeTest
 
 class EditProjectUITest {

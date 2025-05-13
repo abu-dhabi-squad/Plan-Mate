@@ -16,7 +16,7 @@ import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
 import presentation.taskmanagement.TestData.fakeUser

@@ -12,8 +12,8 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
-import presentation.presentation.utils.extensions.showAuditLogs
+import presentation.utils.PromptService
+import presentation.utils.extensions.showAuditLogs
 
 class GetAuditForProjectUITest {
     private val promptService: PromptService = mockk(relaxed = true)

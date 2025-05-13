@@ -1,4 +1,4 @@
-package presentation.presentation.utils.extensions
+package presentation.utils.extensions
 
 import logic.model.Task
 import logic.model.TaskState

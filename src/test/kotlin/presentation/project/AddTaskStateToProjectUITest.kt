@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 import logic.project.AddStateToProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 
 class AddTaskStateToProjectUITest {
     private val addStateToProjectUseCase: AddStateToProjectUseCase = mockk(relaxed = true)

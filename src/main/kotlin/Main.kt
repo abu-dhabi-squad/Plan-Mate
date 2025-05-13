@@ -1,5 +1,3 @@
-package presentation
-
 import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin

@@ -8,8 +8,8 @@ import logic.project.GetAllProjectsUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
-import presentation.presentation.utils.extensions.printWithStates
+import presentation.utils.PromptService
+import presentation.utils.extensions.printWithStates
 
 
 class DeleteProjectUI(

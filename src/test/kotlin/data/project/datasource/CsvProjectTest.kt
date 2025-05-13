@@ -166,10 +166,25 @@ class CsvProjectTest {
     }
 
     @Test
-    fun `editProject should edit when project in list`(){
+    fun `editProject should not edit when project not in the list`(){
         //given
         val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "done")))
-        val project2 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "done")))
+        val project2 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "done")))
+        val editProject = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1c"), "name2", listOf())
+        every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1", "id2,name1,id1-name1")
+        every { csvProjectParser.parseStringToProject(any()) } returns project andThen project2
+        every { csvProjectParser.parseProjectToString(any()) } returns "id1,name1,id1-name1" andThen "id2,name2,"
+        //when
+        csvProject.editProject(editProject)
+        //then
+        verify(exactly = 1) { fileHelper.writeFile("build/project.csv", listOf("id1,name1,id1-name1", "id2,name2,")) }
+    }
+
+    @Test
+    fun `editProject should edit when project in the list`(){
+        //given
+        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "done")))
+        val project2 = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "done")))
         val editProject = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name2", listOf())
         every { fileHelper.readFile(any()) } returns listOf("id1,name1,id1-name1", "id2,name1,id1-name1")
         every { csvProjectParser.parseStringToProject(any()) } returns project andThen project2

@@ -11,7 +11,7 @@ import logic.task.CreateTaskUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 
 class CreateTaskUI(
     private val getLoggedUserUseCase: GetLoggedUserUseCase,

@@ -10,11 +10,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.authentication.LoginByUserNameUseCase
 import logic.model.UserType
-import presentation.presentation.user.admin.ConsoleAdminMenuUI
+import presentation.user.admin.ConsoleAdminMenuUI
 import presentation.io.Printer
-import presentation.presentation.user.mate.ConsoleUserMenuUI
+import presentation.user.mate.ConsoleUserMenuUI
 import logic.user.SaveLoggedUserUseCase
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 
 class LoginByUserNameUITest {
     private val loginUseCase: LoginByUserNameUseCase = mockk(relaxed = true)

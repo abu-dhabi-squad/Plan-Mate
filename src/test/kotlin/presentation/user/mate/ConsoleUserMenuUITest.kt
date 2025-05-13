@@ -8,8 +8,8 @@ import org.junit.jupiter.api.assertThrows
 import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.user.mate.ConsoleUserMenuUI
-import presentation.presentation.utils.PromptService
+import presentation.user.mate.ConsoleUserMenuUI
+import presentation.utils.PromptService
 
 class ConsoleUserMenuUITest {
 

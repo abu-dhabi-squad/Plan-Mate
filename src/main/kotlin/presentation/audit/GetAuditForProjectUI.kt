@@ -5,8 +5,8 @@ import logic.model.Audit
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
-import presentation.presentation.utils.extensions.showAuditLogs
+import presentation.utils.PromptService
+import presentation.utils.extensions.showAuditLogs
 import java.util.UUID
 
 class GetAuditForProjectUI(

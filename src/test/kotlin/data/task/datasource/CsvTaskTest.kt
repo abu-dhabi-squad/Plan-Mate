@@ -68,6 +68,29 @@ class CsvTaskTest {
         assertThat(result).isEmpty()
     }
 
+    @Test
+    fun `getTaskByProjectId should returns empty list when csv file not contains any task with the same project id`() {
+        // Given
+        val tasks = listOf(createTask(), createTask(), createTask(), createTask())
+        every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
+
+        // When && Then
+        val result = csvTask.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `getTaskByProjectId should returns tasks list when csv file contains tasks with the same project id`() {
+        // Given
+        val projectId = UUID.randomUUID()
+        val tasks = listOf(createTask(projectId = projectId), createTask(projectId = projectId), createTask())
+        every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
+        every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
+
+        // When && Then
+        val result = csvTask.getTaskByProjectId(projectId)
+        assertThat(result).containsExactly(tasks[0], tasks[1])
+    }
 
     @Test
     fun `getTaskByProjectId should rethrows Exception when file throws Exception`(){

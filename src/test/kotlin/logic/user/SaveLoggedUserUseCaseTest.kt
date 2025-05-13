@@ -1,6 +1,6 @@
 package logic.user
 
-import io.mockk.mockk
+import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import logic.exceptions.EmptyUsernameException
@@ -32,5 +32,37 @@ class SaveLoggedUserUseCaseTest {
         assertThrows<EmptyUsernameException> {
             saveLoggedUserUseCase(user)
         }
+    }
+
+    @Test
+    fun `should throw EmptyUserUserException when pass is empty`() {
+        // Given
+        val user = User(
+            username = "user",
+            password = "",
+            userType = UserType.MATE
+        )
+
+        // When & Then
+        assertThrows<EmptyUsernameException> {
+            saveLoggedUserUseCase(user)
+        }
+    }
+
+    @Test
+    fun `should complete when username and pass are valid`() {
+        // Given
+        val user = User(
+            username = "user",
+            password = "12345678nN#",
+            userType = UserType.MATE
+        )
+        every { authenticationRepository.saveLoggedUser(user) } just runs
+
+        // When
+        saveLoggedUserUseCase(user)
+
+        // Then
+        verify { saveLoggedUserUseCase(user) }
     }
 }

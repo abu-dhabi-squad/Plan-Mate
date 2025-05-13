@@ -9,7 +9,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
-import presentation.presentation.utils.extensions.printWithStates
+import presentation.utils.extensions.printWithStates
 import kotlin.test.Test
 
 class GetAllProjectsUITest {

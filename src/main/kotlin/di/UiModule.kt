@@ -10,10 +10,10 @@ import presentation.io.ConsolePrinter
 import presentation.io.ConsoleReader
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.presentation.user.admin.ConsoleAdminMenuUI
-import presentation.presentation.user.mate.ConsoleUserMenuUI
-import presentation.presentation.user.usermanagement.CreateMateUserUseCaseUI
-import presentation.presentation.utils.PromptService
+import presentation.user.admin.ConsoleAdminMenuUI
+import presentation.user.mate.ConsoleUserMenuUI
+import presentation.user.usermanagement.CreateMateUserUseCaseUI
+import presentation.utils.PromptService
 import presentation.project.*
 import presentation.taskmanagement.CreateTaskUI
 import presentation.taskmanagement.DeleteTaskByIdUI

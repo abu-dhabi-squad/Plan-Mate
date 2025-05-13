@@ -49,8 +49,8 @@ val excludedPackages = listOf(
     "**/logic/model/**",
     "**/logic/exceptions/**",
     "**/presentation/io/**",
-    "**/presentation/UIFeature.kt",
-    "**/presentation/UiLauncher.kt",
+    "**/presentation/UIFeature*",
+    "**/presentation/utils/**",
 )
 
 tasks.jacocoTestReport {
@@ -73,7 +73,7 @@ tasks.jacocoTestCoverageVerification {
     violationRules {
         rule {
             limit {
-                minimum = "0.8".toBigDecimal()
+                minimum = "0.80".toBigDecimal()
             }
         }
     }

@@ -9,7 +9,7 @@ import logic.project.CreateProjectUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 
 
 class CreateProjectUI(

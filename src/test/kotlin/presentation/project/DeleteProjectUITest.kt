@@ -14,7 +14,7 @@ import logic.user.GetLoggedUserUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 
 
 class DeleteProjectUITest {

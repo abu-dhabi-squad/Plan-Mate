@@ -14,8 +14,8 @@ import logic.task.GetTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
-import presentation.presentation.utils.extensions.showAuditLogs
+import presentation.utils.PromptService
+import presentation.utils.extensions.showAuditLogs
 
 class GetAuditForTaskUITest {
 

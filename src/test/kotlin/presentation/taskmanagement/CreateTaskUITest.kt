@@ -13,7 +13,7 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
-import presentation.presentation.utils.PromptService
+import presentation.utils.PromptService
 import presentation.taskmanagement.TestData.fakeDate
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeUser

@@ -4,9 +4,9 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.utils.PromptService
-import presentation.presentation.utils.extensions.displaySwimlanesByState
-import presentation.presentation.utils.extensions.printWithStates
+import presentation.utils.PromptService
+import presentation.utils.extensions.displaySwimlanesByState
+import presentation.utils.extensions.printWithStates
 
 class GetTasksByProjectIdUI(
     private val printer: Printer,

@@ -5,9 +5,9 @@ import logic.model.UserType
 import logic.user.SaveLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.presentation.user.admin.ConsoleAdminMenuUI
-import presentation.presentation.user.mate.ConsoleUserMenuUI
-import presentation.presentation.utils.PromptService
+import presentation.user.admin.ConsoleAdminMenuUI
+import presentation.user.mate.ConsoleUserMenuUI
+import presentation.utils.PromptService
 
 class LoginByUserNameUI(
     private val loginUseCase: LoginByUserNameUseCase,
