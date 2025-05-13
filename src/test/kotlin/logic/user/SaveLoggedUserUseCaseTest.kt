@@ -9,30 +9,28 @@ import logic.model.UserType
 import logic.repository.AuthenticationRepository
 import kotlin.test.Test
 
-class SaveLoggedUserUseCaseTest{
+class SaveLoggedUserUseCaseTest {
     private lateinit var saveLoggedUserUseCase: SaveLoggedUserUseCase
     private lateinit var authenticationRepository: AuthenticationRepository
 
     @BeforeEach
-    fun setup(){
-        authenticationRepository= mockk(relaxed = true)
-        saveLoggedUserUseCase=SaveLoggedUserUseCase(authenticationRepository)
+    fun setup() {
+        authenticationRepository = mockk(relaxed = true)
+        saveLoggedUserUseCase = SaveLoggedUserUseCase(authenticationRepository)
     }
 
-
     @Test
-    fun `should throw EmptyUserUserException when username is empty`(){
+    fun `should throw EmptyUserUserException when username is empty`() {
+        // Given
         val user = User(
             username = "",
             password = "ValidPass123!",
             userType = UserType.MATE
         )
-       assertThrows<EmptyUsernameException>{
-           saveLoggedUserUseCase(user)
-       }
 
+        // When & Then
+        assertThrows<EmptyUsernameException> {
+            saveLoggedUserUseCase(user)
+        }
     }
-
-
-
 }

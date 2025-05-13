@@ -6,8 +6,8 @@ import data.project.datasource.csv.CsvProjectParser
 import data.project.repository.LocalProjectDataSource
 import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper
-import logic.authentication.validtion.CreateUserPasswordValidator
-import logic.authentication.validtion.LoginPasswordValidator
+import logic.authentication.validation.CreateUserPasswordValidator
+import logic.authentication.validation.LoginPasswordValidator
 import org.koin.dsl.module
 import presentation.data.utils.hashing.Md5Hashing
 import presentation.io.ConsolePrinter

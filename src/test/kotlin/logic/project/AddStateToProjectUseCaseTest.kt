@@ -15,7 +15,7 @@ import logic.model.TaskState
 import logic.repository.ProjectRepository
 import java.util.UUID
 
-class AddTaskStateToProjectUseCaseTest {
+class AddStateToProjectUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
     private lateinit var addStateToProjectUseCase: AddStateToProjectUseCase
 
@@ -26,16 +26,16 @@ class AddTaskStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should add new state to existing project`() = runTest{
+    fun `invoke should add new state to existing project`() = runTest{
         // Given
         val existingTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), stateName = "TODO")
         val newTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), stateName = "InProgress")
         val existingProject = Project(projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), projectName = "Test Project", taskStates = listOf(existingTaskState))
 
-        coEvery { projectRepository.getProjectById("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a") } returns existingProject
+        coEvery { projectRepository.getProjectById(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")) } returns existingProject
 
         // When
-        addStateToProjectUseCase("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", newTaskState)
+        addStateToProjectUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), newTaskState)
 
         // Then
         coVerify {
@@ -48,7 +48,7 @@ class AddTaskStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `should throw DuplicateStateException if state name already exists`() = runTest{
+    fun `should throw DuplicateStateException when state name already exists`() = runTest{
         // Given
         val existingTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateName = "TODO")
         val duplicateTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateName = "TODO")
@@ -58,25 +58,25 @@ class AddTaskStateToProjectUseCaseTest {
 
         // When & Then
         val exception = assertThrows<DuplicateStateException> {
-            addStateToProjectUseCase.invoke("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", duplicateTaskState)
+            addStateToProjectUseCase.invoke(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), duplicateTaskState)
         }
         assertThat(exception).hasMessageThat().contains("TODO")
     }
 
     @Test
-    fun `should throw Project Not FoundException if project id is invalid`()= runTest {
+    fun `should throw Project Not FoundException when project id is invalid`()= runTest {
         // Given
         coEvery { projectRepository.getProjectById(any()) } returns null
         val newTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateName = "Review")
 
         // When & Then
         assertThrows<ProjectNotFoundException> {
-            addStateToProjectUseCase.invoke("invalid_project", newTaskState)
+            addStateToProjectUseCase.invoke(UUID.fromString("3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), newTaskState)
         }
     }
 
     @Test
-    fun `should throw DuplicateStateException if state name matches existing one ignoring case`() = runTest{
+    fun `should throw DuplicateStateException when state name matches existing one ignoring case`() = runTest{
         // Given
         val existingTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), stateName = "ToDo")
         val duplicateTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), stateName = "todo") // same name, different case
@@ -86,7 +86,7 @@ class AddTaskStateToProjectUseCaseTest {
 
         // When & Then
         val exception = assertThrows<DuplicateStateException> {
-            addStateToProjectUseCase.invoke("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a", duplicateTaskState)
+            addStateToProjectUseCase.invoke(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), duplicateTaskState)
         }
 
         assertThat(exception).hasMessageThat().contains("todo")
@@ -101,7 +101,7 @@ class AddTaskStateToProjectUseCaseTest {
         coEvery { projectRepository.getProjectById(any()) } returns existingProject
 
         // When
-        addStateToProjectUseCase.invoke("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b", newTaskState)
+        addStateToProjectUseCase.invoke(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), newTaskState)
 
         // Then
         coVerify {

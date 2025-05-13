@@ -18,6 +18,7 @@ import logic.exceptions.UserNotFoundException
 import logic.model.User
 import logic.model.UserType
 import logic.repository.AuthenticationRepository
+import presentation.logic.utils.hashing.HashingService
 import java.util.UUID
 import kotlin.test.Test
 
@@ -25,93 +26,124 @@ class LoginByUserNameUseCaseTest {
     private lateinit var authRepository: AuthenticationRepository
     private lateinit var loginByUserNameUseCase: LoginByUserNameUseCase
     private lateinit var passwordValidator: PasswordValidator
+    private lateinit var hashingPassword: HashingService
 
     @BeforeEach
     fun setup() {
         authRepository = mockk(relaxed = true)
         passwordValidator = mockk(relaxed = true)
-        loginByUserNameUseCase = LoginByUserNameUseCase(authRepository, passwordValidator)
+        hashingPassword = mockk(relaxed = true)
+        loginByUserNameUseCase = LoginByUserNameUseCase(authRepository, passwordValidator, hashingPassword)
     }
 
     @Test
-    fun `getUser should return user when credentials are valid`() = runTest {
+    fun `getUserByName should return user when credentials are valid`() = runTest {
+        // Given
         val username = "testUser"
         val password = "correctPassword"
-        val expectedUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, password, UserType.MATE)
+        val hashedPassword = "hashedCorrectPassword"
+        val expectedUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, hashedPassword, UserType.MATE)
+        every { hashingPassword.hash(password) } returns hashedPassword
+        coEvery { authRepository.getUserByName(username) } returns expectedUser
 
-        coEvery { authRepository.loginUser(username, password) } returns expectedUser
-
+        // When
         val result = loginByUserNameUseCase(username, password)
 
+        // Then
         assertThat(result).isEqualTo(expectedUser)
         coVerify {
-            authRepository.loginUser(username, password)
+            authRepository.getUserByName(username)
         }
     }
 
     @Test
-    fun `getUser should throw UserNotFoundException when user not found`() = runTest {
+    fun `getUserByName should throw UserNotFoundException when user not found`() = runTest {
+        // Given
         val username = "nonExistingUser"
         val password = "anyPassword"
+        val hashedPassword = "hashedAnyPassword"
+        every { hashingPassword.hash(password) } returns hashedPassword
+        coEvery { authRepository.getUserByName(username) } returns null
 
-        coEvery { authRepository.loginUser(username, password) } returns null
-
+        // When & Then
         assertThrows<UserNotFoundException> {
             loginByUserNameUseCase(username, password)
         }
-
         coVerify {
-            authRepository.loginUser(username, password)
+            authRepository.getUserByName(username)
         }
     }
 
     @Test
-    fun `getUser should hash password before calling repository`() = runTest {
+    fun `invoke should hash password before calling repository`() = runTest {
+        // Given
         val username = "testUser"
         val password = "password123"
-        val expectedUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, password, UserType.MATE)
+        val hashedPassword = "hashedPassword123"
+        val expectedUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, hashedPassword, UserType.MATE)
+        every { hashingPassword.hash(password) } returns hashedPassword
+        coEvery { authRepository.getUserByName(username) } returns expectedUser
 
-        coEvery { authRepository.loginUser(username, password) } returns expectedUser
-
+        // When
         loginByUserNameUseCase(username, password)
 
-        coVerify(exactly = 1) { authRepository.loginUser(username, password) }
+        // Then
+        coVerify(exactly = 1) { hashingPassword.hash(password) }
+        coVerify(exactly = 1) { authRepository.getUserByName(username) }
     }
 
     @Test
-    fun `getUser should propagate InvalidCredentialsException from repository`() = runTest {
+    fun `should throw exception when repository fail that is verify that the exception will be thrown from use case and not handled in it`() = runTest {
+        // Given
         val username = "testUser"
         val password = "wrongPassword"
+        val hashedPassword = "hashedWrongPassword"
+        every { hashingPassword.hash(password) } returns hashedPassword
+        coEvery { authRepository.getUserByName(username) } throws InvalidCredentialsException()
 
-        coEvery { authRepository.loginUser(username, password) } throws InvalidCredentialsException()
-
+        // When & Then
         assertThrows<InvalidCredentialsException> {
             loginByUserNameUseCase(username, password)
         }
+        coVerify { hashingPassword.hash(password) }
+        coVerify { authRepository.getUserByName(username) }
     }
 
     @Test
-    fun `createUser should call password validator`() = runTest {
+    fun `should call password validator`() = runTest {
+        // Given
         val user = User(
             username = "newUser",
             password = "ValidPass123!",
             userType = UserType.MATE
         )
+        val hashedPassword = "hashedValidPass"
         every { passwordValidator.validatePassword(any()) } just runs
+        every { hashingPassword.hash(user.password) } returns hashedPassword
+        coEvery { authRepository.getUserByName(user.username) } returns User(
+            UUID.randomUUID(),
+            user.username,
+            hashedPassword,
+            user.userType
+        )
 
+        // When
         loginByUserNameUseCase(user.username, user.password)
 
+        // Then
         verify { passwordValidator.validatePassword(user.password) }
     }
 
     @Test
-    fun `createUser should throw EmptyUsernameException when username is blank`() = runTest {
+    fun `should throw EmptyUsernameException when username is blank`() = runTest {
+        // Given
         val user = User(
             username = "",
             password = "ValidPass123!",
             userType = UserType.MATE
         )
 
+        // When & Then
         assertThrows<EmptyUsernameException> {
             loginByUserNameUseCase(user.username, user.password)
         }

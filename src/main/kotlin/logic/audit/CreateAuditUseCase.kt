@@ -11,12 +11,12 @@ class CreateAuditUseCase(
         auditLog: Audit
     ) {
 
-        if (auditLog.isValid() && !isSameStates(newState = auditLog.newState, oldState = auditLog.oldState))
+        if (isValid(auditLog.newState, auditLog.createdBy)&& !isSameStates(newState = auditLog.newState, oldState = auditLog.oldState))
             auditRepository.createAuditLog(auditLog)
         else throw InvalidAudit()
     }
 
-    private fun Audit.isValid(): Boolean {
+    private fun isValid(newState: String, createdBy: String): Boolean {
         return newState.isNotEmpty() && createdBy.isNotEmpty()
     }
 

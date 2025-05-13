@@ -1,4 +1,4 @@
-package logic.authentication.validtion
+package logic.authentication.validation
 
 import logic.exceptions.ShortPasswordException
 import org.junit.jupiter.api.Test
@@ -8,7 +8,7 @@ class LoginPasswordValidatorTest {
     private val loginPasswordValidator = LoginPasswordValidator()
 
     @Test
-    fun `should validate successfully when password is contain uppercase, lowercase, special characters, Number and it length more than 7`() {
+    fun `validatePassword should validate successfully when password is contain uppercase, lowercase, special characters, Number and it length more than 7`() {
         // Given
         val password = "12345678"
 
@@ -17,7 +17,7 @@ class LoginPasswordValidatorTest {
     }
 
     @Test
-    fun `should throw exception when password is less than 8 characters`() {
+    fun `validatePassword should throw exception when password is less than 8 characters`() {
         // Given
         val password = "123"
 

@@ -1,15 +1,17 @@
 package logic.audit
 
-import createAudit
+import helper.createAudit
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import logic.exceptions.InvalidAudit
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import logic.repository.AuditRepository
-import kotlin.test.assertFails
+import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class CreateAuditUseCaseTest {
 
@@ -23,17 +25,17 @@ class CreateAuditUseCaseTest {
     }
 
     @Test
-    fun `addAudit adds valid audit`()= runTest {
+    fun `addAudit should adds valid audit when audit is valid`() = runTest {
 
-        // given
+        // Given
         val audit = createAudit(
-            entityId = "asdww98"
+            entityId = UUID.randomUUID(),
         )
 
-        // when
+        // When
         createAuditUseCase(audit)
 
-        // then
+        // Then
 
         coVerify(exactly = 1) {
             auditRepository.createAuditLog(match {
@@ -50,42 +52,41 @@ class CreateAuditUseCaseTest {
 
     @ParameterizedTest
     @CsvSource(
-        "audit1,'',new",
-        "'',entity1,new",
-        "audit1,entity1,''"
+        "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,'',new",
+        "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,entity1,''"
     )
-    fun `addAudit throws InvalidAudit when essential param is empty`(
+    fun `addAudit should throws InvalidAudit when essential param is empty`(
         entityId: String,
         createdBy: String,
         newState: String
-    )= runTest {
+    ) = runTest {
 
-        // given
+        // Given
         val audit = createAudit(
-            entityId = entityId,
+            entityId = UUID.fromString(entityId),
             createdBy = createdBy,
             newState = newState
         )
 
-        // then
-        assertFails {
+        // When & Then
+        assertThrows<InvalidAudit> {
             createAuditUseCase(audit)
         }
 
     }
 
     @Test
-    fun `addAudit throws InvalidAudit when newState equals oldState`() = runTest{
+    fun `addAudit should throws InvalidAudit when newState equals oldState`() = runTest {
 
-        // given
+        // Given
         val audit = createAudit(
-            entityId = "asdww98",
+            entityId = UUID.randomUUID(),
             newState = "done",
             oldState = "done"
         )
 
-        // then
-        assertFails {
+        // When & Then
+        assertThrows<InvalidAudit> {
             createAuditUseCase(audit)
         }
     }

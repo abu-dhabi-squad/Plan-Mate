@@ -3,6 +3,7 @@ package logic.utils
 import com.google.common.truth.Truth.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import presentation.logic.utils.DateTimeParserImpl
@@ -33,8 +34,13 @@ class DateTimeParserImplTest {
         hour: Int,
         minute: Int
     ) {
+        // Given
         val expected = LocalDateTime.of(year, month, day, hour, minute)
+
+        // When
         val actual = parser.parseDateFromString(input)
+
+        // Then
         assertThat(actual).isEqualTo(expected)
     }
 
@@ -52,55 +58,84 @@ class DateTimeParserImplTest {
         minute: Int,
         expected: String
     ) {
+        // Given
         val input = LocalDateTime.of(year, month, day, hour, minute)
+
+        // When
         val result = parser.getStringFromDate(input)
+
+        // Then
         assertThat(result).isEqualTo(expected)
     }
 
     @Test
     fun `parseDateFromString should throw IllegalArgumentException for incorrect format`() {
+        // Given
         val invalid = "2025-05-03 15:30" // wrong separator
+
+        // When
         val exception = assertFailsWith<IllegalArgumentException> {
             parser.parseDateFromString(invalid)
         }
+
+        // Then
         assertThat(exception.message).contains("Invalid date format")
     }
 
     @Test
     fun `parseDateFromString should throw for invalid values like impossible date`() {
+        // Given
         val invalidDate = "2025/02/32 13:00"
-        assertFailsWith<IllegalArgumentException> {
+
+        // When & Then
+        assertThrows<IllegalArgumentException> {
             parser.parseDateFromString(invalidDate)
         }
     }
 
     @Test
     fun `getStringFromDate then parseDateFromString should be symmetrical`() {
+        // Given
         val original = LocalDateTime.of(2025, 5, 3, 15, 30)
+
+        // When
         val stringified = parser.getStringFromDate(original)
         val parsed = parser.parseDateFromString(stringified)
+
+        // Then
         assertThat(parsed).isEqualTo(original)
     }
 
     @Test
     fun `parseDateFromString should trim leading or trailing whitespace`() {
+        // Given
         val input = " 2025/05/03 15:30 "
+
+        // When
         val result = parser.parseDateFromString(input.trim())
+
+        // Then
         assertThat(result).isEqualTo(LocalDateTime.of(2025, 5, 3, 15, 30))
     }
 
     @Test
     fun `parseDateFromString should throw for hour beyond 23`() {
+        // Given
         val input = "2025/05/03 24:01"
-        assertFailsWith<IllegalArgumentException> {
+
+        // When & Then
+        assertThrows<IllegalArgumentException> {
             parser.parseDateFromString(input)
         }
     }
 
     @Test
     fun `parseDateFromString should throw for minute beyond 59`() {
+        // Given
         val input = "2025/05/03 15:60"
-        assertFailsWith<IllegalArgumentException> {
+
+        // When & Then
+        assertThrows<IllegalArgumentException> {
             parser.parseDateFromString(input)
         }
     }
