@@ -1,9 +1,18 @@
 package di
 
+import data.audit.datasource.csv.parser.AuditParser
+import data.audit.datasource.csv.parser.CsvAuditParser
+import data.audit.mapper.AuditMapper
 import data.authentication.datasource.csv.CsvUserParser
+import data.authentication.datasource.inmemory.InMemoryLoggedUser
+import data.authentication.mapper.UserMapper
+import data.authentication.repository.LoggedUserDataSource
 import data.project.datasource.csv.CsvProject
 import data.project.datasource.csv.CsvProjectParser
+import data.project.mapper.ProjectMapper
 import data.project.repository.LocalProjectDataSource
+import data.task.datasource.csv.CsvTaskParser
+import data.task.mapper.TaskMapper
 import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper
 import logic.authentication.validation.CreateUserPasswordValidator
@@ -23,29 +32,34 @@ import presentation.logic.utils.DateTimeParserImpl
 import presentation.logic.utils.hashing.HashingService
 
 val appModule = module {
-
-    single<LocalProjectDataSource> {
-        CsvProject(
-            fileHelper = get(),
-            csvProjectParser = get(),
-            fileName = "projects.csv"
-        )
-    }
-
+    // Services
     single<HashingService> { Md5Hashing() }
-
+    // IO
     single<InputReader> { ConsoleReader() }
     single<Printer> { ConsolePrinter() }
-
+    // Helpers
     single<FileHelper> { CsvFileHelper() }
-
+    // Validators
     single<CreateUserPasswordValidator> { CreateUserPasswordValidator() }
     single<LoginPasswordValidator> { LoginPasswordValidator() }
-
     single<TaskValidator> { TaskValidatorImpl() }
-
+    // Parsers
     single<DateParser> { DateParserImpl() }
-    single { CsvProjectParser() }
     single<CsvUserParser> { CsvUserParser() }
     single<DateTimeParser> { DateTimeParserImpl() }
+    single<AuditParser> { CsvAuditParser(get()) }
+    single { CsvProjectParser() }
+    single { CsvTaskParser(get()) }
+    // Mappers
+    single { ProjectMapper() }
+    single { TaskMapper() }
+    single { AuditMapper() }
+    single { UserMapper() }
+    // DataSources
+    single<LocalProjectDataSource> {
+        CsvProject(
+            fileHelper = get(), csvProjectParser = get(), fileName = "projects.csv"
+        )
+    }
+    single<LoggedUserDataSource> { InMemoryLoggedUser() }
 }
