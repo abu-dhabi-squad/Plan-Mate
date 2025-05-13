@@ -34,16 +34,21 @@ private fun getMaxPaddingValue(
 private fun getLongestLabelWidth(states: List<TaskState?>) =
     states.maxOfOrNull { it?.stateName?.length ?: 0 } ?: 0
 
-private fun getLongestCellWidth(grouped: Map<UUID, List<Task>>) =
-    grouped.values.maxOfOrNull { it.maxOfOrNull { task -> task.title.length + task.username.length + 3 } ?: 0 } ?: 0
+private fun getLongestCellWidth(grouped: Map<UUID, List<Task>>): Int {
+    val r1 = grouped.values.maxOfOrNull { it.maxOfOrNull { task -> task.title.length + task.username.length + 3 } ?: 0 } ?: 0
+    val r2 = grouped.values.maxOfOrNull { it.maxOfOrNull { task -> task.startDate.toString().length + task.endDate.toString().length + 3 } ?: 0 } ?: 0
+    return maxOf(r1, r2)
+}
 
 private fun displayHeader(
     states: List<TaskState?>,
     printer: Printer,
     padValue: Int
 ) {
+    displayHorizontalBorder(printer, padValue, states)
     states.forEach { printer.display("| ${it?.stateName?.padEnd(padValue)} ") }
     printer.displayLn("|")
+    displayHorizontalBorder(printer, padValue, states)
 }
 
 private fun displayRows(
@@ -54,16 +59,35 @@ private fun displayRows(
     printer: Printer
 ) {
     for (i in 0 until maxRows) {
-        states.forEach { state ->
-            val task = grouped[state?.stateId ?: UUID.randomUUID()]?.getOrNull(i)
-            val display = if (task != null) {
-                "${task.title} (${task.username})".padEnd(padValue)
-            } else {
-                "".padEnd(padValue)
-            }
-            printer.display("| ${display.padEnd(20)} ")
-        }
-        printer.displayLn("|")
+        displayRow(states, grouped, i, padValue, printer) { task -> "${task.title} (${task.username})" }
+        displayRow(states, grouped, i, padValue, printer) { task -> "${task.startDate} - ${task.endDate}" }
+        displayHorizontalBorder(printer, padValue, states)
     }
     printer.displayLn()
 }
+
+private fun displayRow(
+    states: List<TaskState?>,
+    grouped: Map<UUID, List<Task>>,
+    i: Int,
+    padValue: Int,
+    printer: Printer,
+    getCellValue: (Task) -> String
+) {
+    states.forEach { state ->
+        val task = grouped[state?.stateId ?: UUID.randomUUID()]?.getOrNull(i)
+        val display = if (task != null) {
+            getCellValue(task).padEnd(padValue)
+        } else {
+            "".padEnd(padValue)
+        }
+        printer.display("| ${display.padEnd(padValue)} ")
+    }
+    printer.displayLn("|")
+}
+
+private fun displayHorizontalBorder(
+    printer: Printer,
+    padValue: Int,
+    states: List<TaskState?>
+) = printer.displayLn("-".repeat(padValue * states.size + states.size * 3 + 1))
