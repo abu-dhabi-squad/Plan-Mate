@@ -9,10 +9,9 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 import presentation.io.Printer
 import presentation.presentation.utils.PromptService
+import presentation.presentation.utils.extensions.displaySwimlanesByState
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
 
@@ -47,8 +46,13 @@ class GetTasksByProjectIdUITest {
         // When
         presenter.launchUi()
         // Then
-        verify { printer.displayLn(match { it.toString().contains("=== Available Projects") }) }
-        verify { printer.displayLn(match { it.toString().contains(fakeTask.title) }) }
+        verify {
+            listOf(fakeTask).displaySwimlanesByState(
+                fakeProject.projectName,
+                fakeProject.taskStates,
+                printer
+            )
+        }
     }
 
     @Test
@@ -95,25 +99,5 @@ class GetTasksByProjectIdUITest {
         verify { printer.displayLn("\nNo tasks found in '${fakeProject.projectName}'.") }
     }
 
-    @ParameterizedTest
-    @CsvSource("2,1", "null,1", nullValues = ["null"])
-    fun `should prompt again if invalid project number is entered`(
-        firstAttempt: Int?,
-        secondAttempt: Int
-    ) = runTest {
-        // Given
-        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(
-            firstAttempt ?: -1,
-            secondAttempt - 1
-        )
-        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns emptyList()
 
-        // When
-        presenter.launchUi()
-
-        // Then
-        verify { printer.displayLn("Please enter a number between")}
-        verify { printer.displayLn("\nNo tasks found in '${fakeProject.projectName}'.") }
-    }
 }

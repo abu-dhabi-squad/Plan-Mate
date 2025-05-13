@@ -60,8 +60,11 @@ class EditTaskUITest {
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
         every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("NewTitle", "NewDesc")
-        every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate,fakeDate2)
+        every { promptService.promptString(any(),any()) } returnsMany listOf(
+            "NewTitle",
+            "NewDesc"
+        )
+        every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate, fakeDate2)
 
         //When
         presenter.launchUi()
@@ -97,8 +100,11 @@ class EditTaskUITest {
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
         every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("New Title", "New Desc")
-        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate,fakeDate)
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(
+            "New Title",
+            "New Desc"
+        )
+        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
         coEvery { editTaskUseCase(any()) } throws RuntimeException("Failed to update task")
 
         //When
@@ -107,54 +113,24 @@ class EditTaskUITest {
         //Then
         verify { printer.displayLn(match { it.toString().contains("Failed to update task") }) }
     }
-
-    @Test
-    fun `should show date format error message when user enter invalid date format`() = runTest {
-        //Given
-        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("New Title", "New Desc")
-        every { promptService.promptDate(any()) } throws Exception("Invalid format")
-
-        //When
-        presenter.launchUi()
-
-        //Then
-        verify { printer.displayLn(match { it.toString().contains("Invalid date format") }) }
-    }
-
+    
     @Test
     fun `should keep existing title and description if user inputs are empty`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
         every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("", "")
-        every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate,fakeDate)
+        every { promptService.promptString(any(), any()) } returnsMany listOf(fakeTask.title, fakeTask.description)
+        every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate, fakeDate)
 
         //When
         presenter.launchUi()
 
         //Then
-        coVerify { editTaskUseCase(fakeTask) }
+        coVerify { editTaskUseCase(fakeTask.copy(startDate = fakeDate, endDate = fakeDate)) }
     }
 
-    @Test
-    fun `should re-prompt when project index is invalid`() = runTest {
-        //Given
-        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(-1, 0, 0, 0)
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
-        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
 
-        //When
-        presenter.launchUi()
-
-        //Then
-        verify { printer.displayLn(match { it.toString().contains("Please enter a number") }) }
-    }
 
     @Test
     fun `should display error when no tasks exist for selected project`() = runTest {

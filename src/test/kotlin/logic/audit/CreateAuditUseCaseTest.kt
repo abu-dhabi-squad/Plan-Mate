@@ -5,12 +5,12 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import logic.exceptions.InvalidAudit
+import logic.repository.AuditRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import logic.repository.AuditRepository
-import org.junit.jupiter.api.assertThrows
 import java.util.UUID
 
 class CreateAuditUseCaseTest {
@@ -25,18 +25,17 @@ class CreateAuditUseCaseTest {
     }
 
     @Test
-    fun `addAudit should adds valid audit when audit is valid`() = runTest {
-
+    fun `addAudit should add the audit when its valid`() = runTest {
         // Given
         val audit = createAudit(
             entityId = UUID.randomUUID(),
+            newState = "new state",
+            oldState = "old state",
+            createdBy = "noor"
         )
-
         // When
         createAuditUseCase(audit)
-
         // Then
-
         coVerify(exactly = 1) {
             auditRepository.createAuditLog(match {
                 it.auditId == audit.auditId &&

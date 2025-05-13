@@ -50,7 +50,7 @@ class PromptService(
             printer.display("$prompt (1–$size): ")
             val input = reader.readInt()
             if (input != null && input in 1..size) {
-                return input - 1
+                return (input - 1)
             }
             printer.displayLn("\nPlease enter a number between 1 and $size.")
         }

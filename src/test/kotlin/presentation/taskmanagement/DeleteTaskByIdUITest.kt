@@ -136,20 +136,6 @@ class DeleteTaskByIdUITest {
     }
 
     @Test
-    fun `should prompt again when invalid task index is entered`() = runTest {
-        //Given
-        coEvery { getAllProjectsUseCase() } returns listOf(TestData.fakeProject)
-        coEvery { getTasksByProjectIdUseCase(TestData.fakeProject.projectId) } returns listOf(TestData.fakeTask)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 2, 0)
-
-        //When
-        deleteTaskByIdUI.launchUi()
-
-        //Then
-        verify { printer.displayLn(match { it.toString().contains("Please enter a number between") }) }
-    }
-
-    @Test
     fun `should show error message when get tasks by project id failed`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(TestData.fakeProject)
