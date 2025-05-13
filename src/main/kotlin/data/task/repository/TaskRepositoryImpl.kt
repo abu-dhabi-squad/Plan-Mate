@@ -3,7 +3,7 @@ package data.task.repository
 import data.task.mapper.TaskMapper
 import logic.model.Task
 import logic.repository.TaskRepository
-import presentation.data.utils.BaseRepository
+import data.utils.BaseRepository
 import java.util.UUID
 
 class TaskRepositoryImpl(

@@ -2,7 +2,7 @@ package data.audit.datasource.csv.parser
 
 import logic.model.Audit
 import logic.model.EntityType
-import presentation.logic.utils.DateTimeParser
+import logic.utils.DateTimeParser
 import java.util.UUID
 
 class CsvAuditParser(

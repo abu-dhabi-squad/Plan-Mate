@@ -3,7 +3,7 @@ package data.project.repository
 import data.project.mapper.ProjectMapper
 import logic.model.Project
 import logic.repository.ProjectRepository
-import presentation.data.utils.BaseRepository
+import data.utils.BaseRepository
 import java.util.UUID
 
 class ProjectRepositoryImpl(

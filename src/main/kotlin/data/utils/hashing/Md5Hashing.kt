@@ -1,6 +1,6 @@
-package presentation.data.utils.hashing
+package data.utils.hashing
 
-import presentation.logic.utils.hashing.HashingService
+import logic.utils.hashing.HashingService
 import java.security.MessageDigest
 
 class Md5Hashing : HashingService {

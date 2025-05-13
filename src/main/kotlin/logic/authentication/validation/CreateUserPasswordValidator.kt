@@ -5,7 +5,7 @@ import logic.exceptions.NoUpperCaseInPasswordException
 import logic.exceptions.NoLowerCaseInPasswordException
 import logic.exceptions.NoNumberInPasswordException
 import logic.exceptions.NoSpecialCharsInPasswordException
-import presentation.logic.authentication.validtion.PasswordValidator
+import logic.authentication.validtion.PasswordValidator
 
 class CreateUserPasswordValidator : PasswordValidator {
 

@@ -1,4 +1,4 @@
-package presentation.data.utils
+package data.utils
 
 import logic.exceptions.NetworkErrorException
 import logic.exceptions.UnknownDataBaseException

@@ -17,18 +17,18 @@ import data.utils.filehelper.FileHelper
 import logic.authentication.validation.CreateUserPasswordValidator
 import logic.authentication.validation.LoginPasswordValidator
 import org.koin.dsl.module
-import presentation.data.utils.hashing.Md5Hashing
+import data.utils.hashing.Md5Hashing
 import presentation.io.ConsolePrinter
 import presentation.io.ConsoleReader
 import presentation.io.InputReader
 import presentation.io.Printer
-import presentation.logic.task.validation.TaskValidator
-import presentation.logic.task.validation.TaskValidatorImpl
+import logic.task.validation.TaskValidator
+import logic.task.validation.TaskValidatorImpl
 import logic.utils.DateParser
 import logic.utils.DateParserImpl
-import presentation.logic.utils.DateTimeParser
-import presentation.logic.utils.DateTimeParserImpl
-import presentation.logic.utils.hashing.HashingService
+import logic.utils.DateTimeParser
+import logic.utils.DateTimeParserImpl
+import logic.utils.hashing.HashingService
 
 val appModule = module {
     // Services

@@ -3,7 +3,7 @@ import logic.model.Task
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import presentation.logic.task.validation.TaskValidatorImpl
+import logic.task.validation.TaskValidatorImpl
 import java.time.LocalDate
 import java.util.UUID
 

@@ -1,4 +1,4 @@
-package presentation.logic.task.validation
+package logic.task.validation
 
 import logic.model.Task
 

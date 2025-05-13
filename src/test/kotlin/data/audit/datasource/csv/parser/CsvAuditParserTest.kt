@@ -3,7 +3,7 @@ package data.audit.datasource.csv.parser
 import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import presentation.logic.utils.DateTimeParser
+import logic.utils.DateTimeParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.model.Audit

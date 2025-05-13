@@ -3,7 +3,7 @@ package data.authentication.repository
 import data.authentication.mapper.UserMapper
 import logic.model.User
 import logic.repository.AuthenticationRepository
-import presentation.data.utils.BaseRepository
+import data.utils.BaseRepository
 
 class AuthenticationRepositoryImpl(
     private val remoteAuthenticationDataSource: RemoteAuthenticationDataSource,

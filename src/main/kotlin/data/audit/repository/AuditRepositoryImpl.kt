@@ -3,7 +3,7 @@ package data.audit.repository
 import data.audit.mapper.AuditMapper
 import logic.model.Audit
 import logic.repository.AuditRepository
-import presentation.data.utils.BaseRepository
+import data.utils.BaseRepository
 import java.util.UUID
 
 class AuditRepositoryImpl(

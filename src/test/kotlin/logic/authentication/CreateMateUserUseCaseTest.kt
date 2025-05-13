@@ -9,7 +9,7 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import presentation.logic.authentication.validtion.PasswordValidator
+import logic.authentication.validtion.PasswordValidator
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -18,7 +18,7 @@ import logic.exceptions.UserAlreadyExistsException
 import logic.model.User
 import logic.model.UserType
 import logic.repository.AuthenticationRepository
-import presentation.logic.utils.hashing.HashingService
+import logic.utils.hashing.HashingService
 
 class CreateMateUserUseCaseTest {
     private lateinit var authRepository: AuthenticationRepository

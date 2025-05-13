@@ -4,8 +4,8 @@ import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.User
 import logic.repository.AuthenticationRepository
-import presentation.logic.authentication.validtion.PasswordValidator
-import presentation.logic.utils.hashing.HashingService
+import logic.authentication.validtion.PasswordValidator
+import logic.utils.hashing.HashingService
 
 class CreateMateUserUseCase(
     private val authRepository: AuthenticationRepository,
