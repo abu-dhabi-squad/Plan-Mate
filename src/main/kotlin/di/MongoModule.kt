@@ -36,22 +36,19 @@ val mongoModule = module {
         database.getCollection<UserDto>("users")
     }
     // mongo dataSource
+
+    single {
+        val mongoUri: String = getProperty("MONGO_URI")
+        MongoClient.create(mongoUri)
+    }
+    single {
+        val mongoDbName: String = getProperty("MONGO_DB_NAME")
+        get<MongoClient>().getDatabase(mongoDbName)
+    }
     single<RemoteAuthenticationDataSource> { MongoAuthentication(get(named("users"))) }
     single<RemoteProjectDataSource> { MongoProject(get(named("projects"))) }
     single<RemoteTaskDataSource> { MongoTask(get(named("tasks"))) }
     single<RemoteAuditDataSource> { MongoAudit(get(named("audits"))) }
-    // mongoConnection
-    single<MongoDatabase> {
-        try {
-            val mongoUri = System.getenv("MONGO_URI") ?: throw Exception("Environment variable MONGO_URI not found")
-            val mongoDatabaseName = System.getenv("MONGO_DATABASE_NAME")
-                ?: throw Exception("Environment variable MONGO_DATABASE_NAME not found")
-            val client: MongoClient = MongoClient.create(mongoUri)
-            client.getDatabase(mongoDatabaseName)
-        } catch (e: Exception) {
-            println(e.message.toString())
-            throw e
-        }
-    }
+
 
 }

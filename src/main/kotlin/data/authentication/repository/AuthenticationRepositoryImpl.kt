@@ -3,20 +3,20 @@ package data.authentication.repository
 import data.authentication.mapper.UserMapper
 import logic.model.User
 import logic.repository.AuthenticationRepository
-import presentation.logic.utils.hashing.HashingService
+import presentation.data.utils.BaseRepository
 
 class AuthenticationRepositoryImpl(
     private val remoteAuthenticationDataSource: RemoteAuthenticationDataSource,
     private val loggedUserDataSource: LoggedUserDataSource,
     private val userMapper: UserMapper
-) : AuthenticationRepository {
+) : AuthenticationRepository, BaseRepository() {
 
     override suspend fun getUserByName(username: String): User? {
         val userDto = remoteAuthenticationDataSource.getUserByUsername(username)
-        return userDto?.let { userMapper.dtoToUser(it) }
+        return wrapResponse { userDto?.let { userMapper.dtoToUser(it) } }
     }
 
-    override suspend fun createUser(user: User) {
+    override suspend fun createUser(user: User) = wrapResponse {
         remoteAuthenticationDataSource.createUser(userMapper.userToDto(user))
     }
 

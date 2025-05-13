@@ -40,12 +40,16 @@ class NoNumberInPasswordException : AppException("Password must contain at least
 
 class NoSpecialCharsInPasswordException : AppException("Password must contain at least one special character")
 
-class InvalidCredentialsException : RuntimeException("Invalid credentials")
+class InvalidCredentialsException : AppException("Invalid credentials")
 
-class EmptyUsernameException : IllegalArgumentException("Username cannot be empty")
+class EmptyUsernameException : AppException("Username cannot be empty")
 
-class NoLoggedInUserException : IllegalStateException("No user is currently logged in")
+class NoLoggedInUserException : AppException("No user is currently logged in")
 
 class UserTypeNotFoundException : AppException("User type is not found in data")
 
 class DateFormatException (dateString:String, expectedFormat:String) : AppException("Invalid date format: $dateString. Expected format: $expectedFormat")
+
+class NetworkErrorException(): AppException("There are Network Error")
+
+class UnknownDataBaseException(): AppException("There are Unknown DataBase Error")
