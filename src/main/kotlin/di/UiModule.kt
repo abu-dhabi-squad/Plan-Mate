@@ -21,7 +21,6 @@ import presentation.taskmanagement.EditTaskUI
 import presentation.taskmanagement.GetTasksByProjectIdUI
 
 val uiModule = module {
-
     // I/O dependencies
     single<Printer> { ConsolePrinter() }
     single<InputReader> { ConsoleReader() }
@@ -38,8 +37,9 @@ val uiModule = module {
     single { GetAuditForTaskUI(get(), get(), get(), get(), get()) }
     single { GetAuditForProjectUI(get(), get(), get(), get()) }
     single { AddStateToProjectUI(get(), get(), get(), get()) }
-    single { EditStateOfProjectUI(get(), get(), get(), get(),get(),get()) }
+    single { EditStateOfProjectUI(get(), get(), get(), get(), get(), get()) }
     single { LoginByUserNameUI(get(), get(), get(), get(), get(), get()) }
+    single { GetAllProjectsUI(get(), get()) }
 
     // Admin UIFeatures
     single<List<UIFeature>>(named("adminFeatures")) {
@@ -54,6 +54,7 @@ val uiModule = module {
             UIFeature("Create Mate User", 8, get<CreateMateUserUseCaseUI>()),
             UIFeature("Get Task Audit", 9, get<GetAuditForTaskUI>()),
             UIFeature("Get Project Audit", 10, get<GetAuditForProjectUI>()),
+            UIFeature("View All Project", 11, get<GetAllProjectsUI>()),
         )
     }
 
@@ -64,7 +65,8 @@ val uiModule = module {
             UIFeature("Edit Task", 2, get<EditTaskUI>()),
             UIFeature("Delete Task", 3, get<DeleteTaskByIdUI>()),
             UIFeature("View Tasks by Project", 4, get<GetTasksByProjectIdUI>()),
-            UIFeature("Get Task Audit", 5, get<GetAuditForTaskUI>())
+            UIFeature("Get Task Audit", 5, get<GetAuditForTaskUI>()),
+            UIFeature("View All Project", 6, get<GetAllProjectsUI>())
         )
     }
 

@@ -49,6 +49,4 @@ val mongoModule = module {
     single<RemoteProjectDataSource> { MongoProject(get(named("projects"))) }
     single<RemoteTaskDataSource> { MongoTask(get(named("tasks"))) }
     single<RemoteAuditDataSource> { MongoAudit(get(named("audits"))) }
-
-
 }
