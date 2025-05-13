@@ -37,13 +37,16 @@ class ConsoleUserMenuUITest {
 
     @Test
     fun `launchUi should display welcome message and feature labels`() = runTest {
+        //Given
         coEvery { promptService.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
         coEvery { uiLauncher.launchUi() } just Runs
 
+        //When
         assertThrows<RuntimeException> {
             view.launchUi()
         }
 
+        //Then
         verify { printer.displayLn(match { it.toString().contains("Welcome to PlanMate App") }) }
         verify { printer.displayLn(match { it.toString().contains("View Profile") }) }
         verify { printer.displayLn(match { it.toString().contains("View Reports") }) }
@@ -52,38 +55,89 @@ class ConsoleUserMenuUITest {
 
     @Test
     fun `launchUi should call feature ui when valid input`() = runTest {
+        //Given
         coEvery { promptService.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
         coEvery { uiLauncher.launchUi() } just Runs
 
+        //When
         assertThrows<RuntimeException> {
             view.launchUi()
         }
 
+        //Then
         coVerify { uiLauncher.launchUi() }
     }
 
     @Test
     fun `launchUi should show invalid input message when input is out of range`() = runTest {
+        //Given
         coEvery { promptService.promptNonEmptyInt(any()) } returns 999 andThenThrows RuntimeException()
 
+        //When
         assertThrows<RuntimeException> {
             view.launchUi()
         }
 
+        //Then
         verify { printer.displayLn(match { it.toString().contains("Invalid input") }) }
     }
 
-
     @Test
     fun `launchUi should loop when input is invalid then valid`() = runTest {
+        //Given
         coEvery { promptService.promptNonEmptyInt(any()) } returnsMany listOf(999, 2) andThenThrows RuntimeException()
         coEvery { uiLauncher.launchUi() } just Runs
 
+        //When
         assertThrows<RuntimeException> {
             view.launchUi()
         }
 
+        //Then
         verify { printer.displayLn(match { it.toString().contains("Invalid input") }) }
         coVerify { uiLauncher.launchUi() }
+    }
+
+    @Test
+    fun `should not crash if no feature matches input id`() = runTest {
+        // Given
+        val unmatchedId = 5
+        coEvery { promptService.promptNonEmptyInt(any()) } returns unmatchedId andThenThrows RuntimeException()
+
+        // When & Then
+        assertThrows<RuntimeException> {
+            view.launchUi()
+        }
+
+        coVerify(exactly = 0) { uiLauncher.launchUi() }
+    }
+
+    @Test
+    fun `should handle case when no matching feature is found`() = runTest {
+        // Given
+        coEvery { promptService.promptNonEmptyInt(any()) } returns 10 andThenThrows RuntimeException()
+
+        // When & Then
+        assertThrows<RuntimeException> {
+            view.launchUi()
+        }
+
+        coVerify(exactly = 0) { uiLauncher.launchUi() }
+    }
+
+    @Test
+    fun `should call presentFeature multiple times`() = runTest {
+        //Given
+        coEvery { promptService.promptNonEmptyInt(any()) } returnsMany listOf(999, 1) andThenThrows RuntimeException()
+        coEvery { uiLauncher.launchUi() } just Runs
+
+        //When
+        assertThrows<RuntimeException> {
+            view.launchUi()
+        }
+
+        //Then
+        coVerify(exactly = 1) { uiLauncher.launchUi() }
+        verify(atLeast = 2) { printer.displayLn(any()) } // called multiple times from looping
     }
 }
