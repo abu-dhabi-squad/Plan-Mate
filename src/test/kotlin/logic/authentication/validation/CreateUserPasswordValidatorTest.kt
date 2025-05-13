@@ -13,7 +13,7 @@ class CreateUserPasswordValidatorTest {
     private val validator = CreateUserPasswordValidator()
 
     @Test
-    fun `validatePassword should pass validation when password is valid`() {
+    fun `should pass validation when password is valid`() {
         // Given
         val password = "Abc123@#"
 
@@ -24,7 +24,7 @@ class CreateUserPasswordValidatorTest {
     }
 
     @Test
-    fun `validatePassword should throw ShortPasswordException when password is shorter than 8 characters`() {
+    fun `should throw ShortPasswordException when password is shorter than 8 characters`() {
         // Given
         val password = "A1@bc"
 
@@ -35,7 +35,7 @@ class CreateUserPasswordValidatorTest {
     }
 
     @Test
-    fun `validatePassword should throw NoUpperCaseInPasswordException when password contains no uppercase letter`() {
+    fun `should throw NoUpperCaseInPasswordException when password contains no uppercase letter`() {
         // Given
         val password = "abc123@#"
 
@@ -46,7 +46,7 @@ class CreateUserPasswordValidatorTest {
     }
 
     @Test
-    fun `validatePassword should throw NoLowerCaseInPasswordException when password contains no lowercase letter`() {
+    fun `should throw NoLowerCaseInPasswordException when password contains no lowercase letter`() {
         // Given
         val password = "ABC123@#"
 
@@ -57,7 +57,7 @@ class CreateUserPasswordValidatorTest {
     }
 
     @Test
-    fun `validatePassword should throw NoNumberInPasswordException when password contains no digit`() {
+    fun `should throw NoNumberInPasswordException when password contains no digit`() {
         // Given
         val password = "Abcdef@#"
 
@@ -68,7 +68,7 @@ class CreateUserPasswordValidatorTest {
     }
 
     @Test
-    fun `validatePassword should throw NoSpecialCharsInPasswordException when password contains no special character`() {
+    fun `should throw NoSpecialCharsInPasswordException when password contains no special character`() {
         // Given
         val password = "Abcd1234"
 

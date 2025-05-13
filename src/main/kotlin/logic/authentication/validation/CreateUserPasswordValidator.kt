@@ -1,6 +1,10 @@
 package logic.authentication.validation
 
-import logic.exceptions.*
+import logic.exceptions.ShortPasswordException
+import logic.exceptions.NoUpperCaseInPasswordException
+import logic.exceptions.NoLowerCaseInPasswordException
+import logic.exceptions.NoNumberInPasswordException
+import logic.exceptions.NoSpecialCharsInPasswordException
 import presentation.logic.authentication.validtion.PasswordValidator
 
 class CreateUserPasswordValidator : PasswordValidator {

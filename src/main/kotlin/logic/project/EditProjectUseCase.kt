@@ -2,7 +2,7 @@ package logic.project
 
 import logic.exceptions.ProjectNotFoundException
 import logic.repository.ProjectRepository
-import java.util.*
+import java.util.UUID
 
 class EditProjectUseCase(
     private val projectRepository: ProjectRepository

@@ -35,7 +35,7 @@ class CreateMateUserUseCaseTest {
     }
 
     @Test
-    fun `createUser should successfully create user when the input is valid`() = runTest {
+    fun `should successfully create user when the input is valid`() = runTest {
         // Given
         val username = "shahd"
         val hashingPassword = hashingPassword.hash("pass123")
@@ -60,7 +60,7 @@ class CreateMateUserUseCaseTest {
     }
 
     @Test
-    fun `createUser should hash the password before saving the user`() = runTest {
+    fun `should hash the password before saving the user`() = runTest {
         // Given
         val plainPassword = "MyPlainPassword123"
         val user = User(
@@ -79,7 +79,7 @@ class CreateMateUserUseCaseTest {
     }
 
     @Test
-    fun `createUser should throw EmptyUsernameException when username is blank`() = runTest {
+    fun `should throw EmptyUsernameException when username is blank`() = runTest {
         // Given
         val user = User(
             username = "",
@@ -94,7 +94,7 @@ class CreateMateUserUseCaseTest {
     }
 
     @Test
-    fun `createUser should throw UserAlreadyExistsException when user exists`() = runTest {
+    fun `should throw UserAlreadyExistsException when user exists`() = runTest {
         // Given
         val user = User(
             username = "existingUser",
@@ -111,7 +111,7 @@ class CreateMateUserUseCaseTest {
     }
 
     @Test
-    fun `createUser should call password validator`() = runTest {
+    fun `should call password validator`() = runTest {
         // Given
         val user = User(
             username = "newUser",

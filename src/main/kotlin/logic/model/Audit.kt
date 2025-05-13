@@ -3,7 +3,7 @@ package logic.model
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.*
+import java.util.UUID
 
 data class Audit(
     val auditId: UUID = UUID.randomUUID(),

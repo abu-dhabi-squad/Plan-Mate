@@ -26,7 +26,7 @@ class AddStateToProjectUseCaseTest {
     }
 
     @Test
-    fun `invoke should add new state to existing project`() = runTest{
+    fun `should add new state to existing project`() = runTest{
         // Given
         val existingTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), stateName = "TODO")
         val newTaskState = TaskState(stateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), stateName = "InProgress")

@@ -4,7 +4,7 @@ import logic.exceptions.DuplicateStateException
 import logic.exceptions.ProjectNotFoundException
 import logic.model.TaskState
 import logic.repository.ProjectRepository
-import java.util.*
+import java.util.UUID
 
 class AddStateToProjectUseCase(private val projectRepository: ProjectRepository) {
     suspend operator fun invoke(projectId: UUID, newTaskState: TaskState) {

@@ -25,7 +25,8 @@ class CreateAuditUseCaseTest {
     }
 
     @Test
-    fun `addAudit should add the audit when its valid`() = runTest {
+    fun `should adds valid audit when audit is valid`() = runTest {
+
         // Given
         val audit = createAudit(
             entityId = UUID.randomUUID(),
@@ -35,6 +36,7 @@ class CreateAuditUseCaseTest {
         )
         // When
         createAuditUseCase(audit)
+
         // Then
         coVerify(exactly = 1) {
             auditRepository.createAuditLog(match {
@@ -54,7 +56,7 @@ class CreateAuditUseCaseTest {
         "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,'',new",
         "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,entity1,''"
     )
-    fun `addAudit should throws InvalidAudit when essential param is empty`(
+    fun `should throws InvalidAudit when essential param is empty`(
         entityId: String,
         createdBy: String,
         newState: String
@@ -71,11 +73,10 @@ class CreateAuditUseCaseTest {
         assertThrows<InvalidAudit> {
             createAuditUseCase(audit)
         }
-
     }
 
     @Test
-    fun `addAudit should throws InvalidAudit when newState equals oldState`() = runTest {
+    fun `should throws InvalidAudit when newState equals oldState`() = runTest {
 
         // Given
         val audit = createAudit(

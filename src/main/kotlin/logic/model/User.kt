@@ -1,6 +1,6 @@
 package logic.model
 
-import java.util.*
+import java.util.UUID
 
 data class User(
     val userId: UUID = UUID.randomUUID(),

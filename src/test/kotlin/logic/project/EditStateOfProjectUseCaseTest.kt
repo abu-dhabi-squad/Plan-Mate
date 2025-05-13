@@ -24,7 +24,7 @@ class EditStateOfProjectUseCaseTest {
     }
 
     @Test
-    fun `editStateOfProject should throw ProjectNotFoundException when projectRepository getProjectById returns null`() = runTest{
+    fun `should throw ProjectNotFoundException when projectRepository getProjectById returns null`() = runTest{
 
         //Given
         val newTaskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "newState1")
@@ -38,7 +38,7 @@ class EditStateOfProjectUseCaseTest {
     }
 
     @Test
-    fun `editStateOfProject should throw Exception when projectRepository getProjectById throw Exception`() = runTest{
+    fun `should throw Exception when projectRepository getProjectById throw Exception`() = runTest{
         //Given
         val newTaskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "newState1")
         val taskStates = listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "state1"), TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1d"), "state2"))
@@ -51,7 +51,7 @@ class EditStateOfProjectUseCaseTest {
     }
 
     @Test
-    fun `editStateOfProject should throw ProjectStateNotFoundException when the new state id not in project's states`() = runTest{
+    fun `should throw ProjectStateNotFoundException when the new state id not in project's states`() = runTest{
         //Given
         val newTaskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "newState1")
         val taskStates = listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"), "state1"), TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1d"), "state2"))
@@ -64,7 +64,7 @@ class EditStateOfProjectUseCaseTest {
     }
 
     @Test
-    fun `editStateOfProject should throw Exception when the projectRepository editProject throw Exception`() = runTest{
+    fun `should throw Exception when the projectRepository editProject throw Exception`() = runTest{
         //Given
         val newTaskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "newState1")
         val taskStates = listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"), TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1d"), "state2"))
@@ -78,7 +78,7 @@ class EditStateOfProjectUseCaseTest {
     }
 
     @Test
-    fun `editStateOfProject should call projectRepository editProject function when the state id is found`()= runTest {
+    fun `should call projectRepository editProject function when the state id is found`()= runTest {
         //Given
         val newTaskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "newState1")
         val taskStates = listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"), TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state2"))

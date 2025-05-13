@@ -4,7 +4,7 @@ import logic.exceptions.ProjectNotFoundException
 import logic.exceptions.ProjectStateNotFoundException
 import logic.model.TaskState
 import logic.repository.ProjectRepository
-import java.util.*
+import java.util.UUID
 
 class EditStateOfProjectUseCase(
     private val projectRepository: ProjectRepository

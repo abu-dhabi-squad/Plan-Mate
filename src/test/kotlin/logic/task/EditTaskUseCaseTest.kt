@@ -81,6 +81,7 @@ class EditTaskUseCaseTest {
     @Test
     fun `should throw Exception when repository throws Exception`(
     ) = runTest{
+        //Given
         coEvery { taskRepository.editTask(any()) } throws Exception()
 
         // When && Then
