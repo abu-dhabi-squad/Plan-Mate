@@ -4,8 +4,8 @@ import java.util.UUID
 
 
 data class Project(
-    val id: UUID = UUID.randomUUID(),
+    val projectId: UUID = UUID.randomUUID(),
     val projectName: String,
-    val states: List<State>,
+    val taskStates: List<TaskState>,
 )
 

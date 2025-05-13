@@ -1,25 +1,25 @@
 package data.audit.datasource.csv.parser
 
+import com.google.common.truth.Truth.assertThat
 import io.mockk.every
 import io.mockk.mockk
-import logic.validation.DateTimeParser
+import logic.utils.DateTimeParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.model.Audit
 import logic.model.EntityType
+import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.util.UUID
-import kotlin.test.assertEquals
-import kotlin.test.assertFails
 
 class CsvAuditParserTest {
 
     lateinit var dateParser: DateTimeParser
-    lateinit var csvAuditParser: AuditParser
+    lateinit var csvAuditParser: CsvAuditParser
 
 
     @BeforeEach
-    fun setup(){
+    fun setup() {
         dateParser = mockk(relaxed = true)
         csvAuditParser = CsvAuditParser(dateParser)
     }
@@ -30,23 +30,24 @@ class CsvAuditParserTest {
         // given
         val id = UUID.randomUUID()
         val customDateTime = LocalDate.of(2025, 5, 24).atTime(20, 0)
-        val audit =   Audit(
-            id = id,
+        val audit = Audit(
+            auditId = id,
             createdBy = "user123",
-            entityId = "42",
+            entityId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             entityType = EntityType.PROJECT,
             oldState = "old",
             newState = "new",
-            date =customDateTime
+            createdAt = customDateTime
         )
-        every { dateParser.getStringFromDate(audit.date) } returns "2025-05-24 08:00 PM"
+        every { dateParser.getStringFromDate(audit.createdAt) } returns "2025-05-24 08:00 PM"
 
         // when
         val result = csvAuditParser.getLineFromAudit(audit)
 
         // then
-        val expected = "$id,${audit.createdBy},${audit.entityId},${audit.entityType},${audit.oldState},${audit.newState},2025-05-24 08:00 PM"
-        assertEquals(expected, result)
+        val expected =
+            "$id,${audit.createdBy},${audit.entityId},${audit.entityType},${audit.oldState},${audit.newState},2025-05-24 08:00 PM"
+        assertThat(result).isEqualTo(expected)
     }
 
     @Test
@@ -54,7 +55,7 @@ class CsvAuditParserTest {
 
         // given
         val id = UUID.randomUUID()
-        val line = "$id,user123,42,PROJECT,old,new,2023-12-25"
+        val line = "$id,user123,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,PROJECT,old,new,2023-12-25"
         val customDateTime = LocalDate.of(2025, 5, 24).atTime(20, 0)
 
         every { dateParser.parseDateFromString("2023-12-25") } returns customDateTime
@@ -64,17 +65,18 @@ class CsvAuditParserTest {
 
         // then
         val expectedAudit = Audit(
-            id = id,
+            auditId = id,
             createdBy = "user123",
-            entityId = "42",
+            entityId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             entityType = EntityType.PROJECT,
             oldState = "old",
             newState = "new",
-            date = customDateTime
+            createdAt = customDateTime
         )
 
-        assertEquals(expectedAudit, result)
+        assertThat(result).isEqualTo(expectedAudit)
     }
+
 
     @Test
     fun `getAuditFromLine should throw exception for invalid CSV line`() {
@@ -83,9 +85,11 @@ class CsvAuditParserTest {
         val invalidLine = "1,user123,42,PROJECT,old"
 
         // when & then
-        assertFails {
+        val exception = assertThrows<IllegalArgumentException> {
             csvAuditParser.getAuditFromLine(invalidLine)
         }
-    }
 
+        // then
+        assertThat(exception).hasMessageThat().contains("Invalid CSV")
+    }
 }

@@ -6,11 +6,11 @@ import java.time.LocalTime
 import java.util.UUID
 
 data class Audit(
-    val id: UUID = UUID.randomUUID(),
+    val auditId: UUID = UUID.randomUUID(),
     val createdBy: String,
-    val entityId: String,
+    val entityId: UUID,
     val entityType: EntityType,
     val oldState: String,
     val newState: String,
-    val date: LocalDateTime = LocalDate.now().atTime(LocalTime.now()),
+    val createdAt: LocalDateTime = LocalDate.now().atTime(LocalTime.now()),
 )

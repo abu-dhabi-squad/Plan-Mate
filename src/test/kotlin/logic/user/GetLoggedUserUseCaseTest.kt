@@ -12,32 +12,41 @@ import logic.model.User
 import logic.model.UserType
 import logic.repository.AuthenticationRepository
 
-class GetLoggedUserUseCaseTest{
+class GetLoggedUserUseCaseTest {
     private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
     private lateinit var authenticationRepository: AuthenticationRepository
 
     @BeforeEach
-    fun setup(){
-        authenticationRepository= mockk(relaxed = true)
-        getLoggedUserUseCase= GetLoggedUserUseCase(authenticationRepository)
+    fun setup() {
+        authenticationRepository = mockk(relaxed = true)
+        getLoggedUserUseCase = GetLoggedUserUseCase(authenticationRepository)
     }
 
     @Test
-    fun `should return logged user when getLoggedUser is called`(){
+    fun `should return logged user when getLoggedUser is called`() {
+        // Given
         val user = User(
             username = "newUser",
             password = "ValidPass123!",
             userType = UserType.MATE
         )
-        every{authenticationRepository.getLoggedUser()} returns  user
-        val res=getLoggedUserUseCase()
+        every { authenticationRepository.getLoggedUser() } returns user
+
+        // When
+        val res = getLoggedUserUseCase()
+
+        // Then
         assertThat(res).isEqualTo(user)
         verify { authenticationRepository.getLoggedUser() }
     }
+
     @Test
-    fun `should throw exception when no logged user is found`(){
-        every{authenticationRepository.getLoggedUser()} returns null
-        assertThrows<NoLoggedInUserException>{
+    fun `should throw exception when no logged user is found`() {
+        // Given
+        every { authenticationRepository.getLoggedUser() } returns null
+
+        // When & Then
+        assertThrows<NoLoggedInUserException> {
             getLoggedUserUseCase()
         }
     }

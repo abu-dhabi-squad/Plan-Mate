@@ -1,33 +1,45 @@
 package data.project.repository
 
-import data.project.mapper.MongoProjectMapper
+import data.project.mapper.ProjectMapper
 import logic.model.Project
 import logic.repository.ProjectRepository
+import data.utils.BaseRepository
+import java.util.UUID
 
 class ProjectRepositoryImpl(
     private val projectDataSource: RemoteProjectDataSource,
-    private val mongoProjectMapper: MongoProjectMapper
-
-) : ProjectRepository {
+    private val projectMapper: ProjectMapper
+) : ProjectRepository, BaseRepository() {
 
     override suspend fun getAllProjects(): List<Project> {
-        return projectDataSource.getAllProjects().map { mongoProjectMapper.dtoToProject(it) }
+        return wrapResponse {
+            projectDataSource.getAllProjects().map { projectMapper.dtoToProject(it) }
+        }
     }
 
     override suspend fun addProject(project: Project) {
-        projectDataSource.createProject(mongoProjectMapper.projectToDto(project))
+        wrapResponse {
+            projectDataSource.createProject(projectMapper.projectToDto(project))
+        }
     }
 
     override suspend fun editProject(project: Project) {
-        projectDataSource.editProject(mongoProjectMapper.projectToDto(project))
+        wrapResponse {
+            projectDataSource.editProject(projectMapper.projectToDto(project))
+        }
     }
 
-    override suspend fun deleteProjectById(projectId: String) {
-        projectDataSource.deleteProject(projectId)
+    override suspend fun deleteProjectById(projectId: UUID) {
+        wrapResponse {
+            projectDataSource.deleteProject(projectId.toString())
+        }
     }
 
-    override suspend fun getProjectById(projectId: String): Project? {
-        return projectDataSource.getProjectById(projectId)?.let { mongoProjectMapper.dtoToProject(it) }
+    override suspend fun getProjectById(projectId: UUID): Project? {
+        return wrapResponse {
+            projectDataSource.getProjectById(projectId.toString())
+                ?.let { projectMapper.dtoToProject(it) }
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 package presentation.io
 
-class ConsoleReader: InputReader {
+class ConsoleReader : InputReader {
     override fun readString(): String? {
         return readlnOrNull()
     }

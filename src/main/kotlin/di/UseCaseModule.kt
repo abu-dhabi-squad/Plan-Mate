@@ -4,45 +4,34 @@ import logic.audit.CreateAuditUseCase
 import logic.audit.GetAuditUseCase
 import logic.authentication.CreateMateUserUseCase
 import logic.authentication.LoginByUserNameUseCase
-import logic.authentication.validtion.CreateUserPasswordValidator
-import logic.authentication.validtion.LoginPasswordValidator
-import logic.project.AddStateToProjectUseCase
-import logic.project.CreateProjectUseCase
-import logic.project.DeleteProjectUseCase
-import logic.project.EditProjectUseCase
-import logic.project.EditStateOfProjectUseCase
-import logic.project.GetAllProjectsUseCase
-import logic.project.GetProjectByIdUseCase
-import logic.task.CreateTaskUseCase
-import logic.task.DeleteTaskByIdUseCase
-import logic.task.EditTaskUseCase
-import logic.task.GetTaskByIdUseCase
-import logic.task.GetTasksByProjectIdUseCase
-import org.koin.dsl.module
+import logic.authentication.validation.CreateUserPasswordValidator
+import logic.authentication.validation.LoginPasswordValidator
+import logic.project.*
+import logic.task.*
 import logic.user.GetLoggedUserUseCase
 import logic.user.SaveLoggedUserUseCase
+import org.koin.dsl.module
 
 val useCaseModule = module {
+    // Audit
     single { CreateAuditUseCase(get()) }
     single { GetAuditUseCase(get()) }
-
-    single { CreateMateUserUseCase(get(), get<CreateUserPasswordValidator>()) }
-    single { LoginByUserNameUseCase(get(),get<LoginPasswordValidator>()) }
-
+    // Authentication
+    single { CreateMateUserUseCase(get(), get<CreateUserPasswordValidator>(), get()) }
+    single { LoginByUserNameUseCase(get(), get<LoginPasswordValidator>(), get()) }
+    single { GetLoggedUserUseCase(get()) }
+    single { SaveLoggedUserUseCase(get()) }
+    // Project
     single { AddStateToProjectUseCase(get()) }
     single { CreateProjectUseCase(get()) }
-    single { DeleteProjectUseCase(get()) }
+    single { DeleteProjectUseCase(get(), get()) }
     single { EditProjectUseCase(get()) }
     single { EditStateOfProjectUseCase(get()) }
     single { GetAllProjectsUseCase(get()) }
-    single { GetProjectByIdUseCase(get()) }
-
+    // Task
     single { CreateTaskUseCase(get(), get()) }
     single { DeleteTaskByIdUseCase(get()) }
     single { EditTaskUseCase(get(), get()) }
     single { GetTaskByIdUseCase(get()) }
     single { GetTasksByProjectIdUseCase(get()) }
-
-    single { GetLoggedUserUseCase(get()) }
-    single { SaveLoggedUserUseCase(get()) }
 }

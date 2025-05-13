@@ -1,6 +1,7 @@
 package data.project.repository
 
-import data.project.mapper.MongoProjectMapper
+import com.google.common.truth.Truth.assertThat
+import data.project.mapper.ProjectMapper
 import data.project.model.ProjectDto
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -18,7 +19,7 @@ import java.util.UUID
 class ProjectRepositoryImplTest {
 
     private lateinit var projectDataSource: RemoteProjectDataSource
-    private lateinit var mapper: MongoProjectMapper
+    private lateinit var mapper: ProjectMapper
     private lateinit var repository: ProjectRepository
 
     private val project = Project(UUID.randomUUID(), "Test", emptyList())
@@ -33,14 +34,18 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `getAllProjects should return mapped list`() = runTest {
+        // Given
         coEvery { projectDataSource.getAllProjects() } returns listOf(projectDto)
         every { mapper.dtoToProject(projectDto) } returns project
 
+        // When
         val result = repository.getAllProjects()
 
-        assert(result == listOf(project))
+        // Then
+        assertThat(result).isEqualTo(listOf(project))
         coVerify { projectDataSource.getAllProjects() }
     }
+
 
     @Test
     fun `addProject should map and call createProject`() = runTest {
@@ -64,33 +69,42 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `deleteProjectById should call data source`() = runTest {
-        val projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"
-        coEvery { projectDataSource.deleteProject(projectId) } just Runs
+        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        coEvery { projectDataSource.deleteProject(projectId.toString()) } just Runs
 
         repository.deleteProjectById(projectId)
 
-        coVerify { projectDataSource.deleteProject(projectId) }
+        coVerify { projectDataSource.deleteProject(projectId.toString()) }
     }
 
     @Test
     fun `getProjectById should return mapped project`() = runTest {
-        val projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"
-        coEvery { projectDataSource.getProjectById(projectId) } returns projectDto
+        // Given
+        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        coEvery { projectDataSource.getProjectById(projectId.toString()) } returns projectDto
         every { mapper.dtoToProject(projectDto) } returns project
 
+        // When
         val result = repository.getProjectById(projectId)
 
-        assert(result == project)
-        coVerify { projectDataSource.getProjectById(projectId) }
+        // Then
+        assertThat(result).isEqualTo(project)
+        coVerify { projectDataSource.getProjectById(projectId.toString()) }
     }
+
+
 
     @Test
     fun `getProjectById should return null when not found`() = runTest {
-        val projectId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"
-        coEvery { projectDataSource.getProjectById(projectId) } returns null
+        // Given
+        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        coEvery { projectDataSource.getProjectById(projectId.toString()) } returns null
 
+        // When
         val result = repository.getProjectById(projectId)
 
-        assert(result == null)
+        // Then
+        assertThat(result).isNull()
     }
+
 }

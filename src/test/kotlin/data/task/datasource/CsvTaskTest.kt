@@ -1,6 +1,6 @@
 package data.task.datasource
 
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import data.task.datasource.csv.CsvTask
 import helper.createTask
 import io.mockk.every
@@ -9,7 +9,6 @@ import io.mockk.verify
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
-import kotlin.test.assertTrue
 import data.task.datasource.csv.CsvTaskParser
 import data.utils.filehelper.CsvFileHelper
 import java.util.UUID
@@ -37,17 +36,18 @@ class CsvTaskTest {
         val result = csvTask.getAllTasks()
 
         // Then
-        Truth.assertThat(result).containsExactly(*tasks.toTypedArray())
+        assertThat(result).containsExactly(*tasks.toTypedArray())
     }
 
     @Test
-    fun `getAllTasks should returns empty list when csv file is empty`(){
+    fun `getAllTasks should returns empty list when csv file is empty`() {
         // Given
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
         // When && Then
-        assertTrue { csvTask.getAllTasks().isEmpty() }
+        assertThat(csvTask.getAllTasks()).isEmpty()
     }
+
 
     @Test
     fun `getAllTasks should rethrows Exception when file throws Exception`(){
@@ -58,14 +58,38 @@ class CsvTaskTest {
         assertThrows<Exception> { csvTask.getAllTasks() }
     }
 
-
     @Test
-    fun `getTaskByProjectId should returns empty list when csv file is empty`(){
+    fun `getTaskByProjectId should returns empty list when csv file is empty`() {
         // Given
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
         // When && Then
-        assertTrue { csvTask.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")).isEmpty() }
+        val result = csvTask.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `getTaskByProjectId should returns empty list when csv file not contains any task with the same project id`() {
+        // Given
+        val tasks = listOf(createTask(), createTask(), createTask(), createTask())
+        every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
+
+        // When && Then
+        val result = csvTask.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        assertThat(result).isEmpty()
+    }
+
+    @Test
+    fun `getTaskByProjectId should returns tasks list when csv file contains tasks with the same project id`() {
+        // Given
+        val projectId = UUID.randomUUID()
+        val tasks = listOf(createTask(projectId = projectId), createTask(projectId = projectId), createTask())
+        every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
+        every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
+
+        // When && Then
+        val result = csvTask.getTaskByProjectId(projectId)
+        assertThat(result).containsExactly(tasks[0], tasks[1])
     }
 
     @Test
@@ -86,10 +110,10 @@ class CsvTaskTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        val result = csvTask.getTaskById(task.id)
+        val result = csvTask.getTaskById(task.taskId)
 
         // Then
-        Truth.assertThat(result).isEqualTo(task)
+        assertThat(result).isEqualTo(task)
     }
 
     @Test
@@ -101,10 +125,10 @@ class CsvTaskTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        val result = csvTask.getTaskById(task.id)
+        val result = csvTask.getTaskById(task.taskId)
 
         // Then
-        Truth.assertThat(result).isNull()
+        assertThat(result).isNull()
     }
 
     @Test
@@ -114,7 +138,7 @@ class CsvTaskTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTask.getTaskById(task.id) }
+        assertThrows<Exception> { csvTask.getTaskById(task.taskId) }
     }
 
     @Test
@@ -173,7 +197,7 @@ class CsvTaskTest {
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
 
         // When
-        csvTask.deleteTask(task.id.toString())
+        csvTask.deleteTask(task.taskId.toString())
 
         // Then
         verify(exactly = 1) { csvFileHelper.writeFile(any(), any()) }
@@ -186,7 +210,7 @@ class CsvTaskTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTask.deleteTask(task.id.toString()) }
+        assertThrows<Exception> { csvTask.deleteTask(task.taskId.toString()) }
     }
 
     companion object {

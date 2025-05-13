@@ -9,5 +9,6 @@ interface RemoteTaskDataSource {
     suspend fun createTask(task: TaskDto)
     suspend fun editTask(task: TaskDto)
     suspend fun deleteTask(taskId: String)
+    suspend fun deleteTasksByProjectById(projectId: String)
 }
 

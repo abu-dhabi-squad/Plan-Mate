@@ -1,10 +1,12 @@
-package presentation.data.utils.hashing
-import com.soywiz.krypto.md5
+package data.utils.hashing
+
+import logic.utils.hashing.HashingService
+import java.security.MessageDigest
 
 class Md5Hashing : HashingService {
-    @OptIn(ExperimentalStdlibApi::class)
     override fun hash(input: String): String {
-        val hashBytes = input.encodeToByteArray().md5().bytes
-        return hashBytes.toHexString()
+        val md = MessageDigest.getInstance("MD5")
+        val hashBytes = md.digest(input.toByteArray())
+        return hashBytes.joinToString("") { "%02x".format(it) }
     }
 }

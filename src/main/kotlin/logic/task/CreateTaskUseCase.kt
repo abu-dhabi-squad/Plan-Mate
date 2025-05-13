@@ -2,7 +2,7 @@ package logic.task
 
 import logic.model.Task
 import logic.repository.TaskRepository
-import logic.validation.TaskValidator
+import logic.task.validation.TaskValidator
 
 class CreateTaskUseCase(private val taskRepository: TaskRepository, private val taskValidator: TaskValidator) {
     suspend operator fun invoke(task: Task) {

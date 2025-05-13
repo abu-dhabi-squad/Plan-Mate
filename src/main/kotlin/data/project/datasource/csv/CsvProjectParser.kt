@@ -3,16 +3,16 @@ package data.project.datasource.csv
 import logic.exceptions.CanNotParseProjectException
 import logic.exceptions.CanNotParseStateException
 import logic.model.Project
-import logic.model.State
-import java.util.UUID
+import logic.model.TaskState
+import java.util.*
 
 class CsvProjectParser {
 
     fun parseProjectToString(project: Project): String {
-        var res = project.id.toString() + "," + project.projectName + ","
-        if (project.states.isEmpty()) return res
-        project.states.forEach {
-            res += it.id.toString() + ";" + it.name + "|"
+        var res = project.projectId.toString() + "," + project.projectName + ","
+        if (project.taskStates.isEmpty()) return res
+        project.taskStates.forEach {
+            res += it.stateId.toString() + ";" + it.stateName + "|"
         }
         return res.dropLast(UNUSED_CHARACTER)
     }
@@ -31,7 +31,7 @@ class CsvProjectParser {
     }
 
     //ID,NAME,STATE   -->       ID/NAME|ID/NAME
-    private fun parseStringToListOfState(subLine: String): List<State> {
+    private fun parseStringToListOfState(subLine: String): List<TaskState> {
         return if (subLine.contains("|")) {
             parseMultipleStates(subLine)
         } else if (subLine.contains(";")) {
@@ -42,22 +42,22 @@ class CsvProjectParser {
         }
     }
 
-    private fun parseMultipleStates(subLine: String): List<State> {
-        val result: MutableList<State> = mutableListOf()
+    private fun parseMultipleStates(subLine: String): List<TaskState> {
+        val result: MutableList<TaskState> = mutableListOf()
         subLine.split("|")
             .forEach { stateRegex ->
                 stateRegex.split(";").also {
                     it.takeIf(::isValidState) ?: throw CanNotParseStateException()
-                    result.add(State(UUID.fromString(it[STATE_ID]), it[STATE_NAME]))
+                    result.add(TaskState(UUID.fromString(it[STATE_ID]), it[STATE_NAME]))
                 }
             }
         return result
     }
 
-    private fun parseOneState(subLine: String): List<State> {
+    private fun parseOneState(subLine: String): List<TaskState> {
         val listOfRegex: List<String> = subLine.split(";")
             .takeIf(::isValidState) ?: throw CanNotParseStateException()
-        return listOf(State(UUID.fromString(listOfRegex[STATE_ID]), listOfRegex[STATE_NAME]))
+        return listOf(TaskState(UUID.fromString(listOfRegex[STATE_ID]), listOfRegex[STATE_NAME]))
     }
 
     private fun isValidProject(projectRegex: List<String>): Boolean {

@@ -1,16 +1,17 @@
 package logic.audit
 
 import com.google.common.truth.Truth.assertThat
-import createAudit
+import helper.createAudit
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
+import logic.exceptions.NoAuditsFoundException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.exceptions.WrongInputException
 import logic.model.EntityType
 import logic.repository.AuditRepository
-import kotlin.test.assertFails
+import org.junit.jupiter.api.assertThrows
+import java.util.UUID
 
 class GetAuditUseCaseTest {
 
@@ -24,10 +25,10 @@ class GetAuditUseCaseTest {
     }
 
     @Test
-    fun `get Audit History should returns audit list when entityId is valid`() = runTest{
+    fun `should returns audit list when entityId is valid`() = runTest {
 
-        // given
-        val entityId = "123"
+        // Given
+        val entityId = UUID.randomUUID()
         val expectedAudits = listOf(
             createAudit(
                 entityId = entityId,
@@ -40,34 +41,33 @@ class GetAuditUseCaseTest {
 
         coEvery { auditRepository.getAuditByEntityId(entityId) } returns expectedAudits
 
-        // when
+        // When
         val result = getAuditUseCase(entityId)
 
-        // then
+        // Then
         assertThat(expectedAudits).isEqualTo(result)
     }
 
     @Test
-    fun `get Audit History throws WrongInputException when entityId is empty`()= runTest {
+    fun `should throws exception when repository fail`() = runTest {
 
-        // given
-        val entityId = ""
-        coEvery { auditRepository.getAuditByEntityId(entityId) } throws WrongInputException()
+        // Given
+        val entityId = UUID.randomUUID()
+        coEvery { auditRepository.getAuditByEntityId(entityId) } throws Exception()
 
-        // then
-        assertFails { getAuditUseCase(entityId) }
+        // When & Then
+        assertThrows<Exception>() { getAuditUseCase(entityId) }
     }
 
     @Test
-    fun `get Audit History throws Empty List Exception when there is no Audit History`()= runTest {
+    fun `should throws NoAuditsFoundException when there is no audit history`() = runTest {
 
-        // given
-        val entityId = "UG7299"
-
+        // Given
+        val entityId = UUID.randomUUID()
         coEvery { auditRepository.getAuditByEntityId(entityId) } returns emptyList()
 
-        // then
-        assertFails { getAuditUseCase(entityId) }
+        // When & Then
+        assertThrows<NoAuditsFoundException>() { getAuditUseCase(entityId) }
     }
 
 }

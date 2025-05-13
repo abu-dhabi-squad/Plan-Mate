@@ -1,40 +1,37 @@
 package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
-import logic.validation.DateParser
 import logic.model.Audit
 import logic.model.EntityType
 import logic.model.Project
-import logic.model.State
 import logic.model.Task
-import logic.user.GetLoggedUserUseCase
+import logic.model.TaskState
 import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
+import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
-import presentation.io.InputReader
 import presentation.io.Printer
-import java.time.LocalDate
+import presentation.utils.PromptService
 
 class CreateTaskUI(
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val printer: Printer,
-    private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val createTaskUseCase: CreateTaskUseCase,
-    private val parserDate: DateParser,
+    private val promptService : PromptService,
     private val createAuditUseCase: CreateAuditUseCase
 
 ) : UiLauncher {
     override suspend fun launchUi() {
-        val title = promptNonEmptyString("Enter task title: ")
-        val description = promptNonEmptyString("Enter task description: ")
-        val startDate = promptDate("Enter task start date (YYYY-MM-DD): ")
-        val endDate = promptDate("Enter task end date (YYYY-MM-DD): ")
-
+        val title = promptService.promptNonEmptyString("Enter task title: ")
+        val description =
+            promptService.promptNonEmptyString("Enter task description: ")
+        val startDate = promptService.promptDate("Enter task start date (YYYY-MM-DD): ")
+        val endDate = promptService.promptDate("Enter task end date (YYYY-MM-DD): ")
         val projects = try {
             getAllProjectsUseCase()
-        } catch (e: Exception) {
-            printer.displayLn("\nError loading projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError loading projects: ${exception.message}")
             return
         }
 
@@ -44,17 +41,17 @@ class CreateTaskUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptSelectionIndex("\nEnter project number: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
         val selectedProject = projects[projectIndex]
 
-        showStates(selectedProject.states)
-        val stateIndex = promptSelectionIndex("\nEnter state number: ", selectedProject.states.size)
-        val selectedState = selectedProject.states[stateIndex]
+        showStates(selectedProject.taskStates)
+        val stateIndex = promptService.promptSelectionIndex("\nEnter state number", selectedProject.taskStates.size)
+        val selectedState = selectedProject.taskStates[stateIndex]
 
         val task = Task(
-            userName = getLoggedUserUseCase().username,
-            projectId = selectedProject.id,
-            stateId = selectedState.id,
+            username = getLoggedUserUseCase().username,
+            projectId = selectedProject.projectId,
+            taskStateId = selectedState.stateId,
             title = title,
             description = description,
             startDate = startDate,
@@ -65,16 +62,16 @@ class CreateTaskUI(
             createTaskUseCase(task)
             createAuditUseCase(
                 Audit(
-                    entityId = task.id.toString(),
+                    entityId = task.taskId,
                     entityType = EntityType.TASK,
                     oldState = "",
-                    newState = "Created",
+                    newState = selectedState.stateName,
                     createdBy = getLoggedUserUseCase().username
                 )
             )
             printer.displayLn("\nTask created successfully.")
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to create task: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to create task: ${exception.message}")
         }
     }
 
@@ -85,45 +82,10 @@ class CreateTaskUI(
         }
     }
 
-    private fun showStates(states: List<State>) {
-        printer.displayLn("\nAvailable states:")
-        states.forEachIndexed { index, state ->
-            printer.displayLn("${index + 1}. ${state.name}")
-        }
-    }
-
-    private fun promptNonEmptyString(prompt: String): String {
-        while (true) {
-            printer.display(prompt)
-            val input = inputReader.readString()
-            if (!input.isNullOrBlank()) return input
-            printer.displayLn("\nInput cannot be empty.")
-        }
-    }
-
-    private fun promptDate(prompt: String): LocalDate {
-        while (true) {
-            printer.display(prompt)
-            val input = inputReader.readString()
-            if (input.isNullOrBlank()) {
-                printer.displayLn("\nDate cannot be empty.")
-                continue
-            }
-            try {
-                val date = parserDate.parseDateFromString(input)
-                return date
-            } catch (e: Exception) {
-                printer.displayLn("\nInvalid date format. Please use YYYY-MM-DD.")
-            }
-        }
-    }
-
-    private fun promptSelectionIndex(prompt: String, size: Int): Int {
-        while (true) {
-            printer.display(prompt)
-            val input = inputReader.readInt()
-            if (input != null && input in 1..size) return input - 1
-            printer.displayLn("\nPlease enter a number between 1 and $size.")
+    private fun showStates(taskStates: List<TaskState>) {
+        printer.displayLn("\nAvailable taskStates:")
+        taskStates.forEachIndexed { index, state ->
+            printer.displayLn("${index + 1}. ${state.stateName}")
         }
     }
 }

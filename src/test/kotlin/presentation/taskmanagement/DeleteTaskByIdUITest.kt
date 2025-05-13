@@ -1,189 +1,154 @@
 package presentation.taskmanagement
 
-import helper.createProject
-import helper.createTask
 import io.mockk.coEvery
 import io.mockk.coVerify
-import io.mockk.just
+import io.mockk.every
 import io.mockk.mockk
-import io.mockk.runs
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.audit.CreateAuditUseCase
 import logic.exceptions.NoProjectsFoundException
 import logic.exceptions.NoTasksFoundException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.params.ParameterizedTest
-import org.junit.jupiter.params.provider.CsvSource
 import logic.project.GetAllProjectsUseCase
 import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
-import presentation.io.InputReader
 import presentation.io.Printer
-import java.util.UUID
+import presentation.utils.PromptService
+import presentation.taskmanagement.TestData.fakeProject
+import presentation.taskmanagement.TestData.fakeTask
+import presentation.taskmanagement.TestData.fakeUser
 
 class DeleteTaskByIdUITest {
 
     private lateinit var printer: Printer
-    private lateinit var reader: InputReader
+    private lateinit var promptService: PromptService
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
     private lateinit var deleteTaskByIdUseCase: DeleteTaskByIdUseCase
-    private lateinit var presenter: DeleteTaskByIdUI
     private lateinit var createAuditUseCase: CreateAuditUseCase
     private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
+    private lateinit var deleteTaskByIdUI: DeleteTaskByIdUI
 
     @BeforeEach
     fun setUp() {
         printer = mockk(relaxed = true)
-        reader = mockk(relaxed = true)
+        promptService = mockk(relaxed = true)
         getAllProjectsUseCase = mockk(relaxed = true)
         getTasksByProjectIdUseCase = mockk(relaxed = true)
         deleteTaskByIdUseCase = mockk(relaxed = true)
         createAuditUseCase = mockk(relaxed = true)
         getLoggedUserUseCase = mockk(relaxed = true)
 
-        presenter = DeleteTaskByIdUI(
+        every { getLoggedUserUseCase() } returns fakeUser
+
+        deleteTaskByIdUI = DeleteTaskByIdUI(
             printer,
             getLoggedUserUseCase,
-            reader,
             getAllProjectsUseCase,
             getTasksByProjectIdUseCase,
             deleteTaskByIdUseCase,
-            createAuditUseCase
+            createAuditUseCase,
+            promptService
         )
     }
 
     @Test
     fun `should delete task successfully when user input is valid`() = runTest {
-        // Given
-        val uuid = UUID.randomUUID()
-        val project = createProject(id = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
-        val task = createTask(id = uuid)
+        //Given
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
+        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
 
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
-        coEvery { reader.readInt() } returns 1
-        coEvery { deleteTaskByIdUseCase(uuid) } just runs
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { deleteTaskByIdUseCase(task.id) }
-        coVerify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
+        //When
+        deleteTaskByIdUI.launchUi()
+
+        //Then
+        coVerify { deleteTaskByIdUseCase(fakeTask.taskId) }
+        verify { printer.displayLn(match { it.toString().contains("deleted successfully") }) }
     }
 
     @Test
     fun `should display error when loading projects fails`() = runTest {
-        // Given
+        //Given
         coEvery { getAllProjectsUseCase() } throws NoProjectsFoundException()
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { printer.displayLn(match { it.toString().contains("Error loading projects") }) }
+
+        //When
+        deleteTaskByIdUI.launchUi()
+
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("Error loading projects") }) }
+
     }
 
     @Test
     fun `should display warning when no projects are available`() = runTest {
-        // Given
+        //Given
         coEvery { getAllProjectsUseCase() } returns emptyList()
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { printer.displayLn("No projects available.") }
+
+        //When
+        deleteTaskByIdUI.launchUi()
+
+        //Then
+        verify { printer.displayLn("\nNo projects available.") }
     }
 
     @Test
     fun `should display error when loading tasks fails`() = runTest {
         //Given
-        val project = createProject()
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b")) } throws NoTasksFoundException()
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } throws NoTasksFoundException()
+
+        //When
+        deleteTaskByIdUI.launchUi()
+
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("Error loading tasks") }) }
     }
 
     @Test
     fun `should display warning when no tasks are found in project`() = runTest {
-        // Given
-        val project = createProject()
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns emptyList()
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { printer.displayLn("No tasks found in this project.") }
+        //Given
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns emptyList()
+
+        //When
+        deleteTaskByIdUI.launchUi()
+
+        //Then
+        verify { printer.displayLn("\nNo tasks found in this project.") }
     }
 
     @Test
     fun `should display error when deletion fails`() = runTest {
-        // Given
-        val project = createProject()
-        val task = createTask()
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { reader.readInt() } returns 1 andThen 1
-        coEvery { getTasksByProjectIdUseCase(any()) } returns listOf(task)
+        //Given
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
+        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
         coEvery { deleteTaskByIdUseCase(any()) } throws Exception("There are error when deleting")
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify {
-            printer.displayLn(match {
-                it.toString().contains("There are error when deleting")
-            })
-        }
-    }
 
-    @ParameterizedTest
-    @CsvSource("2,1", "null,1", nullValues = ["null"])
-    fun `should prompt again when invalid project index is entered`(
-        firstAttemptIndexEnter: Int?,
-        secondAttemptIndexEnter: Int
-    ) = runTest {
-        // Given
-        val project = createProject()
-        val task = createTask()
+        //When
+        deleteTaskByIdUI.launchUi()
 
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { getTasksByProjectIdUseCase(project.id) } returns listOf(task)
-        coEvery { reader.readInt() } returns firstAttemptIndexEnter andThen secondAttemptIndexEnter andThen 1
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { printer.displayLn("Please enter a number between 1 and 1.") }
-    }
-
-    @Test
-    fun `should prompt again when invalid task index is entered`() = runTest {
-        // Given
-        val task = createTask()
-        val project = createProject()
-
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { getTasksByProjectIdUseCase(any()) } returns listOf(task)
-        coEvery { reader.readInt() } returns 1 andThen 2 andThen 1
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { printer.displayLn("Please enter a number between 1 and 1.") }
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("There are error when deleting") }) }
     }
 
     @Test
     fun `should show error message when get tasks by project id failed`() = runTest {
-        // Given
-        val project = createProject()
-        coEvery { reader.readInt() } returns 1 andThen 1
-        coEvery { getAllProjectsUseCase() } returns listOf(project)
-        coEvery { getTasksByProjectIdUseCase(any()) } throws NoTasksFoundException()
-        // When
-        presenter.launchUi()
-        // Then
-        coVerify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
+        //Given
+        coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
+        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } throws NoTasksFoundException()
+
+        //When
+        deleteTaskByIdUI.launchUi()
+
+        //Then
+        verify { printer.displayLn(match { it.toString().contains("No tasks found") }) }
     }
 }

@@ -1,36 +1,33 @@
 package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
-import logic.validation.DateParser
 import logic.model.Audit
 import logic.model.EntityType
 import logic.model.Project
-import logic.model.State
 import logic.model.Task
+import logic.model.TaskState
 import logic.project.GetAllProjectsUseCase
 import logic.task.EditTaskUseCase
 import logic.task.GetTasksByProjectIdUseCase
-import presentation.UiLauncher
-import presentation.io.InputReader
-import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
-import java.time.LocalDate
+import presentation.UiLauncher
+import presentation.io.Printer
+import presentation.utils.PromptService
 
 class EditTaskUI(
     private val printer: Printer,
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
-    private val inputReader: InputReader,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
     private val editTaskUseCase: EditTaskUseCase,
-    private val dateParser: DateParser,
+    private val promptService: PromptService,
     private val createAuditUseCase: CreateAuditUseCase
 ) : UiLauncher {
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to load projects: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to load projects: ${exception.message}")
             return
         }
 
@@ -40,13 +37,13 @@ class EditTaskUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptSelection("\nSelect a project: ", projects.size)
+        val projectIndex = promptService.promptSelectionIndex("\nSelect a project", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
-            getTasksByProjectIdUseCase(selectedProject.id)
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to load tasks: ${e.message}")
+            getTasksByProjectIdUseCase(selectedProject.projectId)
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to load tasks: ${exception.message}")
             return
         }
 
@@ -56,49 +53,59 @@ class EditTaskUI(
         }
 
         showTasks(tasks)
-        val taskIndex = promptSelection("\nSelect a task to edit: ", tasks.size)
+        val taskIndex = promptService.promptSelectionIndex("\nSelect a task to edit", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         printer.displayLn("\nEditing Task: ${selectedTask.title}")
         val newTitle =
-            promptString("\nEnter new title or leave blank: ", selectedTask.title)
-        val newDescription = promptString(
+            promptService.promptString("\nEnter new title or leave blank: ", selectedTask.title)
+        val newDescription = promptService.promptString(
             "\nEnter new description or leave blank: ",
             selectedTask.description
         )
         val newStartDate =
-            promptDate("\nEnter new start date (YYYY-MM-DD) or leave blank: ", selectedTask.startDate)
+            promptService.promptDate(
+                "\nEnter new start date (YYYY-MM-DD) or leave blank: ",
+                selectedTask.startDate
+            )
         val newEndDate =
-            promptDate("\nEnter new end date (YYYY-MM-DD) or leave blank: ", selectedTask.endDate)
+            promptService.promptDate("\nEnter new end date (YYYY-MM-DD) or leave blank: ", selectedTask.endDate)
 
-        showStates(selectedProject.states)
-        val stateIndex = promptSelection("\nSelect new state: ", selectedProject.states.size)
-        val newState = selectedProject.states[stateIndex]
+        showStates(selectedProject.taskStates)
+        val stateIndex = promptService.promptSelectionIndex(
+            "\nSelect new state",
+            selectedProject.taskStates.size,
+            selectedProject.taskStates.indexOfFirst { it.stateId == selectedTask.taskStateId }
+        )
+        val newState = selectedProject.taskStates[stateIndex]
 
         val updatedTask = selectedTask.copy(
             title = newTitle,
             description = newDescription,
             startDate = newStartDate,
             endDate = newEndDate,
-            stateId = newState.id
+            taskStateId = newState.stateId
         )
 
         try {
             editTaskUseCase(updatedTask)
-            val oldState = selectedProject.states.first { it.id == selectedTask.stateId }
-
-            createAuditUseCase(
-                Audit(
-                    entityId = updatedTask.id.toString(),
-                    entityType = EntityType.TASK,
-                    oldState = oldState.id.toString(),
-                    newState = newState.id.toString(),
-                    createdBy = getLoggedUserUseCase().username
+            try {
+                val oldState = selectedProject.taskStates.first { it.stateId == selectedTask.taskStateId }
+                createAuditUseCase(
+                    Audit(
+                        entityId = updatedTask.taskId,
+                        entityType = EntityType.TASK,
+                        oldState = oldState.stateName,
+                        newState = newState.stateName,
+                        createdBy = getLoggedUserUseCase().username
+                    )
                 )
-            )
+            } catch (exception: Exception) {
+                printer.displayLn("\nFailed to create audit: ${exception.message}")
+            }
             printer.displayLn("\nTask updated successfully.")
-        } catch (e: Exception) {
-            printer.displayLn("\nFailed to update task: ${e.message}")
+        } catch (exception: Exception) {
+            printer.displayLn("\nFailed to update task: ${exception.message}")
         }
     }
 
@@ -116,40 +123,10 @@ class EditTaskUI(
         }
     }
 
-    private fun showStates(states: List<State>) {
+    private fun showStates(taskStates: List<TaskState>) {
         printer.displayLn("\nAvailable States:")
-        states.forEachIndexed { index, state ->
-            printer.displayLn("${index + 1}. ${state.name}")
-        }
-    }
-
-    private fun promptSelection(message: String, max: Int): Int {
-        while (true) {
-            printer.display(message)
-            val input = inputReader.readInt()
-            if (input != null && input in 1..max) return input - 1
-            printer.displayLn("\nPlease enter a valid number between 1 and $max.")
-        }
-    }
-
-    private fun promptString(message: String, currentValue: String): String {
-        printer.display(message)
-        val input = inputReader.readString()
-        return if (input.isNullOrBlank()) currentValue else input
-    }
-
-    private fun promptDate(message: String, currentValue: LocalDate): LocalDate {
-        printer.display(message)
-        val input = inputReader.readString()
-        return if (input.isNullOrBlank()) {
-            currentValue
-        } else {
-            try {
-                dateParser.parseDateFromString(input)
-            } catch (e: Exception) {
-                printer.displayLn("\nInvalid date format. Keeping current value.")
-                currentValue
-            }
+        taskStates.forEachIndexed { index, state ->
+            printer.displayLn("${index + 1}. ${state.stateName}")
         }
     }
 }

@@ -1,25 +1,25 @@
 package data.audit.datasource.csv.parser
 
-import logic.validation.DateTimeParser
 import logic.model.Audit
 import logic.model.EntityType
+import logic.utils.DateTimeParser
 import java.util.UUID
 
 class CsvAuditParser(
     private val dateParser: DateTimeParser
-): AuditParser {
+) {
 
-    override fun getLineFromAudit(audit: Audit): String {
-        return "${audit.id}," +
+    fun getLineFromAudit(audit: Audit): String {
+        return "${audit.auditId}," +
                 "${audit.createdBy}," +
                 "${audit.entityId}," +
                 "${audit.entityType}," +
                 "${audit.oldState}," +
                 "${audit.newState}," +
-                dateParser.getStringFromDate(audit.date)
+                dateParser.getStringFromDate(audit.createdAt)
     }
 
-    override fun getAuditFromLine(auditLine: String): Audit {
+    fun getAuditFromLine(auditLine: String): Audit {
         val parts = auditLine.split(",")
 
         if (parts.size < 7) {
@@ -27,17 +27,17 @@ class CsvAuditParser(
         }
 
         return Audit(
-            id = UUID.fromString(parts[ID]),
+            auditId = UUID.fromString(parts[ID]),
             createdBy = parts[CREATED_BY],
-            entityId = parts[ENTITY_ID],
+            entityId = UUID.fromString(parts[ENTITY_ID]),
             entityType = EntityType.valueOf(parts[ENTITY_TYPE]),
             oldState = parts[OLD_STATE],
             newState = parts[NEW_STATE],
-            date = dateParser.parseDateFromString(parts[DATE]),
+            createdAt = dateParser.parseDateFromString(parts[DATE]),
         )
     }
 
-    private companion object{
+    private companion object {
         const val ID = 0
         const val CREATED_BY = 1
         const val ENTITY_ID = 2

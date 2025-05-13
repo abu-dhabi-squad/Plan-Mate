@@ -1,7 +1,7 @@
 package presentation.io
 
 
-class ConsolePrinter: Printer {
+class ConsolePrinter : Printer {
     override fun display(input: Any?) {
         print(input)
     }

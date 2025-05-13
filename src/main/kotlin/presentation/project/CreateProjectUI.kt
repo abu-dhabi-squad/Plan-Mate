@@ -1,66 +1,55 @@
 package presentation.project
 
 import logic.audit.CreateAuditUseCase
-import logic.project.CreateProjectUseCase
-import presentation.UiLauncher
-import presentation.io.InputReader
-import presentation.io.Printer
 import logic.model.Audit
 import logic.model.EntityType
 import logic.model.Project
-import logic.model.State
+import logic.model.TaskState
+import logic.project.CreateProjectUseCase
 import logic.user.GetLoggedUserUseCase
+import presentation.UiLauncher
+import presentation.io.Printer
+import presentation.utils.PromptService
 
 
 class CreateProjectUI(
     private val createProjectUseCase: CreateProjectUseCase,
-    private val inputReader: InputReader,
     private val printer: Printer,
+    private val promptService: PromptService,
     private val createAuditUseCase: CreateAuditUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase
-): UiLauncher {
-
+) : UiLauncher {
     override suspend fun launchUi() {
-        printer.display("\nEnter project name: ")
-        val projectName = inputReader.readString()?.takeIf { it.isNotBlank() }
-        if (projectName == null) {
-            printer.displayLn("\nProject name cannot be empty.")
-            return
-        }
+        val projectName =
+            promptService.promptNonEmptyString("\nEnter project name: ")
 
-        printer.display("\nEnter number of states: ")
-        val stateCount = inputReader.readInt()
-        if (stateCount == null || stateCount < 0) {
+        val stateCount =
+            promptService.promptNonEmptyInt("\nEnter number of states: ")
+        if (stateCount < 0) {
             printer.displayLn("\nInvalid number of states.")
             return
         }
 
-        val states = mutableListOf<State>()
+        val taskStates = mutableListOf<TaskState>()
         for (i in 1..stateCount) {
-            printer.display("\nEnter name for state #$i: ")
-            val stateName = inputReader.readString()?.takeIf { it.isNotBlank() }
-            if (stateName == null) {
-                printer.displayLn("\nState name cannot be empty.")
-                return
-            }
-            states.add(State(name = stateName))
+            val stateName = promptService.promptNonEmptyString("\nEnter name for state #$i: ")
+            taskStates.add(TaskState(stateName = stateName))
         }
-
         try {
-            val newProject = Project(projectName = projectName, states = states)
+            val newProject = Project(projectName = projectName, taskStates = taskStates)
             createProjectUseCase(newProject)
             createAuditUseCase(
                 Audit(
                     createdBy = getLoggedUserUseCase().username,
                     entityType = EntityType.PROJECT,
-                    entityId = newProject.id.toString(),
+                    entityId = newProject.projectId,
                     oldState = "",
                     newState = "Created"
                 )
             )
-            printer.displayLn("\nProject '$projectName' created with ${states.size} state(s).")
-        } catch (e: Exception) {
-            printer.displayLn("\nError: ${e.message}")
+            printer.displayLn("\nProject '$projectName' created with ${taskStates.size} state(s).")
+        } catch (exception: Exception) {
+            printer.displayLn("\nError: ${exception.message}")
         }
     }
 }

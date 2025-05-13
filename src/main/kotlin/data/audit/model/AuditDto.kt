@@ -1,8 +1,7 @@
 package data.audit.model
 
-import org.bson.codecs.pojo.annotations.BsonId
 import org.bson.codecs.pojo.annotations.BsonProperty
-import java.util.Date
+import java.util.*
 
 data class AuditDto(
     val id: String,
