@@ -38,15 +38,15 @@ class EditTaskStateOfProjectUITest {
 
     @Test
     fun `launchUI should edit successfully when nothing went wrong`() = runTest{
-        //given
+        //Given
         val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
         every { promptService.promptSelectionIndex(any(),any()) } returns 0 andThen 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
-        //when
+        //When
         ui.launchUi()
-        //then
+        //Then
         verify { project.taskStates.forEachIndexed { index, state ->
             printer.displayLn(match { it.toString().contains(state.stateName) })
         } }
@@ -56,65 +56,65 @@ class EditTaskStateOfProjectUITest {
 
     @Test
     fun `launchUI should display Exception message when get all projects throw Exception`() = runTest{
-        //given
+        //Given
         coEvery { getAllProjectsUseCase() } throws Exception()
-        //when
+        //When
         ui.launchUi()
-        //then
+        //Then
         verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 
     @Test
     fun `launchUI should display no project message when get all projects return empty list`() = runTest{
-        //given
+        //Given
         coEvery { getAllProjectsUseCase() } returns emptyList()
-        //when
+        //When
         ui.launchUi()
-        //then
+        //Then
         verify { printer.displayLn(match { it.toString().contains("no project") }) }
     }
 
     @Test
     fun `launchUI should display Exception message editStateOfProjectUseCase when throw Exception`() = runTest{
-        //given
+        //Given
         val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
         every { promptService.promptSelectionIndex(any(),any()) } returns 0 andThen 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
         coEvery { editStateOfProjectUseCase(any(),any()) } throws Exception()
-        //when
+        //When
         ui.launchUi()
-        //then
+        //Then
         verify { printer.displayLn(match { it.toString().contains("${Exception().message}") }) }
     }
 
     @Test
-    fun `should call add audit use case when update project state successfully`() = runTest {
-        //given
+    fun `launchUI should call add audit use case when update project state successfully`() = runTest {
+        //Given
         val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
         every { promptService.promptSelectionIndex(any(), any()) } returns 0 andThen 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
-        //when
+        //When
         ui.launchUi()
-        //then
+        //Then
         coVerify { createAuditUseCase(any()) }
     }
 
     @Test
-    fun `should not call add audit use case when update project state fails`() = runTest {
-        //given
+    fun `launchUI should not call add audit use case when update project state fails`() = runTest {
+        //Given
         val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
         every { promptService.promptSelectionIndex(any(), any()) } returns 0 andThen 0
         every { promptService.promptNonEmptyString(any()) } returns "newName"
         coEvery { editStateOfProjectUseCase(any(), any()) } throws Exception()
-        //when
+        //When
         ui.launchUi()
-        //then
+        //Then
         coVerify(exactly = 0) { createAuditUseCase(any()) }
     }
 }
