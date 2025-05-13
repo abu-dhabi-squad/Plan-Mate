@@ -6,6 +6,7 @@ import io.mockk.just
 import io.mockk.coEvery
 import io.mockk.verify
 import io.mockk.mockk
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,6 +15,7 @@ import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.utils.PromptService
+import kotlin.test.assertFailsWith
 
 class ConsoleAdminMenuUITest {
 
@@ -80,6 +82,7 @@ class ConsoleAdminMenuUITest {
         }
         coVerify { uiLauncher.launchUi() }
     }
+
     @Test
     fun `launchUi should loop back to presentFeature`() = runTest {
         // Given
@@ -93,4 +96,52 @@ class ConsoleAdminMenuUITest {
         verify { printer.displayLn(match { it.toString().contains("Invalid input") }) }
         coVerify { uiLauncher.launchUi() }
     }
+
+    @Test
+    fun `should exit the program when input is 0`() = runTest {
+        //Given
+        coEvery { promptService.promptNonEmptyInt(any()) } returns 0
+
+        //When & Then
+        assertFailsWith<IllegalStateException> {
+            view.launchUi()
+        }
+    }
+
+    @Test
+    fun `should select last feature and launch`() = runTest {
+        //Given
+        val lastFeature = UIFeature("Last Feature", 3, uiLauncher)
+        val features = listOf(
+            UIFeature("Create Project", 1, mockk(relaxed = true)),
+            UIFeature("Edit Project", 2, mockk(relaxed = true)),
+            lastFeature
+        )
+
+        //When & Then
+        view = ConsoleAdminMenuUI(features, printer, promptService)
+        coEvery { promptService.promptNonEmptyInt(any()) } returns 3 andThenThrows RuntimeException()
+        coEvery { lastFeature.uiLauncher.launchUi() } just Runs
+
+        //Then
+        assertThrows<RuntimeException> {
+            view.launchUi()
+        }
+
+        coVerify { lastFeature.uiLauncher.launchUi() }
+    }
+
+    @Test
+    fun `printFeatureLine should format line correctly`() {
+        //Given
+        val feature = UIFeature("Sample Feature", 7, mockk())
+        view = ConsoleAdminMenuUI(listOf(feature), printer, promptService)
+
+        //When
+        runBlocking { view.launchUi() }
+
+        //Then
+        verify { printer.displayLn(match { it.toString().contains(" 7.  Sample Feature") }) }
+    }
+
 }
