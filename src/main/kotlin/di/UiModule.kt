@@ -43,7 +43,7 @@ val uiModule = module {
     single { GetAuditForTaskUI(get(), get(), get(), get(), get()) }
     single { GetAuditForProjectUI(get(), get(), get(), get()) }
     single { AddStateToProjectUI(get(), get(), get(), get()) }
-    single { EditStateOfProjectUI(get(), get(), get(), get()) }
+    single { EditStateOfProjectUI(get(), get(), get(), get(),get(),get()) }
     single { LoginByUserNameUI(get(), get(), get(), get(), get(), get()) }
 
     // Admin UIFeatures
