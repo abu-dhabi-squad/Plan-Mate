@@ -1,30 +1,23 @@
 package presentation.user.mate
 
-import io.mockk.Runs
-import io.mockk.coEvery
-import io.mockk.just
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.presentation.user.mate.ConsoleUserMenuUI
 import presentation.presentation.utils.PromptService
+import kotlin.system.exitProcess
 
 class ConsoleUserMenuUITest {
+
     private lateinit var printer: Printer
     private lateinit var promptService: PromptService
     private lateinit var uiLauncher: UiLauncher
     private lateinit var view: ConsoleUserMenuUI
-
-    val features = listOf(
-        UIFeature("Create Project", 1, uiLauncher),
-        UIFeature("Edit Project", 2, uiLauncher),
-        UIFeature("Delete Project", 3, uiLauncher),
-    )
 
     @BeforeEach
     fun setup() {
@@ -32,44 +25,66 @@ class ConsoleUserMenuUITest {
         promptService = mockk(relaxed = true)
         uiLauncher = mockk(relaxed = true)
 
-        view = ConsoleUserMenuUI(features, printer, promptService)
+        view = ConsoleUserMenuUI(
+            listOf(
+                UIFeature("View Profile", 1, uiLauncher),
+                UIFeature("View Reports", 2, uiLauncher),
+                UIFeature("Chat with Coach", 3, uiLauncher),
+            ),
+            printer,
+            promptService
+        )
     }
 
     @Test
-    fun `launchUi should print expected feature labels and welcome message`() = runTest{
-        //Given
-        coEvery { promptService.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException("stop loop")
-        coEvery { features[0].uiLauncher.launchUi() } just Runs
+    fun `launchUi should display welcome message and feature labels`() = runTest {
+        coEvery { promptService.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
+        coEvery { uiLauncher.launchUi() } just Runs
 
-        //When
-        try {
+        assertThrows<RuntimeException> {
             view.launchUi()
-        } catch (_: RuntimeException) {
-            // Expected to stop infinite recursion from presentFeature()
         }
 
-        //Then
         verify { printer.displayLn(match { it.toString().contains("Welcome to PlanMate App") }) }
-        verify { printer.displayLn(match { it.toString().contains("Create Project") }) }
-        verify { printer.displayLn(match { it.toString().contains("Edit Project") }) }
-        verify { printer.displayLn(match { it.toString().contains("Delete Project") }) }
-
+        verify { printer.displayLn(match { it.toString().contains("View Profile") }) }
+        verify { printer.displayLn(match { it.toString().contains("View Reports") }) }
+        verify { printer.displayLn(match { it.toString().contains("Chat with Coach") }) }
     }
 
     @Test
-    fun `launchUi should print Invalid input when input is not in range`() = runTest{
-        // Simulate invalid input first, then break the loop
-        // Given
-        coEvery { promptService.promptNonEmptyInt(any()) } returns 999 andThenThrows RuntimeException("stop loop")
+    fun `launchUi should call feature ui when valid input`() = runTest {
+        coEvery { promptService.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
+        coEvery { uiLauncher.launchUi() } just Runs
 
-        //When
-        try {
+        assertThrows<RuntimeException> {
             view.launchUi()
-        } catch (_: RuntimeException) {
-            // Stop infinite recursion
         }
 
-        //Then
+        coVerify { uiLauncher.launchUi() }
+    }
+
+    @Test
+    fun `launchUi should show invalid input message when input is out of range`() = runTest {
+        coEvery { promptService.promptNonEmptyInt(any()) } returns 999 andThenThrows RuntimeException()
+
+        assertThrows<RuntimeException> {
+            view.launchUi()
+        }
+
         verify { printer.displayLn(match { it.toString().contains("Invalid input") }) }
+    }
+
+
+    @Test
+    fun `launchUi should loop when input is invalid then valid`() = runTest {
+        coEvery { promptService.promptNonEmptyInt(any()) } returnsMany listOf(999, 2) andThenThrows RuntimeException()
+        coEvery { uiLauncher.launchUi() } just Runs
+
+        assertThrows<RuntimeException> {
+            view.launchUi()
+        }
+
+        verify { printer.displayLn(match { it.toString().contains("Invalid input") }) }
+        coVerify { uiLauncher.launchUi() }
     }
 }

@@ -1,21 +1,16 @@
 package presentation.user.usermanagement
 
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
+import io.mockk.*
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
 import logic.authentication.CreateMateUserUseCase
 import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.UserType
+import org.junit.jupiter.api.BeforeEach
+import kotlin.test.Test
 import presentation.io.Printer
 import presentation.presentation.user.usermanagement.CreateMateUserUseCaseUI
 import presentation.presentation.utils.PromptService
-import kotlin.test.Test
-
 
 class CreateMateUserUseCaseUITest {
 
@@ -25,70 +20,67 @@ class CreateMateUserUseCaseUITest {
     private lateinit var createMateUserUI: CreateMateUserUseCaseUI
 
     @BeforeEach
-    fun setup() {
+    fun setUp() {
         useCase = mockk(relaxed = true)
         promptService = mockk(relaxed = true)
         printer = mockk(relaxed = true)
-
         createMateUserUI = CreateMateUserUseCaseUI(useCase, printer, promptService)
     }
 
     @Test
     fun `should create user successfully`() = runTest {
-        // Given
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("shahd", "123456")
+        val username = "shahd"
+        val password = "123456"
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
 
-        // When:
         createMateUserUI.launchUi()
 
-        // Then:
         coVerify {
             useCase.invoke(
                 match {
-                    it.username == "shahd" && it.password == "123456" && it.userType == UserType.MATE
+                    it.username == username &&
+                            it.password == password &&
+                            it.userType == UserType.MATE
                 }
             )
         }
-        // Then:
-        verify { printer.displayLn("User created successfully!") }
+
+        verify { printer.displayLn("\nUser created successfully!") }
     }
 
     @Test
-    fun `should throw exception when username is empty`() = runTest {
-        // Given:
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("", "shahd", "123456789")
+    fun `should display message when username is empty from useCase`() = runTest {
+        val username = "  "
+        val password = "123456"
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
         coEvery { useCase.invoke(any()) } throws EmptyUsernameException()
 
-        // When:
         createMateUserUI.launchUi()
 
-        // Then:
-        verify { printer.displayLn("Input cannot be empty.") }
+        verify { printer.displayLn("\n${EmptyUsernameException().message}") }
     }
 
     @Test
-    fun `should show error when password is empty`() = runTest {
-        // Given:
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("shahd", "", "123456")
+    fun `should display message when user already exists`() = runTest {
+        val username = "shahd"
+        val password = "123456"
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
+        coEvery { useCase.invoke(any()) } throws UserAlreadyExistsException(username)
 
-        // When:
         createMateUserUI.launchUi()
 
-        // Then:
-        verify { printer.displayLn("Input cannot be empty.") }
+        verify { printer.displayLn("\nUsername '$username' already exists") }
     }
 
     @Test
-    fun `should show error when user already exists`() = runTest {
-        val name = "shahd"
-        // Given:
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(name, "123456")
-        coEvery { useCase.invoke(any()) } throws UserAlreadyExistsException(name)
+    fun `should display generic error when unknown exception occurs`() = runTest {
+        val username = "shahd"
+        val password = "123456"
+        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
+        coEvery { useCase.invoke(any()) } throws RuntimeException("Unexpected error")
 
-        // When:
         createMateUserUI.launchUi()
 
-        // Then
-        verify { printer.displayLn("Username '$name' already exists") }
+        verify { printer.displayLn("\nUnexpected error") }
     }
 }
