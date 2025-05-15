@@ -8,20 +8,19 @@ import org.junit.jupiter.api.assertThrows
 import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.user.mate.ConsoleUserMenuUI
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class ConsoleUserMenuUITest {
 
     private lateinit var printer: Printer
-    private lateinit var promptService: PromptService
+    private lateinit var promptUtils: PromptUtils
     private lateinit var uiLauncher: UiLauncher
     private lateinit var view: ConsoleUserMenuUI
 
     @BeforeEach
     fun setup() {
         printer = mockk(relaxed = true)
-        promptService = mockk(relaxed = true)
+        promptUtils = mockk(relaxed = true)
         uiLauncher = mockk(relaxed = true)
 
         view = ConsoleUserMenuUI(
@@ -31,14 +30,14 @@ class ConsoleUserMenuUITest {
                 UIFeature("Chat with Coach", 3, uiLauncher),
             ),
             printer,
-            promptService
+            promptUtils
         )
     }
 
     @Test
     fun `launchUi should display welcome message and feature labels`() = runTest {
         //Given
-        coEvery { promptService.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
+        coEvery { promptUtils.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
         coEvery { uiLauncher.launchUi() } just Runs
 
         //When
@@ -56,7 +55,7 @@ class ConsoleUserMenuUITest {
     @Test
     fun `launchUi should call feature ui when valid input`() = runTest {
         //Given
-        coEvery { promptService.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
+        coEvery { promptUtils.promptNonEmptyInt(any()) } returns 1 andThenThrows RuntimeException()
         coEvery { uiLauncher.launchUi() } just Runs
 
         //When
@@ -71,7 +70,7 @@ class ConsoleUserMenuUITest {
     @Test
     fun `launchUi should show invalid input message when input is out of range`() = runTest {
         //Given
-        coEvery { promptService.promptNonEmptyInt(any()) } returns 999 andThenThrows RuntimeException()
+        coEvery { promptUtils.promptNonEmptyInt(any()) } returns 999 andThenThrows RuntimeException()
 
         //When
         assertThrows<RuntimeException> {
@@ -85,7 +84,7 @@ class ConsoleUserMenuUITest {
     @Test
     fun `launchUi should loop when input is invalid then valid`() = runTest {
         //Given
-        coEvery { promptService.promptNonEmptyInt(any()) } returnsMany listOf(999, 2) andThenThrows RuntimeException()
+        coEvery { promptUtils.promptNonEmptyInt(any()) } returnsMany listOf(999, 2) andThenThrows RuntimeException()
         coEvery { uiLauncher.launchUi() } just Runs
 
         //When
@@ -102,7 +101,7 @@ class ConsoleUserMenuUITest {
     fun `should not crash if no feature matches input id`() = runTest {
         // Given
         val unmatchedId = 5
-        coEvery { promptService.promptNonEmptyInt(any()) } returns unmatchedId andThenThrows RuntimeException()
+        coEvery { promptUtils.promptNonEmptyInt(any()) } returns unmatchedId andThenThrows RuntimeException()
 
         // When & Then
         assertThrows<RuntimeException> {
@@ -115,7 +114,7 @@ class ConsoleUserMenuUITest {
     @Test
     fun `should handle case when no matching feature is found`() = runTest {
         // Given
-        coEvery { promptService.promptNonEmptyInt(any()) } returns 10 andThenThrows RuntimeException()
+        coEvery { promptUtils.promptNonEmptyInt(any()) } returns 10 andThenThrows RuntimeException()
 
         // When & Then
         assertThrows<RuntimeException> {
@@ -128,7 +127,7 @@ class ConsoleUserMenuUITest {
     @Test
     fun `should call presentFeature multiple times`() = runTest {
         //Given
-        coEvery { promptService.promptNonEmptyInt(any()) } returnsMany listOf(999, 1) andThenThrows RuntimeException()
+        coEvery { promptUtils.promptNonEmptyInt(any()) } returnsMany listOf(999, 1) andThenThrows RuntimeException()
         coEvery { uiLauncher.launchUi() } just Runs
 
         //When

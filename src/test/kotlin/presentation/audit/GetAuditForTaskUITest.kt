@@ -14,13 +14,13 @@ import logic.task.GetTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.utils.extensions.showAuditLogs
 
 class GetAuditForTaskUITest {
 
     private val printer: Printer = mockk(relaxed = true)
-    private val promptService: PromptService = mockk(relaxed = true)
+    private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val getAuditUseCase: GetAuditUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase = mockk(relaxed = true)
@@ -30,7 +30,7 @@ class GetAuditForTaskUITest {
     fun setUp() {
         ui = GetAuditForTaskUI(
             printer = printer,
-            promptService = promptService,
+            promptUtils = promptUtils,
             getAuditUseCase = getAuditUseCase,
             getAllProjectsUseCase = getAllProjectsUseCase,
             getTasksByProjectIdUseCase = getTasksByProjectIdUseCase
@@ -46,7 +46,7 @@ class GetAuditForTaskUITest {
         val tasks = listOf(task)
         val audits = listOf(createAudit(entityId = task.taskId))
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns tasks
         coEvery { getAuditUseCase(any()) } returns audits
         //When
@@ -93,7 +93,7 @@ class GetAuditForTaskUITest {
         val project = createProject(name = "Project A")
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } throws Exception()
         //When
         ui.launchUi()
@@ -108,7 +108,7 @@ class GetAuditForTaskUITest {
             val project = createProject(name = "Project A")
             val projects = listOf(project)
             coEvery { getAllProjectsUseCase() } returns projects
-            every { promptService.promptSelectionIndex(any(), any()) } returns 0
+            every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
             coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns emptyList()
             //When
             ui.launchUi()
@@ -124,7 +124,7 @@ class GetAuditForTaskUITest {
         val task = createTask(projectId = project.projectId)
         val tasks = listOf(task)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(projectId = project.projectId) } returns tasks
         coEvery { getAuditUseCase(any()) } throws Exception()
         //When

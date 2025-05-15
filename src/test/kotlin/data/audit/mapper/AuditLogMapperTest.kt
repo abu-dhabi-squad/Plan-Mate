@@ -11,9 +11,9 @@ import java.time.ZoneId
 import java.util.Date
 import java.util.UUID
 
-class AuditMapperTest {
+class AuditLogMapperTest {
 
-    private val mapper = AuditMapper()
+    private val mapper = AuditLogMapper()
 
     @Test
     fun `should return valid AuditDto when mapping from Audit`() {
@@ -34,7 +34,7 @@ class AuditMapperTest {
         val dto = mapper.auditToDto(audit)
 
         // Then
-        assertThat(dto.id).isEqualTo(uuid.toString())
+        assertThat(dto._id).isEqualTo(uuid.toString())
         assertThat(dto.createdBy).isEqualTo("shahd")
         assertThat(dto.entityId).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         assertThat(dto.entityType).isEqualTo("TASK")
@@ -50,7 +50,7 @@ class AuditMapperTest {
         val now = LocalDateTime.now()
         val date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant())
         val dto = AuditDto(
-            id = uuid.toString(),
+            _id = uuid.toString(),
             createdBy = "shahd",
             entityId = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a",
             entityType = "PROJECT",
@@ -75,7 +75,7 @@ class AuditMapperTest {
     fun `should throw exception when invalid AuditDto is passed`() {
         // Given
         val invalidDto = AuditDto(
-            id = "invalid-uuid",
+            _id = "invalid-uuid",
             createdBy = "shahd",
             entityId = "not-a-valid-uuid",
             entityType = "INVALID_TYPE",

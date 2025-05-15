@@ -13,7 +13,7 @@ import presentation.io.Printer
 import presentation.user.admin.ConsoleAdminMenuUI
 import presentation.user.mate.ConsoleUserMenuUI
 import presentation.user.usermanagement.CreateMateUserUseCaseUI
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.project.*
 import presentation.taskmanagement.CreateTaskUI
 import presentation.taskmanagement.DeleteTaskByIdUI
@@ -75,6 +75,6 @@ val uiModule = module {
     single { ConsoleUserMenuUI(get(named("mateFeatures")), get(), get()) }
 
     //PromptService
-    single { PromptService(get(), get(), get()) }
+    single { PromptUtils(get(), get(), get()) }
 }
 

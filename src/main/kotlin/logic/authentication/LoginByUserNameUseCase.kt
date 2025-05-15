@@ -1,16 +1,12 @@
 package logic.authentication
 
-import logic.exceptions.EmptyUsernameException
 import logic.exceptions.InvalidCredentialsException
-import logic.exceptions.UserNotFoundException
 import logic.model.User
 import logic.repository.AuthenticationRepository
-import logic.authentication.validtion.PasswordValidator
 import logic.utils.hashing.HashingService
 
 class LoginByUserNameUseCase(
     private val authRepository: AuthenticationRepository,
-    private val loginPasswordValidator: PasswordValidator,
     private val hashingPassword: HashingService
 ) {
     suspend operator fun invoke(username: String, password: String): User {
@@ -18,11 +14,11 @@ class LoginByUserNameUseCase(
         val hashedPassword = hashingPassword.hash(password)
         return authRepository.getUserByName(username)
             ?.let { it.takeIf { it.password == hashedPassword } ?: throw InvalidCredentialsException() }
-            ?: throw UserNotFoundException(username)
+            ?: throw InvalidCredentialsException()
     }
 
-    private fun validateInputs(username: String, password: String) {
-        username.takeIf { it.isNotBlank() } ?: throw EmptyUsernameException()
-        loginPasswordValidator.validatePassword(password)
+    private fun validateInputs(username: String ,password: String) {
+        username.takeIf { it.isNotBlank() } ?: throw InvalidCredentialsException()
+        password.takeIf { it.isNotBlank() } ?: throw InvalidCredentialsException()
     }
 }

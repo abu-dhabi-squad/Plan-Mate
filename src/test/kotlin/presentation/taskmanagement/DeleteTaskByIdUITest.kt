@@ -16,7 +16,7 @@ import logic.task.DeleteTaskByIdUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
 import presentation.taskmanagement.TestData.fakeUser
@@ -24,7 +24,7 @@ import presentation.taskmanagement.TestData.fakeUser
 class DeleteTaskByIdUITest {
 
     private lateinit var printer: Printer
-    private lateinit var promptService: PromptService
+    private lateinit var promptUtils: PromptUtils
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
     private lateinit var deleteTaskByIdUseCase: DeleteTaskByIdUseCase
@@ -35,7 +35,7 @@ class DeleteTaskByIdUITest {
     @BeforeEach
     fun setUp() {
         printer = mockk(relaxed = true)
-        promptService = mockk(relaxed = true)
+        promptUtils = mockk(relaxed = true)
         getAllProjectsUseCase = mockk(relaxed = true)
         getTasksByProjectIdUseCase = mockk(relaxed = true)
         deleteTaskByIdUseCase = mockk(relaxed = true)
@@ -51,7 +51,7 @@ class DeleteTaskByIdUITest {
             getTasksByProjectIdUseCase,
             deleteTaskByIdUseCase,
             createAuditUseCase,
-            promptService
+            promptUtils
         )
     }
 
@@ -60,7 +60,7 @@ class DeleteTaskByIdUITest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
+        every { promptUtils.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
 
         //When
         deleteTaskByIdUI.launchUi()
@@ -99,7 +99,7 @@ class DeleteTaskByIdUITest {
     fun `should display error when loading tasks fails`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } throws NoTasksFoundException()
 
         //When
@@ -113,7 +113,7 @@ class DeleteTaskByIdUITest {
     fun `should display warning when no tasks are found in project`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns emptyList()
 
         //When
@@ -128,7 +128,7 @@ class DeleteTaskByIdUITest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
+        every { promptUtils.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
         coEvery { deleteTaskByIdUseCase(any()) } throws Exception("There are error when deleting")
 
         //When
@@ -142,7 +142,7 @@ class DeleteTaskByIdUITest {
     fun `should show error message when get tasks by project id failed`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } throws NoTasksFoundException()
 
         //When

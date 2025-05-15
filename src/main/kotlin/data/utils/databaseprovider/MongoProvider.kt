@@ -2,7 +2,6 @@ package data.utils.databaseprovider
 
 import com.mongodb.kotlin.client.coroutine.MongoClient
 import com.mongodb.kotlin.client.coroutine.MongoDatabase
-import java.lang.System.getProperty
 
 class MongoProvider {
     companion object {
@@ -10,10 +9,10 @@ class MongoProvider {
 
         fun getMongoDatabase(): MongoDatabase {
             if (instance == null) {
-                if (getProperty("MONGO_URI") == null || getProperty("MONGO_DB_NAMEe") == null)
+                if (System.getenv("MONGO_URI") == null || System.getenv("MONGO_DB_NAME") == null)
                     throw Exception("Mongo url or mongo database name are not found")
-                val mongoUri: String = getProperty("MONGO_URI")
-                val mongoDbName: String = getProperty("MONGO_DB_NAME")
+                val mongoUri: String = System.getenv("MONGO_URI")
+                val mongoDbName: String = System.getenv("MONGO_DB_NAME")
                 val client = MongoClient.create(mongoUri)
                 instance = client.getDatabase(mongoDbName)
             }

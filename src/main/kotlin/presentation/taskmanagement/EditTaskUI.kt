@@ -12,7 +12,7 @@ import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class EditTaskUI(
     private val printer: Printer,
@@ -20,7 +20,7 @@ class EditTaskUI(
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
     private val editTaskUseCase: EditTaskUseCase,
-    private val promptService: PromptService,
+    private val promptUtils: PromptUtils,
     private val createAuditUseCase: CreateAuditUseCase
 ) : UiLauncher {
     override suspend fun launchUi() {
@@ -37,7 +37,7 @@ class EditTaskUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptService.promptSelectionIndex("\nSelect a project", projects.size)
+        val projectIndex = promptUtils.promptSelectionIndex("\nSelect a project", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
@@ -53,26 +53,26 @@ class EditTaskUI(
         }
 
         showTasks(tasks)
-        val taskIndex = promptService.promptSelectionIndex("\nSelect a task to edit", tasks.size)
+        val taskIndex = promptUtils.promptSelectionIndex("\nSelect a task to edit", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         printer.displayLn("\nEditing Task: ${selectedTask.title}")
         val newTitle =
-            promptService.promptString("\nEnter new title or leave blank: ", selectedTask.title)
-        val newDescription = promptService.promptString(
+            promptUtils.promptString("\nEnter new title or leave blank: ", selectedTask.title)
+        val newDescription = promptUtils.promptString(
             "\nEnter new description or leave blank: ",
             selectedTask.description
         )
         val newStartDate =
-            promptService.promptDate(
+            promptUtils.promptDate(
                 "\nEnter new start date (YYYY-MM-DD) or leave blank: ",
                 selectedTask.startDate
             )
         val newEndDate =
-            promptService.promptDate("\nEnter new end date (YYYY-MM-DD) or leave blank: ", selectedTask.endDate)
+            promptUtils.promptDate("\nEnter new end date (YYYY-MM-DD) or leave blank: ", selectedTask.endDate)
 
         showStates(selectedProject.taskStates)
-        val stateIndex = promptService.promptSelectionIndex(
+        val stateIndex = promptUtils.promptSelectionIndex(
             "\nSelect new state",
             selectedProject.taskStates.size,
             selectedProject.taskStates.indexOfFirst { it.stateId == selectedTask.taskStateId }

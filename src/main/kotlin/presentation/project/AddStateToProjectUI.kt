@@ -5,22 +5,22 @@ import logic.project.AddStateToProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.utils.extensions.printWithStates
 
 class AddStateToProjectUI(
     private val addStateToProjectUseCase: AddStateToProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
-    private val promptService: PromptService,
+    private val promptUtils: PromptUtils,
     private val printer: Printer
 ) : UiLauncher {
     override suspend fun launchUi() {
         try {
             val projects = getAllProjectsUseCase()
             projects.printWithStates(printer)
-            val projectIndex = promptService.promptSelectionIndex("\nChoose Project: ", projects.size)
+            val projectIndex = promptUtils.promptSelectionIndex("\nChoose Project: ", projects.size)
             val stateName =
-                promptService.promptNonEmptyString("Enter the new state name: ")
+                promptUtils.promptNonEmptyString("Enter the new state name: ")
             try {
                 addStateToProjectUseCase(
                     projects[projectIndex].projectId,

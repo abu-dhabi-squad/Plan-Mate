@@ -10,7 +10,7 @@ class TaskMapper {
     private val dateFormatter = DateTimeFormatter.ISO_DATE
     fun taskToDto(task: Task): TaskDto {
         return TaskDto(
-            id = task.taskId.toString(),
+            _id = task.taskId.toString(),
             userName = task.username,
             projectId = task.projectId.toString(),
             stateId = task.taskStateId.toString(),
@@ -23,7 +23,7 @@ class TaskMapper {
 
     fun dtoToTask(taskDto: TaskDto): Task {
         return Task(
-            taskId = UUID.fromString(taskDto.id),
+            taskId = UUID.fromString(taskDto._id),
             username = taskDto.userName,
             projectId = UUID.fromString(taskDto.projectId),
             taskStateId = UUID.fromString(taskDto.stateId),

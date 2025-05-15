@@ -7,18 +7,18 @@ import logic.model.User
 import logic.model.UserType
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class CreateMateUserUseCaseUI(
     private val createUserUseCase: CreateMateUserUseCase,
     private val printer: Printer,
-    private val promptService: PromptService
+    private val promptUtils: PromptUtils
     ) : UiLauncher {
     override suspend fun launchUi() {
         printer.displayLn("===== Create User =====")
 
-        val username = promptService.promptNonEmptyString("\nEnter username: ")
-        val password = promptService.promptNonEmptyString("\nEnter password: ")
+        val username = promptUtils.promptNonEmptyString("\nEnter username: ")
+        val password = promptUtils.promptNonEmptyString("\nEnter password: ")
 
         val user = User(username = username, password = password, userType = UserType.MATE)
 

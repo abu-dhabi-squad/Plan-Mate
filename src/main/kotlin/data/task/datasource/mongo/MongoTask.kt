@@ -17,11 +17,11 @@ class MongoTask(
     }
 
     override suspend fun getTaskById(taskId: String): TaskDto? {
-        return taskCollection.find(Filters.eq(TASK_ID, taskId)).firstOrNull()
+        return taskCollection.find(Filters.eq(TaskDto::_id.name, taskId)).firstOrNull()
     }
 
     override suspend fun getTaskByProjectId(projectId: String): List<TaskDto> {
-        return taskCollection.find(Filters.eq(PROJECT_ID, projectId)).toList()
+        return taskCollection.find(Filters.eq(TaskDto::projectId.name, projectId)).toList()
     }
 
     override suspend fun createTask(task: TaskDto) {
@@ -30,36 +30,26 @@ class MongoTask(
 
     override suspend fun editTask(task: TaskDto) {
         val updateDoc = Document("\$set", Document().apply {
-            append(USER_NAME, task.userName)
-            append(PROJECT_ID, task.projectId)
-            append(TASK_STATE_ID, task.stateId)
-            append(TASK_TITLE, task.title)
-            append(TASK_DESCRIPTION, task.description)
-            append(TASK_START_DATE, task.startDate)
-            append(TASK_END_DATE, task.endDate)
+            append(TaskDto::userName.name, task.userName)
+            append(TaskDto::projectId.name, task.projectId)
+            append(TaskDto::stateId.name, task.stateId)
+            append(TaskDto::title.name, task.title)
+            append(TaskDto::description.name, task.description)
+            append(TaskDto::startDate.name, task.startDate)
+            append(TaskDto::endDate.name, task.endDate)
         })
         taskCollection.updateOne(
-            Filters.eq(TASK_ID, task.id),
+            Filters.eq(TaskDto::_id.name, task._id),
             updateDoc
         )
     }
 
     override suspend fun deleteTask(taskId: String) {
-        taskCollection.deleteOne(Filters.eq(TASK_ID, taskId))
+        taskCollection.deleteOne(Filters.eq(TaskDto::_id.name, taskId))
     }
 
     override suspend fun deleteTasksByProjectById(projectId: String) {
-        taskCollection.deleteMany(Filters.eq(PROJECT_ID, projectId))
+        taskCollection.deleteMany(Filters.eq(TaskDto::projectId.name, projectId))
     }
 
-    private companion object{
-        const val PROJECT_ID = "projectId"
-        const val TASK_ID = "id"
-        const val USER_NAME = "userName"
-        const val TASK_STATE_ID = "stateId"
-        const val TASK_TITLE = "title"
-        const val TASK_DESCRIPTION = "description"
-        const val TASK_START_DATE = "startDate"
-        const val TASK_END_DATE = "endDate"
-    }
 }

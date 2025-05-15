@@ -14,14 +14,14 @@ import logic.user.GetLoggedUserUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 
 class DeleteProjectUITest {
     private val deleteProjectUseCase: DeleteProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
-    private val promptService: PromptService = mockk(relaxed = true)
+    private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val createAuditUseCase: CreateAuditUseCase = mockk(relaxed = true)
     private val getLoggedUserUseCase: GetLoggedUserUseCase = mockk(relaxed = true)
     private lateinit var ui: DeleteProjectUI
@@ -32,7 +32,7 @@ class DeleteProjectUITest {
             deleteProjectUseCase = deleteProjectUseCase,
             getAllProjectsUseCase = getAllProjectsUseCase,
             printer = printer,
-            promptService = promptService,
+            promptUtils = promptUtils,
             createAuditUseCase = createAuditUseCase,
             getLoggedUserUseCase = getLoggedUserUseCase,
         )
@@ -44,7 +44,7 @@ class DeleteProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         //When
         ui.launchUi()
         //Then
@@ -69,7 +69,7 @@ class DeleteProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { deleteProjectUseCase(any()) } throws Exception()
         //When
         ui.launchUi()
@@ -83,7 +83,7 @@ class DeleteProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { createAuditUseCase(any()) } throws Exception()
         //When
         ui.launchUi()

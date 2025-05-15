@@ -19,11 +19,11 @@ class ProjectMapperTest {
         val state2Id = UUID.randomUUID()
 
         val projectDto = ProjectDto(
-            id = projectId.toString(),
+            _id = projectId.toString(),
             projectName = "Test Project",
             states = listOf(
-                StateDto(id = state1Id.toString(), name = "TaskState 1"),
-                StateDto(id = state2Id.toString(), name = "TaskState 2")
+                StateDto(_id = state1Id.toString(), name = "TaskState 1"),
+                StateDto(_id = state2Id.toString(), name = "TaskState 2")
             )
         )
 
@@ -51,17 +51,17 @@ class ProjectMapperTest {
 
         val result = mapper.projectToDto(project)
 
-        assertThat(result.id).isEqualTo(projectId.toString())
+        assertThat(result._id).isEqualTo(projectId.toString())
         assertThat(result.projectName).isEqualTo("Sample Project")
         assertThat(result.states).hasSize(1)
-        assertThat(result.states[0].id).isEqualTo(state1Id.toString())
+        assertThat(result.states[0]._id).isEqualTo(state1Id.toString())
         assertThat(result.states[0].name).isEqualTo("Done")
     }
 
     @Test
     fun `dtoToState should map StateDto to State correctly`() {
         val uuid = UUID.randomUUID()
-        val stateDto = StateDto(id = uuid.toString(), name = "Pending")
+        val stateDto = StateDto(_id = uuid.toString(), name = "Pending")
 
         val result = mapper.dtoToState(stateDto)
 
@@ -76,7 +76,7 @@ class ProjectMapperTest {
 
         val result = mapper.stateToDto(taskState)
 
-        assertThat(result.id).isEqualTo(uuid.toString())
+        assertThat(result._id).isEqualTo(uuid.toString())
         assertThat(result.name).isEqualTo("In Progress")
     }
 }

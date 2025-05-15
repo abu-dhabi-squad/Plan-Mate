@@ -1,7 +1,7 @@
 package di
 
 import data.audit.datasource.csv.parser.CsvAuditParser
-import data.audit.mapper.AuditMapper
+import data.audit.mapper.AuditLogMapper
 import data.authentication.datasource.csv.CsvUserParser
 import data.authentication.datasource.inmemory.InMemoryLoggedUser
 import data.authentication.mapper.UserMapper
@@ -15,7 +15,6 @@ import data.task.mapper.TaskMapper
 import data.utils.filehelper.CsvFileHelper
 import data.utils.filehelper.FileHelper
 import logic.authentication.validation.CreateUserPasswordValidator
-import logic.authentication.validation.LoginPasswordValidator
 import org.koin.dsl.module
 import data.utils.hashing.Md5Hashing
 import presentation.io.ConsolePrinter
@@ -40,7 +39,6 @@ val appModule = module {
     single<FileHelper> { CsvFileHelper() }
     // Validators
     single<CreateUserPasswordValidator> { CreateUserPasswordValidator() }
-    single<LoginPasswordValidator> { LoginPasswordValidator() }
     single<TaskValidator> { TaskValidatorImpl() }
     // Parsers
     single<DateParser> { DateParserImpl() }
@@ -52,7 +50,7 @@ val appModule = module {
     // Mappers
     single { ProjectMapper() }
     single { TaskMapper() }
-    single { AuditMapper() }
+    single { AuditLogMapper() }
     single { UserMapper() }
     // DataSources
     single<LocalProjectDataSource> {

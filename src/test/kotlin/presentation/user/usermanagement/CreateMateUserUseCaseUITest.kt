@@ -9,22 +9,21 @@ import logic.model.UserType
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 import presentation.io.Printer
-import presentation.user.usermanagement.CreateMateUserUseCaseUI
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class CreateMateUserUseCaseUITest {
 
     private lateinit var useCase: CreateMateUserUseCase
-    private lateinit var promptService: PromptService
+    private lateinit var promptUtils: PromptUtils
     private lateinit var printer: Printer
     private lateinit var createMateUserUI: CreateMateUserUseCaseUI
 
     @BeforeEach
     fun setUp() {
         useCase = mockk(relaxed = true)
-        promptService = mockk(relaxed = true)
+        promptUtils = mockk(relaxed = true)
         printer = mockk(relaxed = true)
-        createMateUserUI = CreateMateUserUseCaseUI(useCase, printer, promptService)
+        createMateUserUI = CreateMateUserUseCaseUI(useCase, printer, promptUtils)
     }
 
     @Test
@@ -32,7 +31,7 @@ class CreateMateUserUseCaseUITest {
         //Given
         val username = "shahd"
         val password = "123456"
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf(username, password)
 
         //When
         createMateUserUI.launchUi()
@@ -56,7 +55,7 @@ class CreateMateUserUseCaseUITest {
         //Given
         val username = "  "
         val password = "123456"
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf(username, password)
         coEvery { useCase.invoke(any()) } throws EmptyUsernameException()
 
         //When
@@ -71,7 +70,7 @@ class CreateMateUserUseCaseUITest {
         //Given
         val username = "shahd"
         val password = "123456"
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf(username, password)
         coEvery { useCase.invoke(any()) } throws UserAlreadyExistsException(username)
 
         //When
@@ -86,7 +85,7 @@ class CreateMateUserUseCaseUITest {
         //Given
         val username = "shahd"
         val password = "123456"
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf(username, password)
         coEvery { useCase.invoke(any()) } throws RuntimeException("Unexpected error")
 
         //When
@@ -101,7 +100,7 @@ class CreateMateUserUseCaseUITest {
         // Given
         val username = "shahd"
         val password = "123456"
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(username, password)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf(username, password)
         coEvery { useCase.invoke(any()) } throws Exception("Something weird happened")
 
         // When

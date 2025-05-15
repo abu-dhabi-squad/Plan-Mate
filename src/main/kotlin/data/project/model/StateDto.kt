@@ -1,10 +1,9 @@
 package data.project.model
 
-import org.bson.codecs.pojo.annotations.BsonProperty
-import java.util.*
+import org.bson.codecs.pojo.annotations.BsonId
 
 data class StateDto(
-    val id: String,
-    @BsonProperty("name")
+    @BsonId
+    val _id: String,
     val name: String
 )

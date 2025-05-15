@@ -12,15 +12,15 @@ import logic.utils.DateParser
 import java.time.LocalDate
 import kotlin.test.Test
 
-class PromptServiceTest {
+class PromptUtilsTest {
     private val printer: Printer = mockk(relaxed = true)
     private val reader: InputReader = mockk(relaxed = true)
     private val dateParser: DateParser = mockk(relaxed = true)
-    private lateinit var promptService: PromptService
+    private lateinit var promptUtils: PromptUtils
 
     @BeforeEach
     fun setup() {
-        promptService = PromptService(
+        promptUtils = PromptUtils(
             printer = printer,
             reader = reader,
             dateParser = dateParser,
@@ -33,7 +33,7 @@ class PromptServiceTest {
         val expectedRes = 1
         every { reader.readInt() } returns null andThen expectedRes
         // When
-        val res = promptService.promptNonEmptyInt("inter integer")
+        val res = promptUtils.promptNonEmptyInt("inter integer")
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes)
         verify(exactly = 1) { printer.displayLn(match { it.toString().contains("cannot be empty") }) }
@@ -45,7 +45,7 @@ class PromptServiceTest {
         val expectedRes = "name"
         every { reader.readString() } returns null andThen expectedRes
         // When
-        val res = promptService.promptNonEmptyString("inter String")
+        val res = promptUtils.promptNonEmptyString("inter String")
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes)
         verify(exactly = 1) { printer.displayLn(match { it.toString().contains("cannot be empty") }) }
@@ -57,7 +57,7 @@ class PromptServiceTest {
         val expectedRes = "name"
         every { reader.readString() } returns expectedRes
         // When
-        val res = promptService.promptString("inter String", "")
+        val res = promptUtils.promptString("inter String", "")
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes)
     }
@@ -69,7 +69,7 @@ class PromptServiceTest {
         every { reader.readString() } returns null andThen "2002-8-10"
         every { dateParser.parseDateFromString(any()) } returns expectedRes
         // When
-        val res = promptService.promptDate("inter date")
+        val res = promptUtils.promptDate("inter date")
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes)
         verify(exactly = 1) { printer.displayLn(match { it.toString().contains("cannot be empty") }) }
@@ -82,7 +82,7 @@ class PromptServiceTest {
         every { reader.readString() } returns "2002-8-10"
         every { dateParser.parseDateFromString(any()) } throws Exception() andThen expectedRes
         // When
-        val res = promptService.promptDate("inter date")
+        val res = promptUtils.promptDate("inter date")
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes)
         verify(exactly = 1) { printer.displayLn(match { it.toString().contains("Invalid date format") }) }
@@ -94,7 +94,7 @@ class PromptServiceTest {
         val expectedRes = 1
         every { reader.readInt() } returns null andThen 11 andThen expectedRes
         // When
-        val res = promptService.promptSelectionIndex("inter String", 10)
+        val res = promptUtils.promptSelectionIndex("inter String", 10)
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes - 1)
         verify(exactly = 2) { printer.displayLn(match { it.toString().contains("enter a number between 1") }) }
@@ -106,7 +106,7 @@ class PromptServiceTest {
         val expectedRes = "name"
         every { reader.readString() } returns null
         // When
-        val res = promptService.promptString("inter String", expectedRes)
+        val res = promptUtils.promptString("inter String", expectedRes)
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes)
     }
@@ -117,7 +117,7 @@ class PromptServiceTest {
         val expectedRes = 1
         every { reader.readInt() } returns null
         // When
-        val res = promptService.promptSelectionIndex("inter String", 2, expectedRes)
+        val res = promptUtils.promptSelectionIndex("inter String", 2, expectedRes)
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes)
     }
@@ -128,7 +128,7 @@ class PromptServiceTest {
         val expectedRes = 1
         every { reader.readInt() } returns 4 andThen 0 andThen expectedRes + 1
         // When
-        val res = promptService.promptSelectionIndex("inter String", 3, 2)
+        val res = promptUtils.promptSelectionIndex("inter String", 3, 2)
         // Then
         Truth.assertThat(res).isEqualTo(expectedRes)
         verify(exactly = 2) { printer.displayLn(match { it.toString().contains("enter a number between 1") }) }

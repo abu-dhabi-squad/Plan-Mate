@@ -5,7 +5,6 @@ import logic.audit.GetAuditUseCase
 import logic.authentication.CreateMateUserUseCase
 import logic.authentication.LoginByUserNameUseCase
 import logic.authentication.validation.CreateUserPasswordValidator
-import logic.authentication.validation.LoginPasswordValidator
 import logic.project.*
 import logic.task.*
 import logic.user.GetLoggedUserUseCase
@@ -18,7 +17,7 @@ val useCaseModule = module {
     single { GetAuditUseCase(get()) }
     // Authentication
     single { CreateMateUserUseCase(get(), get<CreateUserPasswordValidator>(), get()) }
-    single { LoginByUserNameUseCase(get(), get<LoginPasswordValidator>(), get()) }
+    single { LoginByUserNameUseCase(get(), get()) }
     single { GetLoggedUserUseCase(get()) }
     single { SaveLoggedUserUseCase(get()) }
     // Project
