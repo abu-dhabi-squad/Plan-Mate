@@ -7,12 +7,6 @@ import kotlin.system.exitProcess
 
 fun main() {
     startKoin {
-        properties(
-            mapOf(
-                "MONGO_URI" to System.getenv("MONGO_URI"),
-                "MONGO_DB_NAME" to System.getenv("MONGO_DATABASE_NAME")
-            )
-        )
         modules(appModule, repositoryModule, useCaseModule, uiModule, mongoModule)
     }
     runBlocking {
