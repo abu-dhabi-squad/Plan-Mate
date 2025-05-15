@@ -13,13 +13,13 @@ import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import kotlin.test.BeforeTest
 
 class EditTaskStateOfProjectUITest {
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
-    private val promptService: PromptService = mockk(relaxed = true)
+    private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
     private lateinit var ui: EditStateOfProjectUI
     private val createAuditUseCase: CreateAuditUseCase = mockk(relaxed = true)
@@ -29,7 +29,7 @@ class EditTaskStateOfProjectUITest {
         ui = EditStateOfProjectUI(
             editStateOfProjectUseCase = editStateOfProjectUseCase,
             getAllProjectsUseCase = getAllProjectsUseCase,
-            promptService = promptService,
+            promptUtils = promptUtils,
             printer = printer,
             getLoggedUserUseCase = mockk(relaxed = true),
             createAuditUseCase = createAuditUseCase
@@ -42,8 +42,8 @@ class EditTaskStateOfProjectUITest {
         val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0 andThen 0
-        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        every { promptUtils.promptSelectionIndex(any(),any()) } returns 0 andThen 0
+        every { promptUtils.promptNonEmptyString(any()) } returns "newName"
         //When
         ui.launchUi()
         //Then
@@ -80,8 +80,8 @@ class EditTaskStateOfProjectUITest {
         val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0 andThen 0
-        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        every { promptUtils.promptSelectionIndex(any(),any()) } returns 0 andThen 0
+        every { promptUtils.promptNonEmptyString(any()) } returns "newName"
         coEvery { editStateOfProjectUseCase(any(),any()) } throws Exception()
         //When
         ui.launchUi()
@@ -95,8 +95,8 @@ class EditTaskStateOfProjectUITest {
         val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0 andThen 0
-        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0 andThen 0
+        every { promptUtils.promptNonEmptyString(any()) } returns "newName"
         //When
         ui.launchUi()
         //Then
@@ -109,8 +109,8 @@ class EditTaskStateOfProjectUITest {
         val project = createProject(taskStates = listOf(TaskState(stateName = "state1")))
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0 andThen 0
-        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0 andThen 0
+        every { promptUtils.promptNonEmptyString(any()) } returns "newName"
         coEvery { editStateOfProjectUseCase(any(), any()) } throws Exception()
         //When
         ui.launchUi()

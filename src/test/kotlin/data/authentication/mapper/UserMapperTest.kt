@@ -33,7 +33,7 @@ class UserMapperTest {
         val dto = mapper.userToDto(user)
 
         // Then
-        assertThat(dto.id).isEqualTo(user.userId.toString())
+        assertThat(dto._id).isEqualTo(user.userId.toString())
         assertThat(dto.username).isEqualTo(user.username)
         assertThat(dto.password).isEqualTo(user.password)
         assertThat(dto.userType).isEqualTo(user.userType.name)
@@ -43,7 +43,7 @@ class UserMapperTest {
     fun `dtoToUser should convert UserDto to User correctly`() {
         // Given
         val dto = UserDto(
-            id = "550e8400-e29b-41d4-a716-446655440000",
+            _id = "550e8400-e29b-41d4-a716-446655440000",
             username = "shahd",
             password = "pass1",
             userType = "ADMIN"
@@ -53,7 +53,7 @@ class UserMapperTest {
         val user = mapper.dtoToUser(dto)
 
         // Then
-        assertThat(user.userId).isEqualTo(UUID.fromString(dto.id))
+        assertThat(user.userId).isEqualTo(UUID.fromString(dto._id))
         assertThat(user.username).isEqualTo(dto.username)
         assertThat(user.password).isEqualTo(dto.password)
         assertThat(user.userType).isEqualTo(UserType.ADMIN)
@@ -63,7 +63,7 @@ class UserMapperTest {
     fun `dtoToUser should throw UserTypeNotFoundException for invalid userType`() {
         // Given
         val dto = UserDto(
-            id = "550e8400-e29b-41d4-a716-446655440000",
+            _id = "550e8400-e29b-41d4-a716-446655440000",
             username = "shahd",
             password = "pass1",
             userType = "INVALID_TYPE"

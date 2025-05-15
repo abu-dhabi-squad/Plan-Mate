@@ -12,11 +12,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.utils.extensions.showAuditLogs
 
 class GetAuditForProjectUITest {
-    private val promptService: PromptService = mockk(relaxed = true)
+    private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val getAuditUseCase: GetAuditUseCase = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
@@ -25,7 +25,7 @@ class GetAuditForProjectUITest {
     @BeforeEach
     fun setUp() {
         ui = GetAuditForProjectUI(
-            promptService = promptService,
+            promptUtils = promptUtils,
             printer = printer,
             getAuditUseCase = getAuditUseCase,
             getAllProjectsUseCase = getAllProjectsUseCase
@@ -39,7 +39,7 @@ class GetAuditForProjectUITest {
         val projects = listOf(project)
         val audits = listOf(createAudit(entityId = project.projectId))
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getAuditUseCase(any()) } returns audits
         //When
         ui.launchUi()
@@ -80,7 +80,7 @@ class GetAuditForProjectUITest {
         val project = createProject(name = "Project A")
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getAuditUseCase(any()) } throws Exception()
         //When
         ui.launchUi()

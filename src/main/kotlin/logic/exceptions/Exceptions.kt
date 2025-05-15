@@ -24,8 +24,6 @@ class UserAlreadyExistsException(username: String) : AppException("Username '$us
 
 class CanNotParseUserException : AppException("Cannot parse User data from CSV")
 
-class UserNotFoundException(username: String) : AppException("User with username '$username' not found")
-
 class CanNotParseProjectException : AppException("can't parse string to project")
 
 class CanNotParseStateException : AppException("can't parse string to TaskState")
@@ -53,3 +51,7 @@ class DateFormatException (dateString:String, expectedFormat:String) : AppExcept
 class NetworkErrorException(): AppException("There are Network Error")
 
 class UnknownDataBaseException(): AppException("There are Unknown DataBase Error")
+
+class DatabaseNotFoundException(): AppException("Database not found")
+
+

@@ -13,13 +13,13 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.CreateTaskUseCase
 import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.taskmanagement.TestData.fakeDate
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeUser
 
 class CreateTaskUITest {
-    private lateinit var promptService: PromptService
+    private lateinit var promptUtils: PromptUtils
     private lateinit var printer: Printer
     private lateinit var createTaskUseCase: CreateTaskUseCase
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
@@ -29,7 +29,7 @@ class CreateTaskUITest {
 
     @BeforeEach
     fun setup() {
-        promptService = mockk(relaxed = true)
+        promptUtils = mockk(relaxed = true)
         printer = mockk(relaxed = true)
         createTaskUseCase = mockk(relaxed = true)
         getAllProjectsUseCase = mockk(relaxed = true)
@@ -43,7 +43,7 @@ class CreateTaskUITest {
             printer,
             getAllProjectsUseCase,
             createTaskUseCase,
-            promptService,
+            promptUtils,
             createAuditUseCase
         )
     }
@@ -51,9 +51,9 @@ class CreateTaskUITest {
     @Test
     fun `should create a task when user input is valid`() = runTest {
         //Given
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("Task Title", "Task Desc")
-        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf("Task Title", "Task Desc")
+        every { promptUtils.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
+        every { promptUtils.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
         //When
@@ -68,8 +68,8 @@ class CreateTaskUITest {
     fun `should display error message when get all projects use case throw error`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } throws RuntimeException("DB Error")
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
-        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
+        every { promptUtils.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
 
         //When
         createTaskUI.launchUi()
@@ -82,8 +82,8 @@ class CreateTaskUITest {
     fun `should show message when no projects available`() = runTest {
         //Given
         coEvery { getAllProjectsUseCase() } returns emptyList()
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
-        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
+        every { promptUtils.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
 
         //When
         createTaskUI.launchUi()
@@ -95,9 +95,9 @@ class CreateTaskUITest {
     @Test
     fun `should display error message when failed to create task`() = runTest {
         //Given
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
-        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
+        every { promptUtils.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
+        every { promptUtils.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { createTaskUseCase(any()) } throws RuntimeException("Failed")
 
@@ -111,9 +111,9 @@ class CreateTaskUITest {
     @Test
     fun `should print project and task states correctly`() = runTest {
         //Given
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
-        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf("Title", "Desc")
+        every { promptUtils.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
+        every { promptUtils.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0)
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
 
         //When

@@ -11,23 +11,23 @@ import logic.task.CreateTaskUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class CreateTaskUI(
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val printer: Printer,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val createTaskUseCase: CreateTaskUseCase,
-    private val promptService : PromptService,
+    private val promptUtils : PromptUtils,
     private val createAuditUseCase: CreateAuditUseCase
 
 ) : UiLauncher {
     override suspend fun launchUi() {
-        val title = promptService.promptNonEmptyString("Enter task title: ")
+        val title = promptUtils.promptNonEmptyString("Enter task title: ")
         val description =
-            promptService.promptNonEmptyString("Enter task description: ")
-        val startDate = promptService.promptDate("Enter task start date (YYYY-MM-DD): ")
-        val endDate = promptService.promptDate("Enter task end date (YYYY-MM-DD): ")
+            promptUtils.promptNonEmptyString("Enter task description: ")
+        val startDate = promptUtils.promptDate("Enter task start date (YYYY-MM-DD): ")
+        val endDate = promptUtils.promptDate("Enter task end date (YYYY-MM-DD): ")
         val projects = try {
             getAllProjectsUseCase()
         } catch (exception: Exception) {
@@ -41,11 +41,11 @@ class CreateTaskUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
+        val projectIndex = promptUtils.promptSelectionIndex("\nEnter project number", projects.size)
         val selectedProject = projects[projectIndex]
 
         showStates(selectedProject.taskStates)
-        val stateIndex = promptService.promptSelectionIndex("\nEnter state number", selectedProject.taskStates.size)
+        val stateIndex = promptUtils.promptSelectionIndex("\nEnter state number", selectedProject.taskStates.size)
         val selectedState = selectedProject.taskStates[stateIndex]
 
         val task = Task(

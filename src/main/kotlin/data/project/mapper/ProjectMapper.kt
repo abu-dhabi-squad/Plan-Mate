@@ -9,7 +9,7 @@ import java.util.*
 class ProjectMapper {
     fun dtoToProject(projectDto: ProjectDto): Project {
         return Project(
-            projectId = UUID.fromString(projectDto.id),
+            projectId = UUID.fromString(projectDto._id),
             projectName = projectDto.projectName,
             taskStates = projectDto.states.map { stateDto -> dtoToState(stateDto) }
         )
@@ -17,14 +17,14 @@ class ProjectMapper {
 
     fun dtoToState(stateDto: StateDto): TaskState {
         return TaskState(
-            stateId = UUID.fromString(stateDto.id),
+            stateId = UUID.fromString(stateDto._id),
             stateName = stateDto.name
         )
     }
 
     fun projectToDto(project: Project): ProjectDto {
         return ProjectDto(
-            id = project.projectId.toString(),
+            _id = project.projectId.toString(),
             projectName = project.projectName,
             states = project.taskStates.map { state -> stateToDto(state) }
         )
@@ -32,7 +32,7 @@ class ProjectMapper {
 
     fun stateToDto(taskState: TaskState): StateDto {
         return StateDto(
-            id = taskState.stateId.toString(),
+            _id = taskState.stateId.toString(),
             name = taskState.stateName
         )
     }

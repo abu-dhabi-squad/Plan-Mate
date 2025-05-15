@@ -11,13 +11,13 @@ import org.junit.jupiter.api.Test
 import logic.project.EditProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import kotlin.test.BeforeTest
 
 class EditProjectUITest {
     private val editProjectUseCase: EditProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
-    private val promptService: PromptService = mockk(relaxed = true)
+    private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
     private lateinit var ui: EditProjectUI
 
@@ -26,7 +26,7 @@ class EditProjectUITest {
         ui = EditProjectUI(
             editProjectUseCase = editProjectUseCase,
             getAllProjectsUseCase = getAllProjectsUseCase,
-            promptService = promptService,
+            promptUtils = promptUtils,
             printer = printer
         )
     }
@@ -37,8 +37,8 @@ class EditProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any()) } returns 0
-        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        every { promptUtils.promptSelectionIndex(any(),any()) } returns 0
+        every { promptUtils.promptNonEmptyString(any()) } returns "newName"
         //when
         ui.launchUi()
         //then
@@ -72,7 +72,7 @@ class EditProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(),any())} returns 0
+        every { promptUtils.promptSelectionIndex(any(),any())} returns 0
         coEvery { editProjectUseCase(any(),any()) } throws Exception()
         //when
         ui.launchUi()

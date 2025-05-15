@@ -4,13 +4,13 @@ import logic.project.GetAllProjectsUseCase
 import logic.task.GetTasksByProjectIdUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.utils.extensions.displaySwimlanesByState
 import presentation.utils.extensions.printWithStates
 
 class GetTasksByProjectIdUI(
     private val printer: Printer,
-    private val promptService: PromptService,
+    private val promptUtils: PromptUtils,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
 ) : UiLauncher {
@@ -28,7 +28,7 @@ class GetTasksByProjectIdUI(
         }
         printer.displayLn("\n=== Available Projects ===")
         projects.printWithStates(printer)
-        val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
+        val projectIndex = promptUtils.promptSelectionIndex("\nEnter project number", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {

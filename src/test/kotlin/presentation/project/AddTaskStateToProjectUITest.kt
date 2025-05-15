@@ -12,12 +12,12 @@ import org.junit.jupiter.api.Test
 import logic.project.AddStateToProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class AddTaskStateToProjectUITest {
     private val addStateToProjectUseCase: AddStateToProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)
-    private val promptService: PromptService = mockk(relaxed = true)
+    private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
     private lateinit var ui: AddStateToProjectUI
 
@@ -26,7 +26,7 @@ class AddTaskStateToProjectUITest {
         ui = AddStateToProjectUI(
             addStateToProjectUseCase = addStateToProjectUseCase,
             getAllProjectsUseCase = getAllProjectsUseCase,
-            promptService = promptService,
+            promptUtils = promptUtils,
             printer = printer
         )
     }
@@ -37,8 +37,8 @@ class AddTaskStateToProjectUITest {
         val project = createProject(name = "Project A")
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
-        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptNonEmptyString(any()) } returns "newName"
         //When
         ui.launchUi()
         //Then
@@ -80,8 +80,8 @@ class AddTaskStateToProjectUITest {
         val project = createProject()
         val projects = listOf(project)
         coEvery { getAllProjectsUseCase() } returns projects
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
-        every { promptService.promptNonEmptyString(any()) } returns "newName"
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptNonEmptyString(any()) } returns "newName"
         coEvery { addStateToProjectUseCase(project.projectId, any()) } throws Exception()
         //When
         ui.launchUi()
