@@ -3,6 +3,7 @@ package data.project.datasource.mongo
 import com.mongodb.client.model.Filters
 import com.mongodb.kotlin.client.coroutine.MongoCollection
 import data.project.model.ProjectDto
+import data.project.model.StateDto
 import data.project.repository.RemoteProjectDataSource
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.toList
@@ -23,36 +24,28 @@ class MongoProject(
     override suspend fun editProject(project: ProjectDto) {
         val statesDocs = project.states.map { state ->
             Document()
-                .append(STATE_ID_FIELD, state.id)
-                .append(STATE_NAME_FIELD, state.name)
+                .append(StateDto::_id.name, state._id)
+                .append(StateDto::name.name, state.name)
         }
 
         val updateDoc = Document(
             "\$set", Document()
-                .append(PROJECT_NAME_FIELD, project.projectName)
-                .append(STATES_FIELD, statesDocs)
+                .append(ProjectDto::projectName.name, project.projectName)
+                .append(ProjectDto::states.name, statesDocs)
         )
 
         projectCollection.updateOne(
-            Filters.eq(PROJECT_ID_FIELD, project.id),
+            Filters.eq(ProjectDto::_id.name, project._id),
             updateDoc
         )
     }
 
     override suspend fun deleteProject(projectId: String) {
-        projectCollection.deleteOne(Filters.eq(PROJECT_ID_FIELD, projectId))
+        projectCollection.deleteOne(Filters.eq(ProjectDto::_id.name, projectId))
     }
 
     override suspend fun getProjectById(projectId: String): ProjectDto? {
-        return projectCollection.find(Filters.eq(PROJECT_ID_FIELD, projectId))
+        return projectCollection.find(Filters.eq(ProjectDto::_id.name, projectId))
             .firstOrNull()
-    }
-
-    companion object {
-        private const val STATE_ID_FIELD = "id"
-        private const val STATE_NAME_FIELD = "name"
-        private const val PROJECT_ID_FIELD = "id"
-        private const val PROJECT_NAME_FIELD = "projectName"
-        private const val STATES_FIELD = "states"
     }
 }

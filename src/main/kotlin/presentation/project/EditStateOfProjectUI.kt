@@ -2,20 +2,20 @@ package presentation.project
 
 import logic.audit.CreateAuditUseCase
 import logic.model.Audit
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import logic.project.EditStateOfProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.utils.extensions.printWithStates
 
 class EditStateOfProjectUI(
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
-    private val promptService: PromptService,
+    private val promptUtils: PromptUtils,
     private val printer: Printer,
     private val createAuditUseCase: CreateAuditUseCase
 ) : UiLauncher {
@@ -24,17 +24,17 @@ class EditStateOfProjectUI(
             val projects = getAllProjectsUseCase()
             projects.printWithStates(printer)
             val projectIndex =
-                promptService.promptSelectionIndex("\nChoose Project: ", projects.size)
+                promptUtils.promptSelectionIndex("\nChoose Project: ", projects.size)
 
             projects[projectIndex].taskStates.forEachIndexed { index, state ->
                 printer.displayLn("${index + 1}- TaskState Name: ${state.stateName}")
             }
 
-            val stateIndex = promptService.promptSelectionIndex(
+            val stateIndex = promptUtils.promptSelectionIndex(
                 "Choose state you want to edit: ",
                 projects[projectIndex].taskStates.size
             )
-            val stateNewName = promptService.promptNonEmptyString("Enter the new name of the state: ")
+            val stateNewName = promptUtils.promptNonEmptyString("Enter the new name of the state: ")
             editStateOfProjectUseCase(
                 projects[projectIndex].projectId,
                 projects[projectIndex].taskStates[stateIndex].copy(stateName = stateNewName)

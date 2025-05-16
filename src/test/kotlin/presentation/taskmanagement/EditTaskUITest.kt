@@ -14,7 +14,7 @@ import logic.user.GetLoggedUserUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.taskmanagement.TestData.fakeDate
 import presentation.taskmanagement.TestData.fakeDate2
 import presentation.taskmanagement.TestData.fakeProject
@@ -25,7 +25,7 @@ import presentation.taskmanagement.TestData.testState
 class EditTaskUITest {
 
     private lateinit var printer: Printer
-    private lateinit var promptService: PromptService
+    private lateinit var promptUtils: PromptUtils
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
     private lateinit var editTaskUseCase: EditTaskUseCase
@@ -36,7 +36,7 @@ class EditTaskUITest {
     @BeforeEach
     fun setup() {
         printer = mockk(relaxed = true)
-        promptService = mockk(relaxed = true)
+        promptUtils = mockk(relaxed = true)
         getAllProjectsUseCase = mockk()
         getTasksByProjectIdUseCase = mockk()
         editTaskUseCase = mockk(relaxed = true)
@@ -50,7 +50,7 @@ class EditTaskUITest {
             getAllProjectsUseCase,
             getTasksByProjectIdUseCase,
             editTaskUseCase,
-            promptService,
+            promptUtils,
             createAuditUseCase
         )
     }
@@ -60,12 +60,12 @@ class EditTaskUITest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
-        every { promptService.promptString(any(),any()) } returnsMany listOf(
+        every { promptUtils.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
+        every { promptUtils.promptString(any(),any()) } returnsMany listOf(
             "NewTitle",
             "NewDesc"
         )
-        every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate, fakeDate2)
+        every { promptUtils.promptDate(any(), any()) } returnsMany listOf(fakeDate, fakeDate2)
 
         //When
         presenter.launchUi()
@@ -100,12 +100,12 @@ class EditTaskUITest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
-        every { promptService.promptNonEmptyString(any()) } returnsMany listOf(
+        every { promptUtils.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
+        every { promptUtils.promptNonEmptyString(any()) } returnsMany listOf(
             "New Title",
             "New Desc"
         )
-        every { promptService.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
+        every { promptUtils.promptDate(any()) } returnsMany listOf(fakeDate, fakeDate)
         coEvery { editTaskUseCase(any()) } throws RuntimeException("Failed to update task")
 
         //When
@@ -120,9 +120,9 @@ class EditTaskUITest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
-        every { promptService.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
-        every { promptService.promptString(any(), any()) } returnsMany listOf(fakeTask.title, fakeTask.description)
-        every { promptService.promptDate(any(), any()) } returnsMany listOf(fakeDate, fakeDate)
+        every { promptUtils.promptSelectionIndex(any(), any()) } returnsMany listOf(0, 0, 0)
+        every { promptUtils.promptString(any(), any()) } returnsMany listOf(fakeTask.title, fakeTask.description)
+        every { promptUtils.promptDate(any(), any()) } returnsMany listOf(fakeDate, fakeDate)
 
         //When
         presenter.launchUi()
@@ -138,7 +138,7 @@ class EditTaskUITest {
         //Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns emptyList()
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
 
         //When
         presenter.launchUi()

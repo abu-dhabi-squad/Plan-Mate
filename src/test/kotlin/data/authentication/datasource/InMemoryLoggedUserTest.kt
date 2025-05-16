@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import data.authentication.datasource.inmemory.InMemoryLoggedUser
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 
 class InMemoryLoggedUserTest{
     private lateinit var inMemoryLoggedUser: InMemoryLoggedUser

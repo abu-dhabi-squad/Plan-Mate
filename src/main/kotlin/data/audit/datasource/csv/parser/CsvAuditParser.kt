@@ -1,7 +1,6 @@
 package data.audit.datasource.csv.parser
 
 import logic.model.Audit
-import logic.model.EntityType
 import logic.utils.DateTimeParser
 import java.util.UUID
 
@@ -30,7 +29,7 @@ class CsvAuditParser(
             auditId = UUID.fromString(parts[ID]),
             createdBy = parts[CREATED_BY],
             entityId = UUID.fromString(parts[ENTITY_ID]),
-            entityType = EntityType.valueOf(parts[ENTITY_TYPE]),
+            entityType = Audit.EntityType.valueOf(parts[ENTITY_TYPE]),
             oldState = parts[OLD_STATE],
             newState = parts[NEW_STATE],
             createdAt = dateParser.parseDateFromString(parts[DATE]),

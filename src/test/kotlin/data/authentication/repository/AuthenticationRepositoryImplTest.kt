@@ -12,7 +12,7 @@ import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 

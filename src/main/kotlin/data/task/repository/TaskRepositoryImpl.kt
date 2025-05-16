@@ -45,7 +45,6 @@ class TaskRepositoryImpl(
         remoteTaskDataSource.deleteTask(taskId.toString())
     }
 
-
     override suspend fun deleteTasksByProjectById(projectId: UUID) = wrapResponse {
         remoteTaskDataSource.deleteTasksByProjectById(projectId.toString())
     }

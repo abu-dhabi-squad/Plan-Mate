@@ -13,4 +13,8 @@ data class Audit(
     val oldState: String,
     val newState: String,
     val createdAt: LocalDateTime = LocalDate.now().atTime(LocalTime.now()),
-)
+){
+    enum class EntityType {
+        PROJECT, TASK
+    }
+}

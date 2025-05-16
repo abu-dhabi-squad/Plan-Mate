@@ -5,7 +5,7 @@ import presentation.io.Printer
 import logic.utils.DateParser
 import java.time.LocalDate
 
-class PromptService(
+class PromptUtils(
     private val printer: Printer,
     private val reader: InputReader,
     private val dateParser: DateParser

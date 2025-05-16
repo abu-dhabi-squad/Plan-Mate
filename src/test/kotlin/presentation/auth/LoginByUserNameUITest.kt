@@ -9,17 +9,17 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.authentication.LoginByUserNameUseCase
-import logic.model.UserType
+import logic.model.User.UserType
 import presentation.user.admin.ConsoleAdminMenuUI
 import presentation.io.Printer
 import presentation.user.mate.ConsoleUserMenuUI
 import logic.user.SaveLoggedUserUseCase
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class LoginByUserNameUITest {
     private val loginUseCase: LoginByUserNameUseCase = mockk(relaxed = true)
     private val saveLoggedUserUseCase: SaveLoggedUserUseCase = mockk(relaxed = true)
-    private val promptService: PromptService = mockk(relaxed = true)
+    private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
     private val consoleMenuViewUser: ConsoleUserMenuUI = mockk(relaxed = true)
     private val consoleMenuViewAdmin: ConsoleAdminMenuUI = mockk(relaxed = true)
@@ -30,7 +30,7 @@ class LoginByUserNameUITest {
         ui = LoginByUserNameUI(
             loginUseCase = loginUseCase,
             saveLoggedUserUseCase = saveLoggedUserUseCase,
-            promptService = promptService,
+            promptUtils = promptUtils,
             printer = printer,
             consoleMenuViewUser = consoleMenuViewUser,
             consoleMenuViewAdmin = consoleMenuViewAdmin,

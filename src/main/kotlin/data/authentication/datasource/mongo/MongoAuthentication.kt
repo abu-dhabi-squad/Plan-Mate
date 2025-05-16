@@ -12,7 +12,7 @@ class MongoAuthentication(
 ) : RemoteAuthenticationDataSource {
 
     override suspend fun getUserByUsername(username: String): UserDto? {
-        return userCollection.find(Filters.eq(USERNAME_FIELD, username)).firstOrNull()
+        return userCollection.find(Filters.eq(UserDto::username.name, username)).firstOrNull()
     }
 
     override suspend fun getAllUsers(): List<UserDto> {
@@ -23,7 +23,4 @@ class MongoAuthentication(
         userCollection.insertOne(userDto)
     }
 
-    companion object {
-        const val USERNAME_FIELD = "username"
-    }
 }

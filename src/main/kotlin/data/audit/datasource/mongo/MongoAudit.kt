@@ -15,11 +15,8 @@ class MongoAudit(
     }
 
     override suspend fun getAuditByEntityId(entityId: String): List<AuditDto> {
-        val filter = Filters.eq(ENTITY_ID_FIELD, entityId)
+        val filter = Filters.eq(AuditDto::entityId.name, entityId)
         return auditCollection.find(filter).toList()
     }
 
-    private companion object {
-        const val ENTITY_ID_FIELD = "entityId"
-    }
 }

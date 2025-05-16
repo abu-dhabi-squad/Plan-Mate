@@ -5,12 +5,12 @@ import logic.model.Audit
 import logic.project.GetAllProjectsUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.utils.extensions.showAuditLogs
 import java.util.UUID
 
 class GetAuditForProjectUI(
-    private val promptService: PromptService,
+    private val promptUtils: PromptUtils,
     private val printer: Printer,
     private val getAuditUseCase: GetAuditUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase
@@ -30,7 +30,7 @@ class GetAuditForProjectUI(
         projects.forEachIndexed { index, project ->
             printer.displayLn("${index + 1}. ${project.projectName}")
         }
-        val projectIndex = promptService.promptSelectionIndex("\nEnter project number", projects.size)
+        val projectIndex = promptUtils.promptSelectionIndex("\nEnter project number", projects.size)
         val selectedProject = projects[projectIndex]
         showAuditLogs(selectedProject.projectId)
     }

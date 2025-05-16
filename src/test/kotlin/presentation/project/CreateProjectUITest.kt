@@ -12,12 +12,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
 import logic.user.GetLoggedUserUseCase
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class CreateProjectUITest {
     private val createProjectUseCase: CreateProjectUseCase = mockk(relaxed = true)
     private val printer: Printer = mockk(relaxed = true)
-    private val promptService: PromptService = mockk(relaxed = true)
+    private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val createAuditUseCase: CreateAuditUseCase = mockk(relaxed = true)
     private val getLoggedUserUseCase: GetLoggedUserUseCase = mockk(relaxed = true)
     private lateinit var ui: CreateProjectUI
@@ -27,7 +27,7 @@ class CreateProjectUITest {
         ui = CreateProjectUI(
             createProjectUseCase = createProjectUseCase,
             printer = printer,
-            promptService = promptService,
+            promptUtils = promptUtils,
             createAuditUseCase = createAuditUseCase,
             getLoggedUserUseCase = getLoggedUserUseCase
         )
@@ -36,8 +36,8 @@ class CreateProjectUITest {
     @Test
     fun `launchUi should create project successfully when entering number more than 0 as number of states`() = runTest {
         //Given
-        every { promptService.promptNonEmptyString(any()) } returns "projectName" andThen "stateName"
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptUtils.promptNonEmptyString(any()) } returns "projectName" andThen "stateName"
+        every { promptUtils.promptNonEmptyInt(any()) } returns 1
         //When
         ui.launchUi()
         //Then
@@ -49,8 +49,8 @@ class CreateProjectUITest {
     @Test
     fun `launchUi should create project successfully when entering 0 as number of states`() = runTest {
         //Given
-        every { promptService.promptNonEmptyString(any()) } returns "projectName"
-        every { promptService.promptNonEmptyInt(any()) } returns 0
+        every { promptUtils.promptNonEmptyString(any()) } returns "projectName"
+        every { promptUtils.promptNonEmptyInt(any()) } returns 0
         //When
         ui.launchUi()
         //Then
@@ -62,8 +62,8 @@ class CreateProjectUITest {
     @Test
     fun `launchUi should show Invalid number message when entering number less than 0 as number of states`() = runTest {
         //Given
-        every { promptService.promptNonEmptyString(any()) } returns "projectName"
-        every { promptService.promptNonEmptyInt(any()) } returns -1
+        every { promptUtils.promptNonEmptyString(any()) } returns "projectName"
+        every { promptUtils.promptNonEmptyInt(any()) } returns -1
         //When
         ui.launchUi()
         //Then
@@ -73,8 +73,8 @@ class CreateProjectUITest {
     @Test
     fun `launchUi should show error message when createProjectUseCase throw exception`() = runTest {
         //Given
-        every { promptService.promptNonEmptyString(any()) } returns "projectName" andThen "stateName"
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptUtils.promptNonEmptyString(any()) } returns "projectName" andThen "stateName"
+        every { promptUtils.promptNonEmptyInt(any()) } returns 1
         coEvery { createProjectUseCase(any()) } throws Exception()
         //When
         ui.launchUi()
@@ -85,8 +85,8 @@ class CreateProjectUITest {
     @Test
     fun `launchUi should show error message when createAuditUseCase throw exception`() = runTest {
         //Given
-        every { promptService.promptNonEmptyString(any()) } returns "projectName" andThen "stateName"
-        every { promptService.promptNonEmptyInt(any()) } returns 1
+        every { promptUtils.promptNonEmptyString(any()) } returns "projectName" andThen "stateName"
+        every { promptUtils.promptNonEmptyInt(any()) } returns 1
         coEvery { createAuditUseCase(any()) } throws Exception()
         //When
         ui.launchUi()

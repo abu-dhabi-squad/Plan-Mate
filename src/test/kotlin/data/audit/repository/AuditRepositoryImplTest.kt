@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import helper.createAudit
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import data.audit.mapper.AuditMapper
+import data.audit.mapper.AuditLogMapper
 import data.audit.model.AuditDto
 import io.mockk.Runs
 import io.mockk.coEvery
@@ -21,14 +21,14 @@ import java.util.UUID
 class AuditRepositoryImplTest {
 
     lateinit var dataSource: RemoteAuditDataSource
-    lateinit var auditMapper: AuditMapper
+    lateinit var auditLogMapper: AuditLogMapper
     lateinit var auditRepository: AuditRepository
 
     @BeforeEach
     fun setup() {
         dataSource = mockk(relaxed = true)
-        auditMapper = mockk(relaxed = true)
-        auditRepository = AuditRepositoryImpl(dataSource, auditMapper)
+        auditLogMapper = mockk(relaxed = true)
+        auditRepository = AuditRepositoryImpl(dataSource, auditLogMapper)
     }
 
     @Test
@@ -40,13 +40,13 @@ class AuditRepositoryImplTest {
         val auditDto1 = mockk<AuditDto>()
         val auditDto2 = mockk<AuditDto>()
 
-        every { auditMapper.auditToDto(audit1) } returns auditDto1
-        every { auditMapper.auditToDto(audit2) } returns auditDto2
+        every { auditLogMapper.auditToDto(audit1) } returns auditDto1
+        every { auditLogMapper.auditToDto(audit2) } returns auditDto2
 
         coEvery { dataSource.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString()) } returns listOf(auditDto1, auditDto2)
 
-        every { auditMapper.dtoToAudit(auditDto1) } returns audit1
-        every { auditMapper.dtoToAudit(auditDto2) } returns audit2
+        every { auditLogMapper.dtoToAudit(auditDto1) } returns audit1
+        every { auditLogMapper.dtoToAudit(auditDto2) } returns audit2
 
         // when
         val result = auditRepository.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
@@ -61,7 +61,7 @@ class AuditRepositoryImplTest {
         val audit = createAudit()
         val auditDto = mockk<AuditDto>()
 
-        every { auditMapper.auditToDto(audit) } returns auditDto
+        every { auditLogMapper.auditToDto(audit) } returns auditDto
         coEvery { dataSource.createAuditLog(auditDto) }just Runs
 
         // when
@@ -69,7 +69,7 @@ class AuditRepositoryImplTest {
 
         // then
         coVerify(exactly = 1) { dataSource.createAuditLog(auditDto) }
-        verify { auditMapper.auditToDto(audit) }
+        verify { auditLogMapper.auditToDto(audit) }
     }
 
     @Test
@@ -118,7 +118,7 @@ class AuditRepositoryImplTest {
         )
         val auditDto = mockk<AuditDto>()
 
-        every { auditMapper.auditToDto(audit) } returns auditDto
+        every { auditLogMapper.auditToDto(audit) } returns auditDto
         coEvery { dataSource.createAuditLog(auditDto) } just Runs
 
         // when
@@ -126,6 +126,6 @@ class AuditRepositoryImplTest {
 
         // then
         coVerify { dataSource.createAuditLog(auditDto) }
-        verify { auditMapper.auditToDto(audit) }
+        verify { auditLogMapper.auditToDto(audit) }
     }
 }

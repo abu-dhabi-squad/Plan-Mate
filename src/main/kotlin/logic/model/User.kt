@@ -7,4 +7,8 @@ data class User(
     val username: String,
     val password: String,
     val userType: UserType
-)
+){
+    enum class UserType {
+        ADMIN, MATE
+    }
+}

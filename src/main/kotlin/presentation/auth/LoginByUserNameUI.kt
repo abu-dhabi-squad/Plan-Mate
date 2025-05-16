@@ -1,26 +1,26 @@
 package presentation.auth
 
 import logic.authentication.LoginByUserNameUseCase
-import logic.model.UserType
+import logic.model.User.UserType
 import logic.user.SaveLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.user.admin.ConsoleAdminMenuUI
 import presentation.user.mate.ConsoleUserMenuUI
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class LoginByUserNameUI(
     private val loginUseCase: LoginByUserNameUseCase,
     private val saveLoggedUserUseCase: SaveLoggedUserUseCase,
-    private val promptService: PromptService,
+    private val promptUtils: PromptUtils,
     private val printer: Printer,
     private val consoleMenuViewUser: ConsoleUserMenuUI,
     private val consoleMenuViewAdmin: ConsoleAdminMenuUI
 ) : UiLauncher {
     override suspend fun launchUi() {
         printer.displayLn("===== Login =====")
-        val username = promptService.promptNonEmptyString("Enter username: ")
-        val password = promptService.promptNonEmptyString(("Enter password: "))
+        val username = promptUtils.promptNonEmptyString("Enter username: ")
+        val password = promptUtils.promptNonEmptyString(("Enter password: "))
         try {
             val user = loginUseCase(username, password)
             printer.displayLn("\nLogin successful! Welcome ${user.username} [${user.userType}]")

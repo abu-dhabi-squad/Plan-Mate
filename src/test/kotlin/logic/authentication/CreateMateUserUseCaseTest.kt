@@ -9,14 +9,14 @@ import io.mockk.mockk
 import io.mockk.runs
 import io.mockk.verify
 import kotlinx.coroutines.test.runTest
-import logic.authentication.validtion.PasswordValidator
+import logic.authentication.validation.PasswordValidator
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import logic.repository.AuthenticationRepository
 import logic.utils.hashing.HashingService
 

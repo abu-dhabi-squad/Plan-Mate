@@ -4,7 +4,7 @@ import logic.model.Project
 import logic.model.Task
 import logic.model.TaskState
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import java.time.LocalDate
 import java.util.UUID
 

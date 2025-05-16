@@ -22,7 +22,7 @@ class TaskMapperTest {
         val dto = mapper.taskToDto(task)
 
         // Then
-        assertThat(dto.id).isEqualTo(task.taskId.toString())
+        assertThat(dto._id).isEqualTo(task.taskId.toString())
         assertThat(dto.userName).isEqualTo(task.username)
         assertThat(dto.projectId).isEqualTo(task.projectId.toString())
         assertThat(dto.stateId).isEqualTo(task.taskStateId.toString())
@@ -42,7 +42,7 @@ class TaskMapperTest {
         val endDate = startDate.plusDays(5)
 
         val dto = TaskDto(
-            id = id.toString(),
+            _id = id.toString(),
             userName = "testUser",
             projectId = projectId.toString(),
             stateId = stateId.toString(),
@@ -56,7 +56,7 @@ class TaskMapperTest {
         val task = mapper.dtoToTask(dto)
 
         // Then
-        assertThat(task.taskId.toString()).isEqualTo(dto.id)
+        assertThat(task.taskId.toString()).isEqualTo(dto._id)
         assertThat(task.username).isEqualTo(dto.userName)
         assertThat(task.projectId.toString()).isEqualTo(dto.projectId)
         assertThat(task.taskStateId.toString()).isEqualTo(dto.stateId)

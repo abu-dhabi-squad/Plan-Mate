@@ -2,7 +2,7 @@ package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
 import logic.model.Audit
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import logic.model.Project
 import logic.model.Task
 import logic.project.GetAllProjectsUseCase
@@ -11,7 +11,7 @@ import logic.task.GetTasksByProjectIdUseCase
 import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 
 class DeleteTaskByIdUI(
     private val printer: Printer,
@@ -20,7 +20,7 @@ class DeleteTaskByIdUI(
     private val getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase,
     private val deleteTaskByIdUseCase: DeleteTaskByIdUseCase,
     private val createAuditUseCase: CreateAuditUseCase,
-    private val promptService: PromptService
+    private val promptUtils: PromptUtils
 ) : UiLauncher {
 
     override suspend fun launchUi() {
@@ -37,7 +37,7 @@ class DeleteTaskByIdUI(
         }
 
         showProjects(projects)
-        val projectIndex = promptService.promptSelectionIndex("\nSelect a project", projects.size)
+        val projectIndex = promptUtils.promptSelectionIndex("\nSelect a project", projects.size)
         val selectedProject = projects[projectIndex]
 
         val tasks = try {
@@ -54,7 +54,7 @@ class DeleteTaskByIdUI(
 
         showTasks(tasks)
         val taskIndex =
-            promptService.promptSelectionIndex("\nSelect a task to delete", tasks.size)
+            promptUtils.promptSelectionIndex("\nSelect a task to delete", tasks.size)
         val selectedTask = tasks[taskIndex]
 
         try {

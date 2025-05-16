@@ -4,13 +4,13 @@ import org.koin.core.annotation.Named
 import presentation.UIFeature
 import presentation.UiLauncher
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import kotlin.system.exitProcess
 
 class ConsoleUserMenuUI(
     @Named("mate") private val uiFeatures: List<UIFeature>,
     private val printer: Printer,
-    private val promptService: PromptService
+    private val promptUtils: PromptUtils
     ) : UiLauncher {
     override suspend fun launchUi() {
         sortMenu()
@@ -24,7 +24,7 @@ class ConsoleUserMenuUI(
 
     private suspend fun presentFeature() {
         showOptions()
-        when (val input =promptService.promptNonEmptyInt("Enter your choice: ")) {
+        when (val input =promptUtils.promptNonEmptyInt("Enter your choice: ")) {
             in 1..uiFeatures.size -> {
                 uiFeatures.find { it.id == input }?.uiLauncher?.launchUi()
             }

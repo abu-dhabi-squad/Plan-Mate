@@ -1,7 +1,7 @@
 package helper
 
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import java.util.UUID
 
 fun createUser(

@@ -8,7 +8,7 @@ import kotlinx.coroutines.test.runTest
 import logic.exceptions.NoAuditsFoundException
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import logic.repository.AuditRepository
 import org.junit.jupiter.api.assertThrows
 import java.util.UUID

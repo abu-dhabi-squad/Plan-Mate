@@ -10,14 +10,14 @@ import logic.task.GetTasksByProjectIdUseCase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import presentation.io.Printer
-import presentation.utils.PromptService
+import presentation.utils.PromptUtils
 import presentation.utils.extensions.displaySwimlanesByState
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
 
 class GetTasksByProjectIdUITest {
     private lateinit var printer: Printer
-    private lateinit var promptService: PromptService
+    private lateinit var promptUtils: PromptUtils
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
     private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
     private lateinit var presenter: GetTasksByProjectIdUI
@@ -25,13 +25,13 @@ class GetTasksByProjectIdUITest {
     @BeforeEach
     fun setUp() {
         printer = mockk(relaxed = true)
-        promptService = mockk(relaxed = true)
+        promptUtils = mockk(relaxed = true)
         getAllProjectsUseCase = mockk()
         getTasksByProjectIdUseCase = mockk()
 
         presenter = GetTasksByProjectIdUI(
             printer,
-            promptService,
+            promptUtils,
             getAllProjectsUseCase,
             getTasksByProjectIdUseCase
         )
@@ -41,7 +41,7 @@ class GetTasksByProjectIdUITest {
     fun `should show tasks for selected project when everything is valid`() = runTest {
         // Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns listOf(fakeTask)
         // When
         presenter.launchUi()
@@ -79,7 +79,7 @@ class GetTasksByProjectIdUITest {
     fun `should display error when loading tasks fails`() = runTest {
         // Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } throws RuntimeException("Network issue")
         // When
         presenter.launchUi()
@@ -91,7 +91,7 @@ class GetTasksByProjectIdUITest {
     fun `should display message when no tasks found for selected project`() = runTest {
         // Given
         coEvery { getAllProjectsUseCase() } returns listOf(fakeProject)
-        every { promptService.promptSelectionIndex(any(), any()) } returns 0
+        every { promptUtils.promptSelectionIndex(any(), any()) } returns 0
         coEvery { getTasksByProjectIdUseCase(fakeProject.projectId) } returns emptyList()
         // When
         presenter.launchUi()
