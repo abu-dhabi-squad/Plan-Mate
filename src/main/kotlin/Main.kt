@@ -1,13 +1,16 @@
-package squad.abudhabi
-
+import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin
-import squad.abudhabi.di.appModule
-import squad.abudhabi.di.repositoryModule
-import squad.abudhabi.di.uiModule
-import squad.abudhabi.di.useCaseModule
+import org.koin.java.KoinJavaComponent.getKoin
+import presentation.auth.LoginByUserNameUI
+import di.*
+import kotlin.system.exitProcess
 
 fun main() {
     startKoin {
-        modules(appModule, repositoryModule, useCaseModule, uiModule)
+        modules(appModule, repositoryModule, useCaseModule, uiModule, mongoModule)
     }
+    runBlocking {
+        getKoin().get<LoginByUserNameUI>().launchUi()
+    }
+    exitProcess(0)
 }

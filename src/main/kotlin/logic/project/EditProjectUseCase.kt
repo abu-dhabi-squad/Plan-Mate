@@ -1,4 +1,15 @@
-package squad.abudhabi.logic.project
+package logic.project
 
-class EditProjectUseCase {
+import logic.exceptions.ProjectNotFoundException
+import logic.repository.ProjectRepository
+import java.util.UUID
+
+class EditProjectUseCase(
+    private val projectRepository: ProjectRepository
+) {
+    suspend operator fun invoke(projectId: UUID, newName: String) {
+        val project = projectRepository.getProjectById(projectId)
+            ?: throw ProjectNotFoundException()
+        projectRepository.editProject(project.copy(projectName = newName))
+    }
 }

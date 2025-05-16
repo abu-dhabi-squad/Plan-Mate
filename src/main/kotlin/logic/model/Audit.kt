@@ -1,14 +1,20 @@
-package squad.abudhabi.logic.model
+package logic.model
 
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.util.UUID
 
 data class Audit(
-    val id: String,
-    val userId: String,
+    val auditId: UUID = UUID.randomUUID(),
     val createdBy: String,
-    val entityId: String,
+    val entityId: UUID,
+    val entityType: EntityType,
     val oldState: String,
     val newState: String,
-    val date: LocalDate,
-    val entityType: EntityType
-)
+    val createdAt: LocalDateTime = LocalDate.now().atTime(LocalTime.now()),
+){
+    enum class EntityType {
+        PROJECT, TASK
+    }
+}

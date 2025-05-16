@@ -1,4 +1,14 @@
-package squad.abudhabi.logic.task
+package logic.task
 
-class EditTaskUseCase {
+import logic.exceptions.TaskNotFoundException
+import logic.model.Task
+import logic.repository.TaskRepository
+import logic.task.validation.TaskValidator
+
+class EditTaskUseCase(private val taskRepository: TaskRepository, private val taskValidator: TaskValidator) {
+    suspend operator fun invoke(task: Task) {
+        taskValidator.validateOrThrow(task)
+        taskRepository.getTaskById(task.taskId) ?: throw TaskNotFoundException()
+        taskRepository.editTask(task)
+    }
 }

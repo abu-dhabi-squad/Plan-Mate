@@ -1,15 +1,30 @@
-package squad.abudhabi.data.utils.filehelper
+package data.utils.filehelper
 
-import squad.abudhabi.data.utils.filehelper.FileHelper
 import java.io.File
 
-class CsvFileHelper(): FileHelper {
-    override fun <T> readFile(files: File): T {
-        TODO("Not yet implemented")
+class CsvFileHelper : FileHelper {
+    override fun readFile(fileName: String): List<String> {
+        val file = File(fileName)
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+        return File(fileName).readLines()
+
     }
 
-    override fun <T> writeFile(file: File, data: List<T>) {
-        TODO("Not yet implemented")
+
+    override fun writeFile(fileName: String, data: List<String>) {
+        val file = File(fileName)
+        if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
+        file.writeText(data.joinToString("\n") + "\n")
+    }
+
+    override fun appendFile(fileName: String, data: List<String>) {
+        val file = File(fileName)
+        if (!file.exists())
+            file.createNewFile()
+        if (data.isEmpty()) throw IllegalArgumentException("Data cannot be empty")
+        file.appendText(data.joinToString("\n") + "\n")
     }
 
 }

@@ -1,4 +1,14 @@
-package squad.abudhabi.logic.audit
+package logic.audit
 
-class GetAuditUseCase {
+import logic.exceptions.NoAuditsFoundException
+import logic.model.Audit
+import logic.repository.AuditRepository
+import java.util.UUID
+
+class GetAuditUseCase(
+    private val auditRepository: AuditRepository
+) {
+    suspend operator fun invoke(entityId: UUID): List<Audit> {
+        return auditRepository.getAuditByEntityId(entityId).takeIf { it.isNotEmpty() } ?: throw NoAuditsFoundException()
+    }
 }
