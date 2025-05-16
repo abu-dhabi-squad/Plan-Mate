@@ -2,7 +2,7 @@ package data.task.datasource.csv
 
 import logic.model.Task
 import logic.utils.DateParser
-import java.util.*
+import java.util.UUID
 
 
 class CsvTaskParser(

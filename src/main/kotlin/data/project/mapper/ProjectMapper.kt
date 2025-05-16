@@ -4,7 +4,7 @@ import data.project.model.ProjectDto
 import data.project.model.StateDto
 import logic.model.Project
 import logic.model.TaskState
-import java.util.*
+import java.util.UUID
 
 class ProjectMapper {
     fun dtoToProject(projectDto: ProjectDto): Project {

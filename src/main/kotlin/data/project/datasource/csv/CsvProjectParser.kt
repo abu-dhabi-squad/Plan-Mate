@@ -4,7 +4,7 @@ import logic.exceptions.CanNotParseProjectException
 import logic.exceptions.CanNotParseStateException
 import logic.model.Project
 import logic.model.TaskState
-import java.util.*
+import java.util.UUID
 
 class CsvProjectParser {
 

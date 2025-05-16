@@ -1,7 +1,7 @@
 package helper
 
 import logic.model.Audit
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime

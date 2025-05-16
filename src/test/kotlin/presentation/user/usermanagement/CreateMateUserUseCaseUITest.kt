@@ -1,11 +1,15 @@
 package presentation.user.usermanagement
 
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.authentication.CreateMateUserUseCase
 import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
-import logic.model.UserType
+import logic.model.User.UserType
 import org.junit.jupiter.api.BeforeEach
 import kotlin.test.Test
 import presentation.io.Printer

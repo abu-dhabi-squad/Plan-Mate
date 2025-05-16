@@ -2,7 +2,7 @@ package presentation.project
 
 import logic.audit.CreateAuditUseCase
 import logic.model.Audit
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import logic.model.Project
 import logic.model.TaskState
 import logic.project.CreateProjectUseCase

@@ -9,7 +9,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.authentication.LoginByUserNameUseCase
-import logic.model.UserType
+import logic.model.User.UserType
 import presentation.user.admin.ConsoleAdminMenuUI
 import presentation.io.Printer
 import presentation.user.mate.ConsoleUserMenuUI

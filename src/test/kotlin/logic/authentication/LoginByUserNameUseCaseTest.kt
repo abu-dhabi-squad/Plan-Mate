@@ -10,7 +10,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import logic.exceptions.InvalidCredentialsException
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import logic.repository.AuthenticationRepository
 import logic.utils.hashing.HashingService
 import java.util.UUID

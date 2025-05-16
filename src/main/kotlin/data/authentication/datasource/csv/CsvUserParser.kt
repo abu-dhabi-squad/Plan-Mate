@@ -2,7 +2,7 @@ package data.authentication.datasource.csv
 
 import logic.exceptions.CanNotParseUserException
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import java.util.UUID
 
 

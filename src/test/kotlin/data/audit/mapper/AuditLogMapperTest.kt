@@ -3,7 +3,7 @@ package data.audit.mapper
 import com.google.common.truth.Truth.assertThat
 import data.audit.model.AuditDto
 import logic.model.Audit
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDateTime

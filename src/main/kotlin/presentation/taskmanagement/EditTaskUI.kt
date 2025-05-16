@@ -2,7 +2,7 @@ package presentation.taskmanagement
 
 import logic.audit.CreateAuditUseCase
 import logic.model.Audit
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import logic.model.Project
 import logic.model.Task
 import logic.model.TaskState

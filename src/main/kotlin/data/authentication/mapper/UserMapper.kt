@@ -3,7 +3,6 @@ package data.authentication.mapper
 import data.authentication.model.UserDto
 import logic.exceptions.UserTypeNotFoundException
 import logic.model.User
-import logic.model.UserType
 import java.util.UUID
 
 class UserMapper {
@@ -17,12 +16,12 @@ class UserMapper {
     }
 
     fun dtoToUser(dto: UserDto): User {
-        UserType.entries.find { it.name == dto.userType } ?: throw UserTypeNotFoundException()
+        User.UserType.entries.find { it.name == dto.userType } ?: throw UserTypeNotFoundException()
         return User(
             userId = UUID.fromString(dto._id),
             username = dto.username,
             password = dto.password,
-            userType = UserType.valueOf(dto.userType)
+            userType = User.UserType.valueOf(dto.userType)
         )
     }
 }

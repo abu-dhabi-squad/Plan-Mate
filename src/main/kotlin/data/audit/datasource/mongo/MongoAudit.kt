@@ -19,5 +19,4 @@ class MongoAudit(
         return auditCollection.find(filter).toList()
     }
 
-
 }

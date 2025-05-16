@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import logic.exceptions.NoLoggedInUserException
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import logic.repository.AuthenticationRepository
 
 class GetLoggedUserUseCaseTest {

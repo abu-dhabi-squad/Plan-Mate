@@ -7,7 +7,7 @@ import logic.utils.DateTimeParser
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import logic.model.Audit
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 import java.util.UUID

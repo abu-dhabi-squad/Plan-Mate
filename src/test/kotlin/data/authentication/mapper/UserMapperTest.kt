@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import data.authentication.model.UserDto
 import logic.exceptions.UserTypeNotFoundException
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

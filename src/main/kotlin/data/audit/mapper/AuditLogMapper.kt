@@ -2,9 +2,11 @@ package data.audit.mapper
 
 import data.audit.model.AuditDto
 import logic.model.Audit
-import logic.model.EntityType
+import logic.model.Audit.EntityType
 import java.time.ZoneId
-import java.util.*
+import java.util.UUID
+import java.util.Date
+
 
 class AuditLogMapper {
     fun auditToDto(audit: Audit): AuditDto {

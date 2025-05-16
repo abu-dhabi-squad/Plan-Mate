@@ -1,7 +1,7 @@
 package presentation.auth
 
 import logic.authentication.LoginByUserNameUseCase
-import logic.model.UserType
+import logic.model.User.UserType
 import logic.user.SaveLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer

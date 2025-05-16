@@ -4,7 +4,7 @@ import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.User
 import logic.repository.AuthenticationRepository
-import logic.authentication.validtion.PasswordValidator
+import logic.authentication.validation.PasswordValidator
 import logic.utils.hashing.HashingService
 
 class CreateMateUserUseCase(

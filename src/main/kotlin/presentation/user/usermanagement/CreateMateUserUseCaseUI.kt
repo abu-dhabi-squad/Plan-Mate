@@ -4,7 +4,7 @@ import logic.authentication.CreateMateUserUseCase
 import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.User
-import logic.model.UserType
+import logic.model.User.UserType
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.utils.PromptUtils
