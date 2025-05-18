@@ -62,6 +62,17 @@
 
 ---
 
+## 🎨 Diagrams
+### Usecase Diagram: -
+![blank_diagram__7_](https://github.com/user-attachments/assets/20ba1de4-b528-4121-8eea-a3e1c0995b3e)
+
+
+
+
+
+
+---
+
 ## ⚙️ Technologies Used
 
 | Layer         | Tech Stack                                     |
@@ -185,5 +196,4 @@ This project is licensed under **the-chance** License.
 
 
 
-
-Built with ❤️ by the Abu Dhabi Squad
+<p align="center">Built with ❤️ by the Abu Dhabi Squad</p>
