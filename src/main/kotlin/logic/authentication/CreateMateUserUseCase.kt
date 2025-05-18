@@ -6,7 +6,9 @@ import logic.model.User
 import logic.repository.AuthenticationRepository
 import logic.authentication.validation.PasswordValidator
 import logic.utils.hashing.HashingService
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class CreateMateUserUseCase(
     private val authRepository: AuthenticationRepository,
     private val standardPasswordValidator: PasswordValidator,

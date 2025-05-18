@@ -3,12 +3,14 @@ package logic.model
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.UUID
+import kotlin.uuid.Uuid
+import kotlin.uuid.ExperimentalUuidApi
 
-data class Audit(
-    val auditId: UUID = UUID.randomUUID(),
+@OptIn(ExperimentalUuidApi::class)
+data class Audit (
+    val auditId: Uuid = Uuid.random(),
     val createdBy: String,
-    val entityId: UUID,
+    val entityId: Uuid,
     val entityType: EntityType,
     val oldState: String,
     val newState: String,

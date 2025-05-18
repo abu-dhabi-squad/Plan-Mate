@@ -14,7 +14,9 @@ import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
 import presentation.utils.PromptUtils
 import presentation.utils.extensions.showAuditLogs
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class GetAuditForProjectUITest {
     private val promptUtils: PromptUtils = mockk(relaxed = true)
     private val getAuditUseCase: GetAuditUseCase = mockk(relaxed = true)

@@ -11,9 +11,9 @@ import logic.exceptions.EmptyUsernameException
 import logic.exceptions.UserAlreadyExistsException
 import logic.model.User.UserType
 import org.junit.jupiter.api.BeforeEach
-import kotlin.test.Test
 import presentation.io.Printer
 import presentation.utils.PromptUtils
+import kotlin.test.Test
 
 class CreateMateUserUseCaseUITest {
 
@@ -113,4 +113,5 @@ class CreateMateUserUseCaseUITest {
         // Then
         verify { printer.displayLn("\nSomething weird happened") }
     }
+
 }

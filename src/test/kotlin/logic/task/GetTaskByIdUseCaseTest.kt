@@ -10,8 +10,10 @@ import logic.repository.TaskRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class GetTaskByIdUseCaseTest {
     private lateinit var taskRepository: TaskRepository
     private lateinit var getTasksByIdUseCaseTest: GetTaskByIdUseCase
@@ -25,7 +27,7 @@ class GetTaskByIdUseCaseTest {
     @Test
     fun `should get task by task id when task with same id exists`() = runTest{
         // Given
-        val uuid= UUID.randomUUID()
+        val uuid= Uuid.random()
         val taskId = uuid
         val task = createTask(id = taskId)
         coEvery { taskRepository.getTaskById(any()) } returns task
@@ -40,7 +42,7 @@ class GetTaskByIdUseCaseTest {
     @Test
     fun `should throw TaskNotFoundException when there is no task with the same id`() = runTest{
         // Given
-        val taskId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val taskId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { taskRepository.getTaskById(any()) } returns null
 
         // When && Then

@@ -2,13 +2,15 @@ package helper
 
 import logic.model.Task
 import java.time.LocalDate
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun createTask(
-    id : UUID =UUID.randomUUID(),
+    id : Uuid =Uuid.random(),
     userName :String = "",
-    projectId :UUID = UUID.randomUUID(),
-    stateId :UUID = UUID.randomUUID(),
+    projectId :Uuid = Uuid.random(),
+    stateId :Uuid = Uuid.random(),
     title :String= "",
     description :String = "",
     startDate :LocalDate = LocalDate.now(),

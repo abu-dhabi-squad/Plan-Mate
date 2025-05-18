@@ -13,7 +13,9 @@ import logic.project.AddStateToProjectUseCase
 import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
 import presentation.utils.PromptUtils
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class AddTaskStateToProjectUITest {
     private val addStateToProjectUseCase: AddStateToProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)

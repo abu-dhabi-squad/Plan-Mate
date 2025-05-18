@@ -6,17 +6,19 @@ import data.project.model.StateDto
 import logic.model.Project
 import logic.model.TaskState
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class ProjectMapperTest {
 
     private val mapper = ProjectMapper()
 
     @Test
     fun `dtoToProject should map ProjectDto to Project correctly`() {
-        val projectId = UUID.randomUUID()
-        val state1Id = UUID.randomUUID()
-        val state2Id = UUID.randomUUID()
+        val projectId = Uuid.random()
+        val state1Id = Uuid.random()
+        val state2Id = Uuid.random()
 
         val projectDto = ProjectDto(
             _id = projectId.toString(),
@@ -40,8 +42,8 @@ class ProjectMapperTest {
 
     @Test
     fun `projectToDto should map Project to ProjectDto correctly`() {
-        val projectId = UUID.randomUUID()
-        val state1Id = UUID.randomUUID()
+        val projectId = Uuid.random()
+        val state1Id = Uuid.random()
 
         val project = Project(
             projectId = projectId,
@@ -60,7 +62,7 @@ class ProjectMapperTest {
 
     @Test
     fun `dtoToState should map StateDto to State correctly`() {
-        val uuid = UUID.randomUUID()
+        val uuid = Uuid.random()
         val stateDto = StateDto(_id = uuid.toString(), name = "Pending")
 
         val result = mapper.dtoToState(stateDto)
@@ -71,7 +73,7 @@ class ProjectMapperTest {
 
     @Test
     fun `stateToDto should map State to StateDto correctly`() {
-        val uuid = UUID.randomUUID()
+        val uuid = Uuid.random()
         val taskState = TaskState(stateId = uuid, stateName = "In Progress")
 
         val result = mapper.stateToDto(taskState)

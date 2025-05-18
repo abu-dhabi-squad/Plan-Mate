@@ -1,13 +1,14 @@
 package logic.model
 
 import java.time.LocalDate
-import java.util.UUID
-
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+@OptIn(ExperimentalUuidApi::class)
 data class Task(
-    val taskId: UUID = UUID.randomUUID(),
+    val taskId: Uuid = Uuid.random(),
     val username: String,
-    val projectId: UUID,
-    val taskStateId: UUID,
+    val projectId: Uuid,
+    val taskStateId: Uuid,
     val title: String,
     val description: String,
     val startDate: LocalDate,

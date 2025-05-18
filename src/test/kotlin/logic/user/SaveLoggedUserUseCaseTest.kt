@@ -8,7 +8,9 @@ import logic.model.User
 import logic.model.User.UserType
 import logic.repository.AuthenticationRepository
 import kotlin.test.Test
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class SaveLoggedUserUseCaseTest {
     private lateinit var saveLoggedUserUseCase: SaveLoggedUserUseCase
     private lateinit var authenticationRepository: AuthenticationRepository

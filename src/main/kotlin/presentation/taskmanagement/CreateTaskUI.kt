@@ -12,7 +12,9 @@ import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.utils.PromptUtils
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class CreateTaskUI(
     private val getLoggedUserUseCase: GetLoggedUserUseCase,
     private val printer: Printer,

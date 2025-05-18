@@ -20,7 +20,9 @@ import presentation.utils.PromptUtils
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
 import presentation.taskmanagement.TestData.fakeUser
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class DeleteTaskByIdUITest {
 
     private lateinit var printer: Printer

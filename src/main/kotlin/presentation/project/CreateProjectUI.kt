@@ -10,8 +10,9 @@ import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.utils.PromptUtils
+import kotlin.uuid.ExperimentalUuidApi
 
-
+@OptIn(ExperimentalUuidApi::class)
 class CreateProjectUI(
     private val createProjectUseCase: CreateProjectUseCase,
     private val printer: Printer,

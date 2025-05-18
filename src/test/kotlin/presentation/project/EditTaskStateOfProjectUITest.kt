@@ -15,7 +15,9 @@ import org.junit.jupiter.api.Test
 import presentation.io.Printer
 import presentation.utils.PromptUtils
 import kotlin.test.BeforeTest
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class EditTaskStateOfProjectUITest {
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)

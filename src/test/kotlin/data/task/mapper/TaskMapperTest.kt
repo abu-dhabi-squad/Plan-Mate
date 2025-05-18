@@ -5,9 +5,11 @@ import data.task.model.TaskDto
 import helper.createTask
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlin.test.Test
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class TaskMapperTest {
 
     private val mapper = TaskMapper()
@@ -35,9 +37,9 @@ class TaskMapperTest {
     @Test
     fun `dtoToTask maps correctly`() {
         // Given
-        val id = UUID.randomUUID()
-        val stateId = UUID.randomUUID()
-        val projectId = UUID.randomUUID()
+        val id = Uuid.random()
+        val stateId = Uuid.random()
+        val projectId = Uuid.random()
         val startDate = LocalDate.now()
         val endDate = startDate.plusDays(5)
 

@@ -11,8 +11,10 @@ import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class EditProjectUseCaseTest {
     private lateinit var editProjectUseCase: EditProjectUseCase
     private lateinit var projectRepository: ProjectRepository
@@ -26,8 +28,8 @@ class EditProjectUseCaseTest {
     @Test
     fun `should throw ProjectNotFoundException when it returns null`() = runTest{
         //Given
-        val taskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
+        val taskState = TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
+        val project = Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } returns null
 
@@ -40,8 +42,8 @@ class EditProjectUseCaseTest {
     @Test
     fun `should throw Exception when it failed`() = runTest{
         //Given
-        val taskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
+        val taskState = TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
+        val project = Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } throws Exception()
 
@@ -54,8 +56,8 @@ class EditProjectUseCaseTest {
     @Test
     fun `should throw Exception when the projectRepository editProject throw Exception`() = runTest{
         //Given
-        val taskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
+        val taskState = TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
+        val project = Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
         val newName = "name2"
         coEvery { projectRepository.editProject(any()) } throws Exception()
         coEvery { projectRepository.getProjectById(any()) } returns project
@@ -69,8 +71,8 @@ class EditProjectUseCaseTest {
     @Test
     fun `should call projectRepository editProject function when the id is found`() = runTest{
         //Given
-        val taskState = TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
+        val taskState = TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "stateName")
+        val project = Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf(taskState))
         val newName = "name2"
         coEvery { projectRepository.getProjectById(any()) } returns project
 

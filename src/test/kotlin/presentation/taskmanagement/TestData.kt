@@ -6,12 +6,14 @@ import logic.model.TaskState
 import logic.model.User
 import logic.model.User.UserType
 import java.time.LocalDate
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 object TestData {
 
     val fakeUser = User(
-        UUID.fromString("11111111-1111-1111-1111-111111111111"),
+        Uuid.parse("11111111-1111-1111-1111-111111111111"),
         "noor",
         "pass",
         UserType.MATE)
@@ -20,19 +22,19 @@ object TestData {
     val fakeDate2 = LocalDate.of(2025, 5, 13)
 
     val testState = TaskState(
-        stateId = UUID.fromString("55555555-5555-5555-5555-555555555555"),
+        stateId = Uuid.parse("55555555-5555-5555-5555-555555555555"),
         stateName = "To Do"
     )
 
     val fakeProject = Project(
-        projectId = UUID.fromString("22222222-2222-2222-2222-222222222222"),
+        projectId = Uuid.parse("22222222-2222-2222-2222-222222222222"),
         projectName = "Project A",
         taskStates = listOf(testState)
 
     )
 
     val fakeTask = Task(
-        taskId = UUID.fromString("44444444-4444-4444-4444-444444444444"),
+        taskId = Uuid.parse("44444444-4444-4444-4444-444444444444"),
         username = "noor",
         title = "Test Task",
         description = "desc",

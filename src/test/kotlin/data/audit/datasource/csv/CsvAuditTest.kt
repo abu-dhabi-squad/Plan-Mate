@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Test
 import data.utils.filehelper.CsvFileHelper
 import helper.createAudit
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CsvAuditTest {
 
     private lateinit var csvFileHelper: CsvFileHelper
@@ -92,6 +94,6 @@ class CsvAuditTest {
     }
 
     companion object {
-        private val ENTITY_ID = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        private val ENTITY_ID = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
     }
 }

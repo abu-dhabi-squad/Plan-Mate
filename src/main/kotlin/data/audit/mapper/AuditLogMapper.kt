@@ -4,10 +4,11 @@ import data.audit.model.AuditDto
 import logic.model.Audit
 import logic.model.Audit.EntityType
 import java.time.ZoneId
-import java.util.UUID
+import kotlin.uuid.Uuid
 import java.util.Date
+import kotlin.uuid.ExperimentalUuidApi
 
-
+@OptIn(ExperimentalUuidApi::class)
 class AuditLogMapper {
     fun auditToDto(audit: Audit): AuditDto {
         return AuditDto(
@@ -23,9 +24,9 @@ class AuditLogMapper {
 
     fun dtoToAudit(dto: AuditDto): Audit {
         return Audit(
-            auditId = UUID.fromString(dto._id),
+            auditId = Uuid.parse(dto._id),
             createdBy = dto.createdBy,
-            entityId = UUID.fromString(dto.entityId),
+            entityId = Uuid.parse(dto.entityId),
             entityType = EntityType.valueOf(dto.entityType),
             oldState = dto.oldState,
             newState = dto.newState,

@@ -3,7 +3,9 @@ package data.project.datasource.csv
 import data.project.repository.LocalProjectDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.Project
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class CsvProject(
     private val fileHelper: FileHelper,
     private val csvProjectParser: CsvProjectParser,

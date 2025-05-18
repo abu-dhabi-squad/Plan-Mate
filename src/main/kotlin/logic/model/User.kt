@@ -1,9 +1,10 @@
 package logic.model
 
-import java.util.UUID
-
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+@OptIn(ExperimentalUuidApi::class)
 data class User(
-    val userId: UUID = UUID.randomUUID(),
+    val userId: Uuid = Uuid.random(),
     val username: String,
     val password: String,
     val userType: UserType

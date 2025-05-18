@@ -11,8 +11,10 @@ import logic.repository.TaskRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class DeleteProjectUseCaseTest {
 
     private lateinit var projectRepository: ProjectRepository
@@ -29,7 +31,7 @@ class DeleteProjectUseCaseTest {
     @Test
     fun `should call deleteProjectById when given valid project ID`() = runTest {
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
 
         // When
@@ -42,7 +44,7 @@ class DeleteProjectUseCaseTest {
     @Test
     fun `should call deleteTasksByProjectById when given valid project ID`() = runTest {
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
 
         // When
@@ -55,7 +57,7 @@ class DeleteProjectUseCaseTest {
     @Test
     fun `should return false when delete project return false`() = runTest{
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectRepository.deleteProjectById(projectId) } throws Exception()
         coEvery { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
 
@@ -68,7 +70,7 @@ class DeleteProjectUseCaseTest {
     @Test
     fun `should throw exception when data is not exist`()= runTest {
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectRepository.getProjectById(any()) } returns null
 
         // When & Then
@@ -81,7 +83,7 @@ class DeleteProjectUseCaseTest {
     @Test
     fun `should throw ProjectNotFoundException when given non-existent project ID`() = runTest{
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectRepository.getProjectById(any()) } returns null
 
         // When & Then
@@ -94,7 +96,7 @@ class DeleteProjectUseCaseTest {
     @Test
     fun `should throw exception when their is an issue in getProject`() = runTest{
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectRepository.getProjectById(any()) } throws Exception()
 
         // When & Then
@@ -107,7 +109,7 @@ class DeleteProjectUseCaseTest {
     @Test
     fun `should throw exception when deleting tasks fails after project deletion`() = runTest {
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectRepository.getProjectById(any()) } returns Project(projectId, "test", emptyList())
         coEvery { taskRepository.deleteTasksByProjectById(projectId) } throws Exception("Task deletion failed")
 

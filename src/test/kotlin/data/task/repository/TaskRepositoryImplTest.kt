@@ -16,8 +16,10 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.verify
 import logic.repository.TaskRepository
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class TaskRepositoryImplTest {
 
     private lateinit var remoteTaskDataSource: RemoteTaskDataSource
@@ -67,7 +69,7 @@ class TaskRepositoryImplTest {
 
     @Test
     fun `getTaskByProjectId should return list of tasks when datasource is not empty`() = runTest {
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         val taskDto1 = mockk<TaskDto>()
         val taskDto2 = mockk<TaskDto>()
         val task1 = createTask().copy(projectId = projectId)
@@ -88,7 +90,7 @@ class TaskRepositoryImplTest {
     fun `getTaskByProjectId should return empty list when datasource is empty`() = runTest {
         coEvery { remoteTaskDataSource.getTaskByProjectId(any()) } returns emptyList()
 
-        val result = taskRepository.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        val result = taskRepository.getTaskByProjectId(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
 
         assertThat(result).isEmpty()
     }
@@ -97,7 +99,7 @@ class TaskRepositoryImplTest {
     fun `getTaskByProjectId should rethrow Exception when datasource throws Exception`() = runTest {
         coEvery { remoteTaskDataSource.getTaskByProjectId(any()) } throws Exception()
 
-        assertThrows<Exception> { taskRepository.getTaskByProjectId(UUID.fromString("1")) }
+        assertThrows<Exception> { taskRepository.getTaskByProjectId(Uuid.parse("1")) }
     }
 
     @Test

@@ -6,11 +6,14 @@ import di.*
 import kotlin.system.exitProcess
 
 fun main() {
+
     startKoin {
         modules(appModule, repositoryModule, useCaseModule, uiModule, mongoModule)
     }
     runBlocking {
         getKoin().get<LoginByUserNameUI>().launchUi()
     }
+
+
     exitProcess(0)
 }

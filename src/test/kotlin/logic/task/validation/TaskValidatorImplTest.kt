@@ -5,8 +5,10 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import logic.task.validation.TaskValidatorImpl
 import java.time.LocalDate
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class TaskValidatorImplTest {
 
     private val validator = TaskValidatorImpl()
@@ -16,8 +18,8 @@ class TaskValidatorImplTest {
         // Given
         val task = Task(
             username = "user1",
-            projectId = UUID.randomUUID(),
-            taskStateId = UUID.randomUUID(),
+            projectId = Uuid.random(),
+            taskStateId = Uuid.random(),
             title = "Invalid Task",
             description = "End date before start date",
             startDate = LocalDate.of(2025, 5, 10),
@@ -35,8 +37,8 @@ class TaskValidatorImplTest {
         // Given
         val task = Task(
             username = "user1",
-            projectId = UUID.randomUUID(),
-            taskStateId = UUID.randomUUID(),
+            projectId = Uuid.random(),
+            taskStateId = Uuid.random(),
             title = "Valid Task",
             description = "Valid date range",
             startDate = LocalDate.of(2025, 5, 10),
@@ -55,8 +57,8 @@ class TaskValidatorImplTest {
         val date = LocalDate.of(2025, 5, 10)
         val task = Task(
             username = "user1",
-            projectId = UUID.randomUUID(),
-            taskStateId = UUID.randomUUID(),
+            projectId = Uuid.random(),
+            taskStateId = Uuid.random(),
             title = "Same Date Task",
             description = "Start and end are the same",
             startDate = date,

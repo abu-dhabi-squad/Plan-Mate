@@ -1,6 +1,8 @@
 package helper
 
 import logic.model.TaskState
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-fun createState(id: UUID = UUID.randomUUID(), name: String= "state name"): TaskState = TaskState(stateId = id, stateName = name)
+@OptIn(ExperimentalUuidApi::class)
+fun createState(id: Uuid = Uuid.random(), name: String= "state name"): TaskState = TaskState(stateId = id, stateName = name)

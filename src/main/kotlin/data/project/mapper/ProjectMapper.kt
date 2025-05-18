@@ -4,12 +4,14 @@ import data.project.model.ProjectDto
 import data.project.model.StateDto
 import logic.model.Project
 import logic.model.TaskState
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class ProjectMapper {
     fun dtoToProject(projectDto: ProjectDto): Project {
         return Project(
-            projectId = UUID.fromString(projectDto._id),
+            projectId = Uuid.parse(projectDto._id),
             projectName = projectDto.projectName,
             taskStates = projectDto.states.map { stateDto -> dtoToState(stateDto) }
         )
@@ -17,7 +19,7 @@ class ProjectMapper {
 
     fun dtoToState(stateDto: StateDto): TaskState {
         return TaskState(
-            stateId = UUID.fromString(stateDto._id),
+            stateId = Uuid.parse(stateDto._id),
             stateName = stateDto.name
         )
     }

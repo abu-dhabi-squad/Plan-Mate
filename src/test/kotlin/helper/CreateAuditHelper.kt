@@ -5,11 +5,13 @@ import logic.model.Audit.EntityType
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun createAudit(
-    id: UUID = UUID.randomUUID(),
-    entityId: UUID = UUID.randomUUID(),
+    id: Uuid = Uuid.random(),
+    entityId: Uuid = Uuid.random(),
     newState: String = "",
     oldState : String = "",
     createdBy: String = "",

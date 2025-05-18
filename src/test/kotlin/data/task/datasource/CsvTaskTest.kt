@@ -11,8 +11,10 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import data.task.datasource.csv.CsvTaskParser
 import data.utils.filehelper.CsvFileHelper
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CsvTaskTest {
     private lateinit var csvFileHelper: CsvFileHelper
     private lateinit var csvTaskParser: CsvTaskParser
@@ -64,7 +66,7 @@ class CsvTaskTest {
         every { csvFileHelper.readFile(any()) } returns emptyList()
 
         // When && Then
-        val result = csvTask.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        val result = csvTask.getTaskByProjectId(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
         assertThat(result).isEmpty()
     }
 
@@ -75,14 +77,14 @@ class CsvTaskTest {
         every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
 
         // When && Then
-        val result = csvTask.getTaskByProjectId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        val result = csvTask.getTaskByProjectId(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
         assertThat(result).isEmpty()
     }
 
     @Test
     fun `getTaskByProjectId should returns tasks list when csv file contains tasks with the same project id`() {
         // Given
-        val projectId = UUID.randomUUID()
+        val projectId = Uuid.random()
         val tasks = listOf(createTask(projectId = projectId), createTask(projectId = projectId), createTask())
         every { csvFileHelper.readFile(any()) } returns tasks.map { csvTaskParser.getCsvLineFromTask(it) }
         every { csvTaskParser.getTaskFromCsvLine(any()) } returnsMany tasks
@@ -98,7 +100,7 @@ class CsvTaskTest {
         every { csvFileHelper.readFile(any()) } throws Exception()
 
         // When && Then
-        assertThrows<Exception> { csvTask.getTaskByProjectId(UUID.fromString("1")) }
+        assertThrows<Exception> { csvTask.getTaskByProjectId(Uuid.parse("1")) }
     }
 
     @Test

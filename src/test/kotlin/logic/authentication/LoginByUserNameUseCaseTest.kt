@@ -13,9 +13,11 @@ import logic.model.User
 import logic.model.User.UserType
 import logic.repository.AuthenticationRepository
 import logic.utils.hashing.HashingService
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlin.test.Test
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class LoginByUserNameUseCaseTest {
     private lateinit var authRepository: AuthenticationRepository
     private lateinit var loginByUserNameUseCase: LoginByUserNameUseCase
@@ -34,7 +36,7 @@ class LoginByUserNameUseCaseTest {
         val username = "testUser"
         val password = "correctPassword"
         val hashedPassword = "hashedCorrectPassword"
-        val expectedUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, hashedPassword, UserType.MATE)
+        val expectedUser = User(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, hashedPassword, UserType.MATE)
         every { hashingPassword.hash(password) } returns hashedPassword
         coEvery { authRepository.getUserByName(username) } returns expectedUser
 
@@ -72,7 +74,7 @@ class LoginByUserNameUseCaseTest {
         val username = "testUser"
         val password = "password123"
         val hashedPassword = "hashedPassword123"
-        val expectedUser = User(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, hashedPassword, UserType.MATE)
+        val expectedUser = User(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), username, hashedPassword, UserType.MATE)
         every { hashingPassword.hash(password) } returns hashedPassword
         coEvery { authRepository.getUserByName(username) } returns expectedUser
 

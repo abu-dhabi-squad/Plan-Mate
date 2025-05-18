@@ -15,7 +15,9 @@ import logic.model.User
 import logic.model.User.UserType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class AuthenticationRepositoryImplTest {
 
     private val remoteDataSource: RemoteAuthenticationDataSource = mockk()
