@@ -5,7 +5,7 @@ import logic.model.Task
 import logic.model.TaskState
 import logic.model.User
 import logic.model.User.UserType
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -18,8 +18,8 @@ object TestData {
         "pass",
         UserType.MATE)
 
-    val fakeDate = LocalDate.of(2025, 5, 12)
-    val fakeDate2 = LocalDate.of(2025, 5, 13)
+    val fakeDate = LocalDate(2025, 5, 12)
+    val fakeDate2 = LocalDate(2025, 5, 13)
 
     val testState = TaskState(
         stateId = Uuid.parse("55555555-5555-5555-5555-555555555555"),

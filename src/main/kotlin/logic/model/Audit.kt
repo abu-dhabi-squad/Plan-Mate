@@ -1,8 +1,9 @@
 package logic.model
 
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
+import kotlinx.datetime.Clock
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.LocalDateTime
 import kotlin.uuid.Uuid
 import kotlin.uuid.ExperimentalUuidApi
 
@@ -14,7 +15,7 @@ data class Audit (
     val entityType: EntityType,
     val oldState: String,
     val newState: String,
-    val createdAt: LocalDateTime = LocalDate.now().atTime(LocalTime.now()),
+    val createdAt: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
 ){
     enum class EntityType {
         PROJECT, TASK

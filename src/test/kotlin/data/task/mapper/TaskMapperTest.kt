@@ -3,8 +3,11 @@ package data.task.mapper
 import com.google.common.truth.Truth.assertThat
 import data.task.model.TaskDto
 import helper.createTask
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.plus
+import kotlinx.datetime.todayIn
 import kotlin.uuid.Uuid
 import kotlin.test.Test
 import kotlin.uuid.ExperimentalUuidApi
@@ -13,7 +16,6 @@ import kotlin.uuid.ExperimentalUuidApi
 class TaskMapperTest {
 
     private val mapper = TaskMapper()
-    private val dateFormatter = DateTimeFormatter.ISO_DATE
 
     @Test
     fun `taskToDto maps correctly`() {
@@ -30,8 +32,9 @@ class TaskMapperTest {
         assertThat(dto.stateId).isEqualTo(task.taskStateId.toString())
         assertThat(dto.title).isEqualTo(task.title)
         assertThat(dto.description).isEqualTo(task.description)
-        assertThat(dto.startDate).isEqualTo(task.startDate.format(dateFormatter))
-        assertThat(dto.endDate).isEqualTo(task.endDate.format(dateFormatter))
+        // LocalDate.toString() outputs ISO-8601 by default
+        assertThat(dto.startDate).isEqualTo(task.startDate.toString())
+        assertThat(dto.endDate).isEqualTo(task.endDate.toString())
     }
 
     @Test
@@ -40,8 +43,8 @@ class TaskMapperTest {
         val id = Uuid.random()
         val stateId = Uuid.random()
         val projectId = Uuid.random()
-        val startDate = LocalDate.now()
-        val endDate = startDate.plusDays(5)
+        val startDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
+        val endDate = startDate.plus(5, DateTimeUnit.DAY)
 
         val dto = TaskDto(
             _id = id.toString(),
@@ -50,8 +53,8 @@ class TaskMapperTest {
             stateId = stateId.toString(),
             title = "Task title",
             description = "Task description",
-            startDate = startDate.format(dateFormatter),
-            endDate = endDate.format(dateFormatter)
+            startDate = startDate.toString(),
+            endDate = endDate.toString()
         )
 
         // When

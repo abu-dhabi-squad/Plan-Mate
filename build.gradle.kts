@@ -10,6 +10,7 @@ repositories {
     mavenCentral()
 }
 
+
 dependencies {
 
     testImplementation(kotlin("test"))
@@ -25,6 +26,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
     implementation("org.slf4j:slf4j-simple:2.0.12")
     implementation("io.reactivex.rxjava3:rxjava:3.1.8")
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 
 }
 

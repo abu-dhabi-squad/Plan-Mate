@@ -9,7 +9,8 @@ import org.junit.jupiter.api.Test
 import logic.model.Audit
 import logic.model.Audit.EntityType
 import org.junit.jupiter.api.assertThrows
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.atTime
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)
@@ -30,7 +31,7 @@ class CsvAuditParserTest {
 
         // given
         val id = Uuid.random()
-        val customDateTime = LocalDate.of(2025, 5, 24).atTime(20, 0)
+        val customDateTime = LocalDate(2025, 5, 24).atTime(20, 0)
         val audit = Audit(
             auditId = id,
             createdBy = "user123",
@@ -57,7 +58,8 @@ class CsvAuditParserTest {
         // given
         val id = Uuid.random()
         val line = "$id,user123,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,PROJECT,old,new,2023-12-25"
-        val customDateTime = LocalDate.of(2025, 5, 24).atTime(20, 0)
+        val customDate = LocalDate(2025, 5, 24)
+        val customDateTime = customDate.atTime(20, 0, 0)
 
         every { dateParser.parseDateFromString("2023-12-25") } returns customDateTime
 

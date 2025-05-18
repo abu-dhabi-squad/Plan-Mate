@@ -13,7 +13,7 @@ import logic.exceptions.TaskNotFoundException
 import logic.model.Task
 import logic.repository.TaskRepository
 import logic.task.validation.TaskValidator
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 

@@ -1,6 +1,6 @@
 package logic.model
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 @OptIn(ExperimentalUuidApi::class)

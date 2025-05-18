@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import logic.task.validation.TaskValidatorImpl
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import kotlin.uuid.ExperimentalUuidApi
 import kotlin.uuid.Uuid
 
@@ -22,8 +22,8 @@ class TaskValidatorImplTest {
             taskStateId = Uuid.random(),
             title = "Invalid Task",
             description = "End date before start date",
-            startDate = LocalDate.of(2025, 5, 10),
-            endDate = LocalDate.of(2025, 5, 9)
+            startDate = LocalDate(2025, 5, 10),
+            endDate = LocalDate(2025, 5, 9)
         )
 
         // When & Then
@@ -41,8 +41,8 @@ class TaskValidatorImplTest {
             taskStateId = Uuid.random(),
             title = "Valid Task",
             description = "Valid date range",
-            startDate = LocalDate.of(2025, 5, 10),
-            endDate = LocalDate.of(2025, 5, 11)
+            startDate = LocalDate(2025, 5, 10),
+            endDate = LocalDate(2025, 5, 11)
         )
 
         // When & Then
@@ -54,7 +54,7 @@ class TaskValidatorImplTest {
     @Test
     fun `should pass validation when endDate is equal to startDate`() {
         // Given
-        val date = LocalDate.of(2025, 5, 10)
+        val date = LocalDate(2025, 5, 10)
         val task = Task(
             username = "user1",
             projectId = Uuid.random(),

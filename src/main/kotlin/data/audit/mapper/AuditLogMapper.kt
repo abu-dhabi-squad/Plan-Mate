@@ -1,15 +1,18 @@
 package data.audit.mapper
 
 import data.audit.model.AuditDto
+import kotlinx.datetime.Instant
 import logic.model.Audit
 import logic.model.Audit.EntityType
-import java.time.ZoneId
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
 import kotlin.uuid.Uuid
-import java.util.Date
 import kotlin.uuid.ExperimentalUuidApi
 
 @OptIn(ExperimentalUuidApi::class)
 class AuditLogMapper {
+
     fun auditToDto(audit: Audit): AuditDto {
         return AuditDto(
             _id = audit.auditId.toString(),
@@ -18,7 +21,7 @@ class AuditLogMapper {
             entityType = audit.entityType.name,
             oldState = audit.oldState,
             newState = audit.newState,
-            date = Date.from(audit.createdAt.atZone(ZoneId.systemDefault()).toInstant())
+            date = audit.createdAt.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds()
         )
     }
 
@@ -30,10 +33,7 @@ class AuditLogMapper {
             entityType = EntityType.valueOf(dto.entityType),
             oldState = dto.oldState,
             newState = dto.newState,
-            createdAt = dto.date
-                .toInstant()
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime()
+            createdAt = Instant.fromEpochMilliseconds(dto.date).toLocalDateTime(TimeZone.currentSystemDefault())
         )
     }
 }
