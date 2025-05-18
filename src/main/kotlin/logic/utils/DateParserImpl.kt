@@ -11,13 +11,22 @@ class DateParserImpl : DateParser {
         throw DateFormatException(date, "Expected ISO-8601 format: yyyy-MM-dd")
 
     }
+
     private fun normalizeDate(input: String): String {
-        val parts = input.split("-")
-        if (parts.size != 3) return input
-        val year = parts[0]
-        val month = parts[1].padStart(2, '0')
-        val day = parts[2].padStart(2, '0')
-        return "$year-$month-$day"
+        val dateParts = input.split(DATE_SEPARATOR)
+        if (dateParts.size != EXPECTED_DATE_PARTS) return input
+
+        val (year, rawMonth, rawDay) = dateParts
+        val month = rawMonth.padStart(2, '0')
+        val day = rawDay.padStart(2, '0')
+
+        return "$year$DATE_SEPARATOR$month$DATE_SEPARATOR$day"
     }
-        override fun getStringFromDate(date: LocalDate): String = date.toString()
+
+    override fun getStringFromDate(date: LocalDate): String = date.toString()
+
+    companion object {
+        private const val DATE_SEPARATOR = "-"
+        private const val EXPECTED_DATE_PARTS = 3
     }
+}

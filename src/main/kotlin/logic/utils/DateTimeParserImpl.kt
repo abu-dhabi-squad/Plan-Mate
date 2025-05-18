@@ -1,8 +1,7 @@
 package logic.utils
 
-import logic.exceptions.DateFormatException
 import kotlinx.datetime.LocalDateTime
-
+import logic.exceptions.DateFormatException
 
 class DateTimeParserImpl : DateTimeParser {
 
@@ -20,27 +19,34 @@ class DateTimeParserImpl : DateTimeParser {
     }
 
     private fun normalize(dateTimeStr: String): String {
-        // Split date and time parts by 'T'
-        val parts = dateTimeStr.split("T")
-        if (parts.size != 2) return dateTimeStr // Unexpected format
+        val parts = dateTimeStr.split(DATE_TIME_SEPARATOR)
+        if (parts.size != 2) return dateTimeStr
 
         val datePart = parts[0]
         val timePart = parts[1]
 
-        // Normalize date part (yyyy-M-d -> yyyy-MM-dd)
-        val dateSegments = datePart.split("-")
-        if (dateSegments.size != 3) return dateTimeStr
-        val year = dateSegments[0]
-        val month = dateSegments[1].padStart(2, '0')
-        val day = dateSegments[2].padStart(2, '0')
+        val dateSegments = datePart.split(DATE_SEPARATOR)
+        val expectedDateParts = 3
+        if (dateSegments.size != expectedDateParts) return dateTimeStr
 
-        // Normalize time part (H:m:s or H:m -> HH:mm:ss)
-        val timeSegments = timePart.split(":")
+        val (year, rawMonth, rawDay) = dateSegments
+        val month = rawMonth.padStart(2, '0')
+        val day = rawDay.padStart(2, '0')
+
+        val timeSegments = timePart.split(TIME_SEPARATOR)
         if (timeSegments.size !in 2..3) return dateTimeStr
+
         val hour = timeSegments[0].padStart(2, '0')
         val minute = timeSegments[1].padStart(2, '0')
         val second = if (timeSegments.size == 3) timeSegments[2].padStart(2, '0') else "00"
 
-        return "$year-$month-$day" + "T" + "$hour:$minute:$second"
+        return "$year-$month-$day$DATE_TIME_SEPARATOR$hour:$minute:$second"
     }
+
+    companion object {
+        private const val DATE_TIME_SEPARATOR = "T"
+        private const val DATE_SEPARATOR = "-"
+        private const val TIME_SEPARATOR = ":"
+    }
+
 }
