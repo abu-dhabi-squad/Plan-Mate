@@ -4,9 +4,12 @@ import logic.exceptions.CanNotParseProjectException
 import logic.exceptions.CanNotParseStateException
 import logic.model.Project
 import logic.model.TaskState
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CsvProjectParser {
+
 
     fun parseProjectToString(project: Project): String {
         var res = project.projectId.toString() + "," + project.projectName + ","
@@ -22,7 +25,7 @@ class CsvProjectParser {
             .takeIf(::isValidProject)
             ?.let { projectRegex ->
                 return Project(
-                    UUID.fromString(projectRegex[ID]),
+                    Uuid.parse(projectRegex[ID]),
                     projectRegex[NAME],
                     parseStringToListOfState(projectRegex[STATES])
                 )
@@ -48,7 +51,7 @@ class CsvProjectParser {
             .forEach { stateRegex ->
                 stateRegex.split(";").also {
                     it.takeIf(::isValidState) ?: throw CanNotParseStateException()
-                    result.add(TaskState(UUID.fromString(it[STATE_ID]), it[STATE_NAME]))
+                    result.add(TaskState(Uuid.parse(it[STATE_ID]), it[STATE_NAME]))
                 }
             }
         return result
@@ -57,7 +60,7 @@ class CsvProjectParser {
     private fun parseOneState(subLine: String): List<TaskState> {
         val listOfRegex: List<String> = subLine.split(";")
             .takeIf(::isValidState) ?: throw CanNotParseStateException()
-        return listOf(TaskState(UUID.fromString(listOfRegex[STATE_ID]), listOfRegex[STATE_NAME]))
+        return listOf(TaskState(Uuid.parse(listOfRegex[STATE_ID]), listOfRegex[STATE_NAME]))
     }
 
     private fun isValidProject(projectRegex: List<String>): Boolean {

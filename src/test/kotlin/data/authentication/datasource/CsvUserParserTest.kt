@@ -8,8 +8,10 @@ import logic.model.User.UserType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CsvUserParserTest {
     private lateinit var csvUserParser: CsvUserParser
 
@@ -21,7 +23,7 @@ class CsvUserParserTest {
     @Test
     fun `parseUserToString should return comma separated string`() {
         val user = User(
-            UUID.fromString("123e4567-e89b-12d3-a456-426614174000"),
+            Uuid.parse("123e4567-e89b-12d3-a456-426614174000"),
             "shahd",
             "password123",
             UserType.MATE
@@ -34,7 +36,7 @@ class CsvUserParserTest {
     fun `parseStringToUser should return User from valid string`() {
         val line = "123e4567-e89b-12d3-a456-426614174000,shahd,password123,MATE"
         val user = csvUserParser.parseStringToUser(line)
-        assertThat(user.userId).isEqualTo(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+        assertThat(user.userId).isEqualTo(Uuid.parse("123e4567-e89b-12d3-a456-426614174000"))
         assertThat(user.username).isEqualTo("shahd")
         assertThat(user.password).isEqualTo("password123")
         assertThat(user.userType).isEqualTo(UserType.MATE)

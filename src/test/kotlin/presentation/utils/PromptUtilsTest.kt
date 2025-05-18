@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import presentation.io.InputReader
 import presentation.io.Printer
 import logic.utils.DateParser
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import kotlin.test.Test
 
 class PromptUtilsTest {
@@ -65,7 +65,7 @@ class PromptUtilsTest {
     @Test
     fun `promptDate should should return date when entering date`() = runTest {
         // Given
-        val expectedRes = LocalDate.of(2002, 8, 10)
+        val expectedRes = LocalDate(2002, 8, 10)
         every { reader.readString() } returns null andThen "2002-8-10"
         every { dateParser.parseDateFromString(any()) } returns expectedRes
         // When
@@ -78,7 +78,7 @@ class PromptUtilsTest {
     @Test
     fun `promptDate should should display error message when parser throw exception`() = runTest {
         // Given
-        val expectedRes = LocalDate.of(2002, 8, 10)
+        val expectedRes = LocalDate(2002, 8, 10)
         every { reader.readString() } returns "2002-8-10"
         every { dateParser.parseDateFromString(any()) } throws Exception() andThen expectedRes
         // When

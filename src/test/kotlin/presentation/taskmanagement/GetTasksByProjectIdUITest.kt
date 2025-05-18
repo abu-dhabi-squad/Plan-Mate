@@ -14,7 +14,9 @@ import presentation.utils.PromptUtils
 import presentation.utils.extensions.displaySwimlanesByState
 import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class GetTasksByProjectIdUITest {
     private lateinit var printer: Printer
     private lateinit var promptUtils: PromptUtils

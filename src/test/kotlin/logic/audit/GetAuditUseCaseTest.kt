@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Test
 import logic.model.Audit.EntityType
 import logic.repository.AuditRepository
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class GetAuditUseCaseTest {
 
     private lateinit var auditRepository: AuditRepository
@@ -28,7 +30,7 @@ class GetAuditUseCaseTest {
     fun `should returns audit list when entityId is valid`() = runTest {
 
         // Given
-        val entityId = UUID.randomUUID()
+        val entityId = Uuid.random()
         val expectedAudits = listOf(
             createAudit(
                 entityId = entityId,
@@ -52,7 +54,7 @@ class GetAuditUseCaseTest {
     fun `should throws exception when repository fail`() = runTest {
 
         // Given
-        val entityId = UUID.randomUUID()
+        val entityId = Uuid.random()
         coEvery { auditRepository.getAuditByEntityId(entityId) } throws Exception()
 
         // When & Then
@@ -63,7 +65,7 @@ class GetAuditUseCaseTest {
     fun `should throws NoAuditsFoundException when there is no audit history`() = runTest {
 
         // Given
-        val entityId = UUID.randomUUID()
+        val entityId = Uuid.random()
         coEvery { auditRepository.getAuditByEntityId(entityId) } returns emptyList()
 
         // When & Then

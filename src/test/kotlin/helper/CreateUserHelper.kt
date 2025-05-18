@@ -2,10 +2,12 @@ package helper
 
 import logic.model.User
 import logic.model.User.UserType
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun createUser(
-    userId: UUID = UUID.randomUUID(),
+    userId: Uuid = Uuid.random(),
     username: String = "",
     userType: UserType = UserType.MATE,
     password: String = ""

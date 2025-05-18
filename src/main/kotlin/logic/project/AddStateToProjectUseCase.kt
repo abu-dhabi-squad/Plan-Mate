@@ -4,10 +4,12 @@ import logic.exceptions.DuplicateStateException
 import logic.exceptions.ProjectNotFoundException
 import logic.model.TaskState
 import logic.repository.ProjectRepository
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class AddStateToProjectUseCase(private val projectRepository: ProjectRepository) {
-    suspend operator fun invoke(projectId: UUID, newTaskState: TaskState) {
+    suspend operator fun invoke(projectId: Uuid, newTaskState: TaskState) {
         val project = projectRepository.getProjectById(projectId)
             ?: throw ProjectNotFoundException()
 

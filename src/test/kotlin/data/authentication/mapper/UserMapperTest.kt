@@ -8,8 +8,10 @@ import logic.model.User.UserType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class UserMapperTest {
 
     private lateinit var mapper: UserMapper
@@ -23,7 +25,7 @@ class UserMapperTest {
     fun `userToDto should convert User to UserDto correctly`() {
         // Given
         val user = User(
-            userId = UUID.fromString("550e8400-e29b-41d4-a716-446655440000"),
+            userId = Uuid.parse("550e8400-e29b-41d4-a716-446655440000"),
             username = "shahd",
             password = "pass1",
             userType = UserType.ADMIN
@@ -53,7 +55,7 @@ class UserMapperTest {
         val user = mapper.dtoToUser(dto)
 
         // Then
-        assertThat(user.userId).isEqualTo(UUID.fromString(dto._id))
+        assertThat(user.userId).isEqualTo(Uuid.parse(dto._id))
         assertThat(user.username).isEqualTo(dto.username)
         assertThat(user.password).isEqualTo(dto.password)
         assertThat(user.userType).isEqualTo(UserType.ADMIN)

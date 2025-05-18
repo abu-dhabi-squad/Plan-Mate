@@ -9,9 +9,11 @@ import org.junit.jupiter.api.Test
 import logic.model.Audit
 import logic.model.Audit.EntityType
 import org.junit.jupiter.api.assertThrows
-import java.time.LocalDate
-import java.util.UUID
-
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.atTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+@OptIn(ExperimentalUuidApi::class)
 class CsvAuditParserTest {
 
     lateinit var dateParser: DateTimeParser
@@ -28,12 +30,12 @@ class CsvAuditParserTest {
     fun `getLineFromAudit should return CSV line correctly`() {
 
         // given
-        val id = UUID.randomUUID()
-        val customDateTime = LocalDate.of(2025, 5, 24).atTime(20, 0)
+        val id = Uuid.random()
+        val customDateTime = LocalDate(2025, 5, 24).atTime(20, 0)
         val audit = Audit(
             auditId = id,
             createdBy = "user123",
-            entityId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            entityId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             entityType = EntityType.PROJECT,
             oldState = "old",
             newState = "new",
@@ -54,9 +56,10 @@ class CsvAuditParserTest {
     fun `getAuditFromLine should parse CSV line into Audit object`() {
 
         // given
-        val id = UUID.randomUUID()
+        val id = Uuid.random()
         val line = "$id,user123,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,PROJECT,old,new,2023-12-25"
-        val customDateTime = LocalDate.of(2025, 5, 24).atTime(20, 0)
+        val customDate = LocalDate(2025, 5, 24)
+        val customDateTime = customDate.atTime(20, 0, 0)
 
         every { dateParser.parseDateFromString("2023-12-25") } returns customDateTime
 
@@ -67,7 +70,7 @@ class CsvAuditParserTest {
         val expectedAudit = Audit(
             auditId = id,
             createdBy = "user123",
-            entityId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            entityId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             entityType = EntityType.PROJECT,
             oldState = "old",
             newState = "new",

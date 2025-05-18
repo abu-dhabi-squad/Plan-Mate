@@ -13,6 +13,7 @@ import logic.user.GetLoggedUserUseCase
 import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.utils.PromptUtils
+import kotlin.uuid.ExperimentalUuidApi
 
 class EditTaskUI(
     private val printer: Printer,
@@ -23,6 +24,7 @@ class EditTaskUI(
     private val promptUtils: PromptUtils,
     private val createAuditUseCase: CreateAuditUseCase
 ) : UiLauncher {
+    @ExperimentalUuidApi
     override suspend fun launchUi() {
         val projects = try {
             getAllProjectsUseCase()

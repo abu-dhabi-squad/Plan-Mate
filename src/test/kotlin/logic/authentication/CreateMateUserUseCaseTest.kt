@@ -19,7 +19,9 @@ import logic.model.User
 import logic.model.User.UserType
 import logic.repository.AuthenticationRepository
 import logic.utils.hashing.HashingService
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class CreateMateUserUseCaseTest {
     private lateinit var authRepository: AuthenticationRepository
     private lateinit var passwordValidator: PasswordValidator

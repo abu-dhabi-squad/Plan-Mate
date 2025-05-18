@@ -2,8 +2,9 @@ package data.audit.datasource.csv.parser
 
 import logic.model.Audit
 import logic.utils.DateTimeParser
-import java.util.UUID
-
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+@OptIn(ExperimentalUuidApi::class)
 class CsvAuditParser(
     private val dateParser: DateTimeParser
 ) {
@@ -26,9 +27,9 @@ class CsvAuditParser(
         }
 
         return Audit(
-            auditId = UUID.fromString(parts[ID]),
+            auditId = Uuid.parse(parts[ID]),
             createdBy = parts[CREATED_BY],
-            entityId = UUID.fromString(parts[ENTITY_ID]),
+            entityId = Uuid.parse(parts[ENTITY_ID]),
             entityType = Audit.EntityType.valueOf(parts[ENTITY_TYPE]),
             oldState = parts[OLD_STATE],
             newState = parts[NEW_STATE],

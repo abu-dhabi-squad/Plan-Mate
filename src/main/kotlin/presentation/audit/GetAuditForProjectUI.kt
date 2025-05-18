@@ -7,8 +7,10 @@ import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.utils.PromptUtils
 import presentation.utils.extensions.showAuditLogs
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class GetAuditForProjectUI(
     private val promptUtils: PromptUtils,
     private val printer: Printer,
@@ -35,7 +37,7 @@ class GetAuditForProjectUI(
         showAuditLogs(selectedProject.projectId)
     }
 
-    private suspend fun showAuditLogs(entityId: UUID) {
+    private suspend fun showAuditLogs(entityId: Uuid) {
         try {
             val audits: List<Audit> = getAuditUseCase(entityId)
             audits.showAuditLogs(printer)

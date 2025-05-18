@@ -3,8 +3,10 @@ package data.task.datasource.csv
 import data.task.repository.LocalTaskDataSource
 import data.utils.filehelper.FileHelper
 import logic.model.Task
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CsvTask(
     private val csvFileHelper: FileHelper,
     private val csvFileName: String,
@@ -15,11 +17,11 @@ class CsvTask(
         return csvFileHelper.readFile(csvFileName).map { csvTaskParser.getTaskFromCsvLine(it) }
     }
 
-    override fun getTaskById(taskId: UUID): Task? {
+    override fun getTaskById(taskId: Uuid): Task? {
         return getAllTasks().find { it.taskId == taskId }
     }
 
-    override fun getTaskByProjectId(projectId: UUID): List<Task> {
+    override fun getTaskByProjectId(projectId: Uuid): List<Task> {
         return getAllTasks().filter { it.projectId == projectId }
     }
 

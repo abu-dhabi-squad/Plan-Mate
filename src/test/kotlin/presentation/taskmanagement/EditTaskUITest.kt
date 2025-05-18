@@ -21,7 +21,9 @@ import presentation.taskmanagement.TestData.fakeProject
 import presentation.taskmanagement.TestData.fakeTask
 import presentation.taskmanagement.TestData.fakeUser
 import presentation.taskmanagement.TestData.testState
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class EditTaskUITest {
 
     private lateinit var printer: Printer

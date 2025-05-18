@@ -10,8 +10,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import logic.exceptions.TaskNotFoundException
 import logic.repository.TaskRepository
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class DeleteTaskByIdUseCaseTest {
     private lateinit var taskRepository: TaskRepository
     private lateinit var deleteTaskByIdUseCase: DeleteTaskByIdUseCase
@@ -25,7 +27,7 @@ class DeleteTaskByIdUseCaseTest {
     @Test
     fun `should delete task by its id when task is exists`() = runTest{
         // Given
-        val taskId = UUID.randomUUID()
+        val taskId = Uuid.random()
         coEvery { taskRepository.getTaskById(any()) } returns createTask(id = taskId)
 
         // When
@@ -38,7 +40,7 @@ class DeleteTaskByIdUseCaseTest {
     @Test
     fun `should throw TaskNotFoundException exception when task is not exists`() = runTest{
         // Given
-        val taskId = UUID.randomUUID()
+        val taskId = Uuid.random()
         coEvery { taskRepository.getTaskById(any()) } returns null
 
         // When && Then

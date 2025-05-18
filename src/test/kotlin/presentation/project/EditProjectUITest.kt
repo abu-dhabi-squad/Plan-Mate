@@ -13,7 +13,9 @@ import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
 import presentation.utils.PromptUtils
 import kotlin.test.BeforeTest
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class EditProjectUITest {
     private val editProjectUseCase: EditProjectUseCase = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)

@@ -7,8 +7,8 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
-import java.time.LocalDate
-import java.time.format.DateTimeParseException
+import kotlinx.datetime.LocalDate
+import logic.exceptions.DateFormatException
 
 class DateParserImplTest {
 
@@ -33,19 +33,19 @@ class DateParserImplTest {
         val result = dateParserImpl.parseDateFromString(date)
 
         // Then
-        assertThat(result).isEqualTo(LocalDate.of(year, month, day))
+        assertThat(result).isEqualTo(LocalDate(year, month, day))
     }
 
     @Test
     fun `getStringFromDate should return correct formatted string`() {
         // Given
-        val date = LocalDate.of(2025, 5, 3)
+        val date = LocalDate(2025, 5, 3)
 
         // When
         val result = dateParserImpl.getStringFromDate(date)
 
         // Then
-        assertThat(result).isEqualTo("2025-5-3")
+        assertThat(result).isEqualTo("2025-05-03")
     }
 
     @ParameterizedTest
@@ -55,7 +55,7 @@ class DateParserImplTest {
         // invalid date input
 
         // When & Then
-        assertThrows<DateTimeParseException> {
+        assertThrows<DateFormatException> {
             dateParserImpl.parseDateFromString(date)
         }
     }
@@ -67,7 +67,7 @@ class DateParserImplTest {
         // invalid date format
 
         // When & Then
-        assertThrows<DateTimeParseException> {
+        assertThrows<DateFormatException> {
             dateParserImpl.parseDateFromString(date)
         }
     }
@@ -75,19 +75,19 @@ class DateParserImplTest {
     @Test
     fun `getStringFromDate should handle single-digit months and days without padding`() {
         // Given
-        val date = LocalDate.of(2025, 1, 2)
+        val date = LocalDate(2025, 1, 2)
 
         // When
         val result = dateParserImpl.getStringFromDate(date)
 
         // Then
-        assertThat(result).isEqualTo("2025-1-2") // no zero-padding
+        assertThat(result).isEqualTo("2025-01-02") // no zero-padding
     }
 
     @Test
     fun `parseDateFromString and getStringFromDate should be symmetrical`() {
         // Given
-        val original = "2025-6-9"
+        val original = "2025-06-09"
 
         // When
         val parsed = dateParserImpl.parseDateFromString(original)
@@ -103,7 +103,7 @@ class DateParserImplTest {
         val input = ""
 
         // When & Then
-        assertThrows<DateTimeParseException> {
+        assertThrows<DateFormatException> {
             dateParserImpl.parseDateFromString(input)
         }
     }
@@ -114,7 +114,7 @@ class DateParserImplTest {
         val nullLikeInput = "null"
 
         // When & Then
-        assertThrows<DateTimeParseException> {
+        assertThrows<DateFormatException> {
             dateParserImpl.parseDateFromString(nullLikeInput)
         }
     }

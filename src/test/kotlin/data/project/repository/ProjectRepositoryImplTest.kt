@@ -14,16 +14,18 @@ import kotlinx.coroutines.test.runTest
 import logic.repository.ProjectRepository
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class ProjectRepositoryImplTest {
 
     private lateinit var projectDataSource: RemoteProjectDataSource
     private lateinit var mapper: ProjectMapper
     private lateinit var repository: ProjectRepository
 
-    private val project = Project(UUID.randomUUID(), "Test", emptyList())
-    private val projectDto = ProjectDto(UUID.randomUUID().toString(), "Test", emptyList())
+    private val project = Project(Uuid.random(), "Test", emptyList())
+    private val projectDto = ProjectDto(Uuid.random().toString(), "Test", emptyList())
 
     @BeforeEach
     fun setUp() {
@@ -69,7 +71,7 @@ class ProjectRepositoryImplTest {
 
     @Test
     fun `deleteProjectById should call data source`() = runTest {
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectDataSource.deleteProject(projectId.toString()) } just Runs
 
         repository.deleteProjectById(projectId)
@@ -80,7 +82,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `getProjectById should return mapped project`() = runTest {
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectDataSource.getProjectById(projectId.toString()) } returns projectDto
         every { mapper.dtoToProject(projectDto) } returns project
 
@@ -97,7 +99,7 @@ class ProjectRepositoryImplTest {
     @Test
     fun `getProjectById should return null when not found`() = runTest {
         // Given
-        val projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
+        val projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a")
         coEvery { projectDataSource.getProjectById(projectId.toString()) } returns null
 
         // When

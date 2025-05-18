@@ -11,7 +11,9 @@ import logic.exceptions.NoLoggedInUserException
 import logic.model.User
 import logic.model.User.UserType
 import logic.repository.AuthenticationRepository
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class GetLoggedUserUseCaseTest {
     private lateinit var getLoggedUserUseCase: GetLoggedUserUseCase
     private lateinit var authenticationRepository: AuthenticationRepository

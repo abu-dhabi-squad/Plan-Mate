@@ -11,7 +11,9 @@ import logic.project.GetAllProjectsUseCase
 import presentation.io.Printer
 import presentation.utils.extensions.printWithStates
 import kotlin.test.Test
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class GetAllProjectsUITest {
     private val printer: Printer = mockk(relaxed = true)
     private val getAllProjectsUseCase: GetAllProjectsUseCase = mockk(relaxed = true)

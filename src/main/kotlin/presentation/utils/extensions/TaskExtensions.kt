@@ -3,8 +3,9 @@ package presentation.utils.extensions
 import logic.model.Task
 import logic.model.TaskState
 import presentation.io.Printer
-import java.util.UUID
-
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+@OptIn(ExperimentalUuidApi::class)
 fun List<Task>.displaySwimlanesByState(projectName: String, taskStates: List<TaskState>, printer: Printer) {
     val grouped = groupTasksByState(this)
     val maxRows = getMaxRows(grouped)
@@ -13,17 +14,19 @@ fun List<Task>.displaySwimlanesByState(projectName: String, taskStates: List<Tas
     displayHeader(taskStates, printer, paddingValue)
     displayRows(maxRows, taskStates, grouped, paddingValue, printer)
 }
-
-private fun groupTasksByState(tasks: List<Task>): Map<UUID, List<Task>> {
+@OptIn(ExperimentalUuidApi::class)
+private fun groupTasksByState(tasks: List<Task>): Map<Uuid, List<Task>> {
     return tasks.groupBy { it.taskStateId }
 }
 
-private fun getMaxRows(grouped: Map<UUID, List<Task>>) =
+@OptIn(ExperimentalUuidApi::class)
+private fun getMaxRows(grouped: Map<Uuid, List<Task>>) =
     grouped.values.maxOfOrNull { it.size } ?: 0
 
+@OptIn(ExperimentalUuidApi::class)
 private fun getMaxPaddingValue(
     taskStates: List<TaskState>,
-    grouped: Map<UUID, List<Task>>
+    grouped: Map<Uuid, List<Task>>
 ): Int {
     val longestLabelWidth = getLongestLabelWidth(taskStates)
     val longestCellWidth = getLongestCellWidth(grouped)
@@ -34,7 +37,8 @@ private fun getMaxPaddingValue(
 private fun getLongestLabelWidth(states: List<TaskState?>) =
     states.maxOfOrNull { it?.stateName?.length ?: 0 } ?: 0
 
-private fun getLongestCellWidth(grouped: Map<UUID, List<Task>>): Int {
+@OptIn(ExperimentalUuidApi::class)
+private fun getLongestCellWidth(grouped: Map<Uuid, List<Task>>): Int {
     val r1 = grouped.values.maxOfOrNull { it.maxOfOrNull { task -> task.title.length + task.username.length + 3 } ?: 0 } ?: 0
     val r2 = grouped.values.maxOfOrNull { it.maxOfOrNull { task -> task.startDate.toString().length + task.endDate.toString().length + 3 } ?: 0 } ?: 0
     return maxOf(r1, r2)
@@ -51,10 +55,11 @@ private fun displayHeader(
     displayHorizontalBorder(printer, padValue, states)
 }
 
+@OptIn(ExperimentalUuidApi::class)
 private fun displayRows(
     maxRows: Int,
     states: List<TaskState?>,
-    grouped: Map<UUID, List<Task>>,
+    grouped: Map<Uuid, List<Task>>,
     padValue: Int,
     printer: Printer
 ) {
@@ -66,16 +71,17 @@ private fun displayRows(
     printer.displayLn()
 }
 
+@OptIn(ExperimentalUuidApi::class)
 private fun displayRow(
     states: List<TaskState?>,
-    grouped: Map<UUID, List<Task>>,
+    grouped: Map<Uuid, List<Task>>,
     i: Int,
     padValue: Int,
     printer: Printer,
     getCellValue: (Task) -> String
 ) {
     states.forEach { state ->
-        val task = grouped[state?.stateId ?: UUID.randomUUID()]?.getOrNull(i)
+        val task = grouped[state?.stateId ?: Uuid.random()]?.getOrNull(i)
         val display = if (task != null) {
             getCellValue(task).padEnd(padValue)
         } else {

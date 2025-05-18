@@ -10,8 +10,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import logic.exceptions.NoTasksFoundException
 import logic.repository.TaskRepository
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class GetTasksByProjectIdUseCaseTest {
     private lateinit var taskRepository: TaskRepository
     private lateinit var getTasksByProjectIdUseCase: GetTasksByProjectIdUseCase
@@ -25,7 +27,7 @@ class GetTasksByProjectIdUseCaseTest {
     @Test
     fun `should get tasks by project id when project is exists`()= runTest {
         // Given
-        val projectId = UUID.randomUUID()
+        val projectId = Uuid.random()
         val firstRelatedTask = createTask(projectId = projectId)
         val secondRelatedTask = createTask(projectId = projectId)
         coEvery { taskRepository.getTaskByProjectId(projectId) } returns listOf(
@@ -43,7 +45,7 @@ class GetTasksByProjectIdUseCaseTest {
     @Test
     fun `should throw NoTasksFoundException when there are no tasks for provided project id`()= runTest {
         // Given
-        val projectId = UUID.randomUUID()
+        val projectId = Uuid.random()
         coEvery { taskRepository.getAllTasks() } returns listOf(
             createTask(),
             createTask(),

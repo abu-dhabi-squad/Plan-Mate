@@ -16,7 +16,9 @@ import org.junit.jupiter.api.Test
 import presentation.io.Printer
 import presentation.utils.PromptUtils
 import presentation.utils.extensions.showAuditLogs
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class GetAuditForTaskUITest {
 
     private val printer: Printer = mockk(relaxed = true)

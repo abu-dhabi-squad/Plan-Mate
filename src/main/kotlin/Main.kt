@@ -1,8 +1,8 @@
+import di.*
 import kotlinx.coroutines.runBlocking
 import org.koin.core.context.startKoin
 import org.koin.java.KoinJavaComponent.getKoin
 import presentation.auth.LoginByUserNameUI
-import di.*
 import kotlin.system.exitProcess
 
 fun main() {
@@ -12,5 +12,6 @@ fun main() {
     runBlocking {
         getKoin().get<LoginByUserNameUI>().launchUi()
     }
+
     exitProcess(0)
 }

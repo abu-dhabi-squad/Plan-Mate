@@ -3,7 +3,7 @@ package presentation.utils
 import presentation.io.InputReader
 import presentation.io.Printer
 import logic.utils.DateParser
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 class PromptUtils(
     private val printer: Printer,
