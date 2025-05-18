@@ -12,22 +12,31 @@ repositories {
 
 
 dependencies {
-
+    // Kotlin Test Framework
     testImplementation(kotlin("test"))
+
+    // Dependency Injection (Koin)
     implementation("io.insert-koin:koin-core:4.0.2")
     implementation("io.insert-koin:koin-annotations:2.0.0")
 
-    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
-    testImplementation ("com.google.truth:truth:1.4.4")
+    // Coroutine Testing
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
+
+    // Assertion and Mocking Libraries
+    testImplementation("com.google.truth:truth:1.4.4")
     testImplementation("io.mockk:mockk:1.14.0")
+
+    // Unit Testing Framework
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+
+    // MongoDB Kotlin Coroutine Driver
     implementation("org.mongodb:mongodb-driver-kotlin-coroutine:4.10.1")
 
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    // Logging
     implementation("org.slf4j:slf4j-simple:2.0.12")
-    implementation("io.reactivex.rxjava3:rxjava:3.1.8")
-    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 
+    // Date and Time
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.5.0")
 }
 
 tasks.test {
