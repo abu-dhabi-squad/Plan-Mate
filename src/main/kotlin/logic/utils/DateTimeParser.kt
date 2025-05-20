@@ -1,6 +1,6 @@
 package logic.utils
 
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
 
 interface DateTimeParser {
     fun getStringFromDate(dateTime: LocalDateTime): String

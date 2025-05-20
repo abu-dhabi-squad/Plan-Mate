@@ -10,7 +10,9 @@ import presentation.UiLauncher
 import presentation.io.Printer
 import presentation.utils.PromptUtils
 import presentation.utils.extensions.printWithStates
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class EditStateOfProjectUI(
     private val editStateOfProjectUseCase: EditStateOfProjectUseCase,
     private val getAllProjectsUseCase: GetAllProjectsUseCase,

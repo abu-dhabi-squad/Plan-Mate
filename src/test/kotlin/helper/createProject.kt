@@ -2,10 +2,12 @@ package helper
 
 import logic.model.Project
 import logic.model.TaskState
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun createProject(
-    id: UUID = UUID.randomUUID(),
+    id: Uuid = Uuid.random(),
     name: String = "",
     taskStates : List<TaskState> = listOf()
 ):Project{

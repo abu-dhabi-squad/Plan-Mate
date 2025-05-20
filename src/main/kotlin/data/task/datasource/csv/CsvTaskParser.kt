@@ -2,9 +2,10 @@ package data.task.datasource.csv
 
 import logic.model.Task
 import logic.utils.DateParser
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-
+@OptIn(ExperimentalUuidApi::class)
 class CsvTaskParser(
     private val dateParser: DateParser
 ) {
@@ -21,10 +22,10 @@ class CsvTaskParser(
         return taskLine.split(",")
             .let {
                 Task(
-                    taskId = UUID.fromString(it[ID]),
+                    taskId = Uuid.parse(it[ID]),
                     username = it[USERNAME],
-                    projectId = UUID.fromString(it[PROJECT_ID]),
-                    taskStateId = UUID.fromString(it[STATE_ID]),
+                    projectId = Uuid.parse(it[PROJECT_ID]),
+                    taskStateId = Uuid.parse(it[STATE_ID]),
                     title = it[TITLE],
                     description = it[DESCRIPTION],
                     startDate = dateParser.parseDateFromString(it[START_DATE]),

@@ -10,9 +10,11 @@ import logic.model.Project
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.assertThrows
 import logic.repository.ProjectRepository
-import java.util.UUID
+import kotlin.uuid.Uuid
 import kotlin.test.Test
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class GetAllProjectsUseCaseTest {
     private lateinit var projectRepository: ProjectRepository
     private lateinit var getAllProjectsUseCase: GetAllProjectsUseCase
@@ -28,12 +30,12 @@ class GetAllProjectsUseCaseTest {
         //Given
         val projects = listOf(
             Project(
-                projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+                projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
                 projectName = "Project One",
                 taskStates = emptyList()
             ),
             Project(
-                projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+                projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
                 projectName = "Project Two",
                 taskStates = emptyList()
             )

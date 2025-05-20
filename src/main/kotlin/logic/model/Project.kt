@@ -1,10 +1,11 @@
 package logic.model
 
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
-
+@OptIn(ExperimentalUuidApi::class)
 data class Project(
-    val projectId: UUID = UUID.randomUUID(),
+    val projectId: Uuid = Uuid.random(),
     val projectName: String,
     val taskStates: List<TaskState>,
 )

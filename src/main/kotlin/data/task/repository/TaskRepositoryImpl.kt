@@ -4,8 +4,10 @@ import data.task.mapper.TaskMapper
 import logic.model.Task
 import logic.repository.TaskRepository
 import data.utils.BaseRepository
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class TaskRepositoryImpl(
     private val remoteTaskDataSource: RemoteTaskDataSource,
     private val taskMapper: TaskMapper
@@ -15,7 +17,7 @@ class TaskRepositoryImpl(
         remoteTaskDataSource.getAllTasks().map { taskDto -> taskMapper.dtoToTask(taskDto) }
     }
 
-    override suspend fun getTaskById(taskId: UUID): Task? {
+    override suspend fun getTaskById(taskId: Uuid): Task? {
         return wrapResponse {
             remoteTaskDataSource.getTaskById(taskId.toString())?.let { taskDto ->
                 taskMapper.dtoToTask(taskDto)
@@ -23,7 +25,7 @@ class TaskRepositoryImpl(
         }
     }
 
-    override suspend fun getTaskByProjectId(projectId: UUID): List<Task> {
+    override suspend fun getTaskByProjectId(projectId: Uuid): List<Task> {
         return wrapResponse {
             remoteTaskDataSource.getTaskByProjectId(projectId.toString()).map { taskDto ->
                 taskMapper.dtoToTask(taskDto)
@@ -41,11 +43,11 @@ class TaskRepositoryImpl(
         wrapResponse { remoteTaskDataSource.editTask(taskDto) }
     }
 
-    override suspend fun deleteTask(taskId: UUID) = wrapResponse {
+    override suspend fun deleteTask(taskId: Uuid) = wrapResponse {
         remoteTaskDataSource.deleteTask(taskId.toString())
     }
 
-    override suspend fun deleteTasksByProjectById(projectId: UUID) = wrapResponse {
+    override suspend fun deleteTasksByProjectById(projectId: Uuid) = wrapResponse {
         remoteTaskDataSource.deleteTasksByProjectById(projectId.toString())
     }
 

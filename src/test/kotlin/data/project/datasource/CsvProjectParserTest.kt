@@ -1,6 +1,5 @@
 package data.project.datasource
 
-import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import data.project.datasource.csv.CsvProjectParser
 import org.junit.jupiter.api.BeforeEach
@@ -12,8 +11,10 @@ import logic.exceptions.CanNotParseProjectException
 import logic.exceptions.CanNotParseStateException
 import logic.model.Project
 import logic.model.TaskState
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CsvProjectParserTest {
 
     private lateinit var csvProjectParser: CsvProjectParser
@@ -71,22 +72,22 @@ class CsvProjectParserTest {
     fun `parseStringToProject should return Project when the string could be splited`() {
         //given
         val resTaskStates = listOf(
-            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"),
-            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state2"),
-            TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state3")
+            TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"),
+            TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state2"),
+            TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state3")
         )
         val line = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state2|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state3"
         //when & then
-        assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resTaskStates))
+        assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resTaskStates))
     }
 
     @Test
     fun `parseStringToProject should return Project when the string could be splited with one state`() {
         //given
-        val resTaskState = listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"))
+        val resTaskState = listOf(TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "state1"))
         val line = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;state1"
         //when & then
-        assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resTaskState))
+        assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", resTaskState))
     }
 
     @Test
@@ -94,13 +95,13 @@ class CsvProjectParserTest {
         //given
         val line = "d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,"
         //when & then
-        assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf()))
+        assertThat(csvProjectParser.parseStringToProject(line)).isEqualTo(Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"), "name1", listOf()))
     }
 
     @Test
     fun`parseProjectToString should return a string when get a project with empty states`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf())
+        val project = Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf())
         //when & then
         assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,")
     }
@@ -108,7 +109,7 @@ class CsvProjectParserTest {
     @Test
     fun`parseProjectToString should return a string when get a project with state`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1")))
+        val project = Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1")))
         //when & then
         assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name1")
     }
@@ -116,7 +117,7 @@ class CsvProjectParserTest {
     @Test
     fun`parseProjectToString should return a string when get a project with states`(){
         //given
-        val project = Project(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1"),TaskState(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name2")))
+        val project = Project(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1", listOf(TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name1"),TaskState(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),"name2")))
         //when & then
         assertThat(csvProjectParser.parseProjectToString(project)).isEqualTo("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a,name1,d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name1|d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a;name2")
     }

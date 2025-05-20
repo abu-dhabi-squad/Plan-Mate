@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test
 import data.authentication.datasource.inmemory.InMemoryLoggedUser
 import logic.model.User
 import logic.model.User.UserType
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class InMemoryLoggedUserTest{
     private lateinit var inMemoryLoggedUser: InMemoryLoggedUser
 

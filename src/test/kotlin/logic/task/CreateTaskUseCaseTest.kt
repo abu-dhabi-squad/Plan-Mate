@@ -12,9 +12,11 @@ import logic.exceptions.InvalidTaskDateException
 import logic.model.Task
 import logic.repository.TaskRepository
 import logic.task.validation.TaskValidator
-import java.time.LocalDate
-import java.util.UUID
+import kotlinx.datetime.LocalDate
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CreateTaskUseCaseTest {
     private lateinit var taskRepository: TaskRepository
     private lateinit var taskValidator: TaskValidator
@@ -32,8 +34,8 @@ class CreateTaskUseCaseTest {
         // Given
         val task = Task(
             username = "11111",
-            projectId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"),
-            taskStateId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            projectId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1b"),
+            taskStateId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             title = "Title",
             description = "Description",
             startDate = LocalDate.parse("2025-01-01"),

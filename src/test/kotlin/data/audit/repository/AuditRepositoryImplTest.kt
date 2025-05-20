@@ -16,8 +16,10 @@ import io.mockk.verify
 import kotlinx.coroutines.test.runTest
 import logic.repository.AuditRepository
 import org.junit.jupiter.api.assertThrows
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class AuditRepositoryImplTest {
 
     lateinit var dataSource: RemoteAuditDataSource
@@ -43,13 +45,13 @@ class AuditRepositoryImplTest {
         every { auditLogMapper.auditToDto(audit1) } returns auditDto1
         every { auditLogMapper.auditToDto(audit2) } returns auditDto2
 
-        coEvery { dataSource.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString()) } returns listOf(auditDto1, auditDto2)
+        coEvery { dataSource.getAuditByEntityId(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a").toString()) } returns listOf(auditDto1, auditDto2)
 
         every { auditLogMapper.dtoToAudit(auditDto1) } returns audit1
         every { auditLogMapper.dtoToAudit(auditDto2) } returns audit2
 
         // when
-        val result = auditRepository.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        val result = auditRepository.getAuditByEntityId(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
 
         // then
         assertThat(result).containsExactly(audit1, audit2)
@@ -90,7 +92,7 @@ class AuditRepositoryImplTest {
         coEvery { dataSource.getAuditByEntityId(any()) } returns emptyList()
 
         // when
-        val result = auditRepository.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        val result = auditRepository.getAuditByEntityId(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
 
         // then
         assertThat(result).isEmpty()
@@ -104,7 +106,7 @@ class AuditRepositoryImplTest {
 
         // when & then
         assertThrows<Exception> {
-            auditRepository.getAuditByEntityId(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+            auditRepository.getAuditByEntityId(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
         }
     }
 

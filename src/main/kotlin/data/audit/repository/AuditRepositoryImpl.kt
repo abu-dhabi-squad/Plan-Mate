@@ -4,8 +4,9 @@ import data.audit.mapper.AuditLogMapper
 import logic.model.Audit
 import logic.repository.AuditRepository
 import data.utils.BaseRepository
-import java.util.UUID
-
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+@OptIn(ExperimentalUuidApi::class)
 class AuditRepositoryImpl(
     private val remoteAuditDataSource: RemoteAuditDataSource,
     private val auditLogMapper: AuditLogMapper
@@ -15,7 +16,7 @@ class AuditRepositoryImpl(
         remoteAuditDataSource.createAuditLog(auditLogMapper.auditToDto(auditLog))
     }
 
-    override suspend fun getAuditByEntityId(entityId: UUID): List<Audit> = wrapResponse {
+    override suspend fun getAuditByEntityId(entityId: Uuid): List<Audit> = wrapResponse {
         remoteAuditDataSource.getAuditByEntityId(entityId.toString())
             .map { auditLogMapper.dtoToAudit(it) }
     }

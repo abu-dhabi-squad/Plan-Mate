@@ -2,15 +2,18 @@ package data.audit.mapper
 
 import com.google.common.truth.Truth.assertThat
 import data.audit.model.AuditDto
+import kotlinx.datetime.Clock
 import logic.model.Audit
 import logic.model.Audit.EntityType
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.Date
-import java.util.UUID
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class AuditLogMapperTest {
 
     private val mapper = AuditLogMapper()
@@ -18,12 +21,12 @@ class AuditLogMapperTest {
     @Test
     fun `should return valid AuditDto when mapping from Audit`() {
         // Given
-        val uuid = UUID.randomUUID()
-        val now = LocalDateTime.now()
+        val uuid = Uuid.random()
+        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         val audit = Audit(
             auditId = uuid,
             createdBy = "shahd",
-            entityId = UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
+            entityId = Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"),
             entityType = EntityType.TASK,
             oldState = "old",
             newState = "new",
@@ -40,15 +43,15 @@ class AuditLogMapperTest {
         assertThat(dto.entityType).isEqualTo("TASK")
         assertThat(dto.oldState).isEqualTo("old")
         assertThat(dto.newState).isEqualTo("new")
-        assertThat(dto.date).isEqualTo(Date.from(now.atZone(ZoneId.systemDefault()).toInstant()))
+        assertThat(dto.date).isEqualTo(now.toInstant(TimeZone.currentSystemDefault()).toEpochMilliseconds())
     }
 
     @Test
     fun `should return valid Audit when mapping from AuditDto`() {
         // Given
-        val uuid = UUID.randomUUID()
-        val now = LocalDateTime.now()
-        val date = Date.from(now.atZone(ZoneId.systemDefault()).toInstant())
+        val uuid = Uuid.random()
+        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+        val date = now.toInstant(TimeZone.currentSystemDefault()).epochSeconds
         val dto = AuditDto(
             _id = uuid.toString(),
             createdBy = "shahd",
@@ -65,7 +68,7 @@ class AuditLogMapperTest {
         // Then
         assertThat(audit.auditId).isEqualTo(uuid)
         assertThat(audit.createdBy).isEqualTo("shahd")
-        assertThat(audit.entityId).isEqualTo(UUID.fromString("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
+        assertThat(audit.entityId).isEqualTo(Uuid.parse("d3b07384-d9a0-4e9f-8a1e-6f0c2e5c9b1a"))
         assertThat(audit.entityType).isEqualTo(EntityType.PROJECT)
         assertThat(audit.oldState).isEqualTo("s1")
         assertThat(audit.newState).isEqualTo("s2")
@@ -74,6 +77,7 @@ class AuditLogMapperTest {
     @Test
     fun `should throw exception when invalid AuditDto is passed`() {
         // Given
+        val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
         val invalidDto = AuditDto(
             _id = "invalid-uuid",
             createdBy = "shahd",
@@ -81,7 +85,7 @@ class AuditLogMapperTest {
             entityType = "INVALID_TYPE",
             oldState = "s1",
             newState = "s2",
-            date = Date()
+            date = now.toInstant(TimeZone.currentSystemDefault()).epochSeconds
         )
 
         // When & Then

@@ -1,21 +1,26 @@
 package helper
 
+import kotlinx.datetime.Clock
 import logic.model.Task
-import java.time.LocalDate
-import java.util.UUID
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun createTask(
-    id : UUID =UUID.randomUUID(),
-    userName :String = "",
-    projectId :UUID = UUID.randomUUID(),
-    stateId :UUID = UUID.randomUUID(),
-    title :String= "",
-    description :String = "",
-    startDate :LocalDate = LocalDate.now(),
-    endDate :LocalDate = LocalDate.now()
+    id: Uuid = Uuid.random(),
+    userName: String = "",
+    projectId: Uuid = Uuid.random(),
+    stateId: Uuid = Uuid.random(),
+    title: String = "",
+    description: String = "",
+    startDate: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
+    endDate: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault())
 ): Task {
     return Task(
-        taskId=id,
+        taskId = id,
         username = userName,
         projectId = projectId,
         taskStateId = stateId,

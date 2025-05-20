@@ -11,8 +11,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class CreateAuditUseCaseTest {
 
     private lateinit var auditRepository: AuditRepository
@@ -29,7 +31,7 @@ class CreateAuditUseCaseTest {
 
         // Given
         val audit = createAudit(
-            entityId = UUID.randomUUID(),
+            entityId = Uuid.random(),
             newState = "new state",
             oldState = "old state",
             createdBy = "noor"
@@ -64,7 +66,7 @@ class CreateAuditUseCaseTest {
 
         // Given
         val audit = createAudit(
-            entityId = UUID.fromString(entityId),
+            entityId = Uuid.parse(entityId),
             createdBy = createdBy,
             newState = newState
         )
@@ -80,7 +82,7 @@ class CreateAuditUseCaseTest {
 
         // Given
         val audit = createAudit(
-            entityId = UUID.randomUUID(),
+            entityId = Uuid.random(),
             newState = "done",
             oldState = "done"
         )

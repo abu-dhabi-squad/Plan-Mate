@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import logic.utils.DateTimeParserImpl
-import java.time.LocalDateTime
+import kotlinx.datetime.LocalDateTime
 import kotlin.test.assertFailsWith
 
 class DateTimeParserImplTest {
@@ -22,10 +21,10 @@ class DateTimeParserImplTest {
 
     @ParameterizedTest
     @CsvSource(
-        "2025/05/03 15:30, 2025,5,3,15,30",
-        "2024/12/01 00:00, 2024,12,1,0,0",
-        "2024/12/01 12:00, 2024,12,1,12,0",
-        "2023/01/31 09:45, 2023,1,31,9,45"
+        "2025-05-03T15:30, 2025,5,3,15,30",
+        "2024-12-01T00:00, 2024,12,1,0,0",
+        "2024-12-01T12:00, 2024,12,1,12,0",
+        "2023-1-31T09:45, 2023,1,31,9,45"
     )
     fun `parseDateFromString should return correct LocalDateTime`(
         input: String,
@@ -36,7 +35,7 @@ class DateTimeParserImplTest {
         minute: Int
     ) {
         // Given
-        val expected = LocalDateTime.of(year, month, day, hour, minute)
+        val expected = LocalDateTime(year, month, day, hour, minute)
 
         // When
         val actual = parser.parseDateFromString(input)
@@ -47,9 +46,9 @@ class DateTimeParserImplTest {
 
     @ParameterizedTest
     @CsvSource(
-        "2025,5,3,15,30,2025/5/3 15:30",
-        "2024,12,1,0,0,2024/12/1 0:00",
-        "2024,12,1,12,0,2024/12/1 12:00"
+        "2025,5,3,15,30,2025-05-03T15:30",
+        "2024,12,1,0,0,2024-12-01T00:00",
+        "2024,12,1,12,0,2024-12-01T12:00"
     )
     fun `getStringFromDate should return correctly formatted string`(
         year: Int,
@@ -60,7 +59,7 @@ class DateTimeParserImplTest {
         expected: String
     ) {
         // Given
-        val input = LocalDateTime.of(year, month, day, hour, minute)
+        val input = LocalDateTime(year, month, day, hour, minute)
 
         // When
         val result = parser.getStringFromDate(input)
@@ -72,7 +71,7 @@ class DateTimeParserImplTest {
     @Test
     fun `parseDateFromString should throw DateFormatException for incorrect format`() {
         // Given
-        val invalid = "2025-05-03 15:30" // wrong separator
+        val invalid = "2025/05/03 15:30" // wrong separator
 
         // When
         val exception = assertFailsWith<DateFormatException> {
@@ -97,7 +96,7 @@ class DateTimeParserImplTest {
     @Test
     fun `getStringFromDate then parseDateFromString should be symmetrical`() {
         // Given
-        val original = LocalDateTime.of(2025, 5, 3, 15, 30)
+        val original = LocalDateTime(2025, 5, 3, 15, 30)
 
         // When
         val stringified = parser.getStringFromDate(original)
@@ -108,15 +107,15 @@ class DateTimeParserImplTest {
     }
 
     @Test
-    fun `parseDateFromString should trim leading or trailing whitespace`() {
+    fun `parseDateFromString should parse the text to date when date text start or end spaces`() {
         // Given
-        val input = " 2025/05/03 15:30 "
+        val input = " 2025-05-03T15:30   "
 
         // When
-        val result = parser.parseDateFromString(input.trim())
+        val result = parser.parseDateFromString(input)
 
         // Then
-        assertThat(result).isEqualTo(LocalDateTime.of(2025, 5, 3, 15, 30))
+        assertThat(result).isEqualTo(LocalDateTime(2025, 5, 3, 15, 30))
     }
 
     @Test

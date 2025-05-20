@@ -15,7 +15,9 @@ import presentation.io.Printer
 import presentation.user.mate.ConsoleUserMenuUI
 import logic.user.SaveLoggedUserUseCase
 import presentation.utils.PromptUtils
+import kotlin.uuid.ExperimentalUuidApi
 
+@OptIn(ExperimentalUuidApi::class)
 class LoginByUserNameUITest {
     private val loginUseCase: LoginByUserNameUseCase = mockk(relaxed = true)
     private val saveLoggedUserUseCase: SaveLoggedUserUseCase = mockk(relaxed = true)

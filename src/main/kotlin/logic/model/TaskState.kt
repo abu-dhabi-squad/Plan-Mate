@@ -1,8 +1,9 @@
 package logic.model
 
-import java.util.UUID
-
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
+@OptIn(ExperimentalUuidApi::class)
 data class TaskState(
-    val stateId: UUID = UUID.randomUUID(),
+    val stateId: Uuid = Uuid.random(),
     val stateName: String
 )

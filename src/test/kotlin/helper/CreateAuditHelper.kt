@@ -1,19 +1,22 @@
 package helper
 
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import logic.model.Audit
 import logic.model.Audit.EntityType
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 fun createAudit(
-    id: UUID = UUID.randomUUID(),
-    entityId: UUID = UUID.randomUUID(),
+    id: Uuid = Uuid.random(),
+    entityId: Uuid = Uuid.random(),
     newState: String = "",
-    oldState : String = "",
+    oldState: String = "",
     createdBy: String = "",
-    date: LocalDateTime = LocalDate.now().atTime(LocalTime.now()),
+    date: LocalDateTime = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()),
     entityType: EntityType = EntityType.PROJECT,
 ): Audit {
     return Audit(

@@ -4,12 +4,14 @@ import logic.exceptions.ProjectNotFoundException
 import logic.exceptions.ProjectStateNotFoundException
 import logic.model.TaskState
 import logic.repository.ProjectRepository
-import java.util.UUID
+import kotlin.uuid.ExperimentalUuidApi
+import kotlin.uuid.Uuid
 
+@OptIn(ExperimentalUuidApi::class)
 class EditStateOfProjectUseCase(
     private val projectRepository: ProjectRepository
 ) {
-    suspend operator fun invoke(projectId: UUID, newTaskState: TaskState) {
+    suspend operator fun invoke(projectId: Uuid, newTaskState: TaskState) {
         val project = projectRepository.getProjectById(projectId) ?: throw ProjectNotFoundException()
         project.taskStates.find { it.stateId == newTaskState.stateId } ?: throw ProjectStateNotFoundException()
         val updatedState =
